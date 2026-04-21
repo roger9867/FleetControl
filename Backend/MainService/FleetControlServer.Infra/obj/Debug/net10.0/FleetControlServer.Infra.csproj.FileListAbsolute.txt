@@ -1,0 +1,12 @@
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/bin/Debug/net10.0/FleetControlServer.Infra.deps.json
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/bin/Debug/net10.0/FleetControlServer.Infra.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/bin/Debug/net10.0/FleetControlServer.Infra.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.csproj.AssemblyReference.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.GeneratedMSBuildEditorConfig.editorconfig
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.AssemblyInfoInputs.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.AssemblyInfo.cs
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.csproj.CoreCompileInputs.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/refint/FleetControlServer.Infra.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/FleetControlServer.Infra.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Infra/obj/Debug/net10.0/ref/FleetControlServer.Infra.dll

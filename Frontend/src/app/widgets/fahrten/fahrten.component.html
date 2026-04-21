@@ -1,0 +1,35 @@
+
+<h1 class="header">Dokumentierte Fahrten</h1>
+
+<div class="container">
+
+  <div class="sidebar">
+    Sidebar content
+  </div>
+
+  <div class="main">
+
+    <div class="card">
+      <app-card-widget></app-card-widget>
+    </div>
+
+    <div class="list">
+      <div
+        class="box"
+        *ngFor="let item of items; let i = index"
+        (click)="selectItem(i)"
+        [class.active]="selectedIndex === i"
+        >
+      <div>
+        <strong>{{ item }}</strong>
+
+        <div class="details" *ngIf="selectedIndex === i">
+          Extra details for this item<br>
+          More info here<br>
+          Even more content
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

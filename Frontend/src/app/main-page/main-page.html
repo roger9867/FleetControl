@@ -1,0 +1,118 @@
+<!-- Library imports -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100" rel="stylesheet">
+
+
+<!-- Header for menu bar -->
+<header class="header">
+
+  <span class="material-symbols-outlined app-menu"
+    (click)="toggleSidebar()">
+  apps</span>
+
+  <nav class="tabs">
+    <button
+      *ngFor="let tab of tabs"
+      (click)="selectTab(tab)"
+      [class.active]="activeTab === tab">
+      {{ tab }}
+    </button>
+  </nav>
+
+  <div class="header-right">
+    <span class="material-symbols-outlined header-icon">
+      settings
+    </span>
+
+    <span class="material-symbols-outlined profile-icon">
+      account_circle
+    </span>
+  </div>
+
+</header>
+
+
+<div class="layout">
+  <div class="stripe" [class.closed]="sidebarClosed" >
+
+    <nav class="tabs-vertical">
+
+      <button *ngFor="let tab of sidebarTabs"
+            (click)="selectTab(tab.label)"
+            [class.active]="activeTab === tab.label">
+        <span class="material-symbols-outlined">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="main">
+    <!-- Central dynamically switched content of UI -->
+    <div class="content">
+      
+      <div *ngIf="activeTab === 'Statistik'">
+        <h1>Hier stehen Statistiken</h1>
+        <app-card-widget></app-card-widget>
+      </div>
+
+      <div *ngIf="activeTab === 'Fahrten'">
+          <app-layout></app-layout>
+      </div>
+
+      <div *ngIf="activeTab === 'Personen'">
+        <h1>Personen</h1>
+        <p>Hier stehen deine Personen.</p>
+      </div>
+
+      <div *ngIf="activeTab === 'Fahrzeuge'">
+        <h1>Fahrzeuge</h1>
+        <p>Hier stehen deine Fahrzeuge.</p>
+      </div>
+
+      <!-- Action to register new person / vehicle operator in the system -->
+      <div *ngIf="activeTab === 'Person anlegen'" class="person-form">
+        <h2>Person anlegen</h2>
+
+        <form (ngSubmit)="submitPerson()" #personForm="ngForm">
+          <label>
+            Vorname:
+            <input type="text" name="firstName" [(ngModel)]="person.firstName" required>
+          </label>
+
+          <label>
+            Nachname:
+            <input type="text" name="lastName" [(ngModel)]="person.lastName" required>
+          </label>
+
+          <label>
+            Geburtsdatum:
+            <input type="date" name="birthDate" [(ngModel)]="person.birthDate" required>
+          </label>
+
+          <label>
+            Geburtsort:
+            <input type="text" name="birthPlace" [(ngModel)]="person.birthPlace">
+          </label>
+
+          <label>
+            Email:
+            <input type="email" name="email" [(ngModel)]="person.email">
+          </label>
+
+          <label>
+            Adresse:
+            <input type="text" name="address" [(ngModel)]="person.address">
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" name="isAdmin" [(ngModel)]="person.isAdmin">
+              Admin-Rechte
+          </label>
+
+          <button type="submit" [disabled]="!personForm.form.valid">Person speichern</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

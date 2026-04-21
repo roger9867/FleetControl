@@ -1,0 +1,70 @@
+{
+  "hash": "a489eb73",
+  "configHash": "0fcac73a",
+  "lockfileHash": "5cf767d8",
+  "browserHash": "342120fa",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "7ad4182f",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "1a97c2ae",
+      "needsInterop": false
+    },
+    "@angular/forms": {
+      "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
+      "file": "@angular_forms.js",
+      "fileHash": "bfe5fe3c",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "3ff90517",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "c13fa34e",
+      "needsInterop": false
+    },
+    "echarts/core": {
+      "src": "../../../../../../node_modules/echarts/core.js",
+      "file": "echarts_core.js",
+      "fileHash": "d162fd5c",
+      "needsInterop": false
+    },
+    "leaflet": {
+      "src": "../../../../../../node_modules/leaflet/dist/leaflet-src.js",
+      "file": "leaflet.js",
+      "fileHash": "a0d40cb1",
+      "needsInterop": true
+    },
+    "ngx-echarts": {
+      "src": "../../../../../../node_modules/ngx-echarts/fesm2022/ngx-echarts.mjs",
+      "file": "ngx-echarts.js",
+      "fileHash": "147a57e6",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-DJW2N7ER": {
+      "file": "chunk-DJW2N7ER.js"
+    },
+    "chunk-KZOLIKMT": {
+      "file": "chunk-KZOLIKMT.js"
+    },
+    "chunk-PRQDQVE5": {
+      "file": "chunk-PRQDQVE5.js"
+    },
+    "chunk-D7MF2QZF": {
+      "file": "chunk-D7MF2QZF.js"
+    }
+  }
+}

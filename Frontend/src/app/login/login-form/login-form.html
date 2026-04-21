@@ -1,0 +1,45 @@
+
+
+<header class="header">
+</header>
+
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Login</h2>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+  <!-- Email -->
+  <div class="form-group">
+    <label>Email</label>
+    <input
+      type="email"
+      name="email"
+      [(ngModel)]="email"
+      required
+    />
+  </div>
+
+  <!-- Password -->
+  <div class="form-group password-field">
+    <label>Password</label>
+
+    <span class="eye-icon" (click)="togglePassword()">
+      <i [class]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+    </span>
+
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      name="password"
+      [(ngModel)]="password"
+      required
+    />
+  </div>
+
+  <button type="submit" [disabled]="!loginForm.valid">
+    Sign In
+  </button>
+</form>
+  </div>
+</div>

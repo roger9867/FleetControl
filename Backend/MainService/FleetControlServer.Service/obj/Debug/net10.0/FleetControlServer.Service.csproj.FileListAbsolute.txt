@@ -1,0 +1,15 @@
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/bin/Debug/net10.0/FleetControlServer.Service.deps.json
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/bin/Debug/net10.0/FleetControlServer.Service.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/bin/Debug/net10.0/FleetControlServer.Service.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/bin/Debug/net10.0/FleetControlServer.Infra.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/bin/Debug/net10.0/FleetControlServer.Infra.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.csproj.AssemblyReference.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.GeneratedMSBuildEditorConfig.editorconfig
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.AssemblyInfoInputs.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.AssemblyInfo.cs
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.csproj.CoreCompileInputs.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetCon.9CC6E516.Up2Date
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/refint/FleetControlServer.Service.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/FleetControlServer.Service.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/obj/Debug/net10.0/ref/FleetControlServer.Service.dll

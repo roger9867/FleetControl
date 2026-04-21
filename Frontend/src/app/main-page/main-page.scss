@@ -1,0 +1,297 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  padding: 0 10px;
+  background-color: #222222;
+  border-bottom: 1px solid #424242;
+  position: sticky;
+}
+
+.app-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+}
+
+.widget-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 400px);
+  gap: 20px;
+}
+
+.widget-container > * {
+  flex: 0 0 400px;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: row;
+  background-color:  #101014;
+  height: 100vh;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.847);
+}
+
+.leaflet-popup-content {
+  font-size: 16px;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 8px 12px;
+}
+
+.leaflet-tooltip {
+  font-size: 16px;
+}
+
+.app-menu {
+  font-variation-settings: "wght" 400;
+  font-size: 40px;
+  font-weight: 400;
+  color: white;
+  cursor: pointer;
+  margin-right: 30px;
+
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20%;
+}
+.app-menu:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.tab-container {
+  margin-top: 200px;
+  width: 100%;
+}
+
+.tabs {
+  margin-left: 130px;
+}
+
+.tabs button {
+  margin-right: 20px;
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.tabs button.active {
+  color: white;
+}
+
+.tabs button:hover {
+  color: white;
+}
+
+.line {
+  width: 80%;
+  margin: 20px auto;
+  border-bottom: 2px solid black;
+}
+
+.stripe {
+  width: 220px;
+  background-color:  #222222;
+  transition: width 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &.closed {
+    width: 60px;
+
+    .tab-label {
+      display: none;
+    }
+
+    .close-sidebar {
+      transform: rotate(180deg);
+    }
+  }
+
+  .close-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.2s;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  .tabs-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 50px 10px 10px 10px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: white;
+      }
+
+      .material-icons-outlined {
+        font-size: 24px;
+      }
+
+      .tab-label {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+
+.person-form {
+  max-width: 500px;
+  margin-left: 20px 0 20px 0;
+  padding: 20px;
+  background: #2c2c2c;
+  border-radius: 8px;
+  color: white;
+
+  h2 {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+
+      input[type="text"],
+      input[type="email"],
+      input[type="date"] {
+        margin-top: 5px;
+        padding: 8px;
+        border-radius: 4px;
+        border: none;
+      }
+    }
+
+    .checkbox-label {
+      flex-direction: row;
+      align-items: left;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #444;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+
+      &:hover {
+        background-color: #666;
+      }
+
+      &:disabled {
+        background-color: #333;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  justify-content: flex-end;
+  margin-left: auto;
+  color: #999;
+}
+
+.header-icon {
+  font-size: 32px;
+  cursor: pointer;
+  color: white;
+
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.header-icon:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.profile-icon {
+  font-size: 36px;
+  color: white;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.profile-icon:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.header-name {
+  font-size: 16px;
+  font-weight: 500;
+}

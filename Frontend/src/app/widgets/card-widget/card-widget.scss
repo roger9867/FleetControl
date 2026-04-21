@@ -1,0 +1,19 @@
+#map {
+    width: 800px;
+    height: 600px;
+    border: 1px solid #2a2b33;
+    border-radius: 20px;
+    flex-shrink: 0;
+    background-color: #2b2d30;
+
+  }
+
+.leaflet-tile {
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+    background-color: #1e1e1e;
+}
+
+.leaflet-tile-container {
+    background: #1e1e1e;
+}
