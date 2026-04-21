@@ -102,9 +102,6 @@
         <mxCell id="B5ItKrPx_Q8lwCRuAPn2-32" parent="1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontStyle=1;fontColor=light-dark(#000000,#D4D4D4);fontFamily=Tahoma;" value="Backend" vertex="1">
           <mxGeometry height="40" width="100" x="-290" y="350" as="geometry" />
         </mxCell>
-        <mxCell id="B5ItKrPx_Q8lwCRuAPn2-33" parent="1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontStyle=1;fontColor=light-dark(#000000,#D4D4D4);fontFamily=Tahoma;" value="UI" vertex="1">
-          <mxGeometry height="40" width="100" x="-570" y="160" as="geometry" />
-        </mxCell>
         <mxCell id="B5ItKrPx_Q8lwCRuAPn2-35" parent="1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;fontStyle=1;fontColor=light-dark(#000000,#D4D4D4);fontFamily=Tahoma;" value="MCU" vertex="1">
           <mxGeometry height="40" width="100" x="-580" y="350" as="geometry" />
         </mxCell>
