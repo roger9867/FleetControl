@@ -1,0 +1,12 @@
+# Build directories
+build/
+cmake-build-debug/
+
+# Python virtual environment
+venv/
+
+# Documentation
+doc/
+
+# Modules
+Modules/
