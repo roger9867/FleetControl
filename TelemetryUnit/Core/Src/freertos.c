@@ -161,7 +161,7 @@ void startCommandHandler(void *argument)
   /* Infinite loop */
   for(;;) {
     
-    uart_check_command(&huart2);
+    //uart_check_command(&huart2);
     osDelay(1);
   }
   /* USER CODE END startCommandHandler */
