@@ -1,0 +1,34 @@
+<h1 class="header">Datenerfassungseinheiten</h1>
+
+<div class="container">
+
+  <div class="main">
+
+    <!-- Neuer Button -->
+    <button class="create-btn">
+      Neu anlegen
+    </button>
+
+    <div class="list">
+      <div
+        class="box"
+        *ngFor="let item of items; let i = index"
+        (click)="selectItem(i)"
+        [class.active]="selectedIndex === i"
+      >
+
+        <div>
+          <strong>{{ item }}</strong>
+
+          <div class="details" *ngIf="selectedIndex === i">
+            Extra details for this item<br>
+            More info here<br>
+            Even more content
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

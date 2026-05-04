@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
 
@@ -9,6 +10,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
+    provideHttpClient(),
     provideEchartsCore({ echarts })
   ]
 };

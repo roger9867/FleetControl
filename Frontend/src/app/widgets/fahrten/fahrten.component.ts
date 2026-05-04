@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CardWidget } from '../card-widget/card-widget';
+import { CardWidget } from '../card-widget/card-widget.component';
 
 @Component({
   selector: 'app-layout',

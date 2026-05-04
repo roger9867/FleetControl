@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "E6nlqlvIbvo=",
+  "dgSpecHash": "8Guthwlhy4w=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/backend/FleetControlServer.Domain/FleetControlServer.Domain.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/FleetControlServer.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

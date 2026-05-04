@@ -1,0 +1,11 @@
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/bin/Debug/net10.0/FleetControlServer.Domain.deps.json
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/bin/Debug/net10.0/FleetControlServer.Domain.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/bin/Debug/net10.0/FleetControlServer.Domain.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/FleetControlServer.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/FleetControlServer.Domain.AssemblyInfoInputs.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/FleetControlServer.Domain.AssemblyInfo.cs
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/FleetControlServer.Domain.csproj.CoreCompileInputs.cache
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/FleetControlServer.Domain.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/refint/FleetControlServer.Domain.dll
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/FleetControlServer.Domain.pdb
+/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Domain/obj/Debug/net10.0/ref/FleetControlServer.Domain.dll

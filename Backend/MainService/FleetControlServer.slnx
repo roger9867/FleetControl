@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="FleetControlServer.Api/FleetControlServer.Api.csproj" />
+  <Project Path="FleetControlServer.Data/FleetControlServer.Data.csproj" />
+  <Project Path="FleetControlServer.Domain/FleetControlServer.Domain.csproj" />
+  <Project Path="FleetControlServer.Infra/FleetControlServer.Infra.csproj" />
+  <Project Path="FleetControlServer.Service/FleetControlServer.Service.csproj" />
+</Solution>

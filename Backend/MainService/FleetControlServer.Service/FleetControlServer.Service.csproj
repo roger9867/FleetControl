@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FleetControlServer.Data\FleetControlServer.Data.csproj" />
+    <ProjectReference Include="..\FleetControlServer.Domain\FleetControlServer.Domain.csproj" />
+    <ProjectReference Include="..\FleetControlServer.Infra\FleetControlServer.Infra.csproj" />
+  </ItemGroup>
+
+</Project>
