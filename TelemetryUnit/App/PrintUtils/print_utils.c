@@ -1,7 +1,7 @@
 #include "print_utils.h"
 
 
-oid uprints(UART_HandleTypeDef* huart, const char* message) {
+void uprints(UART_HandleTypeDef* huart, const char* message) {
     uint32_t count = 0;
     char* current_pos = message;
     while (*current_pos != '\0') {

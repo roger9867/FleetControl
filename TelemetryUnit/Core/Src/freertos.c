@@ -25,9 +25,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "../../Modules/I2c/i2c_scanner.h"
-#include "../../Modules/MPU6050/mpu6050.h"
-#include "../../Modules/UsbConfig/usb_config.h"
+#include "../../App/PrintUtils/print_utils.h"
+#include "../../App/GetDeviceId/get_device_id.h"
+#include "usart.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -161,7 +162,7 @@ void startCommandHandler(void *argument)
   /* Infinite loop */
   for(;;) {
     
-    //uart_check_command(&huart2);
+    check_for_device_id_request_command(&huart2);
     osDelay(1);
   }
   /* USER CODE END startCommandHandler */
