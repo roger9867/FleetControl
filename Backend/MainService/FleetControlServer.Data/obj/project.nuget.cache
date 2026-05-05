@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vmHM3yVRkOw=",
+  "dgSpecHash": "zEYh4MZB9sk=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Data/FleetControlServer.Data.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Data/FleetControlServer.Data.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.build/17.7.2/microsoft.build.17.7.2.nupkg.sha512",
@@ -59,9 +59,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -71,9 +71,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"

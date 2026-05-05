@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CFEW+zWguDQ=",
+  "dgSpecHash": "huBF4eHK/lg=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Api/FleetControlServer.Api.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Api/FleetControlServer.Api.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.aspnetcore.openapi/10.0.3/microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",

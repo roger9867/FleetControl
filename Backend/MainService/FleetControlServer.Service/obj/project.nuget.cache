@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/MUp1TFdRqE=",
+  "dgSpecHash": "4hF8I84OFB4=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/smartlock/backend/FleetControlServer.Service/FleetControlServer.Service.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Service/FleetControlServer.Service.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/microsoft.entityframeworkcore/10.0.0/microsoft.entityframeworkcore.10.0.0.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.0/microsoft.entityframeworkcore.abstractions.10.0.0.nupkg.sha512",

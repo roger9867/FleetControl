@@ -888,6 +888,8 @@
       },
       "FleetControlServer.Service/1.0.0": {
         "dependencies": {
+          "FleetControlServer.Data": "1.0.0",
+          "FleetControlServer.Domain": "1.0.0",
           "FleetControlServer.Infra": "1.0.0"
         },
         "runtime": {

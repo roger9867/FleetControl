@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FleetControlServer.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260504213505_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260505125954_RemoveNotNUll")]
+    partial class RemoveNotNUll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
