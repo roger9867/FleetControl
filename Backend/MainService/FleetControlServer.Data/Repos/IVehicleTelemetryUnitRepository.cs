@@ -4,9 +4,11 @@ namespace FleetControlServer.Data.Repos;
 
 public interface IVehicleTelemetryUnitRepository
 {
-    Task CreateAsync(VehicleTelemetryUnit entity);
+    Task CreateAsync(TelemetryUnit entity);
 
-    Task<List<VehicleTelemetryUnit>> GetAllAsync();
+    Task<List<TelemetryUnit>> GetAllAsync();
     
     Task<bool> ExistsAsync(Guid id);
+
+    Task<bool> DeleteAsync(Guid id);
 }

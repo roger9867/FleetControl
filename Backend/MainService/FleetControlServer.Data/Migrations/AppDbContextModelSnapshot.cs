@@ -22,21 +22,25 @@ namespace FleetControlServer.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FleetControlServer.Domain.DriversLicense", b =>
+            modelBuilder.Entity("FleetControlServer.Domain.TelemetryUnit", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("LicenseType")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("VehicleDriverId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("VehicleClass")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("VehicleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DriversLicense");
+                    b.HasIndex("VehicleDriverId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("TelemetryUnits");
                 });
 
             modelBuilder.Entity("FleetControlServer.Domain.Vehicle", b =>
@@ -49,9 +53,6 @@ namespace FleetControlServer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("LicenseNeededToDriveId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("LicensePlateNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -62,9 +63,7 @@ namespace FleetControlServer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LicenseNeededToDriveId");
-
-                    b.ToTable("Vehicle");
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("FleetControlServer.Domain.VehicleDriver", b =>
@@ -97,40 +96,19 @@ namespace FleetControlServer.Data.Migrations
                     b.ToTable("VehicleDrivers");
                 });
 
-            modelBuilder.Entity("FleetControlServer.Domain.VehicleTelemetryUnit", b =>
+            modelBuilder.Entity("FleetControlServer.Domain.TelemetryUnit", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("VehicleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("VehicleTelemetryUnits");
-                });
-
-            modelBuilder.Entity("FleetControlServer.Domain.Vehicle", b =>
-                {
-                    b.HasOne("FleetControlServer.Domain.DriversLicense", "LicenseNeededToDrive")
+                    b.HasOne("FleetControlServer.Domain.VehicleDriver", "VehicleDriver")
                         .WithMany()
-                        .HasForeignKey("LicenseNeededToDriveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VehicleDriverId");
 
-                    b.Navigation("LicenseNeededToDrive");
-                });
-
-            modelBuilder.Entity("FleetControlServer.Domain.VehicleTelemetryUnit", b =>
-                {
                     b.HasOne("FleetControlServer.Domain.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId");
 
                     b.Navigation("Vehicle");
+
+                    b.Navigation("VehicleDriver");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,8 +11,22 @@ public class AppDbContext : DbContext
     {
     }
     
-    public DbSet<VehicleTelemetryUnit> VehicleTelemetryUnits { get; set; }
-    
+    public DbSet<TelemetryUnit> TelemetryUnits { get; set; }
     public DbSet<VehicleDriver> VehicleDrivers { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
+    
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        /*
+        modelBuilder.Entity<Vehicle>()
+            //.HasOne(v => v.LicenseNeededToDrive)
+            ((.WithMany()
+            .HasForeignKey(v => v.LicenseNeededToDriveId)
+            .IsRequired(false);
+            */
+    }
     
 }

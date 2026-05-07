@@ -18,7 +18,7 @@ builder.Services.AddScoped<IUsbVehicleTelemetryUnit, UsbVehicleTelemetryUnit>();
 builder.Services.AddScoped<
     IVehicleTelemetryUnitRepository,
     VehicleTelemetryUnitRepository>();
-builder.Services.AddScoped<VehicleTelemetryUnitService>();
+builder.Services.AddScoped<TelemetryUnitService>();
 
 builder.Services.AddControllers();
 
