@@ -28,15 +28,10 @@ namespace FleetControlServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("VehicleDriverId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("VehicleId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VehicleDriverId");
 
                     b.HasIndex("VehicleId");
 
@@ -61,7 +56,18 @@ namespace FleetControlServer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("VehicleDriverId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("IdentificationNumber")
+                        .IsUnique();
+
+                    b.HasIndex("LicensePlateNumber")
+                        .IsUnique();
+
+                    b.HasIndex("VehicleDriverId");
 
                     b.ToTable("Vehicles");
                 });
@@ -98,15 +104,18 @@ namespace FleetControlServer.Data.Migrations
 
             modelBuilder.Entity("FleetControlServer.Domain.TelemetryUnit", b =>
                 {
-                    b.HasOne("FleetControlServer.Domain.VehicleDriver", "VehicleDriver")
-                        .WithMany()
-                        .HasForeignKey("VehicleDriverId");
-
                     b.HasOne("FleetControlServer.Domain.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId");
 
                     b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("FleetControlServer.Domain.Vehicle", b =>
+                {
+                    b.HasOne("FleetControlServer.Domain.VehicleDriver", "VehicleDriver")
+                        .WithMany()
+                        .HasForeignKey("VehicleDriverId");
 
                     b.Navigation("VehicleDriver");
                 });

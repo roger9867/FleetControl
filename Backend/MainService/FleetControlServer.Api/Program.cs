@@ -2,6 +2,7 @@ using FleetControlServer.Data;
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Infra;
 using FleetControlServer.Service;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -15,10 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Dependeny Injection
 // -----------------------------
 builder.Services.AddScoped<IUsbVehicleTelemetryUnit, UsbVehicleTelemetryUnit>();
-builder.Services.AddScoped<
-    IVehicleTelemetryUnitRepository,
-    VehicleTelemetryUnitRepository>();
+builder.Services.AddScoped<ITelemetryUnitRepository, TelemetryUnitRepository>();
+builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<TelemetryUnitService>();
+builder.Services.AddScoped<VehicleService>();
 
 builder.Services.AddControllers();
 
@@ -52,6 +53,29 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     ));
 
 var app = builder.Build();
+
+
+// Global exception handler
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exception = context.Features
+            .Get<IExceptionHandlerFeature>()?
+            .Error;
+
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/problem+json";
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            title = "Internal Server Error",
+            status = 500,
+            detail = exception?.Message
+        });
+    });
+});
+
 
 // ----------------------------------
 // Middleware Swagger

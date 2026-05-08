@@ -9,11 +9,11 @@ namespace FleetControlServer.Service;
 public class TelemetryUnitService
 {
     private readonly IUsbVehicleTelemetryUnit _usbTelemetryUnit;
-    private readonly IVehicleTelemetryUnitRepository _repository;
+    private readonly ITelemetryUnitRepository _repository;
 
     public TelemetryUnitService(
         IUsbVehicleTelemetryUnit usbTelemetryUnit, 
-        IVehicleTelemetryUnitRepository repository
+        ITelemetryUnitRepository repository
         ) {
         _usbTelemetryUnit = usbTelemetryUnit;
         _repository =  repository;

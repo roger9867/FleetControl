@@ -20,13 +20,13 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        /*
         modelBuilder.Entity<Vehicle>()
-            //.HasOne(v => v.LicenseNeededToDrive)
-            ((.WithMany()
-            .HasForeignKey(v => v.LicenseNeededToDriveId)
-            .IsRequired(false);
-            */
+               .HasIndex(v => v.IdentificationNumber)
+               .IsUnique();
+           
+           modelBuilder.Entity<Vehicle>()
+               .HasIndex(v => v.LicensePlateNumber)
+               .IsUnique();
     }
     
 }

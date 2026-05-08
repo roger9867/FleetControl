@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FleetControlServer.Data.Repos;
 
-public class VehicleTelemetryUnitRepository : IVehicleTelemetryUnitRepository
+public class TelemetryUnitRepository : ITelemetryUnitRepository
 {
     private readonly AppDbContext _context;
 
-    public VehicleTelemetryUnitRepository(AppDbContext context)
+    public TelemetryUnitRepository(AppDbContext context)
     {
         _context = context;
     }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FleetControlServer.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2d6be566ad4ae9184641d36fceb1af1cc490a06")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+89b8243ff9e0989256bd92378b52a8b08f3045fb")]
 [assembly: System.Reflection.AssemblyProductAttribute("FleetControlServer.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FleetControlServer.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

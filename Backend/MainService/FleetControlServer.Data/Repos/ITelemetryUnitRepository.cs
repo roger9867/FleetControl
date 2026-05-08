@@ -2,7 +2,7 @@ using FleetControlServer.Domain;
 
 namespace FleetControlServer.Data.Repos;
 
-public interface IVehicleTelemetryUnitRepository
+public interface ITelemetryUnitRepository
 {
     Task CreateAsync(TelemetryUnit entity);
 
