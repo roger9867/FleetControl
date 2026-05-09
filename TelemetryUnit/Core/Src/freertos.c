@@ -24,9 +24,9 @@
 #include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "../../App/PrintUtils/print_utils.h"
 #include "../../App/GetDeviceId/get_device_id.h"
+#include "../../App/SIM7600EH/sim7600eh.h"
 #include "usart.h"
 
 /* USER CODE END Includes */
@@ -128,13 +128,29 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+    sim7600_gnss_on(&huart3);
+    osDelay(5000); 
+    sim7600_gnss_nmea_start(&huart3);
   /* Infinite loop */
   for(;;) 
   {
+    //confirm_connection(&huart2, &huart3);
+    /* 
+    HAL_UART_Transmit(&huart3,
+      (uint8_t*)"AT+CGNSSPWR=1\r\n",
+      16,
+      HAL_MAX_DELAY);
+      */
+
+   
+    sim7600_get_gps(&huart2, &huart3);
+    osDelay(2000);
+
+    //sim7600_gnss_nmea_start();
     /*
     char uuid[64];
     stm32_get_uid_uuid(uuid);
-
+    
     uprints(&huart2, "STM32 UID: ");
 
     uprints(&huart2, uuid);
@@ -142,9 +158,12 @@ void StartDefaultTask(void *argument)
 
     mpu6050_print_raw(&hi2c1, &huart2);
     */
+    HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);
+    
+    //uprints(&huart2, "Hello");
     //HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-    //HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-    osDelay(500);
+    osDelay(1000);
+
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -159,10 +178,10 @@ void StartDefaultTask(void *argument)
 void startCommandHandler(void *argument)
 {
   /* USER CODE BEGIN startCommandHandler */
+  
   /* Infinite loop */
   for(;;) {
-    
-    check_for_device_id_request_command(&huart2);
+    //check_for_device_id_request_command(&huart2);
     osDelay(1);
   }
   /* USER CODE END startCommandHandler */

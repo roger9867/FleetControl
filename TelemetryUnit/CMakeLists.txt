@@ -49,6 +49,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     App/PrintUtils/print_utils.c
     App/GetDeviceId/get_device_id.c
     App/GetDeviceId/device_id_as_uuid.c
+    App/SIM7600EH/sim7600eh.c
 )
 
 # Add include paths

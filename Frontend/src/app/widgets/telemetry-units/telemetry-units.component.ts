@@ -15,7 +15,7 @@ export class TelemetryUnits {
   items: string[] = [];
 
   ngOnInit() {
-    this.getAllTelemetryUnits();
+    this.loadAllTelemetryUnits();
   }
 
   selectedIndex: number | null = null;
@@ -23,4 +23,12 @@ export class TelemetryUnits {
   selectItem(index: number) {
     this.selectedIndex = this.selectedIndex === index ? null : index;
   }
+
+  loadAllTelemetryUnits() {
+    this.service.getItems()
+      .subscribe(res => {
+        this.items = res ?? [];
+      });
+  }
 }
+   

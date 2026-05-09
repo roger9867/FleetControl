@@ -95,6 +95,7 @@ int main(void)
   MX_RTC_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   //set_config(&hi2c1);
   /* USER CODE END 2 */
