@@ -128,9 +128,13 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-    sim7600_gnss_on(&huart3);
-    osDelay(5000); 
-    sim7600_gnss_nmea_start(&huart3);
+// ----------------------------------------------------------
+  //    sim7600_gnss_on(&huart3);
+  //    osDelay(5000); 
+  //    sim7600_gnss_nmea_start(&huart3);
+// ----------------------------------------------------------
+  sim7600_lte_init(&huart3);
+  uprints(&huart2, "Modem initialized\r\n");
   /* Infinite loop */
   for(;;) 
   {
@@ -142,10 +146,11 @@ void StartDefaultTask(void *argument)
       HAL_MAX_DELAY);
       */
 
-   
-    sim7600_get_gps(&huart2, &huart3);
-    osDelay(2000);
-
+    sim7600_lte_status(&huart3, &huart2);
+    // ----------------------------------------------------------  
+    //sim7600_get_gps(&huart2, &huart3);
+    //osDelay(2000);
+    // ----------------------------------------------------------
     //sim7600_gnss_nmea_start();
     /*
     char uuid[64];
@@ -191,4 +196,3 @@ void startCommandHandler(void *argument)
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
-

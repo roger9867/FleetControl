@@ -1,4 +1,4 @@
-#include "sim7600eh.h"
+#include "gnss.h"
 
 void my_memset(uint8_t *buf, uint8_t value, uint32_t len)
 {
@@ -138,19 +138,13 @@ void sim7600_get_gps(UART_HandleTypeDef* pc,
     uint8_t c;
     uint16_t idx = 0;
 
-    // --------------------------------------------------
     // RX flush
-    // --------------------------------------------------
     while (HAL_UART_Receive(sim, &c, 1, 10) == HAL_OK) {}
 
-    // --------------------------------------------------
     // Command senden
-    // --------------------------------------------------
     HAL_UART_Transmit(sim, cmd, sizeof(cmd) - 1, HAL_MAX_DELAY);
 
-    // --------------------------------------------------
     // Antwort sammeln
-    // --------------------------------------------------
     uint32_t start = HAL_GetTick();
     uint32_t timeout = 5000;
 
