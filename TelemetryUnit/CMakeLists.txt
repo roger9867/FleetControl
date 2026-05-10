@@ -11,9 +11,7 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -21,7 +19,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME TelemetryUnit)
+project(${CMAKE_PROJECT_NAME} C CXX ASM)
 
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
@@ -30,8 +28,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 project(${CMAKE_PROJECT_NAME})
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
-# Enable CMake support for ASM, C and C++ languages
-enable_language(C CXX ASM)
+# Enable CMake support for ASM and C languages
+enable_language(C ASM)
 
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
@@ -46,10 +44,9 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    App/PrintUtils/print_utils.c
-    App/GetDeviceId/get_device_id.c
-    App/GetDeviceId/device_id_as_uuid.c
-    App/SIM7600EH/sim7600eh.c
+    # Add user sources here
+    Api/test.cpp
+    Api/BlinkCounter.cpp
 )
 
 # Add include paths
@@ -60,27 +57,6 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
-)
-
-# Add embedded c++ flags
-target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE
-    -ffunction-sections
-    -fdata-sections
-    -Wall
-    -Wextra
-    -Wpedantic
-
-    $<$<COMPILE_LANGUAGE:CXX>:
-        -fno-exceptions
-        -fno-rtti
-        -fno-threadsafe-statics
-        -fno-use-cxa-atexit
-    >
-)
-
-# Activate linker garbage collection
-target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
-    -Wl,--gc-sections
 )
 
 # Remove wrong libob.a library dependency when using cpp files

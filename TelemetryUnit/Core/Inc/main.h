@@ -57,35 +57,24 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Tuser_Pin GPIO_PIN_13
-#define Tuser_GPIO_Port GPIOC
-#define LED1_Pin GPIO_PIN_0
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_1
-#define LED2_GPIO_Port GPIOC
-#define LED4_Pin GPIO_PIN_5
-#define LED4_GPIO_Port GPIOA
-#define LED3_Pin GPIO_PIN_10
-#define LED3_GPIO_Port GPIOB
-#define T2_Pin GPIO_PIN_8
-#define T2_GPIO_Port GPIOA
-#define T3_Pin GPIO_PIN_9
-#define T3_GPIO_Port GPIOA
-#define T4_Pin GPIO_PIN_10
-#define T4_GPIO_Port GPIOA
+#define B1_Pin GPIO_PIN_13
+#define B1_GPIO_Port GPIOC
+#define B1_EXTI_IRQn EXTI15_10_IRQn
+#define USART_TX_Pin GPIO_PIN_2
+#define USART_TX_GPIO_Port GPIOA
+#define USART_RX_Pin GPIO_PIN_3
+#define USART_RX_GPIO_Port GPIOA
+#define LD2_Pin GPIO_PIN_5
+#define LD2_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
-#define LED4B4_Pin GPIO_PIN_4
-#define LED4B4_GPIO_Port GPIOB
+#define SWO_Pin GPIO_PIN_3
+#define SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define PIN_STATE_HIGH 1
-#define PIN_STATE_LOW 0
-#define bool uint8_t
-#define true 1
-#define false 0
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
