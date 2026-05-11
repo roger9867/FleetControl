@@ -45,13 +45,18 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-    Api/test.cpp
-    Api/BlinkCounter.cpp
+    # Api/test.cpp
+    Platform/Uart.cpp
+    Platform/SIM7600EH/sim7600eh_interface.cpp
+    Platform/SIM7600EH/sim7600eh.cpp
+    App/Telemetry/telemetry_point.cpp
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    # App
+    # Platform/SIM7600EH
 )
 
 # Add project symbols (macros)

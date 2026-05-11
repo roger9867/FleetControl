@@ -69,6 +69,9 @@ void confirm_connection(UART_HandleTypeDef* pc,
 }
 
 
+
+
+
 void sim7600_gnss_on(UART_HandleTypeDef* sim)
 {
     uint8_t cmd1[] = "AT+CGNSSPWR=1\r\n";

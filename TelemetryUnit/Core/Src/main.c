@@ -23,7 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "../../Api/test.h"
+#include "../../Platform/SIM7600EH/sim7600eh_interface.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,8 +89,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  activate_gnss();
+  gnss_nmea_start();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -97,9 +100,32 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    
-    cpp_test();
-    HAL_Delay(500);
+    /*
+    char ip[32];
+    if (get_ip(ip, sizeof(ip)))
+    {
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+    }    
+    HAL_Delay(2000);*/
+     const char* gnss = get_gnss();
+     if (gnss)
+    {
+        HAL_UART_Transmit(
+            &huart2,
+            (uint8_t*)gnss,
+            strlen(gnss),
+            HAL_MAX_DELAY
+        );
+
+        uint8_t nl[] = "\r\n";
+        HAL_UART_Transmit(
+            &huart2,
+            nl,
+            sizeof(nl) - 1,
+            HAL_MAX_DELAY
+        );
+    }
+    HAL_Delay(2000);
 
     /* USER CODE BEGIN 3 */
   }

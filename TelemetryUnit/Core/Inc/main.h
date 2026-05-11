@@ -74,7 +74,11 @@ void Error_Handler(void);
 #define SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+#define PIN_STATE_HIGH 1
+#define PIN_STATE_LOW 0
+#define bool uint8_t
+#define true 1
+#define false 0
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
