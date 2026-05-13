@@ -79,12 +79,10 @@
       </div>
 
       <div *ngIf="activeTab === 'Fahrzeuge'">
-        <h1>Fahrzeuge</h1>
-        <p>Hier stehen deine Fahrzeuge.</p>
+        <app-vehicles></app-vehicles>
       </div>
 
-      <div *ngIf="activeTab === 'Datenerfassunseinheiten'">
-        <h1>Personen</h1>
+      <div *ngIf="activeTab === 'Datenerfassungseinheiten'">
         <app-telemetry-units></app-telemetry-units>
       </div>
 

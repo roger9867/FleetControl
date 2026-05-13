@@ -1,8 +1,13 @@
-﻿namespace FleetControlServer.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FleetControlServer.Domain;
 
 public class TelemetryUnit
 {
-    public Guid Id { get; set; } =  Guid.Empty;
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public Guid Id { get; set; }
     
     public Guid? VehicleId { get; set; }
     public Vehicle? Vehicle { get; set; }

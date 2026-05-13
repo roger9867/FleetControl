@@ -47,9 +47,16 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     # Api/test.cpp
     Platform/Uart.cpp
+    Platform/SIM7600EH/at_buffer.cpp
     Platform/SIM7600EH/sim7600eh_interface.cpp
     Platform/SIM7600EH/sim7600eh.cpp
-    App/Telemetry/telemetry_point.cpp
+    # App/Telemetry/telemetry_point.cpp
+    App/Network/network_fsm.cpp
+    App/Network/gnss_fsm.cpp
+    Platform/PrintUtils/print_utils.c
+    App/Network/interface.cpp
+    Platform/GetDeviceId/get_device_id.c
+    Platform/GetDeviceId/device_id_as_uuid.c
 )
 
 # Add include paths

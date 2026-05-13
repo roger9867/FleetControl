@@ -25,7 +25,6 @@ namespace FleetControlServer.Data.Migrations
             modelBuilder.Entity("FleetControlServer.Domain.TelemetryUnit", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("VehicleId")

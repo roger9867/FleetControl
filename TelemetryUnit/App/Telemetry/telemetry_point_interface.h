@@ -13,3 +13,4 @@ const char* get_gnss();
 #ifdef __cplusplus
 }
 #endif
+

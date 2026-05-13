@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { CardWidget } from '../../widgets/card-widget/card-widget.component';
 import { LayoutComponent } from '../../widgets/fahrten/fahrten.component';
 import { TelemetryUnits } from '../../widgets/telemetry-units/telemetry-units.component';
+import { Vehicles } from '../../widgets/vehicles/vehicles.component';
+
 
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 
@@ -12,7 +14,14 @@ import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardWidget, LayoutComponent, TelemetryUnits ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CardWidget,
+    LayoutComponent,
+    TelemetryUnits,
+    Vehicles
+  ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
@@ -42,7 +51,7 @@ person = {
     };
   }
 
-  tabs = ['Statistik', 'Fahrten', 'Fahrzeuge',  'Datenerfassunseinheiten', 'Personen'];
+  tabs = ['Statistik', 'Fahrten', 'Fahrzeuge',  'Datenerfassungseinheiten', 'Personen'];
   activeTab = 'Fahrten';
 
   selectTab(tab: string) {
@@ -76,7 +85,7 @@ person = {
 
   uuids: string[] = [];
 
-   sendBroadcast() {
+  sendBroadcast() {
   console.log('SEND START');
 
   this.telemetryUnitService.broadcastCommand()

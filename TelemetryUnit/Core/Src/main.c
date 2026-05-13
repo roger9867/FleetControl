@@ -18,13 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "../../Platform/SIM7600EH/sim7600eh_interface.h"
-#include <string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +50,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -91,41 +92,22 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  activate_gnss();
-  gnss_nmea_start();
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-    /*
-    char ip[32];
-    if (get_ip(ip, sizeof(ip)))
-    {
-      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    }    
-    HAL_Delay(2000);*/
-     const char* gnss = get_gnss();
-     if (gnss)
-    {
-        HAL_UART_Transmit(
-            &huart2,
-            (uint8_t*)gnss,
-            strlen(gnss),
-            HAL_MAX_DELAY
-        );
-
-        uint8_t nl[] = "\r\n";
-        HAL_UART_Transmit(
-            &huart2,
-            nl,
-            sizeof(nl) - 1,
-            HAL_MAX_DELAY
-        );
-    }
-    HAL_Delay(2000);
 
     /* USER CODE BEGIN 3 */
   }

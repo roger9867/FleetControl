@@ -44,7 +44,7 @@ public class TelemetryUnitController : ControllerBase
     }
 
     
-    [HttpGet("telemetryunits")]
+    [HttpGet("TelemetryUnits")]
     public async Task<IActionResult> GetAllVehicleTelemetryUnits()
     {
         List<TelemetryUnitDto> responses = await _service.GetAllAsync();

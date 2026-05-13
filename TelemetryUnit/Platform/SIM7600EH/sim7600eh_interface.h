@@ -6,12 +6,12 @@
 extern "C" {
 #endif
 
-bool lte_init();
+bool check_connection();
 bool sim_check();
 bool check_network();
 bool check_signal();
 bool check_attach();
-bool set_apn(const char* apn);
+bool set_apn();
 bool activate_pdp();
 bool get_ip(char* out_ip, uint16_t max_len);
 

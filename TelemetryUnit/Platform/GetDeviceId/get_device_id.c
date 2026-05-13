@@ -1,4 +1,5 @@
 #include "get_device_id.h"
+#include "../PrintUtils/print_utils.h"
 
 
 #define CMD_BUF_SIZE 32

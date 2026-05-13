@@ -17,4 +17,7 @@ class TelemetryFsm
     private:
         TelemetryState current_state = TelemetryState::Idle;
         TelemetryState next_state = TelemetryState::Idle;
+
+        bool is_network_ready();
+        bool is_gnss_ready();
 };

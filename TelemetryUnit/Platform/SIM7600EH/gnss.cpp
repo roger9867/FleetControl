@@ -8,27 +8,20 @@ void my_memset(uint8_t *buf, uint8_t value, uint32_t len)
     }
 }
 
-void confirm_connection(UART_HandleTypeDef* pc,
-                        UART_HandleTypeDef* sim)
+void confirm_connection()
 {
     uint8_t cmd[] = "AT\r\n";
     uint8_t c;
     uint8_t buffer[80];
     uint8_t idx = 0;
 
-    // --------------------------------------------------
     // RX komplett flushen (WICHTIG)
-    // --------------------------------------------------
     while (HAL_UART_Receive(sim, &c, 1, 10) == HAL_OK) {}
 
-    // --------------------------------------------------
     // AT senden
-    // --------------------------------------------------
     HAL_UART_Transmit(sim, cmd, sizeof(cmd) - 1, 1000);
 
-    // --------------------------------------------------
     // Response sammeln
-    // --------------------------------------------------
     uint32_t start = HAL_GetTick();
     uint32_t timeout = 2000;
 
@@ -39,11 +32,7 @@ void confirm_connection(UART_HandleTypeDef* pc,
         {
             buffer[idx++] = c;
 
-
-
-            // --------------------------------------------------
             // stabile End-Erkennung (nicht CRLF!)
-            // --------------------------------------------------
             if (idx >= 2)
             {
                 // OK erkannt
@@ -72,59 +61,83 @@ void confirm_connection(UART_HandleTypeDef* pc,
 
 
 
-void sim7600_gnss_on(UART_HandleTypeDef* sim)
+void Sim7600::gnss_on()
 {
     uint8_t cmd1[] = "AT+CGNSSPWR=1\r\n";
     uint8_t cmd2[] = "AT+CGPS=1\r\n";
 
-    HAL_UART_Transmit(sim, cmd1, sizeof(cmd1) - 1, HAL_MAX_DELAY);
+    huart_sim.write(cmd1, sizeof(cmd1) - 1);
     osDelay(1000);
 
-    HAL_UART_Transmit(sim, cmd2, sizeof(cmd2) - 1, HAL_MAX_DELAY);
+    huart_sim.write(cmd2, sizeof(cmd2) - 1);
     osDelay(1000);
+
+    uint8_t msg[] = "[GNSS] ON\r\n";
+    huart_debug.write(msg, sizeof(msg) - 1);
 }
 
-void sim7600_gnss_status(UART_HandleTypeDef* pc,
-                         UART_HandleTypeDef* sim)
+void Sim7600::gnss_status()
 {
     uint8_t cmd[] = "AT+CGNSSINFO\r\n";
-    uint8_t buf[128];
+
+    uint8_t buf[128] = {0};
     uint8_t c;
+
     uint16_t i = 0;
 
     // RX flush
-    while (HAL_UART_Receive(sim, &c, 1, 10) == HAL_OK) {}
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
-    HAL_UART_Transmit(sim, cmd, sizeof(cmd) - 1, HAL_MAX_DELAY);
+    // Command senden
+    huart_sim.write(cmd, sizeof(cmd) - 1);
 
     uint32_t start = HAL_GetTick();
 
     while ((HAL_GetTick() - start) < 3000 &&
            i < sizeof(buf) - 1)
     {
-        if (HAL_UART_Receive(sim, &c, 1, 100) == HAL_OK)
+        if (huart_sim.read(&c, 1, 100) == HAL_OK)
         {
             buf[i++] = c;
 
+            // Auf "OK" prüfen
             if (i >= 2 &&
-                buf[i-2] == 'O' &&
-                buf[i-1] == 'K')
+                buf[i - 2] == 'O' &&
+                buf[i - 1] == 'K')
+            {
                 break;
+            }
         }
+
+        osDelay(1);
     }
 
     buf[i] = '\0';
 
-    HAL_UART_Transmit(pc, buf, i, HAL_MAX_DELAY);
+    // Ausgabe auf Debug UART
+    huart_debug.write(buf, i);
+
     uint8_t msg[] = "\r\n[GNSS INFO]\r\n";
-    HAL_UART_Transmit(pc, msg, sizeof(msg) - 1, HAL_MAX_DELAY);
+    huart_debug.write(msg, sizeof(msg) - 1);
 }
 
-void sim7600_gnss_nmea_start(UART_HandleTypeDef* sim)
+void Sim7600::gnss_nmea_start()
 {
+    osDelay(1000);
     uint8_t cmd[] = "AT+CGNSTST=1\r\n";
-    HAL_UART_Transmit(sim, cmd, sizeof(cmd) - 1, HAL_MAX_DELAY);
+
+    huart_sim.write(cmd, sizeof(cmd) - 1);
+
+    uint8_t msg[] = "[GNSS] NMEA STREAM STARTED\r\n";
+    huart_debug.write(msg, sizeof(msg) - 1);
 }
+
+
+
+
+
+
+
 
 void sim7600_gnss_stop(UART_HandleTypeDef* sim)
 {

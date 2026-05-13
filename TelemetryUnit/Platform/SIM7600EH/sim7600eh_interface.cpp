@@ -2,14 +2,11 @@
 #include "sim7600eh.hpp"
 #include "usart.h"
 
-static Uart uart_sim(&huart3);
-static Uart uart_debug(&huart2);
+static Sim7600 sim;
 
-static Sim7600 sim(&uart_sim, &uart_debug);
-
-extern "C" bool lte_init()
+extern "C" bool check_connection()
 {
-    sim.lte_init();
+    return sim.check_connection();
 }
 
 extern "C" bool sim_check()
@@ -32,9 +29,9 @@ extern "C" bool check_attach()
     return sim.check_attach() ? true : false;
 }
 
-extern "C" bool set_apn(const char* apn)
+extern "C" bool set_apn()
 {
-    return sim.set_apn(apn) ? true : false;
+    return sim.set_apn() ? true : false;
 }
 
 extern "C" bool activate_pdp()
@@ -48,7 +45,7 @@ extern "C" bool get_ip(char* out_ip, uint16_t max_len)
 }
 
 ////////////////////////////////////////////////////////////////////////
-
+/*
 extern "C" bool activate_gnss()
 {
     return sim.activate_gnss() ? true : false;
@@ -63,3 +60,4 @@ extern "C" const char* get_gnss()
 {
     return sim.get_gnss();
 }
+*/

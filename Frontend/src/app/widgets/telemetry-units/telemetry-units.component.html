@@ -1,34 +1,83 @@
+
 <h1 class="header">Datenerfassungseinheiten</h1>
 
 <div class="container">
-
   <div class="main">
 
-    <!-- Neuer Button -->
-    <button class="create-btn">
-      Neu anlegen
+    <!-- Toolbar -->
+    <div class="toolbar">
+
+  <!-- Neuer Button -->
+  <button class="create-btn"
+          (click)="createUnit()"
+          [disabled]="!selectedUnitId">
+    Neu anlegen
+  </button>
+
+  <!-- Dropdown + Refresh -->
+  <div class="dropdown-wrapper">
+
+    <select class="dropdown"
+            [(ngModel)]="selectedUnitId">
+
+      <option [ngValue]="null" disabled>
+        Verbundenes Gerät registrieren
+      </option>
+
+      <option *ngFor="let unit of usb_connected_units"
+              [value]="unit.id">
+
+        {{ unit.id }}
+
+      </option>
+
+    </select>
+
+    <!-- Refresh Icon -->
+    <button class="refresh-btn"
+            (click)="sendBroadcast()">
+
+      <span class="material-symbols-outlined">
+        refresh
+      </span>
+
     </button>
 
+  </div>
+
+</div>
+
     <div class="list">
-      <div
-        class="box"
-        *ngFor="let item of items; let i = index"
-        (click)="selectItem(i)"
-        [class.active]="selectedIndex === i"
-      >
 
-        <div>
-          <strong>{{ item }}</strong>
+  <div *ngIf="registered_units.length === 0">
+    Keine Datenerfassungseinheiten registriert.
+  </div>
 
-          <div class="details" *ngIf="selectedIndex === i">
-            Extra details for this item<br>
-            More info here<br>
-            Even more content
-          </div>
+  <div class="box"
+     *ngFor="let item of registered_units; let i = index"
+     (click)="selectItem(i)"
+     [class.active]="selectedIndex === i">
 
-        </div>
-      </div>
+  <div class="title">
+    Geräte-ID: {{ item.id }}
+  
+  </div>
+  <div class="details" *ngIf="selectedIndex === i">
+
+    <div>
+      Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
     </div>
+
+    <div>
+      Fahrzeug-ID: {{ item.vehicleId || 'nicht verbunden' }}
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
 
   </div>
 </div>
