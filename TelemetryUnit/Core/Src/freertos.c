@@ -51,13 +51,17 @@ typedef StaticSemaphore_t osStaticMutexDef_t;
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
+volatile bool led_state = false;
+volatile bool armed = false;
+volatile bool last_pin = true;
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh1,
 };
 /* Definitions for CommandHandler */
 osThreadId_t CommandHandlerHandle;
@@ -116,7 +120,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
+  
   /* USER CODE END Init */
   /* Create the mutex(es) */
   /* creation of huart_sim_mutex */
@@ -175,9 +179,29 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-  for(;;)
-  {
-  }
+  bool armed = false;
+  bool last_pin = true;
+
+for (;;)
+{
+    bool pin = HAL_GPIO_ReadPin(UserButton_GPIO_Port, UserButton_Pin);
+
+    if (pin == PIN_STATE_LOW)
+    {
+        armed = true;
+    }
+
+    if (armed && last_pin == PIN_STATE_LOW && pin == PIN_STATE_HIGH)
+    {
+        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+        armed = false;
+        led_state = !led_state;
+    }
+
+    last_pin = pin;
+
+    osDelay(1);
+}
   /* USER CODE END StartDefaultTask */
 }
 
@@ -194,7 +218,10 @@ void start_command_handler(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    check_for_device_id_request_command(&huart2);
+    //if (led_state)
+    //{
+      check_for_device_id_request_command(&huart2);
+    //}
     osDelay(1);
   }
   /* USER CODE END start_command_handler */
@@ -232,10 +259,11 @@ void start_network_fsm(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    
-    gnss_fsm_step();
-    HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    
+    if (!led_state)
+    {
+      gnss_fsm_step();
+    }
+    //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
     osDelay(1000);
   }
   /* USER CODE END start_network_fsm */
