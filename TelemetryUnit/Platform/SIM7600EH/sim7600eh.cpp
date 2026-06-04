@@ -71,7 +71,7 @@ bool Sim7600::check_sim()
     uint8_t cmd[] = "AT+CPIN?\r\n";
     uint8_t response[128] = {0};
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -80,7 +80,7 @@ bool Sim7600::check_sim()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 1000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     if (!ok)
     {
@@ -104,7 +104,7 @@ bool Sim7600::check_network()
     uint8_t cmd[] = "AT+CREG?\r\n";
     uint8_t response[128] = {0};
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -113,7 +113,7 @@ bool Sim7600::check_network()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     if (!ok)
     {
@@ -135,7 +135,7 @@ bool Sim7600::check_signal()
     uint8_t cmd[] = "AT+CSQ\r\n";
     uint8_t response[128] = {0};
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -144,7 +144,7 @@ bool Sim7600::check_signal()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     if (!ok)
     {
@@ -178,7 +178,7 @@ bool Sim7600::check_attach()
     uint8_t cmd[] = "AT+CGATT?\r\n";
     uint8_t response[128] = {0};
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -187,7 +187,7 @@ bool Sim7600::check_attach()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     if (!ok)
     {
@@ -211,7 +211,7 @@ bool Sim7600::set_apn()
     snprintf((char*)cmd, sizeof(cmd),
              "AT+CGDCONT=1,\"IP\",\"%s\"\r\n", APN_TOKEN);
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -220,7 +220,7 @@ bool Sim7600::set_apn()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     return ok && strstr((char*)response, "OK");
 }
@@ -230,7 +230,7 @@ bool Sim7600::activate_pdp()
     uint8_t cmd[] = "AT+CGACT=1,1\r\n";
     uint8_t response[128] = {0};
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -239,7 +239,7 @@ bool Sim7600::activate_pdp()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 5000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     return ok && strstr((char*)response, "OK");
 }
@@ -250,7 +250,7 @@ bool Sim7600::get_ip(char* out_ip, uint16_t max_len)
     uint8_t cmd[] = "AT+CGPADDR\r\n";
     uint8_t response[128] = {0};
 
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -259,7 +259,7 @@ bool Sim7600::get_ip(char* out_ip, uint16_t max_len)
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 3000) == HAL_OK);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     if (!ok)
         return false;
@@ -310,7 +310,7 @@ bool Sim7600::activate_gnss()
     uint8_t cmd2[] = "AT+CGPS=1\r\n";
 
     // GNSS Power ON
-    huart_sim.acquire();
+    //huart_sim.acquire();
     huart_sim.write(cmd1, sizeof(cmd1)-1);
     HAL_Delay(1000);
 
@@ -318,17 +318,17 @@ bool Sim7600::activate_gnss()
     huart_sim.write(cmd2, sizeof(cmd2)-1);
     HAL_Delay(1000);
 
-    huart_sim.release();
+    //huart_sim.release();
 
     return true;
 }
 
 bool Sim7600::gnss_nmea_start()
 {
-    huart_sim.acquire();
+    //huart_sim.acquire();
     uint8_t cmd[] = "AT+CGNSTST=1\r\n";
     huart_sim.write(cmd, sizeof(cmd)-1);
-    huart_sim.release();
+    //huart_sim.release();
     return true;
 }
 
@@ -338,7 +338,7 @@ bool Sim7600::gnss_nmea_start()
 
 void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
 {
-    huart_sim.acquire();
+    //huart_sim.acquire();
 
     uint8_t cmd[] = "AT+CGNSSINFO\r\n";
 
@@ -353,9 +353,9 @@ void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
 
     // Sicherheit
     buffer[buffer_length - 1] = '\0';
-    huart_sim.release();
+    //huart_sim.release();
 
-    huart_debug.acquire();
+    //huart_debug.acquire();
     // Debug Ausgabe
     huart_debug.write(
         buffer,
@@ -368,7 +368,7 @@ void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
         msg,
         sizeof(msg) - 1
     );
-    huart_debug.release();
+    //huart_debug.release();
 }
 
 
@@ -380,7 +380,7 @@ bool Sim7600::has_fix()
 
     // Prefix finden
     char* p = strstr((char*)buffer, "+CGNSSINFO:");
-    huart_debug.acquire();
+    //huart_debug.acquire();
 
     if (p == nullptr)
     {
@@ -392,7 +392,7 @@ bool Sim7600::has_fix()
             msg,
             sizeof(msg) - 1
         );
-        huart_debug.release();
+        //huart_debug.release();
         return false;
     }
 
@@ -409,7 +409,7 @@ bool Sim7600::has_fix()
             sizeof(msg) - 1
         );
 
-        huart_debug.release();
+        //huart_debug.release();
         return false;
     }
 
@@ -423,7 +423,7 @@ bool Sim7600::has_fix()
             msg,
             sizeof(msg) - 1
         );
-        huart_debug.release();
+        //huart_debug.release();
         return true;
     }
 
@@ -435,6 +435,6 @@ bool Sim7600::has_fix()
         sizeof(msg) - 1
     );
 
-    huart_debug.release();
+    //huart_debug.release();
     return false;
 }

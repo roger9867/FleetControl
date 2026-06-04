@@ -2,6 +2,10 @@
 
 #include "../Uart.hpp"
 #include "at_buffer.hpp"
+#include "cmsis_os.h"
+
+extern osMutexId_t huart_sim_mutexHandle;
+extern osMutexId_t huart_debug_mutexHandle;
 
 class Sim7600
 {
@@ -27,8 +31,8 @@ class Sim7600
         void get_gnss(uint8_t* buffer, uint16_t buffer_length);
         bool has_fix();
 
-        Uart huart_sim = Uart(&huart3, );
-        Uart huart_debug = Uart(&huart2, );
+        Uart huart_sim = Uart(&huart3, huart_sim_mutexHandle);
+        Uart huart_debug = Uart(&huart2, huart_debug_mutexHandle);
         AtBuffer at_buffer;
 
         void on_uart_rx(uint8_t c);

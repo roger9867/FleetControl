@@ -1,6 +1,6 @@
 #include "Uart.hpp"
 
-Uart::Uart(UART_HandleTypeDef* _huart, osMutexId_t huart_sim_mutexHandle)
+Uart::Uart(UART_HandleTypeDef* _huart, osMutexId_t& huart_sim_mutexHandle)
     : huart(_huart), mutex(huart_sim_mutexHandle)
 {
     //init();
@@ -16,6 +16,8 @@ HAL_StatusTypeDef Uart::read(
 
     uint32_t start = HAL_GetTick();
 
+    acquire();
+
     while ((HAL_GetTick() - start) < timeout_ms && idx < (max_len - 1))
     {
         if (HAL_UART_Receive(huart, &c, 1, 10) == HAL_OK)
@@ -24,6 +26,8 @@ HAL_StatusTypeDef Uart::read(
             start = HAL_GetTick();
         }
     }
+
+    release();
 
     buffer[idx] = '\0';
 
@@ -40,6 +44,7 @@ HAL_StatusTypeDef Uart::readRaw(
 
     uint32_t start = HAL_GetTick();
 
+    acquire();
     while ((HAL_GetTick() - start) < timeout_ms && idx < max_len)
     {
         if (HAL_UART_Receive(huart, &c, 1, 10) == HAL_OK)
@@ -47,6 +52,7 @@ HAL_StatusTypeDef Uart::readRaw(
             buffer[idx++] = c;
         }
     }
+    release();
 
     return (idx > 0) ? HAL_OK : HAL_TIMEOUT;
 }
@@ -56,17 +62,24 @@ HAL_StatusTypeDef Uart::write(
     uint16_t len,
     uint32_t timeout_ms)
 {
-    return HAL_UART_Transmit(huart, data, len, timeout_ms);
+    acquire();
+
+    HAL_StatusTypeDef status =
+        HAL_UART_Transmit(huart, data, len, timeout_ms);
+
+    release();
+
+    return status;
 }
 
 void Uart::acquire()
 {
-    //osMutexAcquire(mutex, osWaitForever);
+    osMutexAcquire(mutex, osWaitForever);
 }
 
 void Uart::release()
 {
-    //osMutexRelease(mutex);
+    osMutexRelease(mutex);
 }
 
 /*

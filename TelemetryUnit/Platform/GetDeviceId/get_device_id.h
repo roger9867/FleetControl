@@ -2,6 +2,9 @@
 #define __GET_DEVICE_ID_H__
 
 #include "device_id_as_uuid.h"
+#include "cmsis_os.h"
+
+extern osMutexId_t huart_debug_mutexHandle;
 
 /**
  * @brief Checks UART input for incoming commands and processes them.

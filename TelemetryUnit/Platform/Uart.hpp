@@ -5,10 +5,13 @@
 #include "usart.h"
 #include "cmsis_os.h"
 
+extern osMutexId_t huart_sim_mutexHandle;
+extern osMutexId_t huart_debug_mutexHandle;
+
 class Uart
 {
 public:
-    Uart(UART_HandleTypeDef* _huart, osMutexId_t huart_sim_mutexHandle);
+    Uart(UART_HandleTypeDef* _huart, osMutexId_t& huart_sim_mutexHandle);
 
     HAL_StatusTypeDef read(
         uint8_t* buffer,
@@ -28,12 +31,14 @@ public:
         uint32_t timeout_ms = HAL_MAX_DELAY
     );
 
-    void acquire();
-    void release();
+    
 
 
 private:
     UART_HandleTypeDef* huart;
-    osMutexId_t mutex;
+    osMutexId_t& mutex;
+
+    void acquire();
+    void release();
     //void init();
 };

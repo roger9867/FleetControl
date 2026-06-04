@@ -53,18 +53,10 @@ case GnssState::GnssReady:
         sizeof(msg) - 1
     );
 
-    // ------------------------------------------------
     // Prüfen ob GNSS Fix vorhanden
-    // ------------------------------------------------
-
     bool fix = gnss_module.has_fix();
 
-    // ------------------------------------------------
-    // Timeout Überwachung
-    // Wenn 60 Sekunden lang kein Fix:
-    // -> Error State
-    // ------------------------------------------------
-
+    // Timeout
     static uint32_t no_fix_start = 0;
 
     if (fix)

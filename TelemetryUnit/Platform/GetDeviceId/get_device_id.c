@@ -14,45 +14,66 @@ char cmd_buffer[CMD_BUF_SIZE+1];
 char uuid_device[UUID_SIZE+1];
 
 
-void check_for_device_id_request_command(UART_HandleTypeDef* huartx) {
+void check_for_device_id_request_command(UART_HandleTypeDef* huartx)
+{
     uint8_t byte_read;
     uint8_t bytes_read_count = 0;
 
-    while(true) {
-        if (HAL_UART_Receive(huartx, &byte_read, 1, HAL_MAX_DELAY) == HAL_OK){
+    while (true)
+    {
+        // ❌ KEIN Mutex um Receive
+        if (HAL_UART_Receive(huartx, &byte_read, 1, HAL_MAX_DELAY) == HAL_OK)
+        {
+            if (byte_read == '\n' || byte_read == '\r')
+            {
+                if (bytes_read_count == 0)
+                {
+                    continue;
+                }
 
-            // Check for possible end line chararcters
-            if (byte_read == '\n' || byte_read == '\r') {
                 cmd_buffer[bytes_read_count] = '\0';
 
-                if (is_get_id_command(cmd_buffer, bytes_read_count)) {
+                if (is_get_id_command(cmd_buffer, bytes_read_count))
+                {
                     stm32_get_uid_as_uuid(uuid_device);
 
-                    // Send uid as formatted UUID over UART
-                    HAL_UART_Transmit(
-                        huartx,
-                        (uint8_t*)uuid_device,
-                        36,
-                        HAL_MAX_DELAY
-                    );
+                    osMutexAcquire(huart_debug_mutexHandle, osWaitForever);
 
-                    // Clean termination
-                    HAL_UART_Transmit(
-                        huartx,
-                        (uint8_t*)"\r\n",
-                        2,
-                        HAL_MAX_DELAY
-                    );
+                    HAL_UART_Transmit(huartx,
+                                      (uint8_t*)uuid_device,
+                                      36,
+                                      HAL_MAX_DELAY);
+
+                    HAL_UART_Transmit(huartx,
+                                      (uint8_t*)"\r\n",
+                                      2,
+                                      HAL_MAX_DELAY);
+
+                    osMutexRelease(huart_debug_mutexHandle);
                 }
-                else {
-                    uprints(huartx, "Unknown command\r\n");
+                else
+                {
+                    osMutexAcquire(huart_debug_mutexHandle, osWaitForever);
+
+                    HAL_UART_Transmit(huartx,
+                                      (uint8_t*)"Unknown command\r\n",
+                                      18,
+                                      HAL_MAX_DELAY);
+
+                    osMutexRelease(huart_debug_mutexHandle);
                 }
 
                 bytes_read_count = 0;
             }
-            else {
-                if (bytes_read_count < sizeof(cmd_buffer)-1) {
+            else
+            {
+                if (bytes_read_count < sizeof(cmd_buffer) - 1)
+                {
                     cmd_buffer[bytes_read_count++] = byte_read;
+                }
+                else
+                {
+                    bytes_read_count = 0;
                 }
             }
         }
