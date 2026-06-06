@@ -262,9 +262,10 @@ void start_network_fsm(void *argument)
     if (!led_state)
     {
       gnss_fsm_step();
+      network_fsm_step();
     }
     //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    osDelay(1000);
+    osDelay(500);
   }
   /* USER CODE END start_network_fsm */
 }

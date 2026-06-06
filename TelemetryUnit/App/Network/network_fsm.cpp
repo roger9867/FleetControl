@@ -46,6 +46,11 @@ void NetworkFSM::step()
 
                 current_state = NetworkState::NetworkIdle;
             }
+            else 
+            {
+                const char msg[] = "[FSM] Network READY\r\n";
+                network_module.huart_debug.write((uint8_t*)msg, strlen(msg));
+            }
             break;
         }
 
