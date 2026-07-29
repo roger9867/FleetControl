@@ -40,10 +40,26 @@ class Sim7600
         void send_cmd(const char* cmd);
 
 
+        bool mqtt_start();
+        bool mqtt_create_client();
+        bool mqtt_connect();
+        bool mqtt_disconnect();
+        bool mqtt_publish(const char* payload);
+        bool is_mqtt_connected();
+        bool mqtt_stop();
+
+
     private:
         const char* APN_TOKEN = "internet";
+        const char* TOPIC_NAME = "drivedata";
+        const char* IP_BROKER = "74.248.185.45";
+        const char* MQTT_USER = "mqttuser";
+        const char* MQTT_PASSWORD = "hihohihe1967";
+        uint32_t PORT_BROKER = 1883;
 
         void memset(uint8_t *buf, uint8_t value, uint32_t len);
+        bool wait_for_char(char token, uint32_t timeout);
+
 
 
 };

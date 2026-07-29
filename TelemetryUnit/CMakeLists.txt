@@ -45,18 +45,18 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-    # Api/test.cpp
+    App/Gnss/gnss_fsm.cpp
+    App/Gnss/interface.cpp
+    App/Network/interface.cpp
+    App/Network/network_fsm.cpp
+
+    Platform/GetDeviceId/get_device_id.c
+    Platform/GetDeviceId/device_id_as_uuid.c
     Platform/Uart.cpp
     Platform/SIM7600EH/at_buffer.cpp
     Platform/SIM7600EH/sim7600eh_interface.cpp
     Platform/SIM7600EH/sim7600eh.cpp
-    # App/Telemetry/telemetry_point.cpp
-    App/Network/network_fsm.cpp
-    App/Network/gnss_fsm.cpp
     Platform/PrintUtils/print_utils.c
-    App/Network/interface.cpp
-    Platform/GetDeviceId/get_device_id.c
-    Platform/GetDeviceId/device_id_as_uuid.c
 )
 
 # Add include paths

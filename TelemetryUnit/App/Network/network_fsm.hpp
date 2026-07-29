@@ -1,16 +1,7 @@
 #pragma once
 
 #include "../../Platform/SIM7600EH/sim7600eh.hpp"
-
-enum class NetworkState
-{
-    NetworkIdle,
-    NetworkConnecting,
-    NetworkReady,
-    NetworkMqttConnected,
-    NetworkError
-};
-
+#include "./network_states.hpp"
 
 class NetworkFSM
 {

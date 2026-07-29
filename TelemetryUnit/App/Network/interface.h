@@ -3,7 +3,6 @@ extern "C" {
 #endif
 
 void network_fsm_step();
-void gnss_fsm_step();
 
 #ifdef __cplusplus
 }

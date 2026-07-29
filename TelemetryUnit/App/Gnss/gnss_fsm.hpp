@@ -1,21 +1,20 @@
 #pragma once
 
-enum class GnssState
-{
-    Idle,
-    Enabled,
-    Started,
-    Error
-};
+#include "../../Platform/SIM7600EH/sim7600eh.hpp"
+#include "./gnss_states.hpp"
 
 
-class GnssFsm
+
+class GnssFSM
 {
     public:
-        void start_gnss_fsm();
-        GnssState get_current_state();
+        GnssState get_state();
+        void step();
+
+        explicit GnssFSM(Sim7600& _gnss_module);
 
     private:
-        GnssState current_state = GnssState::Idle;
-        GnssState next_state = GnssState::Idle;
+        GnssState current_state = GnssState::GnssIdle;
+
+        Sim7600& gnss_module;    // referenz, da keine Null probleme
 };

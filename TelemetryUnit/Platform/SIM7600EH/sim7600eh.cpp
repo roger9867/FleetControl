@@ -438,3 +438,240 @@ bool Sim7600::has_fix()
     //huart_debug.release();
     return false;
 }
+
+
+///////////////////////////////////////////////
+
+
+bool Sim7600::mqtt_start()
+{
+    uint8_t cmd[] = "AT+CMQTTSTART\r\n";
+    uint8_t response[128] = {0};
+
+    const char msg[] = "[MQTT] START\r\n";
+    huart_debug.write((uint8_t*)msg, strlen(msg));
+
+    uint8_t c;
+    //while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
+    huart_sim.write(cmd, sizeof(cmd)-1);
+
+    bool ok = (huart_sim.read(response,
+                              sizeof(response)-1,
+                              2000) == HAL_OK);
+
+    huart_debug.write(response, strlen((char*)response));
+
+    return ok && strstr((char*)response, "OK") != nullptr;
+}
+
+
+bool Sim7600::mqtt_create_client()
+{
+    uint8_t cmd[] = "AT+CMQTTACCQ=0,\"client1\"\r\n";
+    uint8_t response[128] = {0};
+
+    const char msg[] = "[MQTT] CREATE CLIENT\r\n";
+    huart_debug.write((uint8_t*)msg, strlen(msg));
+
+    uint8_t c;
+    //while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
+    huart_sim.write(cmd, sizeof(cmd)-1);
+
+    bool ok = (huart_sim.read(response,
+                              sizeof(response)-1,
+                              1000) == HAL_OK);
+
+    huart_debug.write(response, strlen((char*)response));
+
+    return ok && strstr((char*)response, "OK") != nullptr;
+}
+
+
+bool Sim7600::mqtt_connect()
+{
+    const char msg[] = "[MQTT] Connecting broker\r\n";
+    huart_debug.write((uint8_t*)msg, strlen(msg));
+
+    uint8_t cmd[128];
+    uint8_t response[256] = {0};
+
+    snprintf((char*)cmd,
+             sizeof(cmd),
+             "AT+CMQTTCONNECT=0,\"tcp://%s:%lu\",60,1,\"%s\",\"%s\"\r\n",
+             IP_BROKER,
+             (unsigned long)PORT_BROKER,
+             MQTT_USER,
+             MQTT_PASSWORD);
+
+
+    huart_sim.write(cmd, strlen((char*)cmd));
+
+
+    bool ok = (huart_sim.read(response,
+                              sizeof(response)-1,
+                              3000)==HAL_OK);
+
+
+    huart_debug.write(response,
+                      strlen((char*)response));
+
+
+    if(ok && strstr((char*)response,"OK"))
+    {
+        const char done[]="[MQTT] Broker connected\r\n";
+        huart_debug.write((uint8_t*)done,strlen(done));
+
+        return true;
+    }
+
+    const char fail[]="[MQTT] Broker connection FAILED\r\n";
+    huart_debug.write((uint8_t*)fail,strlen(fail));
+
+    return false;
+}
+
+
+bool Sim7600::mqtt_stop()
+{
+    uint8_t cmd[] = "AT+CMQTTSTOP\r\n";
+    uint8_t response[128] = {0};
+
+    uint8_t c;
+    //while (huart_sim.read(&c,1,10)==HAL_OK){}
+
+    huart_sim.write(cmd, sizeof(cmd)-1);
+
+    bool ok = (huart_sim.read(response,sizeof(response)-1,5000)==HAL_OK);
+
+    return ok && strstr((char*)response,"OK");
+}
+
+
+
+bool Sim7600::mqtt_disconnect()
+{
+    uint8_t response[128] = {0};
+    uint8_t c;
+
+    // UART leeren
+    // while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
+    const char msg[] = "[MQTT] Disconnect\r\n";
+    huart_debug.write((uint8_t*)msg, strlen(msg));
+
+    // 1. Broker trennen
+    uint8_t cmd_disc[] = "AT+CMQTTDISC=0,60\r\n";
+    huart_sim.write(cmd_disc, sizeof(cmd_disc) - 1);
+    huart_sim.read(response, sizeof(response) - 1, 3000);
+    huart_debug.write(response, strlen((char*)response));
+
+    memset(response, 0, sizeof(response));
+
+    // 2. Client freigeben
+    uint8_t cmd_rel[] = "AT+CMQTTREL=0\r\n";
+    huart_sim.write(cmd_rel, sizeof(cmd_rel) - 1);
+    huart_sim.read(response, sizeof(response) - 1, 3000);
+    huart_debug.write(response, strlen((char*)response));
+
+    memset(response, 0, sizeof(response));
+
+    // 3. MQTT-Service stoppen
+    uint8_t cmd_stop[] = "AT+CMQTTSTOP\r\n";
+    huart_sim.write(cmd_stop, sizeof(cmd_stop) - 1);
+    huart_sim.read(response, sizeof(response) - 1, 3000);
+    huart_debug.write(response, strlen((char*)response));
+
+    return true;
+}
+
+
+bool Sim7600::mqtt_publish(const char* payload)
+{
+    uint8_t cmd[64];
+    uint8_t response[128] = {0};
+
+
+    snprintf((char*)cmd,
+             sizeof(cmd),
+             "AT+CMQTTTOPIC=0,%u\r\n",
+             (unsigned)strlen(TOPIC_NAME));
+
+    huart_sim.write(cmd, strlen((char*)cmd));
+
+    if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
+        return false;
+
+
+    huart_sim.write((uint8_t*)TOPIC_NAME, strlen(TOPIC_NAME));
+
+    memset(response,0,sizeof(response));
+
+    if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
+        return false;
+
+
+    snprintf((char*)cmd,
+             sizeof(cmd),
+             "AT+CMQTTPAYLOAD=0,%u\r\n",
+             (unsigned)strlen(payload));
+
+    huart_sim.write(cmd, strlen((char*)cmd));
+
+    memset(response,0,sizeof(response));
+
+    if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
+        return false;
+
+
+    huart_sim.write((uint8_t*)payload, strlen(payload));
+
+    memset(response,0,sizeof(response));
+
+    if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
+        return false;
+
+
+    uint8_t pub[]="AT+CMQTTPUB=0,1,60\r\n";
+
+    huart_sim.write(pub,sizeof(pub)-1);
+
+    memset(response,0,sizeof(response));
+
+    if (huart_sim.read(response,sizeof(response)-1,2000) != HAL_OK)
+        return false;
+
+
+    return (strstr((char*)response, "OK") != nullptr);
+}
+
+
+
+bool Sim7600::is_mqtt_connected()
+{
+    uint8_t cmd[] = "AT+CMQTTSTATUS?\r\n";
+    uint8_t response[128] = {0};
+
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
+    //huart_sim.write(cmd, sizeof(cmd)-1);
+
+    bool ok = (huart_sim.read(response,
+                              sizeof(response)-1,
+                              3000) == HAL_OK);
+
+    if (!ok)
+        return false;
+
+    huart_debug.write(response, strlen((char*)response));
+
+    // je nach SIM7600 Firmware Status prüfen
+    if (strstr((char*)response, "CONNECTED"))
+    {
+        return true;
+    }
+
+    return false;
+}

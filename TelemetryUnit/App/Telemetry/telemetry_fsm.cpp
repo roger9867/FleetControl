@@ -1,10 +1,16 @@
 #include "telemetry_fsm.hpp"
 
 
-TelemetryFsm::start_fsm()
+TelemetryFsm::fsm_step()
 {
-    for(;;)
+    switch(current_state)
     {
+        case GnssState::Idle : ; break;
 
+        case GnssState::Ready : ; break;
+
+        case GnssState::Driving : ; break;
+
+        case GnssState::Error : ; break;
     }
 }

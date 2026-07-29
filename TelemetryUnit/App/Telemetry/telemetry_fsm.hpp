@@ -12,7 +12,7 @@ enum class TelemetryState
 class TelemetryFsm
 {
     public:
-        void start_fsm();
+        void fsm_step();
 
     private:
         TelemetryState current_state = TelemetryState::Idle;

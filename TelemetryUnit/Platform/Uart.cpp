@@ -1,5 +1,7 @@
 #include "Uart.hpp"
 
+#include <cstring>
+
 Uart::Uart(UART_HandleTypeDef* _huart, osMutexId_t& huart_sim_mutexHandle)
     : huart(_huart), mutex(huart_sim_mutexHandle)
 {
@@ -23,7 +25,22 @@ HAL_StatusTypeDef Uart::read(
         if (HAL_UART_Receive(huart, &c, 1, 10) == HAL_OK)
         {
             buffer[idx++] = c;
+            buffer[idx] = '\0';
+
+            // Timeout zurücksetzen, solange Daten kommen
             start = HAL_GetTick();
+
+            // Prompt zum Senden von Topic/Payload
+            if (strchr((char*)buffer, '>') != nullptr)
+                break;
+
+            // Normale AT-Antwort beendet
+            if (strstr((char*)buffer, "\r\nOK\r\n") != nullptr)
+                break;
+
+            // Fehler beendet ebenfalls
+            if (strstr((char*)buffer, "\r\nERROR\r\n") != nullptr)
+                break;
         }
     }
 

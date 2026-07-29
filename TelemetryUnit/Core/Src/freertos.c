@@ -29,6 +29,7 @@
 #include "../../Platform/GetDeviceId/get_device_id.h"
 //#include <string.h>
 #include "../../App/Network/interface.h"
+#include "../../App/Gnss/interface.h"
 #include "usart.h"
 /* USER CODE END Includes */
 
@@ -265,7 +266,7 @@ void start_network_fsm(void *argument)
       network_fsm_step();
     }
     //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-    osDelay(500);
+    osDelay(1000);
   }
   /* USER CODE END start_network_fsm */
 }
