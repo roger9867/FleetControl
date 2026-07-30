@@ -1,5 +1,6 @@
 #include "telemetry_point.hpp"
 #include "../../Platform/SIM7600EH/sim7600eh.hpp"
+#include "../../Platform/GetDeviceId/device_id_as_uuid.h"
 #include <string.h>
 #include <stdlib.h>
 #include <cstdio>
@@ -78,7 +79,8 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
                 break;
 
             case 11: // speed km/h
-                out.speed_in_kmh = atof(token);
+                float speed_in_knh = atof(token);
+                out.speed_in_kmh = speed_in_knh * 1.852;
                 break;
         }
 
@@ -97,28 +99,84 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
     if (out.latitude != 0.0f || out.longitude != 0.0f)
         out.valid = true;
 
+    // Beschleunigung nur zwischen zwei gültigen Fixes berechnen, sonst
+    // würde ein Loch (kein Fix) fälschlich als starke Verzögerung gewertet.
+    if (out.valid)
+        out.accel_in_ms2 = calculate_accel_in_ms2(out.speed_in_kmh);
+
+    gnss_data = out;
     return out;
 }
 
 
+void TelemetryPoint::format_timestamp(char* out, unsigned out_len)
+{
+    // gnss_data.date is NMEA ddmmyy, gnss_data.time is NMEA hhmmss.sss
+    int day = 0, month = 0, year = 0;
+    int hour = 0, minute = 0, second = 0;
+
+    sscanf(gnss_data.date, "%2d%2d%2d", &day, &month, &year);
+    sscanf(gnss_data.time, "%2d%2d%2d", &hour, &minute, &second);
+
+    snprintf(
+        out,
+        out_len,
+        "20%02d-%02d-%02dT%02d:%02d:%02dZ",
+        year, month, day,
+        hour, minute, second
+    );
+}
+
+float TelemetryPoint::calculate_accel_in_ms2(float new_speed_kmh)
+{
+    uint32_t now = HAL_GetTick();
+    float accel = 0.0f;
+
+    if (prev_tick_ms != 0)
+    {
+        float dt = (now - prev_tick_ms) / 1000.0f;
+
+        if (dt > 0.0f)
+        {
+            float dv = (new_speed_kmh - prev_speed_kmh) / 3.6f; // km/h -> m/s
+            accel = dv / dt;
+        }
+    }
+
+    prev_speed_kmh = new_speed_kmh;
+    prev_tick_ms = now;
+
+    return accel;
+}
+
 const char* TelemetryPoint::to_json()
 {
     // nicht auf stack -> bss / data, persistent
-    static char json[128];
+    static char json[192];
+    char timestamp[32];
 
-     snprintf(
+    if (device_id[0] == '\0')
+        stm32_get_uid_as_uuid(device_id);
+
+    format_timestamp(timestamp, sizeof(timestamp));
+
+    snprintf(
         json,
         sizeof(json),
         "{"
-        "\"time\":\"%s\","
+        "\"device_id\":\"%s\","
+        "\"timestamp_iso_8601\":\"%s\","
         "\"lat\":%.6f,"
         "\"lon\":%.6f,"
-        "\"speed\":%.2f"
+        "\"speed_in_kmh\":%.2f,"
+        "\"accel_in_ms2\":%.3f"
         "}",
-        gnss_data.time,
+        device_id,
+        timestamp,
         gnss_data.latitude,
         gnss_data.longitude,
-        gnss_data.speed_in_kmh
+        gnss_data.speed_in_kmh,
+        gnss_data.accel_in_ms2
     );
 
     return json;

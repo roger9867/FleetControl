@@ -4,6 +4,10 @@
 #include "stm32f1xx_hal.h"
 #include "../PrintUtils/print_utils.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Generates a UUID-formatted string from the STM32 unique device ID.
  *
@@ -16,5 +20,9 @@
  *                 (36 characters + null terminator).
  */
 void stm32_get_uid_as_uuid(char *out);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // __DEVICE_ID_AS_UUID_H__

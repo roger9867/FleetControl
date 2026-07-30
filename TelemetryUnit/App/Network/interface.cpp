@@ -9,3 +9,13 @@ extern "C" void network_fsm_step()
 {
     network_fsm.step();
 }
+
+extern "C" void network_fsm_report_publish_result(bool ok)
+{
+    network_fsm.report_publish_result(ok);
+}
+
+NetworkState network_fsm_get_state()
+{
+    return network_fsm.get_state();
+}

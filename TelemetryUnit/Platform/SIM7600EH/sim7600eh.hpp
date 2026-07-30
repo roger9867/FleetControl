@@ -30,6 +30,7 @@ class Sim7600
         bool gnss_nmea_start();
         void get_gnss(uint8_t* buffer, uint16_t buffer_length);
         bool has_fix();
+        bool get_gnss_fix(uint8_t* buffer, uint16_t buffer_length);
 
         Uart huart_sim = Uart(&huart3, huart_sim_mutexHandle);
         Uart huart_debug = Uart(&huart2, huart_debug_mutexHandle);

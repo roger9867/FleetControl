@@ -49,6 +49,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     App/Gnss/interface.cpp
     App/Network/interface.cpp
     App/Network/network_fsm.cpp
+    App/Telemetry/interface.cpp
+    App/Telemetry/telemetry_fsm.cpp
+    App/Telemetry/telemetry_point.cpp
 
     Platform/GetDeviceId/get_device_id.c
     Platform/GetDeviceId/device_id_as_uuid.c

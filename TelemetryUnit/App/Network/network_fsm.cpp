@@ -3,9 +3,25 @@
 
 #include <cstdio>
 
+namespace
+{
+    constexpr uint32_t HEALTH_CHECK_INTERVAL_MS = 5000;
+    constexpr uint8_t MAX_CONSECUTIVE_PUBLISH_FAILURES = 3;
+}
+
 NetworkFSM::NetworkFSM(Sim7600& _network_module)
 : network_module(_network_module)
 {
+}
+
+NetworkState NetworkFSM::get_state()
+{
+    return current_state;
+}
+
+void NetworkFSM::report_publish_result(bool ok)
+{
+    consecutive_publish_failures = ok ? 0 : (consecutive_publish_failures + 1);
 }
 
 void NetworkFSM::step()
@@ -60,6 +76,8 @@ void NetworkFSM::step()
                 network_module.mqtt_create_client() &&
                 network_module.mqtt_connect())
             {
+                consecutive_publish_failures = 0;
+                last_health_check = HAL_GetTick();
                 current_state = NetworkState::NetworkMqttConnected;
             }
 
@@ -68,23 +86,40 @@ void NetworkFSM::step()
 
         case NetworkState::NetworkMqttConnected:
         {
-            static uint32_t last_publish = 0;
+            // Publishing is owned by TelemetryFsm; this state just stays
+            // connected and ready for it, but we still need to notice when
+            // the modem silently dies (e.g. SIM7600 loses power) so we can
+            // fall back into a clean reinit instead of parking here forever.
+            //
+            // We only trust signals we know are accurate: basic IP
+            // connectivity (AT+CGPADDR, checked periodically) and actual
+            // publish failures reported by TelemetryFsm. There is no
+            // reliable AT+CMQTT*STATUS* query on this modem, so we don't
+            // poll for one.
+            bool lost_connection = false;
 
-            if (HAL_GetTick() - last_publish >= 1000)
+            if (HAL_GetTick() - last_health_check >= HEALTH_CHECK_INTERVAL_MS)
             {
-                last_publish = HAL_GetTick();
+                last_health_check = HAL_GetTick();
 
-                uint32_t t = HAL_GetTick();
+                if (!network_module.is_network_ready())
+                    lost_connection = true;
+            }
 
-                const char msg[] = "[FSM] MQTT SEND\r\n";
+            if (consecutive_publish_failures >= MAX_CONSECUTIVE_PUBLISH_FAILURES)
+                lost_connection = true;
+
+            if (lost_connection)
+            {
+                const char msg[] = "[FSM] Connection lost -> clean reinit\r\n";
                 network_module.huart_debug.write((uint8_t*)msg, strlen(msg));
 
-                network_module.mqtt_publish("222.2222");
+                consecutive_publish_failures = 0;
+                network_module.mqtt_disconnect();
 
-                char buf[64];
-                sprintf(buf, "[FSM] Publish time: %lu ms\r\n", HAL_GetTick() - t);
-                network_module.huart_debug.write((uint8_t*)buf, strlen(buf));
+                current_state = NetworkState::NetworkError;
             }
+
             break;
         }
 

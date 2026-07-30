@@ -440,6 +440,24 @@ bool Sim7600::has_fix()
 }
 
 
+bool Sim7600::get_gnss_fix(uint8_t* buffer, uint16_t buffer_length)
+{
+    get_gnss(buffer, buffer_length);
+
+    char* p = strstr((char*)buffer, "+CGNSSINFO:");
+
+    if (p == nullptr)
+        return false;
+
+    int fix_mode = 0;
+
+    if (sscanf(p, "+CGNSSINFO: %d", &fix_mode) != 1)
+        return false;
+
+    return (fix_mode == 1 || fix_mode == 2);
+}
+
+
 ///////////////////////////////////////////////
 
 
@@ -656,7 +674,7 @@ bool Sim7600::is_mqtt_connected()
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
-    //huart_sim.write(cmd, sizeof(cmd)-1);
+    huart_sim.write(cmd, sizeof(cmd)-1);
 
     bool ok = (huart_sim.read(response,
                               sizeof(response)-1,

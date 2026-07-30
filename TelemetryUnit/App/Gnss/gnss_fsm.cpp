@@ -12,6 +12,16 @@ GnssFSM::GnssFSM(Sim7600& _gnss_module)
 {
 }
 
+const char* GnssFSM::get_last_response()
+{
+    return last_response;
+}
+
+bool GnssFSM::has_valid_fix()
+{
+    return last_fix_valid;
+}
+
 
 void GnssFSM::step()
 {
@@ -53,8 +63,9 @@ case GnssState::GnssReady:
         sizeof(msg) - 1
     );
 
-    // Prüfen ob GNSS Fix vorhanden
-    bool fix = gnss_module.has_fix();
+    // Prüfen ob GNSS Fix vorhanden (und Rohantwort für TelemetryFsm cachen)
+    bool fix = gnss_module.get_gnss_fix((uint8_t*)last_response, sizeof(last_response));
+    last_fix_valid = fix;
 
     // Timeout
     static uint32_t no_fix_start = 0;
@@ -100,6 +111,7 @@ case GnssState::GnssReady:
             );
 
             no_fix_start = 0;
+            last_fix_valid = false;
 
             current_state = GnssState::GnssError;
         }

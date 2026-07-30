@@ -30,6 +30,7 @@
 //#include <string.h>
 #include "../../App/Network/interface.h"
 #include "../../App/Gnss/interface.h"
+#include "../../App/Telemetry/interface.h"
 #include "usart.h"
 /* USER CODE END Includes */
 
@@ -264,6 +265,7 @@ void start_network_fsm(void *argument)
     {
       gnss_fsm_step();
       network_fsm_step();
+      telemetry_fsm_step();
     }
     //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
     osDelay(1000);
