@@ -35,7 +35,10 @@ public class InfluxWriter
             .Measurement("sensor")
             .Tag("deviceId", data.DeviceId)
             .Tag("topic", topic)
-            .Field("value", data.Value)
+            .Field("lat", data.Latitude)
+            .Field("lon", data.Longitude)
+            .Field("speedKmh", data.SpeedKmh)
+            .Field("accelMs2", data.AccelerationMs2)
             .Timestamp(
                 data.Timestamp,
                 InfluxDB.Client.Api.Domain.WritePrecision.Ns);

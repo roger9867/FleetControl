@@ -31,9 +31,12 @@ public class MessageHandler
         });
 
         _logger.LogInformation(
-    "Parsed: DeviceId={deviceId}, Value={value}, Timestamp={timestamp}",
+    "Parsed: DeviceId={deviceId}, Lat={lat}, Lon={lon}, SpeedKmh={speed}, AccelMs2={accel}, Timestamp={timestamp}",
     data?.DeviceId,
-    data?.Value,
+    data?.Latitude,
+    data?.Longitude,
+    data?.SpeedKmh,
+    data?.AccelerationMs2,
     data?.Timestamp);
 
 
@@ -57,9 +60,12 @@ public class MessageHandler
 
 
             _logger.LogInformation(
-                "Event von {device}: {value}",
+                "Event von {device}: lat={lat}, lon={lon}, speed={speed}km/h, accel={accel}m/s2",
                 data.DeviceId,
-                data.Value);
+                data.Latitude,
+                data.Longitude,
+                data.SpeedKmh,
+                data.AccelerationMs2);
 
 
             await _writer.WriteAsync(

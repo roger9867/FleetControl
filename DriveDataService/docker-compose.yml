@@ -16,9 +16,30 @@ services:
       DOCKER_INFLUXDB_INIT_USERNAME: admin
       DOCKER_INFLUXDB_INIT_PASSWORD: geheim123
       DOCKER_INFLUXDB_INIT_ORG: MyOrg
-      DOCKER_INFLUXDB_INIT_BUCKET: Sensors
+      DOCKER_INFLUXDB_INIT_BUCKET: Events
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-secret-token
+
+  ingestionservice:
+    build:
+      context: ./IngestionService/IngestionService
+      dockerfile: Dockerfile
+      network: host
+
+    container_name: ingestionservice
+    network_mode: host
+    depends_on:
+      - influxdb
+    environment:
+      Mqtt__Host: ${MQTT_HOST}
+      Mqtt__Port: ${MQTT_PORT}
+      Mqtt__Username: ${MQTT_USERNAME}
+      Mqtt__Password: ${MQTT_PASSWORD}
+      Mqtt__UseTls: ${MQTT_USE_TLS}
+      Mqtt__Topic: ${MQTT_TOPIC}
+      InfluxDB__Url: http://localhost:8086
+      InfluxDB__Token: ${INFLUXDB_TOKEN}
+      InfluxDB__Org: ${INFLUXDB_ORG}
+      InfluxDB__Bucket: ${INFLUXDB_BUCKET}
 
 volumes:
   influxdb-data:
-  

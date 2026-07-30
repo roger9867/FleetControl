@@ -58,13 +58,28 @@ public class MqttClientService
         };
 
 
-        var options =
+        var optionsBuilder =
             new MqttClientOptionsBuilder()
                 .WithTcpServer(
                     _configuration["Mqtt:Host"],
                     int.Parse(
-                        _configuration["Mqtt:Port"]!))
-                .Build();
+                        _configuration["Mqtt:Port"]!));
+
+        var username = _configuration["Mqtt:Username"];
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            optionsBuilder.WithCredentials(
+                username,
+                _configuration["Mqtt:Password"]);
+        }
+
+        if (bool.TryParse(_configuration["Mqtt:UseTls"], out var useTls) && useTls)
+        {
+            optionsBuilder.WithTlsOptions(o => o.UseTls());
+        }
+
+        var options = optionsBuilder.Build();
 
 
         await _client.ConnectAsync(
