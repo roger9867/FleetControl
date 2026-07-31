@@ -37,6 +37,28 @@ namespace FleetControlServer.Data.Migrations
                     b.ToTable("TelemetryUnits");
                 });
 
+            modelBuilder.Entity("FleetControlServer.Domain.Trip", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("EndTimestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("StartTimestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("TelemetryUnitId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TelemetryUnitId");
+
+                    b.ToTable("Trips");
+                });
+
             modelBuilder.Entity("FleetControlServer.Domain.Vehicle", b =>
                 {
                     b.Property<Guid>("Id")
@@ -108,6 +130,17 @@ namespace FleetControlServer.Data.Migrations
                         .HasForeignKey("VehicleId");
 
                     b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("FleetControlServer.Domain.Trip", b =>
+                {
+                    b.HasOne("FleetControlServer.Domain.TelemetryUnit", "TelemetryUnit")
+                        .WithMany()
+                        .HasForeignKey("TelemetryUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TelemetryUnit");
                 });
 
             modelBuilder.Entity("FleetControlServer.Domain.Vehicle", b =>

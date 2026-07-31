@@ -40,6 +40,7 @@ services:
       InfluxDB__Token: ${INFLUXDB_TOKEN}
       InfluxDB__Org: ${INFLUXDB_ORG}
       InfluxDB__Bucket: ${INFLUXDB_BUCKET}
+      TripService__Address: ${TRIP_SERVICE_ADDRESS}
 
 volumes:
   influxdb-data:

@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  mainservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+
+    container_name: mainservice
+    network_mode: host
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Http__Port: 5000
+      Grpc__Port: 5001
+      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=fleetcontroldb;Username=postgresuser;Password=fleetcontrol"

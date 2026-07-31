@@ -7,11 +7,15 @@ using System.Text;
 
 public class MqttClientService
 {
+    private static readonly TimeSpan ReconnectDelay = TimeSpan.FromSeconds(5);
+
     private readonly IConfiguration _configuration;
     private readonly ILogger<MqttClientService> _logger;
     private readonly MessageHandler _handler;
 
     private IMqttClient? _client;
+    private MqttClientOptions? _options;
+    private CancellationToken _stoppingToken;
 
 
     public MqttClientService(
@@ -31,6 +35,7 @@ public class MqttClientService
         _logger.LogInformation(
             "MqttClientService StartAsync aufgerufen");
 
+        _stoppingToken = token;
 
         var factory = new MqttClientFactory();
 
@@ -58,6 +63,30 @@ public class MqttClientService
         };
 
 
+        _client.DisconnectedAsync += async e =>
+        {
+            if (_stoppingToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _logger.LogError(
+                e.Exception,
+                "MQTT-Verbindung verloren ({reason}), versuche erneut zu verbinden",
+                e.Reason);
+
+            await ConnectWithRetryAsync(
+                _options!,
+                _stoppingToken);
+
+            await _client.SubscribeAsync(
+                _configuration["Mqtt:Topic"]!);
+
+            _logger.LogInformation(
+                "MQTT nach Verbindungsverlust wieder verbunden und Topic neu abonniert");
+        };
+
+
         var optionsBuilder =
             new MqttClientOptionsBuilder()
                 .WithTcpServer(
@@ -79,11 +108,11 @@ public class MqttClientService
             optionsBuilder.WithTlsOptions(o => o.UseTls());
         }
 
-        var options = optionsBuilder.Build();
+        _options = optionsBuilder.Build();
 
 
-        await _client.ConnectAsync(
-            options,
+        await ConnectWithRetryAsync(
+            _options,
             token);
 
 
@@ -93,6 +122,54 @@ public class MqttClientService
 
         _logger.LogInformation(
             "MQTT verbunden");
+    }
+
+
+    private async Task ConnectWithRetryAsync(
+        MqttClientOptions options,
+        CancellationToken token)
+    {
+        var attempt = 0;
+
+        while (true)
+        {
+            attempt++;
+
+            _logger.LogInformation(
+                "MQTT-Verbindungsversuch {attempt} zu {host}:{port}",
+                attempt,
+                _configuration["Mqtt:Host"],
+                _configuration["Mqtt:Port"]);
+
+            try
+            {
+                await _client!.ConnectAsync(
+                    options,
+                    token);
+
+                _logger.LogInformation(
+                    "MQTT-Verbindung erfolgreich nach {attempt} Versuch(en)",
+                    attempt);
+
+                return;
+            }
+            catch (Exception ex) when (!token.IsCancellationRequested)
+            {
+                _logger.LogError(
+                    ex,
+                    "MQTT-Verbindungsversuch {attempt} fehlgeschlagen: {message}",
+                    attempt,
+                    ex.Message);
+
+                _logger.LogInformation(
+                    "Erneuter Verbindungsversuch in {delay}s",
+                    ReconnectDelay.TotalSeconds);
+
+                await Task.Delay(
+                    ReconnectDelay,
+                    token);
+            }
+        }
     }
 
 

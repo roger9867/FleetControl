@@ -1,17 +1,22 @@
 using System.Text.Json;
+using IngestionService.Influx;
 using IngestionService.Models;
+using IngestionService.Trip;
 
 public class MessageHandler
 {
     private readonly InfluxWriter _writer;
+    private readonly TripReactor _tripReactor;
     private readonly ILogger<MessageHandler> _logger;
 
 
     public MessageHandler(
         InfluxWriter writer,
+        TripReactor tripReactor,
         ILogger<MessageHandler> logger)
     {
         _writer = writer;
+        _tripReactor = tripReactor;
         _logger = logger;
     }
 
@@ -68,9 +73,14 @@ public class MessageHandler
                 data.AccelerationMs2);
 
 
+            var state =
+                await _tripReactor.DispatchAsync(
+                    data);
+
             await _writer.WriteAsync(
                 topic,
-                data);
+                data,
+                state);
         }
         catch(Exception ex)
         {

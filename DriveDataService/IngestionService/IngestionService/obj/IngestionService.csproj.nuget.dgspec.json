@@ -44,6 +44,19 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.35.1, )"
+            },
+            "Grpc.Net.Client": {
+              "target": "Package",
+              "version": "[2.80.0, )"
+            },
+            "Grpc.Tools": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.80.0, )"
+            },
             "InfluxDB.Client": {
               "target": "Package",
               "version": "[5.1.0, )"

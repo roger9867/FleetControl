@@ -14,8 +14,9 @@ public class AppDbContext : DbContext
     public DbSet<TelemetryUnit> TelemetryUnits { get; set; }
     public DbSet<VehicleDriver> VehicleDrivers { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
-    
-    
+    public DbSet<Trip> Trips { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -23,10 +24,16 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Vehicle>()
                .HasIndex(v => v.IdentificationNumber)
                .IsUnique();
-           
+
            modelBuilder.Entity<Vehicle>()
                .HasIndex(v => v.LicensePlateNumber)
                .IsUnique();
+
+        modelBuilder.Entity<Trip>()
+            .HasOne(t => t.TelemetryUnit)
+            .WithMany()
+            .HasForeignKey(t => t.TelemetryUnitId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
     
 }

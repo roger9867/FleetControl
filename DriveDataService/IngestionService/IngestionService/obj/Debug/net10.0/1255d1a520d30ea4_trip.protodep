@@ -1,0 +1,3 @@
+obj/Debug/net10.0/Protos/Trip.cs \
+obj/Debug/net10.0/Protos/TripGrpc.cs: /home/roger/.nuget/packages/grpc.tools/2.80.0/build/native/include/google/protobuf/timestamp.proto\
+ Protos/trip.proto

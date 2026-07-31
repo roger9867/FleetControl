@@ -61,3 +61,7 @@
 /home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/obj/Debug/net10.0/IngestionService.pdb
 /home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/obj/Debug/net10.0/IngestionService.genruntimeconfig.cache
 /home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/obj/Debug/net10.0/ref/IngestionService.dll
+/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/bin/Debug/net10.0/Google.Protobuf.dll
+/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/bin/Debug/net10.0/Grpc.Core.Api.dll
+/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/bin/Debug/net10.0/Grpc.Net.Client.dll
+/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/DriveDataService/IngestionService/IngestionService/bin/Debug/net10.0/Grpc.Net.Common.dll

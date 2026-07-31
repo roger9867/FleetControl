@@ -1,54 +1,29 @@
-using InfluxDB.Client;
-using InfluxDB.Client.Writes;
+using System.Threading.Channels;
 using IngestionService.Models;
+using IngestionService.Trip;
 
+namespace IngestionService.Influx;
+
+public record InfluxPoint(string Topic, TelemetryEvent Data, TripState State);
+
+// Nimmt Punkte entgegen, ohne je zu blockieren - das eigentliche Schreiben nach
+// InfluxDB passiert in InfluxWriteWorker, entkoppelt vom MQTT-Verarbeitungspfad.
 public class InfluxWriter
 {
-    private readonly InfluxDBClient _client;
+    private readonly Channel<InfluxPoint> _channel =
+        Channel.CreateUnbounded<InfluxPoint>();
 
-    private readonly string _bucket;
-    private readonly string _org;
-
-
-    public InfluxWriter(
-        IConfiguration config)
-    {
-        _client = new InfluxDBClient(
-            config["InfluxDB:Url"]!,
-            config["InfluxDB:Token"]!);
+    public ChannelReader<InfluxPoint> Reader => _channel.Reader;
 
 
-        _bucket =
-            config["InfluxDB:Bucket"]!;
-
-        _org =
-            config["InfluxDB:Org"]!;
-    }
-
-
-    public async Task WriteAsync(
+    public Task WriteAsync(
         string topic,
-        TelemetryEvent data)
+        TelemetryEvent data,
+        TripState state)
     {
-        var point =
-            PointData
-            .Measurement("sensor")
-            .Tag("deviceId", data.DeviceId)
-            .Tag("topic", topic)
-            .Field("lat", data.Latitude)
-            .Field("lon", data.Longitude)
-            .Field("speedKmh", data.SpeedKmh)
-            .Field("accelMs2", data.AccelerationMs2)
-            .Timestamp(
-                data.Timestamp,
-                InfluxDB.Client.Api.Domain.WritePrecision.Ns);
+        _channel.Writer.TryWrite(
+            new InfluxPoint(topic, data, state));
 
-
-        await _client
-            .GetWriteApiAsync()
-            .WritePointAsync(
-                point,
-                _bucket,
-                _org);
+        return Task.CompletedTask;
     }
 }

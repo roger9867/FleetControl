@@ -1,14 +1,39 @@
+using FleetControlServer.Api.Services;
 using FleetControlServer.Data;
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Infra;
 using FleetControlServer.Service;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Kestrel: Ohne TLS kann ein Port nicht gleichzeitig HTTP/1.1 (REST) und
+// HTTP/2 (gRPC) bedienen - ohne TLS gibt es kein ALPN, über das Kestrel das
+// Protokoll aushandeln könnte, und fällt sonst still auf HTTP/1.1 zurück.
+// Daher REST und gRPC auf getrennten Ports mit je einem Protokoll.
+// Hinweis: Sobald hier ein Endpoint explizit per Code konfiguriert wird,
+// ignoriert Kestrel ASPNETCORE_URLS/launchSettings vollständig - beide Ports
+// müssen deshalb explizit angegeben werden.
+var httpPort = builder.Configuration.GetValue<int?>("Http:Port") ?? 5000;
+var grpcPort = builder.Configuration.GetValue<int?>("Grpc:Port") ?? 5001;
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(httpPort, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1;
+    });
+
+    options.ListenAnyIP(grpcPort, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
+});
 
 
 
@@ -18,10 +43,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IUsbVehicleTelemetryUnit, UsbVehicleTelemetryUnit>();
 builder.Services.AddScoped<ITelemetryUnitRepository, TelemetryUnitRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<TelemetryUnitService>();
 builder.Services.AddScoped<VehicleService>();
+builder.Services.AddScoped<TripService>();
 
 builder.Services.AddControllers();
+builder.Services.AddGrpc();
 
 
 builder.Services.AddCors(options =>
@@ -97,6 +125,9 @@ app.UseCors("AllowAngular");
 
 // Controller routen
 app.MapControllers();
+
+// gRPC Services
+app.MapGrpcService<TripGrpcService>();
 
 
 
