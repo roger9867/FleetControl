@@ -64,6 +64,12 @@ person = {
     this.sidebarClosed = !this.sidebarClosed;
   }
 
+  isDarkMode = true;
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+  }
+
   sidebarTabs = [
     { icon: 'home', label: 'Aktion 1' },
     { icon: 'lock', label: 'Aktion 2'},

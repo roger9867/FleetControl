@@ -1,2 +1,154 @@
 <h1 class="header">Fahrzeuge</h1>
 
+<div class="container">
+  <div class="main">
+
+    <div class="toolbar">
+      <button class="create-btn" (click)="toggleCreateForm()">
+        {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
+      </button>
+    </div>
+
+    <div class="create-form" *ngIf="showCreateForm">
+      <div class="form-grid">
+        <label>
+          Kennzeichen
+          <input type="text" [(ngModel)]="newVehicle.licensePlate">
+        </label>
+
+        <label>
+          Marke
+          <input type="text" [(ngModel)]="newVehicle.brand">
+        </label>
+
+        <label>
+          Modell
+          <input type="text" [(ngModel)]="newVehicle.modelName">
+        </label>
+
+        <label>
+          Baujahr
+          <input type="number" [(ngModel)]="newVehicle.year">
+        </label>
+
+        <label>
+          Fahrzeug-Identnr.
+          <input type="text" [(ngModel)]="newVehicle.identNr">
+        </label>
+
+        <label>
+          Benötigter Führerschein
+          <select [(ngModel)]="newVehicle.requiredLicense">
+            <option value="" disabled>Bitte wählen</option>
+            <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+          </select>
+        </label>
+
+        <label>
+          Leistung (PS)
+          <input type="number" [(ngModel)]="newVehicle.powerPs">
+        </label>
+
+        <label>
+          Farbe
+          <input type="text" [(ngModel)]="newVehicle.color">
+        </label>
+
+        <label>
+          Erstzulassung
+          <input type="date" [(ngModel)]="newVehicle.firstRegistration">
+        </label>
+      </div>
+
+      <button class="save-btn"
+              (click)="createVehicle()"
+              [disabled]="!newVehicle.licensePlate">
+        Speichern
+      </button>
+    </div>
+
+    <div class="list">
+      <div *ngIf="pagedVehicles.length === 0">
+        Keine Fahrzeuge angelegt.
+      </div>
+
+      <div class="box"
+           *ngFor="let vehicle of pagedVehicles; let i = index"
+           (click)="selectItem(i)"
+           [class.active]="selectedIndex === i">
+
+        <div class="title">{{ vehicle.brand }} {{ vehicle.modelName }} - {{ vehicle.identNr }}</div>
+
+        <div class="details" *ngIf="selectedIndex !== i">
+          Baujahr: {{ vehicle.year }}
+        </div>
+
+        <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+          <div>
+            <span>Kennzeichen:</span>
+            <ng-container *ngIf="editingIndex === i; else plateView">
+              <input type="text" class="inline-input" [(ngModel)]="vehicle.licensePlate">
+            </ng-container>
+            <ng-template #plateView>{{ vehicle.licensePlate }}</ng-template>
+          </div>
+
+          <div><span>Marke:</span> {{ vehicle.brand }}</div>
+          <div><span>Modell:</span> {{ vehicle.modelName }}</div>
+          <div><span>Baujahr:</span> {{ vehicle.year }}</div>
+          <div><span>Fahrzeug-Identnr.:</span> {{ vehicle.identNr }}</div>
+          <div><span>Benötigter Führerschein:</span> {{ vehicle.requiredLicense }}</div>
+          <div><span>Leistung:</span> {{ vehicle.powerPs }} PS</div>
+          <div><span>Farbe:</span> {{ vehicle.color }}</div>
+          <div><span>Erstzulassung:</span> {{ vehicle.firstRegistration }}</div>
+
+          <div>
+            <span>Telemetrie-Einheit:</span>
+            <ng-container *ngIf="editingIndex === i; else unitView">
+              <select class="inline-input"
+                      [ngModel]="vehicle.telemetryUnit?.id || ''"
+                      (ngModelChange)="onTelemetryChange(vehicle, $event)">
+                <option value="">nicht verbunden</option>
+                <option *ngFor="let unitId of dummyTelemetryUnits" [value]="unitId">{{ unitId }}</option>
+              </select>
+            </ng-container>
+            <ng-template #unitView>{{ vehicle.telemetryUnit?.id || 'nicht verbunden' }}</ng-template>
+          </div>
+        </div>
+
+        <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+          <button class="action-btn">Löschen</button>
+
+          <div class="actions-right">
+            <button class="action-btn" (click)="collapseItem()">Abbrechen</button>
+            <button class="action-btn" (click)="toggleEdit(i)">
+              {{ editingIndex === i ? 'Fertig' : 'Bearbeiten' }}
+            </button>
+            <button class="action-btn">Fahrten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+  </div>
+</div>

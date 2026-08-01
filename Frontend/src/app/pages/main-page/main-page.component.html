@@ -1,6 +1,6 @@
 <!-- Library imports -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!-- Header for menu bar -->
@@ -20,13 +20,23 @@
   </nav>
 
   <div class="header-right">
+    <!--
     <span class="material-symbols-outlined header-icon">
       settings
     </span>
+    -->
 
+    <span class="material-symbols-outlined header-icon" (click)="toggleTheme()">
+      {{ isDarkMode ? 'dark_mode' : 'light_mode' }}
+    </span>
+
+    <!--
     <span class="material-symbols-outlined profile-icon">
       account_circle
     </span>
+    -->
+
+    <button class="login-btn">Login</button>
   </div>
 
 </header>

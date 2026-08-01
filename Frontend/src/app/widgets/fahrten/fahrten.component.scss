@@ -1,7 +1,7 @@
 .container {
   display: flex;
   min-height: 100vh;
-  transform: translateY(120px);
+  margin-top: 120px;
 
   .sidebar {
     width: 250px;
@@ -11,7 +11,7 @@
     padding: 20px;
     border-radius: 16px;
     border: 1px solid #2a2b33;
-    transform: translateY(18px);
+    margin-top: 18px;
   }
 
   .main {
@@ -83,5 +83,5 @@
   text-align: center;
   color: #72757c;
   margin: 20px 0;
-  transform: translateY(80px);
+  margin-top: 100px;
 }
