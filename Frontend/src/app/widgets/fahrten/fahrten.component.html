@@ -1,35 +1,214 @@
-
 <h1 class="header">Dokumentierte Fahrten</h1>
 
 <div class="container">
 
-  <div class="sidebar">
-    Sidebar content
-  </div>
-
   <div class="main">
 
     <div class="card">
-      <app-card-widget></app-card-widget>
+      <app-card-widget *ngIf="viewMode === 'routen'" [trips]="mapTrips"></app-card-widget>
+
+      <app-trip-chart *ngIf="viewMode === 'details' && selectedTrip" [trips]="selectedTripChartData"></app-trip-chart>
+
+      <div class="chart-placeholder" *ngIf="viewMode === 'details' && !selectedTrip">
+        Wähle eine Fahrt aus der Liste aus, um die Details zu sehen.
+      </div>
+
+      <div class="view-toggle">
+        <button [class.active]="viewMode === 'routen'" (click)="setViewMode('routen')">Routen</button>
+        <button [class.active]="viewMode === 'details'" (click)="setViewMode('details')">Details</button>
+      </div>
     </div>
 
     <div class="list">
+      <div *ngIf="filteredTrips.length === 0" class="empty-hint">
+        Keine Fahrten für die gewählten Filter gefunden.
+      </div>
+
       <div
         class="box"
-        *ngFor="let item of items; let i = index"
+        *ngFor="let trip of pagedTrips; let i = index"
         (click)="selectItem(i)"
-        [class.active]="selectedIndex === i"
-        >
-      <div>
-        <strong>{{ item }}</strong>
+        [class.active]="selectedIndex === i">
 
-        <div class="details" *ngIf="selectedIndex === i">
-          Extra details for this item<br>
-          More info here<br>
-          Even more content
+        <div class="title">{{ trip.id }} &mdash; {{ trip.vehicleId }}</div>
+
+        <div class="details" *ngIf="selectedIndex !== i">
+          {{ trip.points.length }} Datenpunkte
+        </div>
+
+        <div class="details-full" *ngIf="selectedIndex === i">
+          <div><span>Fahrzeug:</span> {{ trip.vehicleId }}</div>
+          <div><span>Telemetrie-Einheit:</span> {{ trip.telemetryUnitId }}</div>
+          <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div><span>Stopp:</span> {{ trip.end | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
         </div>
 
       </div>
     </div>
+
+    <div class="pagination" *ngIf="filteredTrips.length">
+      <button class="page-arrow"
+              (click)="prevTripPage()"
+              [disabled]="currentTripPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of tripPageNumbers"
+              [class.active]="page === currentTripPage"
+              (click)="goToTripPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextTripPage()"
+              [disabled]="currentTripPage === totalTripPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
   </div>
+
+  <div class="sidebar">
+    <div class="filter-title">Filter</div>
+
+    <label>
+      Start (Datum &amp; Uhrzeit)
+      <input type="datetime-local" [(ngModel)]="filterStart">
+    </label>
+
+    <label>
+      Stopp (Datum &amp; Uhrzeit)
+      <input type="datetime-local" [(ngModel)]="filterStop">
+    </label>
+
+    <div class="autocomplete" #vehicleAutocomplete>
+      <div class="label-row">
+        <span>Fahrzeug</span>
+        <button type="button" class="advanced-btn" (click)="toggleAdvancedVehicleFilter()">
+          {{ showAdvancedVehicleFilter ? 'Erweitert ▲' : 'Erweitert ▼' }}
+        </button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Fahrzeug suchen..."
+                 [(ngModel)]="vehicleSearch"
+                 (ngModelChange)="onVehicleSearchChange()"
+                 (focus)="showVehicleOptions = true">
+
+          <div class="options" *ngIf="showVehicleOptions && filteredVehicleOptions.length">
+            <div class="option"
+                 *ngFor="let vehicle of filteredVehicleOptions"
+                 (click)="selectVehicle(vehicle)">
+              {{ vehicle.licensePlate }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterVehicleId || filterVehicleIds.length >= maxVehicleFilters"
+                (click)="addVehicleFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterVehicleIds.length">
+        <div class="chip" *ngFor="let vehicleId of filterVehicleIds">
+          {{ vehicleId }}
+          <span class="chip-remove" (click)="removeVehicleFilter(vehicleId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterVehicleIds.length >= maxVehicleFilters">
+        Maximal {{ maxVehicleFilters }} Fahrzeuge
+      </div>
+
+      <div class="advanced-filter" *ngIf="showAdvancedVehicleFilter">
+        <input type="text" placeholder="Marke" [(ngModel)]="advancedVehicleFilter.brand">
+        <input type="text" placeholder="Modell" [(ngModel)]="advancedVehicleFilter.modelName">
+        <input type="text" placeholder="Farbe" [(ngModel)]="advancedVehicleFilter.color">
+        <input type="text" placeholder="Fahrzeug-Identnr." [(ngModel)]="advancedVehicleFilter.identNr">
+
+        <select [(ngModel)]="advancedVehicleFilter.requiredLicense">
+          <option value="">Führerschein (alle)</option>
+          <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+        </select>
+
+        <div class="year-range">
+          <input type="number" placeholder="Baujahr von" [(ngModel)]="advancedVehicleFilter.yearFrom">
+          <input type="number" placeholder="Baujahr bis" [(ngModel)]="advancedVehicleFilter.yearTo">
+        </div>
+
+        <div class="year-range">
+          <input type="number" placeholder="PS von" [(ngModel)]="advancedVehicleFilter.powerPsFrom">
+          <input type="number" placeholder="PS bis" [(ngModel)]="advancedVehicleFilter.powerPsTo">
+        </div>
+
+        <div class="field-label">Erstzulassung</div>
+        <div class="year-range">
+          <input type="date" placeholder="Erstzulassung von" [(ngModel)]="advancedVehicleFilter.firstRegistrationFrom">
+          <input type="date" placeholder="Erstzulassung bis" [(ngModel)]="advancedVehicleFilter.firstRegistrationTo">
+        </div>
+      </div>
+    </div>
+
+    <div class="autocomplete" #telemetryAutocomplete>
+      <span>Telemetrie-Einheit</span>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Einheit suchen..."
+                 [(ngModel)]="telemetrySearch"
+                 (ngModelChange)="onTelemetrySearchChange()"
+                 (focus)="showTelemetryOptions = true">
+
+          <div class="options" *ngIf="showTelemetryOptions && filteredTelemetryOptions.length">
+            <div class="option"
+                 *ngFor="let unitId of filteredTelemetryOptions"
+                 (click)="selectTelemetryUnit(unitId)">
+              {{ unitId }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterTelemetryUnitId || filterTelemetryUnitIds.length >= maxTelemetryUnitFilters"
+                (click)="addTelemetryUnitFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterTelemetryUnitIds.length">
+        <div class="chip" *ngFor="let unitId of filterTelemetryUnitIds">
+          {{ unitId }}
+          <span class="chip-remove" (click)="removeTelemetryUnitFilter(unitId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterTelemetryUnitIds.length >= maxTelemetryUnitFilters">
+        Maximal {{ maxTelemetryUnitFilters }} Einheiten
+      </div>
+    </div>
+
+    <label>
+      Datenpunkt-Rate
+      <select [(ngModel)]="sampleIntervalSeconds">
+        <option *ngFor="let option of sampleIntervals" [ngValue]="option.seconds">
+          {{ option.label }}
+        </option>
+      </select>
+    </label>
+
+    <div class="filter-actions">
+      <button class="apply-btn" (click)="applyFilters()">Anwenden</button>
+      <button class="reset-btn" (click)="resetFilters()">Zurücksetzen</button>
+    </div>
+  </div>
+
 </div>

@@ -26,10 +26,10 @@ import {
   ɵɵdefineDirective,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-} from "./chunk-PRQDQVE5.js";
+} from "./chunk-2HBXIH6Y.js";
 import "./chunk-D7MF2QZF.js";
 
-// node_modules/@angular/core/fesm2022/rxjs-interop.mjs
+// ../../node_modules/@angular/core/fesm2022/rxjs-interop.mjs
 function takeUntilDestroyed(destroyRef) {
   if (!destroyRef) {
     ngDevMode && assertInInjectionContext(takeUntilDestroyed);
@@ -85,7 +85,7 @@ function outputToObservable(ref) {
   });
 }
 
-// node_modules/ngx-echarts/fesm2022/ngx-echarts.mjs
+// ../../node_modules/ngx-echarts/fesm2022/ngx-echarts.mjs
 var NGX_ECHARTS_CONFIG = new InjectionToken("NGX_ECHARTS_CONFIG");
 var ChangeFilterV2 = class {
   constructor() {

@@ -1,17 +1,231 @@
 .container {
   display: flex;
+  align-items: flex-start;
   min-height: 100vh;
   margin-top: 120px;
 
   .sidebar {
-    width: 250px;
-    height: 800px;
+    width: 260px;
+    min-height: 600px;
     background: #1b1b21;
     color: white;
     padding: 20px;
     border-radius: 16px;
     border: 1px solid #2a2b33;
     margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .filter-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    label, .autocomplete {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      color: #aaa;
+      gap: 6px;
+    }
+
+    .autocomplete {
+      position: relative;
+
+      .label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .advanced-btn {
+        background: transparent;
+        border: none;
+        color: #8b8fd9;
+        font-size: 12px;
+        cursor: pointer;
+        padding: 0;
+
+        &:hover {
+          color: white;
+        }
+      }
+
+      .search-row {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .search-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+
+        input {
+          width: 100%;
+        }
+      }
+
+      .add-btn {
+        background-color: #373669;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        flex-shrink: 0;
+
+        &:hover {
+          background-color: #4a4890;
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+
+        .chip {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: #26262e;
+          border: 1px solid #2a2b33;
+          border-radius: 999px;
+          padding: 4px 10px;
+          font-size: 13px;
+          color: white;
+
+          .chip-remove {
+            cursor: pointer;
+            color: #72757c;
+
+            &:hover {
+              color: white;
+            }
+          }
+        }
+      }
+
+      .limit-hint {
+        font-size: 12px;
+        color: #d98c8c;
+        margin-top: 4px;
+      }
+
+      .advanced-filter {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px;
+        margin-top: 6px;
+        background: #16161b;
+        border: 1px solid #2a2b33;
+        border-radius: 6px;
+
+        .field-label {
+          font-size: 12px;
+          color: #72757c;
+          margin-top: 4px;
+        }
+
+        .year-range {
+          display: flex;
+          gap: 8px;
+
+          input {
+            width: 0;
+            flex: 1;
+          }
+        }
+      }
+
+      .options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 4px;
+        background: #101014;
+        border: 1px solid #2a2b33;
+        border-radius: 6px;
+        max-height: 180px;
+        overflow-y: auto;
+        z-index: 20;
+
+        .option {
+          padding: 8px 10px;
+          font-size: 14px;
+          color: white;
+          cursor: pointer;
+
+          &:hover {
+            background: #2a2b33;
+          }
+        }
+      }
+    }
+
+    input, select {
+      background: #101014;
+      border: 1px solid #2a2b33;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+
+      &:focus {
+        border-color: #373669;
+      }
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 16px;
+
+      button {
+        flex: 1;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .apply-btn {
+        background-color: #373669;
+        color: white;
+
+        &:hover {
+          background-color: #4a4890;
+        }
+      }
+
+      .reset-btn {
+        background-color: #26262e;
+        color: white;
+        border: 1px solid #2a2b33;
+
+        &:hover {
+          background-color: #33333d;
+        }
+      }
+    }
   }
 
   .main {
@@ -22,60 +236,139 @@
     gap: 20px;
     min-height: 0;
 
-    .top-box {
-      background: #1b1b21;
-      padding: 20px;
-      color: white;
-      height: 200px;
-      border: 1px solid #2a2b33;
-      border-radius: 16px;
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      .view-toggle {
+        display: flex;
+        gap: 8px;
+        background: #1b1b21;
+        border: 1px solid #2a2b33;
+        border-radius: 8px;
+        padding: 4px;
+
+        button {
+          background: transparent;
+          border: none;
+          color: #aaa;
+          padding: 8px 18px;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: white;
+          }
+
+          &.active {
+            background: #373669;
+            color: white;
+          }
+        }
+      }
+
+      .chart-placeholder {
+        width: 800px;
+        height: 600px;
+        border: 1px solid #2a2b33;
+        border-radius: 20px;
+        background-color: #2b2d30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #72757c;
+        padding: 40px;
+      }
     }
 
     .list {
-      height: 500px;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      color: white;
 
-    .box {
-      background: #1b1b21;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid #2a2b33;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-height: 50px;
-      overflow: hidden;
+      .empty-hint {
+        color: #72757c;
+      }
+
+      .box {
+        background: #1b1b21;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #2a2b33;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        .title {
+          font-weight: bold;
+        }
+
+        .details {
+          color: #72757c;
+          font-size: 14px;
+          margin-top: 4px;
+        }
+
+        .details-full {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          margin-top: 12px;
+          font-size: 14px;
+
+          span {
+            color: #72757c;
+            margin-right: 6px;
+          }
+        }
+      }
+
+      .box.active {
+        min-height: 150px;
+        border-color: #373669;
+      }
+    }
+
+    .pagination {
       display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+
+      .page-arrow, .page-number {
+        background: #1b1b21;
+        border: 1px solid #2a2b33;
+        color: white;
+        border-radius: 6px;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:hover {
+          background: #2a2b33;
+        }
+
+        &:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+      }
+
+      .page-number.active {
+        background: #373669;
+        border-color: #373669;
+      }
     }
-
-    .box.active {
-      min-height: 150px;
-      align-items: flex-start;
-      overflow: visible;
-    }
   }
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: black;
-    border-radius: 16px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 16px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #777;
-  }
-}
 }
 
 
