@@ -95399,7 +95399,7 @@ var LayoutComponent = class _LayoutComponent {
 // src/environments/environment.ts
 var environment = {
   production: false,
-  apiUrl: "http://localhost:5047/api"
+  apiUrl: "http://localhost:5000/api"
 };
 
 // src/app/services/telemetry-unit.service.ts
@@ -95775,6 +95775,25 @@ var VehicleMap = class _VehicleMap {
 })();
 
 // src/app/services/vehicle.service.ts
+var LICENSE_TYPES = [
+  "AM",
+  "A1",
+  "A2",
+  "A",
+  "B",
+  "B96",
+  "BE",
+  "C1",
+  "C1E",
+  "C",
+  "CE",
+  "D1",
+  "D1E",
+  "D",
+  "DE",
+  "L",
+  "T"
+];
 var VehicleService = class _VehicleService {
   http;
   baseUrl = environment.apiUrl;
@@ -95782,16 +95801,51 @@ var VehicleService = class _VehicleService {
     this.http = http;
   }
   loadAll() {
-    return this.http.get(`${this.baseUrl}/Vehicle`);
+    return this.http.get(`${this.baseUrl}/Vehicle`).pipe(map((list) => list.map((dto) => this.toVehicle(dto))), catchError((err) => this.rethrow(err)));
   }
   save(vehicle) {
-    return this.http.post(`${this.baseUrl}/Vehicle`, vehicle);
+    return this.http.post(`${this.baseUrl}/Vehicle`, this.toRequestDto(vehicle)).pipe(map((dto) => this.toVehicle(dto)), catchError((err) => this.rethrow(err)));
   }
   update(vehicle) {
-    return this.http.put(`${this.baseUrl}/Vehicle/${vehicle.Id}`, vehicle);
+    return this.http.put(`${this.baseUrl}/Vehicle/${vehicle.Id}`, this.toRequestDto(vehicle)).pipe(map((dto) => this.toVehicle(dto)), catchError((err) => this.rethrow(err)));
   }
   delete(id) {
-    return this.http.delete(`${this.baseUrl}/Vehicle/${id}`);
+    return this.http.delete(`${this.baseUrl}/Vehicle/${id}`).pipe(catchError((err) => this.rethrow(err)));
+  }
+  rethrow(err) {
+    const message = typeof err.error === "string" && err.error ? err.error : `Fehler ${err.status}: ${err.statusText}`;
+    return throwError(() => new Error(message));
+  }
+  toRequestDto(vehicle) {
+    return {
+      modelName: vehicle.modelName ?? "",
+      licensePlate: vehicle.licensePlate || null,
+      identNr: vehicle.identNr ?? "",
+      brand: vehicle.brand || null,
+      year: vehicle.year ?? null,
+      requiredLicense: vehicle.requiredLicense || null,
+      powerPs: vehicle.powerPs ?? null,
+      color: vehicle.color || null,
+      firstRegistration: vehicle.firstRegistration || null,
+      assignedPersonId: vehicle.assignedPersonId || null,
+      telemetryUnitId: vehicle.telemetryUnit?.id || null
+    };
+  }
+  toVehicle(dto) {
+    return {
+      Id: dto.id,
+      modelName: dto.modelName,
+      identNr: dto.identificationNumber,
+      licensePlate: dto.licensePlateNumber ?? void 0,
+      brand: dto.brand ?? void 0,
+      year: dto.year ?? void 0,
+      requiredLicense: dto.requiredLicense != null ? LICENSE_TYPES[dto.requiredLicense] : void 0,
+      powerPs: dto.powerPs ?? void 0,
+      color: dto.color ?? void 0,
+      firstRegistration: dto.firstRegistration ?? void 0,
+      assignedPersonId: dto.vehicleDriverId ?? null,
+      telemetryUnit: dto.telemetryUnit ? { id: dto.telemetryUnit.id } : null
+    };
   }
   static \u0275fac = function VehicleService_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _VehicleService)(\u0275\u0275inject(HttpClient));
@@ -95811,7 +95865,7 @@ var _c12 = ["telemetryAutocomplete"];
 var _c22 = ["personAutocomplete"];
 function Vehicles_div_9_option_22_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 47);
+    \u0275\u0275elementStart(0, "option", 49);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -95822,12 +95876,24 @@ function Vehicles_div_9_option_22_Template(rf, ctx) {
     \u0275\u0275textInterpolate(license_r4);
   }
 }
+function Vehicles_div_9_div_34_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r2.createError);
+  }
+}
 function Vehicles_div_9_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 38)(1, "div", 39)(2, "label");
+    \u0275\u0275elementStart(0, "div", 39)(1, "div", 40)(2, "label");
     \u0275\u0275text(3, " Kennzeichen ");
-    \u0275\u0275elementStart(4, "input", 40);
+    \u0275\u0275elementStart(4, "input", 41);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_4_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95836,8 +95902,8 @@ function Vehicles_div_9_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(5, "label");
-    \u0275\u0275text(6, " Marke ");
-    \u0275\u0275elementStart(7, "input", 40);
+    \u0275\u0275text(6, " Marke * ");
+    \u0275\u0275elementStart(7, "input", 41);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95846,8 +95912,8 @@ function Vehicles_div_9_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "label");
-    \u0275\u0275text(9, " Modell ");
-    \u0275\u0275elementStart(10, "input", 40);
+    \u0275\u0275text(9, " Modell * ");
+    \u0275\u0275elementStart(10, "input", 41);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_10_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95856,8 +95922,8 @@ function Vehicles_div_9_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(11, "label");
-    \u0275\u0275text(12, " Baujahr ");
-    \u0275\u0275elementStart(13, "input", 41);
+    \u0275\u0275text(12, " Baujahr * ");
+    \u0275\u0275elementStart(13, "input", 42);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_13_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95866,8 +95932,8 @@ function Vehicles_div_9_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(14, "label");
-    \u0275\u0275text(15, " Fahrzeug-Identnr. ");
-    \u0275\u0275elementStart(16, "input", 40);
+    \u0275\u0275text(15, " Fahrzeug-Identnr. * ");
+    \u0275\u0275elementStart(16, "input", 41);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_16_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95876,22 +95942,22 @@ function Vehicles_div_9_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(17, "label");
-    \u0275\u0275text(18, " Ben\xF6tigter F\xFChrerschein ");
-    \u0275\u0275elementStart(19, "select", 42);
+    \u0275\u0275text(18, " Ben\xF6tigter F\xFChrerschein * ");
+    \u0275\u0275elementStart(19, "select", 43);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_select_ngModelChange_19_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.requiredLicense, $event) || (ctx_r2.newVehicle.requiredLicense = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(20, "option", 43);
+    \u0275\u0275elementStart(20, "option", 44);
     \u0275\u0275text(21, "Bitte w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(22, Vehicles_div_9_option_22_Template, 2, 2, "option", 44);
+    \u0275\u0275template(22, Vehicles_div_9_option_22_Template, 2, 2, "option", 45);
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(23, "label");
-    \u0275\u0275text(24, " Leistung (PS) ");
-    \u0275\u0275elementStart(25, "input", 41);
+    \u0275\u0275text(24, " Leistung (PS) * ");
+    \u0275\u0275elementStart(25, "input", 42);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_25_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95900,8 +95966,8 @@ function Vehicles_div_9_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(26, "label");
-    \u0275\u0275text(27, " Farbe ");
-    \u0275\u0275elementStart(28, "input", 40);
+    \u0275\u0275text(27, " Farbe * ");
+    \u0275\u0275elementStart(28, "input", 41);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_28_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95911,7 +95977,7 @@ function Vehicles_div_9_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(29, "label");
     \u0275\u0275text(30, " Erstzulassung ");
-    \u0275\u0275elementStart(31, "input", 45);
+    \u0275\u0275elementStart(31, "input", 46);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_31_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -95919,14 +95985,16 @@ function Vehicles_div_9_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(32, "button", 46);
+    \u0275\u0275elementStart(32, "button", 47);
     \u0275\u0275listener("click", function Vehicles_div_9_Template_button_click_32_listener() {
       \u0275\u0275restoreView(_r2);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.createVehicle());
     });
     \u0275\u0275text(33, " Speichern ");
-    \u0275\u0275elementEnd()();
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(34, Vehicles_div_9_div_34_Template, 2, 1, "div", 48);
+    \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = \u0275\u0275nextContext();
@@ -95951,7 +96019,9 @@ function Vehicles_div_9_Template(rf, ctx) {
     \u0275\u0275advance(3);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.firstRegistration);
     \u0275\u0275advance();
-    \u0275\u0275property("disabled", !ctx_r2.newVehicle.licensePlate);
+    \u0275\u0275property("disabled", !ctx_r2.newVehicle.modelName || !ctx_r2.newVehicle.identNr || !ctx_r2.newVehicle.brand || !ctx_r2.newVehicle.year || !ctx_r2.newVehicle.requiredLicense || !ctx_r2.newVehicle.powerPs || !ctx_r2.newVehicle.color);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("ngIf", ctx_r2.createError);
   }
 }
 function Vehicles_div_11_Template(rf, ctx) {
@@ -95963,7 +96033,7 @@ function Vehicles_div_11_Template(rf, ctx) {
 }
 function Vehicles_div_12_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275elementStart(0, "div", 56);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -95977,7 +96047,7 @@ function Vehicles_div_12_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 56);
+    \u0275\u0275elementStart(1, "input", 59);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r8);
       const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
@@ -96002,34 +96072,63 @@ function Vehicles_div_12_div_4_ng_template_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate(vehicle_r7.licensePlate);
   }
 }
-function Vehicles_div_12_div_4_ng_container_42_option_4_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_container_38_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 47);
+    const _r9 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275elementStart(1, "input", 60);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_38_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r9);
+      const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+      \u0275\u0275twoWayBindingSet(vehicle_r7.firstRegistration, $event) || (vehicle_r7.firstRegistration = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", vehicle_r7.firstRegistration);
+  }
+}
+function Vehicles_div_12_div_4_ng_template_39_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275text(0);
+  }
+  if (rf & 2) {
+    const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(vehicle_r7.firstRegistration);
+  }
+}
+function Vehicles_div_12_div_4_ng_container_44_option_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 49);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const unitId_r10 = ctx.$implicit;
-    \u0275\u0275property("value", unitId_r10);
+    const unitId_r11 = ctx.$implicit;
+    \u0275\u0275property("value", unitId_r11);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(unitId_r10);
+    \u0275\u0275textInterpolate(unitId_r11);
   }
 }
-function Vehicles_div_12_div_4_ng_container_42_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_container_44_Template(rf, ctx) {
   if (rf & 1) {
-    const _r9 = \u0275\u0275getCurrentView();
+    const _r10 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "select", 57);
-    \u0275\u0275listener("ngModelChange", function Vehicles_div_12_div_4_ng_container_42_Template_select_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r9);
+    \u0275\u0275elementStart(1, "select", 61);
+    \u0275\u0275listener("ngModelChange", function Vehicles_div_12_div_4_ng_container_44_Template_select_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r10);
       const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.onTelemetryChange(vehicle_r7, $event));
     });
-    \u0275\u0275elementStart(2, "option", 58);
+    \u0275\u0275elementStart(2, "option", 62);
     \u0275\u0275text(3, "nicht verbunden");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_42_option_4_Template, 2, 2, "option", 44);
+    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_44_option_4_Template, 2, 2, "option", 45);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -96042,7 +96141,7 @@ function Vehicles_div_12_div_4_ng_container_42_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r2.dummyTelemetryUnits);
   }
 }
-function Vehicles_div_12_div_4_ng_template_43_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_template_45_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -96051,16 +96150,28 @@ function Vehicles_div_12_div_4_ng_template_43_Template(rf, ctx) {
     \u0275\u0275textInterpolate((vehicle_r7.telemetryUnit == null ? null : vehicle_r7.telemetryUnit.id) || "nicht verbunden");
   }
 }
+function Vehicles_div_12_div_4_div_51_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext(3);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r2.editError);
+  }
+}
 function Vehicles_div_12_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 54);
+    \u0275\u0275elementStart(0, "div", 57);
     \u0275\u0275listener("click", function Vehicles_div_12_div_4_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
     \u0275\u0275elementStart(1, "div")(2, "span");
     \u0275\u0275text(3, "Kennzeichen:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_4_Template, 2, 1, "ng-container", 55)(5, Vehicles_div_12_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_4_Template, 2, 1, "ng-container", 58)(5, Vehicles_div_12_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(7, "div")(8, "span");
     \u0275\u0275text(9, "Marke:");
@@ -96100,28 +96211,31 @@ function Vehicles_div_12_div_4_Template(rf, ctx) {
     \u0275\u0275elementStart(35, "div")(36, "span");
     \u0275\u0275text(37, "Erstzulassung:");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(38);
+    \u0275\u0275template(38, Vehicles_div_12_div_4_ng_container_38_Template, 2, 1, "ng-container", 58)(39, Vehicles_div_12_div_4_ng_template_39_Template, 1, 1, "ng-template", null, 4, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(39, "div")(40, "span");
-    \u0275\u0275text(41, "Telemetrie-Einheit:");
+    \u0275\u0275elementStart(41, "div")(42, "span");
+    \u0275\u0275text(43, "Telemetrie-Einheit:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(42, Vehicles_div_12_div_4_ng_container_42_Template, 5, 2, "ng-container", 55)(43, Vehicles_div_12_div_4_ng_template_43_Template, 1, 1, "ng-template", null, 4, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(44, Vehicles_div_12_div_4_ng_container_44_Template, 5, 2, "ng-container", 58)(45, Vehicles_div_12_div_4_ng_template_45_Template, 1, 1, "ng-template", null, 5, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(45, "div")(46, "span");
-    \u0275\u0275text(47, "Zugewiesene Person:");
+    \u0275\u0275elementStart(47, "div")(48, "span");
+    \u0275\u0275text(49, "Zugewiesene Person:");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(48);
-    \u0275\u0275elementEnd()();
+    \u0275\u0275text(50);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(51, Vehicles_div_12_div_4_div_51_Template, 2, 1, "div", 48);
+    \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const plateView_r11 = \u0275\u0275reference(6);
-    const unitView_r12 = \u0275\u0275reference(44);
-    const ctx_r12 = \u0275\u0275nextContext();
-    const vehicle_r7 = ctx_r12.$implicit;
-    const i_r6 = ctx_r12.index;
+    const plateView_r12 = \u0275\u0275reference(6);
+    const firstRegistrationView_r13 = \u0275\u0275reference(40);
+    const unitView_r14 = \u0275\u0275reference(46);
+    const ctx_r14 = \u0275\u0275nextContext();
+    const vehicle_r7 = ctx_r14.$implicit;
+    const i_r6 = ctx_r14.index;
     const ctx_r2 = \u0275\u0275nextContext();
     \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", plateView_r11);
+    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", plateView_r12);
     \u0275\u0275advance(6);
     \u0275\u0275textInterpolate1(" ", vehicle_r7.brand);
     \u0275\u0275advance(4);
@@ -96137,64 +96251,89 @@ function Vehicles_div_12_div_4_Template(rf, ctx) {
     \u0275\u0275advance(4);
     \u0275\u0275textInterpolate1(" ", vehicle_r7.color);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r7.firstRegistration);
-    \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", unitView_r12);
+    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", firstRegistrationView_r13);
+    \u0275\u0275advance(6);
+    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", unitView_r14);
     \u0275\u0275advance(6);
     \u0275\u0275textInterpolate1(" ", vehicle_r7.assignedPersonId || "keine");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r2.editError && ctx_r2.selectedIndex === i_r6);
   }
 }
 function Vehicles_div_12_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r14 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 59);
+    const _r16 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 63);
     \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_div_click_0_listener($event) {
+      \u0275\u0275restoreView(_r16);
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.onActionsClick($event));
+    })("mousedown", function Vehicles_div_12_div_5_Template_div_mousedown_0_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(1, "button", 60);
-    \u0275\u0275text(2, "L\xF6schen");
+    \u0275\u0275elementStart(1, "button", 64);
+    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_5_Template_button_mousedown_1_listener($event) {
+      \u0275\u0275restoreView(_r16);
+      const ctx_r14 = \u0275\u0275nextContext();
+      const vehicle_r7 = ctx_r14.$implicit;
+      const i_r6 = ctx_r14.index;
+      const ctx_r2 = \u0275\u0275nextContext();
+      ctx_r2.onActionMouseDown($event);
+      return \u0275\u0275resetView(ctx_r2.confirmDelete(i_r6, vehicle_r7));
+    });
+    \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 61)(4, "button", 62);
-    \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_button_click_4_listener() {
-      \u0275\u0275restoreView(_r14);
+    \u0275\u0275elementStart(3, "div", 65)(4, "button", 66);
+    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_5_Template_button_mousedown_4_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r2 = \u0275\u0275nextContext(2);
+      ctx_r2.onActionMouseDown($event);
       return \u0275\u0275resetView(ctx_r2.collapseItem());
     });
     \u0275\u0275text(5, "Abbrechen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 62);
-    \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_button_click_6_listener() {
-      \u0275\u0275restoreView(_r14);
+    \u0275\u0275elementStart(6, "button", 66);
+    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_5_Template_button_mousedown_6_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const i_r6 = \u0275\u0275nextContext().index;
       const ctx_r2 = \u0275\u0275nextContext();
+      ctx_r2.onActionMouseDown($event);
       return \u0275\u0275resetView(ctx_r2.toggleEdit(i_r6));
     });
     \u0275\u0275text(7);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "button", 60);
+    \u0275\u0275elementStart(8, "button", 67);
     \u0275\u0275text(9, "Fahrten");
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
-    const i_r6 = \u0275\u0275nextContext().index;
+    const ctx_r14 = \u0275\u0275nextContext();
+    const vehicle_r7 = ctx_r14.$implicit;
+    const i_r6 = ctx_r14.index;
     const ctx_r2 = \u0275\u0275nextContext();
-    \u0275\u0275advance(7);
-    \u0275\u0275textInterpolate1(" ", ctx_r2.editingIndex === i_r6 ? "Fertig" : "Bearbeiten", " ");
+    \u0275\u0275advance();
+    \u0275\u0275classProp("danger", ctx_r2.deleteConfirmIndex === i_r6);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", ctx_r2.deleteConfirmIndex === i_r6 ? "Wirklich L\xF6schen?" : "L\xF6schen", " ");
+    \u0275\u0275advance(4);
+    \u0275\u0275classProp("dirty", ctx_r2.editingIndex === i_r6 && ctx_r2.isEditDirty(vehicle_r7));
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", ctx_r2.editingIndex === i_r6 ? ctx_r2.isEditDirty(vehicle_r7) ? "Speichern" : "Fertig" : "Bearbeiten", " ");
   }
 }
 function Vehicles_div_12_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 48);
+    \u0275\u0275elementStart(0, "div", 51);
     \u0275\u0275listener("click", function Vehicles_div_12_Template_div_click_0_listener() {
       const i_r6 = \u0275\u0275restoreView(_r5).index;
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.selectItem(i_r6));
     });
-    \u0275\u0275elementStart(1, "div", 49);
+    \u0275\u0275elementStart(1, "div", 52);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Vehicles_div_12_div_3_Template, 2, 1, "div", 50)(4, Vehicles_div_12_div_4_Template, 49, 13, "div", 51)(5, Vehicles_div_12_div_5_Template, 10, 1, "div", 52);
+    \u0275\u0275template(3, Vehicles_div_12_div_3_Template, 2, 1, "div", 53)(4, Vehicles_div_12_div_4_Template, 52, 15, "div", 54)(5, Vehicles_div_12_div_5_Template, 10, 6, "div", 55);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96214,46 +96353,46 @@ function Vehicles_div_12_Template(rf, ctx) {
 }
 function Vehicles_button_17_Template(rf, ctx) {
   if (rf & 1) {
-    const _r15 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 63);
+    const _r17 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 68);
     \u0275\u0275listener("click", function Vehicles_button_17_Template_button_click_0_listener() {
-      const page_r16 = \u0275\u0275restoreView(_r15).$implicit;
+      const page_r18 = \u0275\u0275restoreView(_r17).$implicit;
       const ctx_r2 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r2.goToPage(page_r16));
+      return \u0275\u0275resetView(ctx_r2.goToPage(page_r18));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const page_r16 = ctx.$implicit;
+    const page_r18 = ctx.$implicit;
     const ctx_r2 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("active", page_r16 === ctx_r2.currentPage);
+    \u0275\u0275classProp("active", page_r18 === ctx_r2.currentPage);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", page_r16, " ");
+    \u0275\u0275textInterpolate1(" ", page_r18, " ");
   }
 }
 function Vehicles_div_34_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r17 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 66);
+    const _r19 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 71);
     \u0275\u0275listener("click", function Vehicles_div_34_div_1_Template_div_click_0_listener() {
-      const vehicle_r18 = \u0275\u0275restoreView(_r17).$implicit;
+      const vehicle_r20 = \u0275\u0275restoreView(_r19).$implicit;
       const ctx_r2 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r2.selectVehicle(vehicle_r18));
+      return \u0275\u0275resetView(ctx_r2.selectVehicle(vehicle_r20));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const vehicle_r18 = ctx.$implicit;
+    const vehicle_r20 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate3(" ", vehicle_r18.licensePlate, " \u2014 ", vehicle_r18.brand, " ", vehicle_r18.modelName, " ");
+    \u0275\u0275textInterpolate3(" ", vehicle_r20.licensePlate, " \u2014 ", vehicle_r20.brand, " ", vehicle_r20.modelName, " ");
   }
 }
 function Vehicles_div_34_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 64);
-    \u0275\u0275template(1, Vehicles_div_34_div_1_Template, 2, 3, "div", 65);
+    \u0275\u0275elementStart(0, "div", 69);
+    \u0275\u0275template(1, Vehicles_div_34_div_1_Template, 2, 3, "div", 70);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96264,28 +96403,28 @@ function Vehicles_div_34_Template(rf, ctx) {
 }
 function Vehicles_div_37_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r19 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 69);
+    const _r21 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 74);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 70);
+    \u0275\u0275elementStart(2, "span", 75);
     \u0275\u0275listener("click", function Vehicles_div_37_div_1_Template_span_click_2_listener() {
-      const vehicleId_r20 = \u0275\u0275restoreView(_r19).$implicit;
+      const vehicleId_r22 = \u0275\u0275restoreView(_r21).$implicit;
       const ctx_r2 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r2.removeVehicleFilter(vehicleId_r20));
+      return \u0275\u0275resetView(ctx_r2.removeVehicleFilter(vehicleId_r22));
     });
     \u0275\u0275text(3, "\xD7");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const vehicleId_r20 = ctx.$implicit;
+    const vehicleId_r22 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", vehicleId_r20, " ");
+    \u0275\u0275textInterpolate1(" ", vehicleId_r22, " ");
   }
 }
 function Vehicles_div_37_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 67);
-    \u0275\u0275template(1, Vehicles_div_37_div_1_Template, 4, 1, "div", 68);
+    \u0275\u0275elementStart(0, "div", 72);
+    \u0275\u0275template(1, Vehicles_div_37_div_1_Template, 4, 1, "div", 73);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96296,7 +96435,7 @@ function Vehicles_div_37_Template(rf, ctx) {
 }
 function Vehicles_div_38_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275elementStart(0, "div", 76);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -96308,110 +96447,110 @@ function Vehicles_div_38_Template(rf, ctx) {
 }
 function Vehicles_div_39_option_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 47);
+    \u0275\u0275elementStart(0, "option", 49);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const license_r22 = ctx.$implicit;
-    \u0275\u0275property("value", license_r22);
+    const license_r24 = ctx.$implicit;
+    \u0275\u0275property("value", license_r24);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(license_r22);
+    \u0275\u0275textInterpolate(license_r24);
   }
 }
 function Vehicles_div_39_Template(rf, ctx) {
   if (rf & 1) {
-    const _r21 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 72)(1, "input", 73);
+    const _r23 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 77)(1, "input", 78);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.brand, $event) || (ctx_r2.advancedVehicleFilter.brand = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "input", 74);
+    \u0275\u0275elementStart(2, "input", 79);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_2_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.modelName, $event) || (ctx_r2.advancedVehicleFilter.modelName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 75);
+    \u0275\u0275elementStart(3, "input", 80);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_3_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.color, $event) || (ctx_r2.advancedVehicleFilter.color = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "input", 76);
+    \u0275\u0275elementStart(4, "input", 81);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_4_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.identNr, $event) || (ctx_r2.advancedVehicleFilter.identNr = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "select", 42);
+    \u0275\u0275elementStart(5, "select", 43);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_select_ngModelChange_5_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.requiredLicense, $event) || (ctx_r2.advancedVehicleFilter.requiredLicense = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(6, "option", 58);
+    \u0275\u0275elementStart(6, "option", 62);
     \u0275\u0275text(7, "F\xFChrerschein (alle)");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(8, Vehicles_div_39_option_8_Template, 2, 2, "option", 44);
+    \u0275\u0275template(8, Vehicles_div_39_option_8_Template, 2, 2, "option", 45);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(9, "div", 77)(10, "input", 78);
+    \u0275\u0275elementStart(9, "div", 82)(10, "input", 83);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_10_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.yearFrom, $event) || (ctx_r2.advancedVehicleFilter.yearFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "input", 79);
+    \u0275\u0275elementStart(11, "input", 84);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_11_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.yearTo, $event) || (ctx_r2.advancedVehicleFilter.yearTo = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(12, "div", 77)(13, "input", 80);
+    \u0275\u0275elementStart(12, "div", 82)(13, "input", 85);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_13_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.powerPsFrom, $event) || (ctx_r2.advancedVehicleFilter.powerPsFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "input", 81);
+    \u0275\u0275elementStart(14, "input", 86);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_14_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.powerPsTo, $event) || (ctx_r2.advancedVehicleFilter.powerPsTo = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(15, "div", 82);
+    \u0275\u0275elementStart(15, "div", 87);
     \u0275\u0275text(16, "Erstzulassung");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(17, "div", 77)(18, "input", 83);
+    \u0275\u0275elementStart(17, "div", 82)(18, "input", 88);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_18_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.firstRegistrationFrom, $event) || (ctx_r2.advancedVehicleFilter.firstRegistrationFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(19, "input", 84);
+    \u0275\u0275elementStart(19, "input", 89);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_19_listener($event) {
-      \u0275\u0275restoreView(_r21);
+      \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.firstRegistrationTo, $event) || (ctx_r2.advancedVehicleFilter.firstRegistrationTo = $event);
       return \u0275\u0275resetView($event);
@@ -96448,26 +96587,26 @@ function Vehicles_div_39_Template(rf, ctx) {
 }
 function Vehicles_div_47_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r23 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 66);
+    const _r25 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 71);
     \u0275\u0275listener("click", function Vehicles_div_47_div_1_Template_div_click_0_listener() {
-      const unitId_r24 = \u0275\u0275restoreView(_r23).$implicit;
+      const unitId_r26 = \u0275\u0275restoreView(_r25).$implicit;
       const ctx_r2 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r2.selectTelemetryUnit(unitId_r24));
+      return \u0275\u0275resetView(ctx_r2.selectTelemetryUnit(unitId_r26));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const unitId_r24 = ctx.$implicit;
+    const unitId_r26 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", unitId_r24, " ");
+    \u0275\u0275textInterpolate1(" ", unitId_r26, " ");
   }
 }
 function Vehicles_div_47_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 64);
-    \u0275\u0275template(1, Vehicles_div_47_div_1_Template, 2, 1, "div", 65);
+    \u0275\u0275elementStart(0, "div", 69);
+    \u0275\u0275template(1, Vehicles_div_47_div_1_Template, 2, 1, "div", 70);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96478,28 +96617,28 @@ function Vehicles_div_47_Template(rf, ctx) {
 }
 function Vehicles_div_50_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r25 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 69);
+    const _r27 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 74);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 70);
+    \u0275\u0275elementStart(2, "span", 75);
     \u0275\u0275listener("click", function Vehicles_div_50_div_1_Template_span_click_2_listener() {
-      const unitId_r26 = \u0275\u0275restoreView(_r25).$implicit;
+      const unitId_r28 = \u0275\u0275restoreView(_r27).$implicit;
       const ctx_r2 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r2.removeTelemetryUnitFilter(unitId_r26));
+      return \u0275\u0275resetView(ctx_r2.removeTelemetryUnitFilter(unitId_r28));
     });
     \u0275\u0275text(3, "\xD7");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const unitId_r26 = ctx.$implicit;
+    const unitId_r28 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", unitId_r26, " ");
+    \u0275\u0275textInterpolate1(" ", unitId_r28, " ");
   }
 }
 function Vehicles_div_50_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 67);
-    \u0275\u0275template(1, Vehicles_div_50_div_1_Template, 4, 1, "div", 68);
+    \u0275\u0275elementStart(0, "div", 72);
+    \u0275\u0275template(1, Vehicles_div_50_div_1_Template, 4, 1, "div", 73);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96510,7 +96649,7 @@ function Vehicles_div_50_Template(rf, ctx) {
 }
 function Vehicles_div_51_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275elementStart(0, "div", 76);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -96522,26 +96661,26 @@ function Vehicles_div_51_Template(rf, ctx) {
 }
 function Vehicles_div_62_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r27 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 66);
+    const _r29 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 71);
     \u0275\u0275listener("click", function Vehicles_div_62_div_1_Template_div_click_0_listener() {
-      const person_r28 = \u0275\u0275restoreView(_r27).$implicit;
+      const person_r30 = \u0275\u0275restoreView(_r29).$implicit;
       const ctx_r2 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r2.selectPerson(person_r28));
+      return \u0275\u0275resetView(ctx_r2.selectPerson(person_r30));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const person_r28 = ctx.$implicit;
+    const person_r30 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate3(" ", person_r28.firstName, " ", person_r28.lastName, " \u2014 ", person_r28.employeeNr, " ");
+    \u0275\u0275textInterpolate3(" ", person_r30.firstName, " ", person_r30.lastName, " \u2014 ", person_r30.employeeNr, " ");
   }
 }
 function Vehicles_div_62_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 64);
-    \u0275\u0275template(1, Vehicles_div_62_div_1_Template, 2, 3, "div", 65);
+    \u0275\u0275elementStart(0, "div", 69);
+    \u0275\u0275template(1, Vehicles_div_62_div_1_Template, 2, 3, "div", 70);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96552,28 +96691,28 @@ function Vehicles_div_62_Template(rf, ctx) {
 }
 function Vehicles_div_65_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r29 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 69);
+    const _r31 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 74);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 70);
+    \u0275\u0275elementStart(2, "span", 75);
     \u0275\u0275listener("click", function Vehicles_div_65_div_1_Template_span_click_2_listener() {
-      const personId_r30 = \u0275\u0275restoreView(_r29).$implicit;
+      const personId_r32 = \u0275\u0275restoreView(_r31).$implicit;
       const ctx_r2 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r2.removePersonFilter(personId_r30));
+      return \u0275\u0275resetView(ctx_r2.removePersonFilter(personId_r32));
     });
     \u0275\u0275text(3, "\xD7");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const personId_r30 = ctx.$implicit;
+    const personId_r32 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", personId_r30, " ");
+    \u0275\u0275textInterpolate1(" ", personId_r32, " ");
   }
 }
 function Vehicles_div_65_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 67);
-    \u0275\u0275template(1, Vehicles_div_65_div_1_Template, 4, 1, "div", 68);
+    \u0275\u0275elementStart(0, "div", 72);
+    \u0275\u0275template(1, Vehicles_div_65_div_1_Template, 4, 1, "div", 73);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96584,7 +96723,7 @@ function Vehicles_div_65_Template(rf, ctx) {
 }
 function Vehicles_div_66_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275elementStart(0, "div", 76);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -96596,45 +96735,45 @@ function Vehicles_div_66_Template(rf, ctx) {
 }
 function Vehicles_div_67_Template(rf, ctx) {
   if (rf & 1) {
-    const _r31 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 72)(1, "input", 85);
+    const _r33 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 77)(1, "input", 90);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.firstName, $event) || (ctx_r2.advancedPersonFilter.firstName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "input", 86);
+    \u0275\u0275elementStart(2, "input", 91);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_2_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.lastName, $event) || (ctx_r2.advancedPersonFilter.lastName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 87);
+    \u0275\u0275elementStart(3, "input", 92);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_3_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.employeeNr, $event) || (ctx_r2.advancedPersonFilter.employeeNr = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "div", 82);
+    \u0275\u0275elementStart(4, "div", 87);
     \u0275\u0275text(5, "Geburtsdatum");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "div", 77)(7, "input", 88);
+    \u0275\u0275elementStart(6, "div", 82)(7, "input", 93);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_7_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.birthDateFrom, $event) || (ctx_r2.advancedPersonFilter.birthDateFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "input", 89);
+    \u0275\u0275elementStart(8, "input", 94);
     \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_8_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.birthDateTo, $event) || (ctx_r2.advancedPersonFilter.birthDateTo = $event);
       return \u0275\u0275resetView($event);
@@ -96657,6 +96796,7 @@ function Vehicles_div_67_Template(rf, ctx) {
 }
 var Vehicles = class _Vehicles {
   vehicleService;
+  cdr;
   vehicles = [];
   pageSize = 10;
   currentPage = 1;
@@ -96664,6 +96804,10 @@ var Vehicles = class _Vehicles {
   newVehicle = this.emptyVehicle();
   selectedIndex = null;
   editingIndex = null;
+  deleteConfirmIndex = null;
+  createError = null;
+  editError = null;
+  editSnapshot = null;
   dummyTelemetryUnits = ["TU-1001", "TU-1002", "TU-1003"];
   dummyPersons = [
     { Id: "p1", firstName: "Anna", lastName: "Schmidt", employeeNr: "MA-1000", birthDate: "1970-05-20" },
@@ -96726,9 +96870,16 @@ var Vehicles = class _Vehicles {
     if (this.personAutocompleteRef && !this.personAutocompleteRef.nativeElement.contains(target)) {
       this.showPersonOptions = false;
     }
+    if (this.deleteConfirmIndex !== null) {
+      const targetEl = target;
+      if (!targetEl.closest || !targetEl.closest(".delete-btn")) {
+        this.deleteConfirmIndex = null;
+      }
+    }
   }
-  constructor(vehicleService) {
+  constructor(vehicleService, cdr) {
     this.vehicleService = vehicleService;
+    this.cdr = cdr;
   }
   ngOnInit() {
     this.vehicles = this.generateDummyVehicles(40);
@@ -96737,6 +96888,7 @@ var Vehicles = class _Vehicles {
         if (vehicles?.length) {
           this.vehicles = vehicles;
         }
+        this.cdr.detectChanges();
       },
       error: () => {
       }
@@ -96937,13 +97089,79 @@ var Vehicles = class _Vehicles {
   selectItem(index) {
     this.selectedIndex = index;
     this.editingIndex = null;
+    this.editError = null;
+    this.deleteConfirmIndex = null;
   }
   collapseItem() {
     this.selectedIndex = null;
     this.editingIndex = null;
+    this.editError = null;
+    this.editSnapshot = null;
+    this.deleteConfirmIndex = null;
+  }
+  onActionMouseDown(event) {
+    event.preventDefault();
+  }
+  onActionsClick(event) {
+    event.stopPropagation();
+    const target = event.target;
+    if (this.deleteConfirmIndex !== null && (!target.closest || !target.closest(".delete-btn"))) {
+      this.deleteConfirmIndex = null;
+    }
   }
   toggleEdit(index) {
-    this.editingIndex = this.editingIndex === index ? null : index;
+    if (this.editingIndex === index) {
+      this.saveEdit(index);
+      return;
+    }
+    this.editingIndex = index;
+    this.editError = null;
+    this.editSnapshot = __spreadValues({}, this.pagedVehicles[index]);
+    this.deleteConfirmIndex = null;
+  }
+  isEditDirty(vehicle) {
+    if (!this.editSnapshot)
+      return false;
+    return vehicle.licensePlate !== this.editSnapshot.licensePlate || vehicle.firstRegistration !== this.editSnapshot.firstRegistration || (vehicle.telemetryUnit?.id ?? "") !== (this.editSnapshot.telemetryUnit?.id ?? "");
+  }
+  saveEdit(index) {
+    const vehicle = this.pagedVehicles[index];
+    this.editError = null;
+    this.vehicleService.update(vehicle).subscribe({
+      next: (updated) => {
+        Object.assign(vehicle, updated);
+        this.editingIndex = null;
+        this.editSnapshot = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.editError = err?.message ?? "Aktualisieren fehlgeschlagen.";
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  confirmDelete(index, vehicle) {
+    if (this.deleteConfirmIndex !== index) {
+      this.deleteConfirmIndex = index;
+      return;
+    }
+    this.deleteVehicle(vehicle);
+  }
+  deleteVehicle(vehicle) {
+    this.editError = null;
+    this.vehicleService.delete(vehicle.Id).subscribe({
+      next: () => {
+        this.vehicles = this.vehicles.filter((v) => v !== vehicle);
+        this.deleteConfirmIndex = null;
+        this.collapseItem();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.editError = err?.message ?? "L\xF6schen fehlgeschlagen.";
+        this.deleteConfirmIndex = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
   onTelemetryChange(vehicle, value) {
     vehicle.telemetryUnit = value ? { id: value } : null;
@@ -96952,26 +97170,26 @@ var Vehicles = class _Vehicles {
     this.showCreateForm = !this.showCreateForm;
     if (!this.showCreateForm) {
       this.newVehicle = this.emptyVehicle();
+      this.createError = null;
     }
   }
   createVehicle() {
-    if (!this.newVehicle.licensePlate)
+    if (!this.newVehicle.modelName || !this.newVehicle.identNr || !this.newVehicle.brand || !this.newVehicle.year || !this.newVehicle.requiredLicense || !this.newVehicle.powerPs || !this.newVehicle.color)
       return;
-    this.vehicles.unshift({
-      Id: crypto.randomUUID(),
-      licensePlate: this.newVehicle.licensePlate,
-      brand: this.newVehicle.brand,
-      modelName: this.newVehicle.modelName,
-      year: this.newVehicle.year,
-      identNr: this.newVehicle.identNr,
-      requiredLicense: this.newVehicle.requiredLicense,
-      powerPs: this.newVehicle.powerPs,
-      color: this.newVehicle.color,
-      firstRegistration: this.newVehicle.firstRegistration
+    this.createError = null;
+    this.vehicleService.save(this.newVehicle).subscribe({
+      next: (created) => {
+        this.vehicles.unshift(created);
+        this.newVehicle = this.emptyVehicle();
+        this.showCreateForm = false;
+        this.currentPage = 1;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.createError = err?.message ?? "Speichern fehlgeschlagen.";
+        this.cdr.detectChanges();
+      }
     });
-    this.newVehicle = this.emptyVehicle();
-    this.showCreateForm = false;
-    this.currentPage = 1;
   }
   emptyVehicle() {
     return {
@@ -97041,7 +97259,7 @@ var Vehicles = class _Vehicles {
     });
   }
   static \u0275fac = function Vehicles_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _Vehicles)(\u0275\u0275directiveInject(VehicleService));
+    return new (__ngFactoryType__ || _Vehicles)(\u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(ChangeDetectorRef));
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Vehicles, selectors: [["app-vehicles"]], viewQuery: function Vehicles_Query(rf, ctx) {
     if (rf & 1) {
@@ -97059,53 +97277,53 @@ var Vehicles = class _Vehicles {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 73, vars: 27, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], ["plateView", ""], ["unitView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "sidebar"], [1, "filter-title"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], [3, "value"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [1, "actions", 3, "click"], [1, "action-btn"], [1, "actions-right"], [1, "action-btn", 3, "click"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"]], template: function Vehicles_Template(rf, ctx) {
+  }, decls: 73, vars: 27, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], ["plateView", ""], ["firstRegistrationView", ""], ["unitView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "sidebar"], [1, "filter-title"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [3, "value"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "action-btn"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"]], template: function Vehicles_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
-      \u0275\u0275elementStart(0, "h1", 5);
+      \u0275\u0275elementStart(0, "h1", 6);
       \u0275\u0275text(1, "Fahrzeuge");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(2, "div", 6)(3, "div", 7)(4, "div", 8);
-      \u0275\u0275element(5, "app-vehicle-map", 9);
+      \u0275\u0275elementStart(2, "div", 7)(3, "div", 8)(4, "div", 9);
+      \u0275\u0275element(5, "app-vehicle-map", 10);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(6, "div", 10)(7, "button", 11);
+      \u0275\u0275elementStart(6, "div", 11)(7, "button", 12);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_7_listener() {
         return ctx.toggleCreateForm();
       });
       \u0275\u0275text(8);
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(9, Vehicles_div_9_Template, 34, 11, "div", 12);
-      \u0275\u0275elementStart(10, "div", 13);
-      \u0275\u0275template(11, Vehicles_div_11_Template, 2, 0, "div", 14)(12, Vehicles_div_12_Template, 6, 8, "div", 15);
+      \u0275\u0275template(9, Vehicles_div_9_Template, 35, 12, "div", 13);
+      \u0275\u0275elementStart(10, "div", 14);
+      \u0275\u0275template(11, Vehicles_div_11_Template, 2, 0, "div", 15)(12, Vehicles_div_12_Template, 6, 8, "div", 16);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(13, "div", 16)(14, "button", 17);
+      \u0275\u0275elementStart(13, "div", 17)(14, "button", 18);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_14_listener() {
         return ctx.prevPage();
       });
-      \u0275\u0275elementStart(15, "span", 18);
+      \u0275\u0275elementStart(15, "span", 19);
       \u0275\u0275text(16, "chevron_left");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(17, Vehicles_button_17_Template, 2, 3, "button", 19);
-      \u0275\u0275elementStart(18, "button", 17);
+      \u0275\u0275template(17, Vehicles_button_17_Template, 2, 3, "button", 20);
+      \u0275\u0275elementStart(18, "button", 18);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_18_listener() {
         return ctx.nextPage();
       });
-      \u0275\u0275elementStart(19, "span", 18);
+      \u0275\u0275elementStart(19, "span", 19);
       \u0275\u0275text(20, "chevron_right");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(21, "div", 20)(22, "div", 21);
+      \u0275\u0275elementStart(21, "div", 21)(22, "div", 22);
       \u0275\u0275text(23, "Filter");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(24, "div", 22, 0)(26, "div", 23)(27, "span");
+      \u0275\u0275elementStart(24, "div", 23, 0)(26, "div", 24)(27, "span");
       \u0275\u0275text(28, "Fahrzeug");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(29, "button", 24);
+      \u0275\u0275elementStart(29, "button", 25);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_29_listener() {
         return ctx.toggleAdvancedVehicleFilter();
       });
       \u0275\u0275text(30);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(31, "div", 25)(32, "div", 26)(33, "input", 27);
+      \u0275\u0275elementStart(31, "div", 26)(32, "div", 27)(33, "input", 28);
       \u0275\u0275twoWayListener("ngModelChange", function Vehicles_Template_input_ngModelChange_33_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.vehicleSearch, $event) || (ctx.vehicleSearch = $event);
@@ -97117,20 +97335,20 @@ var Vehicles = class _Vehicles {
         return ctx.showVehicleOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(34, Vehicles_div_34_Template, 2, 1, "div", 28);
+      \u0275\u0275template(34, Vehicles_div_34_Template, 2, 1, "div", 29);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(35, "button", 29);
+      \u0275\u0275elementStart(35, "button", 30);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_35_listener() {
         return ctx.addVehicleFilter();
       });
       \u0275\u0275text(36, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(37, Vehicles_div_37_Template, 2, 1, "div", 30)(38, Vehicles_div_38_Template, 2, 1, "div", 31)(39, Vehicles_div_39_Template, 20, 12, "div", 32);
+      \u0275\u0275template(37, Vehicles_div_37_Template, 2, 1, "div", 31)(38, Vehicles_div_38_Template, 2, 1, "div", 32)(39, Vehicles_div_39_Template, 20, 12, "div", 33);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(40, "div", 22, 1)(42, "span");
+      \u0275\u0275elementStart(40, "div", 23, 1)(42, "span");
       \u0275\u0275text(43, "Telemetrie-Einheit");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(44, "div", 25)(45, "div", 26)(46, "input", 33);
+      \u0275\u0275elementStart(44, "div", 26)(45, "div", 27)(46, "input", 34);
       \u0275\u0275twoWayListener("ngModelChange", function Vehicles_Template_input_ngModelChange_46_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.telemetrySearch, $event) || (ctx.telemetrySearch = $event);
@@ -97142,26 +97360,26 @@ var Vehicles = class _Vehicles {
         return ctx.showTelemetryOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(47, Vehicles_div_47_Template, 2, 1, "div", 28);
+      \u0275\u0275template(47, Vehicles_div_47_Template, 2, 1, "div", 29);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(48, "button", 29);
+      \u0275\u0275elementStart(48, "button", 30);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_48_listener() {
         return ctx.addTelemetryUnitFilter();
       });
       \u0275\u0275text(49, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(50, Vehicles_div_50_Template, 2, 1, "div", 30)(51, Vehicles_div_51_Template, 2, 1, "div", 31);
+      \u0275\u0275template(50, Vehicles_div_50_Template, 2, 1, "div", 31)(51, Vehicles_div_51_Template, 2, 1, "div", 32);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(52, "div", 22, 2)(54, "div", 23)(55, "span");
+      \u0275\u0275elementStart(52, "div", 23, 2)(54, "div", 24)(55, "span");
       \u0275\u0275text(56, "Person");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(57, "button", 24);
+      \u0275\u0275elementStart(57, "button", 25);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_57_listener() {
         return ctx.toggleAdvancedPersonFilter();
       });
       \u0275\u0275text(58);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(59, "div", 25)(60, "div", 26)(61, "input", 34);
+      \u0275\u0275elementStart(59, "div", 26)(60, "div", 27)(61, "input", 35);
       \u0275\u0275twoWayListener("ngModelChange", function Vehicles_Template_input_ngModelChange_61_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.personSearch, $event) || (ctx.personSearch = $event);
@@ -97173,23 +97391,23 @@ var Vehicles = class _Vehicles {
         return ctx.showPersonOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(62, Vehicles_div_62_Template, 2, 1, "div", 28);
+      \u0275\u0275template(62, Vehicles_div_62_Template, 2, 1, "div", 29);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(63, "button", 29);
+      \u0275\u0275elementStart(63, "button", 30);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_63_listener() {
         return ctx.addPersonFilter();
       });
       \u0275\u0275text(64, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(65, Vehicles_div_65_Template, 2, 1, "div", 30)(66, Vehicles_div_66_Template, 2, 1, "div", 31)(67, Vehicles_div_67_Template, 9, 5, "div", 32);
+      \u0275\u0275template(65, Vehicles_div_65_Template, 2, 1, "div", 31)(66, Vehicles_div_66_Template, 2, 1, "div", 32)(67, Vehicles_div_67_Template, 9, 5, "div", 33);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(68, "div", 35)(69, "button", 36);
+      \u0275\u0275elementStart(68, "div", 36)(69, "button", 37);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_69_listener() {
         return ctx.applyFilters();
       });
       \u0275\u0275text(70, "Anwenden");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(71, "button", 37);
+      \u0275\u0275elementStart(71, "button", 38);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_71_listener() {
         return ctx.resetFilters();
       });
@@ -97252,7 +97470,7 @@ var Vehicles = class _Vehicles {
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.showAdvancedPersonFilter);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, VehicleMap], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  width: 260px;\n  min-height: 600px;\n  background: #1b1b21;\n  color: white;\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid #2a2b33;\n  margin-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: #aaa;\n  gap: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: #8b8fd9;\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: #72757c;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: #d98c8c;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: #16161b;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: #72757c;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: white;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: #33333d;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, VehicleMap], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  width: 260px;\n  min-height: 600px;\n  background: #1b1b21;\n  color: white;\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid #2a2b33;\n  margin-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: #aaa;\n  gap: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: #8b8fd9;\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: #72757c;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: #d98c8c;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: #16161b;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: #72757c;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: white;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: #33333d;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: #e05252;\n  font-size: 13px;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n  color: white;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: #4a4890;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: #b03434;\n  border-color: #b03434;\n  color: white;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: #cc3d3d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Vehicles, [{
@@ -97280,27 +97498,27 @@ var Vehicles = class _Vehicles {
         </label>
 
         <label>
-          Marke
+          Marke *
           <input type="text" [(ngModel)]="newVehicle.brand">
         </label>
 
         <label>
-          Modell
+          Modell *
           <input type="text" [(ngModel)]="newVehicle.modelName">
         </label>
 
         <label>
-          Baujahr
+          Baujahr *
           <input type="number" [(ngModel)]="newVehicle.year">
         </label>
 
         <label>
-          Fahrzeug-Identnr.
+          Fahrzeug-Identnr. *
           <input type="text" [(ngModel)]="newVehicle.identNr">
         </label>
 
         <label>
-          Ben\xF6tigter F\xFChrerschein
+          Ben\xF6tigter F\xFChrerschein *
           <select [(ngModel)]="newVehicle.requiredLicense">
             <option value="" disabled>Bitte w\xE4hlen</option>
             <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
@@ -97308,12 +97526,12 @@ var Vehicles = class _Vehicles {
         </label>
 
         <label>
-          Leistung (PS)
+          Leistung (PS) *
           <input type="number" [(ngModel)]="newVehicle.powerPs">
         </label>
 
         <label>
-          Farbe
+          Farbe *
           <input type="text" [(ngModel)]="newVehicle.color">
         </label>
 
@@ -97325,9 +97543,13 @@ var Vehicles = class _Vehicles {
 
       <button class="save-btn"
               (click)="createVehicle()"
-              [disabled]="!newVehicle.licensePlate">
+              [disabled]="!newVehicle.modelName || !newVehicle.identNr || !newVehicle.brand
+                          || !newVehicle.year || !newVehicle.requiredLicense
+                          || !newVehicle.powerPs || !newVehicle.color">
         Speichern
       </button>
+
+      <div class="form-error" *ngIf="createError">{{ createError }}</div>
     </div>
 
     <div class="list">
@@ -97362,7 +97584,14 @@ var Vehicles = class _Vehicles {
           <div><span>Ben\xF6tigter F\xFChrerschein:</span> {{ vehicle.requiredLicense }}</div>
           <div><span>Leistung:</span> {{ vehicle.powerPs }} PS</div>
           <div><span>Farbe:</span> {{ vehicle.color }}</div>
-          <div><span>Erstzulassung:</span> {{ vehicle.firstRegistration }}</div>
+
+          <div>
+            <span>Erstzulassung:</span>
+            <ng-container *ngIf="editingIndex === i; else firstRegistrationView">
+              <input type="date" class="inline-input" [(ngModel)]="vehicle.firstRegistration">
+            </ng-container>
+            <ng-template #firstRegistrationView>{{ vehicle.firstRegistration }}</ng-template>
+          </div>
 
           <div>
             <span>Telemetrie-Einheit:</span>
@@ -97378,15 +97607,23 @@ var Vehicles = class _Vehicles {
           </div>
 
           <div><span>Zugewiesene Person:</span> {{ vehicle.assignedPersonId || 'keine' }}</div>
+
+          <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
         </div>
 
-        <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
-          <button class="action-btn">L\xF6schen</button>
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, vehicle)">
+            {{ deleteConfirmIndex === i ? 'Wirklich L\xF6schen?' : 'L\xF6schen' }}
+          </button>
 
           <div class="actions-right">
-            <button class="action-btn" (click)="collapseItem()">Abbrechen</button>
-            <button class="action-btn" (click)="toggleEdit(i)">
-              {{ editingIndex === i ? 'Fertig' : 'Bearbeiten' }}
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+            <button class="action-btn"
+                    [class.dirty]="editingIndex === i && isEditDirty(vehicle)"
+                    (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+              {{ editingIndex === i ? (isEditDirty(vehicle) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
             <button class="action-btn">Fahrten</button>
           </div>
@@ -97597,8 +97834,8 @@ var Vehicles = class _Vehicles {
   </div>
 
 </div>
-`, styles: ["/* src/app/widgets/vehicles/vehicles.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  justify-content: center;\n}\n.container .sidebar {\n  width: 260px;\n  min-height: 600px;\n  background: #1b1b21;\n  color: white;\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid #2a2b33;\n  margin-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container .sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container .sidebar label,\n.container .sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: #aaa;\n  gap: 6px;\n}\n.container .sidebar .autocomplete {\n  position: relative;\n}\n.container .sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container .sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: #8b8fd9;\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container .sidebar .autocomplete .advanced-btn:hover {\n  color: white;\n}\n.container .sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container .sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container .sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.container .sidebar .autocomplete .add-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container .sidebar .autocomplete .add-btn:hover {\n  background-color: #4a4890;\n}\n.container .sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container .sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container .sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: #72757c;\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: white;\n}\n.container .sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: #d98c8c;\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: #16161b;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n}\n.container .sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: #72757c;\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.container .sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: white;\n  cursor: pointer;\n}\n.container .sidebar .autocomplete .options .option:hover {\n  background: #2a2b33;\n}\n.container .sidebar input,\n.container .sidebar select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.container .sidebar input:focus,\n.container .sidebar select:focus {\n  border-color: #373669;\n}\n.container .sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container .sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .sidebar .filter-actions .apply-btn {\n  background-color: #373669;\n  color: white;\n}\n.container .sidebar .filter-actions .apply-btn:hover {\n  background-color: #4a4890;\n}\n.container .sidebar .filter-actions .reset-btn {\n  background-color: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n}\n.container .sidebar .filter-actions .reset-btn:hover {\n  background-color: #33333d;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box.active {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */\n"] }]
-  }], () => [{ type: VehicleService }], { vehicleAutocompleteRef: [{
+`, styles: ["/* src/app/widgets/vehicles/vehicles.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  justify-content: center;\n}\n.container .sidebar {\n  width: 260px;\n  min-height: 600px;\n  background: #1b1b21;\n  color: white;\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid #2a2b33;\n  margin-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container .sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container .sidebar label,\n.container .sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: #aaa;\n  gap: 6px;\n}\n.container .sidebar .autocomplete {\n  position: relative;\n}\n.container .sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container .sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: #8b8fd9;\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container .sidebar .autocomplete .advanced-btn:hover {\n  color: white;\n}\n.container .sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container .sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container .sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.container .sidebar .autocomplete .add-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container .sidebar .autocomplete .add-btn:hover {\n  background-color: #4a4890;\n}\n.container .sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container .sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container .sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: #72757c;\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: white;\n}\n.container .sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: #d98c8c;\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: #16161b;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n}\n.container .sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: #72757c;\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.container .sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: white;\n  cursor: pointer;\n}\n.container .sidebar .autocomplete .options .option:hover {\n  background: #2a2b33;\n}\n.container .sidebar input,\n.container .sidebar select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.container .sidebar input:focus,\n.container .sidebar select:focus {\n  border-color: #373669;\n}\n.container .sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container .sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .sidebar .filter-actions .apply-btn {\n  background-color: #373669;\n  color: white;\n}\n.container .sidebar .filter-actions .apply-btn:hover {\n  background-color: #4a4890;\n}\n.container .sidebar .filter-actions .reset-btn {\n  background-color: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n}\n.container .sidebar .filter-actions .reset-btn:hover {\n  background-color: #33333d;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.form-error {\n  margin-top: 12px;\n  color: #e05252;\n  font-size: 13px;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box .actions .action-btn.dirty {\n  background: #373669;\n  border-color: #373669;\n  color: white;\n}\n.list .box .actions .action-btn.dirty:hover {\n  background: #4a4890;\n}\n.list .box .actions .action-btn.danger {\n  background: #b03434;\n  border-color: #b03434;\n  color: white;\n}\n.list .box .actions .action-btn.danger:hover {\n  background: #cc3d3d;\n}\n.list .box.active {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */\n"] }]
+  }], () => [{ type: VehicleService }, { type: ChangeDetectorRef }], { vehicleAutocompleteRef: [{
     type: ViewChild,
     args: ["vehicleAutocomplete"]
   }], telemetryAutocompleteRef: [{

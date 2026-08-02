@@ -88,12 +88,12 @@ import {
   subPixelOptimizeRect,
   trim,
   windingLine
-} from "./chunk-ZCRFLGZC.js";
+} from "./chunk-R6Z5RNJY.js";
 import {
   __export
 } from "./chunk-D7MF2QZF.js";
 
-// ../../node_modules/echarts/node_modules/tslib/tslib.es6.js
+// node_modules/echarts/node_modules/tslib/tslib.es6.js
 var extendStatics = function(d, b) {
   extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
     d2.__proto__ = b2;
@@ -112,7 +112,7 @@ function __extends2(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-// ../../node_modules/echarts/lib/util/clazz.js
+// node_modules/echarts/lib/util/clazz.js
 var TYPE_DELIMITER = ".";
 var IS_CONTAINER = "___EC__COMPONENT__CONTAINER___";
 var IS_EXTENDED_CLASS = "___EC__EXTENDED_CLASS___";
@@ -268,7 +268,7 @@ function enableClassManagement(target) {
   }
 }
 
-// ../../node_modules/echarts/lib/model/mixin/makeStyleMapper.js
+// node_modules/echarts/lib/model/mixin/makeStyleMapper.js
 function makeStyleMapper(properties, ignoreParent) {
   for (var i = 0; i < properties.length; i++) {
     if (!properties[i][1]) {
@@ -292,7 +292,7 @@ function makeStyleMapper(properties, ignoreParent) {
   };
 }
 
-// ../../node_modules/echarts/lib/model/mixin/areaStyle.js
+// node_modules/echarts/lib/model/mixin/areaStyle.js
 var AREA_STYLE_KEY_MAP = [
   ["fill", "color"],
   ["shadowBlur"],
@@ -316,7 +316,7 @@ var AreaStyleMixin = (
   })()
 );
 
-// ../../node_modules/echarts/lib/util/number.js
+// node_modules/echarts/lib/util/number.js
 var RADIAN_EPSILON = 1e-4;
 var ROUND_SUPPORTED_PRECISION_MAX = 20;
 function _trim(str) {
@@ -620,7 +620,7 @@ function getLeastCommonMultiple(a, b) {
   return a * b / getGreatestCommonDividor(a, b);
 }
 
-// ../../node_modules/echarts/lib/util/log.js
+// node_modules/echarts/lib/util/log.js
 var ECHARTS_PREFIX = "[ECharts] ";
 var storedLogs = {};
 var hasConsole = typeof console !== "undefined" && console.warn && console.log;
@@ -692,7 +692,7 @@ function throwError(msg) {
   throw new Error(msg);
 }
 
-// ../../node_modules/echarts/lib/util/model.js
+// node_modules/echarts/lib/util/model.js
 function interpolateNumber(p0, p1, percent) {
   return (p1 - p0) * percent + p0;
 }
@@ -1177,7 +1177,7 @@ function clearTmpModel(model) {
   model.option = model.parentModel = model.ecModel = null;
 }
 
-// ../../node_modules/echarts/lib/util/innerStore.js
+// node_modules/echarts/lib/util/innerStore.js
 var getECData = makeInner();
 var setCommonECData = function(seriesIndex, dataType, dataIdx, el) {
   if (el) {
@@ -1198,7 +1198,7 @@ var setCommonECData = function(seriesIndex, dataType, dataIdx, el) {
   }
 };
 
-// ../../node_modules/echarts/lib/util/states.js
+// node_modules/echarts/lib/util/states.js
 var _highlightNextDigit = 1;
 var _highlightKeyMap = {};
 var getSavedStates = makeInner();
@@ -1726,7 +1726,7 @@ function savePathStates(el) {
   store.selectStroke = selectState.style && selectState.style.stroke || null;
 }
 
-// ../../node_modules/echarts/lib/util/graphic.js
+// node_modules/echarts/lib/util/graphic.js
 var graphic_exports = {};
 __export(graphic_exports, {
   Arc: () => Arc_default,
@@ -1788,7 +1788,7 @@ __export(graphic_exports, {
   updateProps: () => updateProps
 });
 
-// ../../node_modules/zrender/lib/tool/transformPath.js
+// node_modules/zrender/lib/tool/transformPath.js
 var CMD = PathProxy_default.CMD;
 var points = [[], [], []];
 var mathSqrt = Math.sqrt;
@@ -1869,7 +1869,7 @@ function transformPath(path, m2) {
   path.increaseVersion();
 }
 
-// ../../node_modules/zrender/lib/tool/path.js
+// node_modules/zrender/lib/tool/path.js
 var mathSqrt2 = Math.sqrt;
 var mathSin = Math.sin;
 var mathCos = Math.cos;
@@ -2202,7 +2202,7 @@ function mergePath(pathEls, opts) {
   return pathBundle;
 }
 
-// ../../node_modules/zrender/lib/graphic/shape/Circle.js
+// node_modules/zrender/lib/graphic/shape/Circle.js
 var CircleShape = /* @__PURE__ */ (function() {
   function CircleShape2() {
     this.cx = 0;
@@ -2228,7 +2228,7 @@ var Circle = (function(_super) {
 Circle.prototype.type = "circle";
 var Circle_default = Circle;
 
-// ../../node_modules/zrender/lib/graphic/shape/Ellipse.js
+// node_modules/zrender/lib/graphic/shape/Ellipse.js
 var EllipseShape = /* @__PURE__ */ (function() {
   function EllipseShape2() {
     this.cx = 0;
@@ -2266,7 +2266,7 @@ var Ellipse = (function(_super) {
 Ellipse.prototype.type = "ellipse";
 var Ellipse_default = Ellipse;
 
-// ../../node_modules/zrender/lib/graphic/helper/roundSector.js
+// node_modules/zrender/lib/graphic/helper/roundSector.js
 var PI2 = Math.PI;
 var PI22 = PI2 * 2;
 var mathSin2 = Math.sin;
@@ -2482,7 +2482,7 @@ function buildPath(ctx, shape) {
   ctx.closePath();
 }
 
-// ../../node_modules/zrender/lib/graphic/shape/Sector.js
+// node_modules/zrender/lib/graphic/shape/Sector.js
 var SectorShape = /* @__PURE__ */ (function() {
   function SectorShape2() {
     this.cx = 0;
@@ -2515,7 +2515,7 @@ var Sector = (function(_super) {
 Sector.prototype.type = "sector";
 var Sector_default = Sector;
 
-// ../../node_modules/zrender/lib/graphic/shape/Ring.js
+// node_modules/zrender/lib/graphic/shape/Ring.js
 var RingShape = /* @__PURE__ */ (function() {
   function RingShape2() {
     this.cx = 0;
@@ -2547,7 +2547,7 @@ var Ring = (function(_super) {
 Ring.prototype.type = "ring";
 var Ring_default = Ring;
 
-// ../../node_modules/zrender/lib/graphic/helper/smoothBezier.js
+// node_modules/zrender/lib/graphic/helper/smoothBezier.js
 function smoothBezier(points2, smooth, isLoop, constraint) {
   var cps = [];
   var v = [];
@@ -2609,7 +2609,7 @@ function smoothBezier(points2, smooth, isLoop, constraint) {
   return cps;
 }
 
-// ../../node_modules/zrender/lib/graphic/helper/poly.js
+// node_modules/zrender/lib/graphic/helper/poly.js
 function buildPath2(ctx, shape, closePath) {
   var smooth = shape.smooth;
   var points2 = shape.points;
@@ -2634,7 +2634,7 @@ function buildPath2(ctx, shape, closePath) {
   }
 }
 
-// ../../node_modules/zrender/lib/graphic/shape/Polygon.js
+// node_modules/zrender/lib/graphic/shape/Polygon.js
 var PolygonShape = /* @__PURE__ */ (function() {
   function PolygonShape2() {
     this.points = null;
@@ -2659,7 +2659,7 @@ var Polygon = (function(_super) {
 Polygon.prototype.type = "polygon";
 var Polygon_default = Polygon;
 
-// ../../node_modules/zrender/lib/graphic/shape/Polyline.js
+// node_modules/zrender/lib/graphic/shape/Polyline.js
 var PolylineShape = /* @__PURE__ */ (function() {
   function PolylineShape2() {
     this.points = null;
@@ -2691,7 +2691,7 @@ var Polyline = (function(_super) {
 Polyline.prototype.type = "polyline";
 var Polyline_default = Polyline;
 
-// ../../node_modules/zrender/lib/graphic/shape/Line.js
+// node_modules/zrender/lib/graphic/shape/Line.js
 var subPixelOptimizeOutputShape = {};
 var LineShape = /* @__PURE__ */ (function() {
   function LineShape2() {
@@ -2757,7 +2757,7 @@ var Line = (function(_super) {
 Line.prototype.type = "line";
 var Line_default = Line;
 
-// ../../node_modules/zrender/lib/graphic/shape/BezierCurve.js
+// node_modules/zrender/lib/graphic/shape/BezierCurve.js
 var out = [];
 var BezierCurveShape = /* @__PURE__ */ (function() {
   function BezierCurveShape2() {
@@ -2850,7 +2850,7 @@ var BezierCurve = (function(_super) {
 BezierCurve.prototype.type = "bezier-curve";
 var BezierCurve_default = BezierCurve;
 
-// ../../node_modules/zrender/lib/graphic/shape/Arc.js
+// node_modules/zrender/lib/graphic/shape/Arc.js
 var ArcShape = /* @__PURE__ */ (function() {
   function ArcShape2() {
     this.cx = 0;
@@ -2893,7 +2893,7 @@ var Arc = (function(_super) {
 Arc.prototype.type = "arc";
 var Arc_default = Arc;
 
-// ../../node_modules/zrender/lib/graphic/Gradient.js
+// node_modules/zrender/lib/graphic/Gradient.js
 var Gradient = (function() {
   function Gradient2(colorStops) {
     this.colorStops = colorStops || [];
@@ -2908,7 +2908,7 @@ var Gradient = (function() {
 })();
 var Gradient_default = Gradient;
 
-// ../../node_modules/zrender/lib/graphic/LinearGradient.js
+// node_modules/zrender/lib/graphic/LinearGradient.js
 var LinearGradient = (function(_super) {
   __extends(LinearGradient2, _super);
   function LinearGradient2(x, y, x2, y2, colorStops, globalCoord) {
@@ -2925,7 +2925,7 @@ var LinearGradient = (function(_super) {
 })(Gradient_default);
 var LinearGradient_default = LinearGradient;
 
-// ../../node_modules/zrender/lib/graphic/RadialGradient.js
+// node_modules/zrender/lib/graphic/RadialGradient.js
 var RadialGradient = (function(_super) {
   __extends(RadialGradient2, _super);
   function RadialGradient2(x, y, r, colorStops, globalCoord) {
@@ -2941,7 +2941,7 @@ var RadialGradient = (function(_super) {
 })(Gradient_default);
 var RadialGradient_default = RadialGradient;
 
-// ../../node_modules/zrender/lib/core/OrientedBoundingRect.js
+// node_modules/zrender/lib/core/OrientedBoundingRect.js
 var mathMin3 = Math.min;
 var mathMax3 = Math.max;
 var mathAbs3 = Math.abs;
@@ -3073,7 +3073,7 @@ var OrientedBoundingRect = (function() {
 })();
 var OrientedBoundingRect_default = OrientedBoundingRect;
 
-// ../../node_modules/zrender/lib/graphic/IncrementalDisplayable.js
+// node_modules/zrender/lib/graphic/IncrementalDisplayable.js
 var m = [];
 var IncrementalDisplayable = (function(_super) {
   __extends(IncrementalDisplayable2, _super);
@@ -3183,7 +3183,7 @@ var IncrementalDisplayable = (function(_super) {
 })(Displayable_default);
 var IncrementalDisplayable_default = IncrementalDisplayable;
 
-// ../../node_modules/echarts/lib/animation/basicTransition.js
+// node_modules/echarts/lib/animation/basicTransition.js
 var transitionStore = makeInner();
 function getAnimationConfig(animationType, animatableModel, dataIndex, extraOpts, extraDelayParams) {
   var animationPayload;
@@ -3321,7 +3321,7 @@ function saveOldStyle(el) {
   transitionStore(el).oldStyle = el.style;
 }
 
-// ../../node_modules/echarts/lib/util/graphic.js
+// node_modules/echarts/lib/util/graphic.js
 var _customShapeMap = {};
 var XY = ["x", "y"];
 var WH = ["width", "height"];
@@ -3752,7 +3752,7 @@ registerShape("line", Line_default);
 registerShape("bezierCurve", BezierCurve_default);
 registerShape("arc", Arc_default);
 
-// ../../node_modules/echarts/lib/label/labelStyle.js
+// node_modules/echarts/lib/label/labelStyle.js
 var EMPTY_OBJ = {};
 function setLabelText(label, labelTexts) {
   for (var i = 0; i < SPECIAL_STATES.length; i++) {
@@ -4139,7 +4139,7 @@ var LabelMarginType = {
   textMargin: 2
 };
 
-// ../../node_modules/echarts/lib/model/mixin/textStyle.js
+// node_modules/echarts/lib/model/mixin/textStyle.js
 var PATH_COLOR = ["textStyle", "color"];
 var textStyleParams = ["fontStyle", "fontWeight", "fontSize", "fontFamily", "padding", "lineHeight", "rich", "width", "height", "overflow"];
 var tmpText = new Text_default();
@@ -4177,7 +4177,7 @@ var TextStyleMixin = (
 );
 var textStyle_default = TextStyleMixin;
 
-// ../../node_modules/echarts/lib/model/mixin/lineStyle.js
+// node_modules/echarts/lib/model/mixin/lineStyle.js
 var LINE_STYLE_KEY_MAP = [
   ["lineWidth", "width"],
   ["stroke", "color"],
@@ -4207,7 +4207,7 @@ var LineStyleMixin = (
   })()
 );
 
-// ../../node_modules/echarts/lib/model/mixin/itemStyle.js
+// node_modules/echarts/lib/model/mixin/itemStyle.js
 var ITEM_STYLE_KEY_MAP = [
   ["fill", "color"],
   ["stroke", "borderColor"],
@@ -4238,7 +4238,7 @@ var ItemStyleMixin = (
   })()
 );
 
-// ../../node_modules/echarts/lib/model/Model.js
+// node_modules/echarts/lib/model/Model.js
 var Model = (
   /** @class */
   (function() {
@@ -4337,7 +4337,7 @@ mixin(Model, AreaStyleMixin);
 mixin(Model, textStyle_default);
 var Model_default = Model;
 
-// ../../node_modules/echarts/lib/data/DataDiffer.js
+// node_modules/echarts/lib/data/DataDiffer.js
 function dataIndexMapValueLength(valNumOrArrLengthMoreThan2) {
   return valNumOrArrLengthMoreThan2 == null ? 0 : valNumOrArrLengthMoreThan2.length || 1;
 }
@@ -4490,7 +4490,7 @@ var DataDiffer = (
 );
 var DataDiffer_default = DataDiffer;
 
-// ../../node_modules/echarts/lib/util/types.js
+// node_modules/echarts/lib/util/types.js
 var VISUAL_DIMENSIONS = createHashMap(["tooltip", "label", "itemName", "itemId", "itemGroupId", "itemChildGroupId", "seriesName"]);
 var SOURCE_FORMAT_ORIGINAL = "original";
 var SOURCE_FORMAT_ARRAY_ROWS = "arrayRows";
@@ -4501,7 +4501,7 @@ var SOURCE_FORMAT_UNKNOWN = "unknown";
 var SERIES_LAYOUT_BY_COLUMN = "column";
 var SERIES_LAYOUT_BY_ROW = "row";
 
-// ../../node_modules/echarts/lib/data/helper/sourceHelper.js
+// node_modules/echarts/lib/data/helper/sourceHelper.js
 var BE_ORDINAL = {
   Must: 1,
   Might: 2,
@@ -4733,7 +4733,7 @@ function doGuessOrdinal(data, sourceFormat, seriesLayoutBy, dimensionsDefine, st
   return BE_ORDINAL.Not;
 }
 
-// ../../node_modules/echarts/lib/data/Source.js
+// node_modules/echarts/lib/data/Source.js
 var SourceImpl = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -4938,7 +4938,7 @@ function shouldRetrieveDataByName(source) {
   return sourceFormat === SOURCE_FORMAT_OBJECT_ROWS || sourceFormat === SOURCE_FORMAT_KEYED_COLUMNS;
 }
 
-// ../../node_modules/echarts/lib/data/helper/dataProvider.js
+// node_modules/echarts/lib/data/helper/dataProvider.js
 var _a;
 var _b;
 var _c;
@@ -5197,7 +5197,7 @@ function retrieveRawValue(data, dataIndex, dim) {
   }
 }
 
-// ../../node_modules/echarts/lib/data/helper/dimensionHelper.js
+// node_modules/echarts/lib/data/helper/dimensionHelper.js
 var DimensionUserOuput = (
   /** @class */
   (function() {
@@ -5296,7 +5296,7 @@ function mayLabelDimType(dimType) {
   return !(dimType === "ordinal" || dimType === "time");
 }
 
-// ../../node_modules/echarts/lib/data/SeriesDimensionDefine.js
+// node_modules/echarts/lib/data/SeriesDimensionDefine.js
 var SeriesDimensionDefine = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -5311,7 +5311,7 @@ var SeriesDimensionDefine = (
 );
 var SeriesDimensionDefine_default = SeriesDimensionDefine;
 
-// ../../node_modules/echarts/lib/data/helper/dataValueHelper.js
+// node_modules/echarts/lib/data/helper/dataValueHelper.js
 function parseDataValue(value, opt) {
   var dimType = opt && opt.type;
   if (dimType === "ordinal") {
@@ -5433,7 +5433,7 @@ function createFilterComparator(op, rval) {
   return op === "eq" || op === "ne" ? new FilterEqualityComparator(op === "eq", rval) : hasOwn(ORDER_COMPARISON_OP_MAP, op) ? new FilterOrderComparator(op, rval) : null;
 }
 
-// ../../node_modules/echarts/lib/data/DataStore.js
+// node_modules/echarts/lib/data/DataStore.js
 var UNDEFINED = "undefined";
 var CtorUint32Array = typeof Uint32Array === UNDEFINED ? Array : Uint32Array;
 var CtorUint16Array = typeof Uint16Array === UNDEFINED ? Array : Uint16Array;
@@ -6226,7 +6226,7 @@ var DataStore = (
 );
 var DataStore_default = DataStore;
 
-// ../../node_modules/echarts/lib/data/helper/SeriesDataSchema.js
+// node_modules/echarts/lib/data/helper/SeriesDataSchema.js
 var inner = makeInner();
 var dimTypeShort = {
   float: "f",
@@ -6362,7 +6362,7 @@ function shouldOmitUnusedDimensions(dimCount) {
   return dimCount > 30;
 }
 
-// ../../node_modules/echarts/lib/data/SeriesData.js
+// node_modules/echarts/lib/data/SeriesData.js
 var isObject2 = isObject;
 var map2 = map;
 var CtorInt32Array2 = typeof Int32Array === "undefined" ? Array : Int32Array;
@@ -7027,7 +7027,7 @@ var SeriesData = (
 );
 var SeriesData_default = SeriesData;
 
-// ../../node_modules/echarts/lib/i18n/langEN.js
+// node_modules/echarts/lib/i18n/langEN.js
 var langEN_default = {
   time: {
     month: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -7140,7 +7140,7 @@ var langEN_default = {
   }
 };
 
-// ../../node_modules/echarts/lib/i18n/langZH.js
+// node_modules/echarts/lib/i18n/langZH.js
 var langZH_default = {
   time: {
     month: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
@@ -7253,7 +7253,7 @@ var langZH_default = {
   }
 };
 
-// ../../node_modules/echarts/lib/core/locale.js
+// node_modules/echarts/lib/core/locale.js
 var LOCALE_ZH = "ZH";
 var LOCALE_EN = "EN";
 var DEFAULT_LOCALE = LOCALE_EN;
@@ -7292,7 +7292,7 @@ function getDefaultLocaleModel() {
 registerLocale(LOCALE_EN, langEN_default);
 registerLocale(LOCALE_ZH, langZH_default);
 
-// ../../node_modules/echarts/lib/util/component.js
+// node_modules/echarts/lib/util/component.js
 var base = Math.round(Math.random() * 10);
 function getUID(type) {
   return [type || "", base++].join("_");
@@ -7401,13 +7401,13 @@ function inheritDefaultOption(superOption, subOption) {
   return merge(merge({}, superOption, true), subOption, true);
 }
 
-// ../../node_modules/echarts/lib/scale/break.js
+// node_modules/echarts/lib/scale/break.js
 var _impl = null;
 function getScaleBreakHelper() {
   return _impl;
 }
 
-// ../../node_modules/echarts/lib/util/time.js
+// node_modules/echarts/lib/util/time.js
 var ONE_SECOND = 1e3;
 var ONE_MINUTE = ONE_SECOND * 60;
 var ONE_HOUR = ONE_MINUTE * 60;
@@ -7655,7 +7655,7 @@ function millisecondsSetterName(isUTC) {
   return isUTC ? "setUTCMilliseconds" : "setMilliseconds";
 }
 
-// ../../node_modules/echarts/lib/legacy/getTextRect.js
+// node_modules/echarts/lib/legacy/getTextRect.js
 function getTextRect(text, font, align, verticalAlign, padding, rich, truncate, lineHeight) {
   var textEl = new Text_default({
     style: {
@@ -7672,7 +7672,7 @@ function getTextRect(text, font, align, verticalAlign, padding, rich, truncate, 
   return textEl.getBoundingRect();
 }
 
-// ../../node_modules/echarts/lib/util/format.js
+// node_modules/echarts/lib/util/format.js
 function addCommas(x) {
   if (!isNumeric(x)) {
     return isString(x) ? x : "-";
@@ -7814,7 +7814,7 @@ function windowOpen(link, target) {
   }
 }
 
-// ../../node_modules/echarts/lib/core/CoordinateSystem.js
+// node_modules/echarts/lib/core/CoordinateSystem.js
 var nonSeriesBoxCoordSysCreators = {};
 var normalCoordSysCreators = {};
 var CoordinateSystemManager = (
@@ -7980,7 +7980,7 @@ var simpleCoordSysInjectionProvider = function(coordSysType, injectTargetModel) 
 };
 var CoordinateSystem_default = CoordinateSystemManager;
 
-// ../../node_modules/echarts/lib/util/layout.js
+// node_modules/echarts/lib/util/layout.js
 var each2 = each;
 var LOCATION_PARAMS = ["left", "right", "top", "bottom", "width", "height"];
 var HV_NAMES = [["width", "left", "right"], ["height", "top", "bottom"]];
@@ -8341,7 +8341,7 @@ function copyLayoutParams(target, source) {
   return target;
 }
 
-// ../../node_modules/echarts/lib/model/Component.js
+// node_modules/echarts/lib/model/Component.js
 var inner2 = makeInner();
 var ComponentModel = (
   /** @class */
@@ -8444,7 +8444,7 @@ function getDependencies(componentType) {
 }
 var Component_default = ComponentModel;
 
-// ../../node_modules/echarts/lib/model/mixin/palette.js
+// node_modules/echarts/lib/model/mixin/palette.js
 var innerColor = makeInner();
 var innerDecal = makeInner();
 var PaletteMixin = (
@@ -8501,7 +8501,7 @@ function clearPalette(that, inner6) {
   inner6(that).paletteNameMap = {};
 }
 
-// ../../node_modules/echarts/lib/model/mixin/dataFormat.js
+// node_modules/echarts/lib/model/mixin/dataFormat.js
 var DIMENSION_LABEL_REG = /\{@(.+?)\}/g;
 var DataFormatMixin = (
   /** @class */
@@ -8613,7 +8613,7 @@ function normalizeTooltipFormatResult(result) {
   };
 }
 
-// ../../node_modules/echarts/lib/core/task.js
+// node_modules/echarts/lib/core/task.js
 function createTask(define) {
   return new Task(define);
 }
@@ -8793,7 +8793,7 @@ var iterator = /* @__PURE__ */ (function() {
   }
 })();
 
-// ../../node_modules/echarts/lib/data/helper/transform.js
+// node_modules/echarts/lib/data/helper/transform.js
 var ExternalSource = (
   /** @class */
   (function() {
@@ -9078,7 +9078,7 @@ function isSupportedSourceFormat(sourceFormat) {
   return sourceFormat === SOURCE_FORMAT_ARRAY_ROWS || sourceFormat === SOURCE_FORMAT_OBJECT_ROWS;
 }
 
-// ../../node_modules/echarts/lib/data/helper/sourceManager.js
+// node_modules/echarts/lib/data/helper/sourceManager.js
 var SourceManager = (
   /** @class */
   (function() {
@@ -9306,7 +9306,7 @@ function doThrow(errMsg) {
   throw new Error(errMsg);
 }
 
-// ../../node_modules/echarts/lib/visual/tokens.js
+// node_modules/echarts/lib/visual/tokens.js
 var tokens = {
   color: {},
   darkColor: {},
@@ -9416,7 +9416,7 @@ tokens.size = {
 };
 var tokens_default = tokens;
 
-// ../../node_modules/echarts/lib/component/tooltip/tooltipMarkup.js
+// node_modules/echarts/lib/component/tooltip/tooltipMarkup.js
 var TOOLTIP_LINE_HEIGHT_CSS = "line-height:1";
 function getTooltipLineHeight(textStyle) {
   var lineHeight = textStyle.lineHeight;
@@ -9661,7 +9661,7 @@ var TooltipMarkupStyleCreator = (
   })()
 );
 
-// ../../node_modules/echarts/lib/component/tooltip/seriesFormatTooltip.js
+// node_modules/echarts/lib/component/tooltip/seriesFormatTooltip.js
 function defaultSeriesFormatTooltip(opt) {
   var series = opt.series;
   var dataIndex = opt.dataIndex;
@@ -9751,7 +9751,7 @@ function formatTooltipArrayValue(value, series, dataIndex, tooltipDims, colorStr
   };
 }
 
-// ../../node_modules/echarts/lib/model/Series.js
+// node_modules/echarts/lib/model/Series.js
 var inner3 = makeInner();
 function getSelectionKey(data, dataIndex) {
   return data.getName(dataIndex) || data.getId(dataIndex);
@@ -10149,7 +10149,7 @@ function getCurrentTask(seriesModel) {
 }
 var Series_default = SeriesModel;
 
-// ../../node_modules/echarts/lib/chart/helper/createRenderPlanner.js
+// node_modules/echarts/lib/chart/helper/createRenderPlanner.js
 function createRenderPlanner() {
   var inner6 = makeInner();
   return function(seriesModel) {
@@ -10163,7 +10163,7 @@ function createRenderPlanner() {
   };
 }
 
-// ../../node_modules/echarts/lib/view/Chart.js
+// node_modules/echarts/lib/view/Chart.js
 var inner4 = makeInner();
 var renderPlanner = createRenderPlanner();
 var ChartView = (
@@ -10290,7 +10290,7 @@ var progressMethodMap = {
 };
 var Chart_default = ChartView;
 
-// ../../node_modules/echarts/lib/util/throttle.js
+// node_modules/echarts/lib/util/throttle.js
 var ORIGIN_METHOD = "\0__throttleOriginMethod";
 var RATE = "\0__throttleRate";
 var THROTTLE_TYPE = "\0__throttleType";
@@ -10371,7 +10371,7 @@ function clear(obj, fnAttr) {
   }
 }
 
-// ../../node_modules/echarts/lib/view/Component.js
+// node_modules/echarts/lib/view/Component.js
 var ComponentView = (
   /** @class */
   (function() {
@@ -10406,7 +10406,7 @@ enableClassExtend(ComponentView);
 enableClassManagement(ComponentView);
 var Component_default2 = ComponentView;
 
-// ../../node_modules/echarts/lib/model/globalDefault.js
+// node_modules/echarts/lib/model/globalDefault.js
 var platform = "";
 if (typeof navigator !== "undefined") {
   platform = navigator.platform || "";
@@ -10496,7 +10496,7 @@ var globalDefault_default = {
   useUTC: false
 };
 
-// ../../node_modules/echarts/lib/model/internalComponentCreator.js
+// node_modules/echarts/lib/model/internalComponentCreator.js
 var internalOptionCreatorMap = createHashMap();
 function registerInternalOptionCreator(mainType, creator) {
   assert(internalOptionCreatorMap.get(mainType) == null && creator);
@@ -10519,7 +10519,7 @@ function concatInternalOptions(ecModel, mainType, newCmptOptionList) {
   return newCmptOptionList.concat(internalOptions);
 }
 
-// ../../node_modules/echarts/lib/model/Global.js
+// node_modules/echarts/lib/model/Global.js
 var reCreateSeriesIndices;
 var assertSeriesInitialized;
 var initBase;
@@ -11085,7 +11085,7 @@ function normalizeSetOptionInput(opts) {
 mixin(GlobalModel, PaletteMixin);
 var Global_default = GlobalModel;
 
-// ../../node_modules/echarts/lib/core/ExtensionAPI.js
+// node_modules/echarts/lib/core/ExtensionAPI.js
 var availableMethods = [
   "getDom",
   "getZr",
@@ -11119,7 +11119,7 @@ var ExtensionAPI = (
 );
 var ExtensionAPI_default = ExtensionAPI;
 
-// ../../node_modules/echarts/lib/model/OptionManager.js
+// node_modules/echarts/lib/model/OptionManager.js
 var QUERY_REG = /^(min|max)?(.+)$/;
 var OptionManager = (
   /** @class */
@@ -11305,7 +11305,7 @@ function indicesEquals(indices1, indices2) {
 }
 var OptionManager_default = OptionManager;
 
-// ../../node_modules/echarts/lib/preprocessor/helper/compatStyle.js
+// node_modules/echarts/lib/preprocessor/helper/compatStyle.js
 var each3 = each;
 var isObject3 = isObject;
 var POSSIBLE_STYLES = ["areaStyle", "lineStyle", "nodeStyle", "linkStyle", "chordStyle", "label", "labelLine"];
@@ -11569,7 +11569,7 @@ function globalCompatStyle(option, isTheme) {
   compatTextStyle(toObj(option.tooltip).axisPointer, "label");
 }
 
-// ../../node_modules/echarts/lib/preprocessor/backwardCompat.js
+// node_modules/echarts/lib/preprocessor/backwardCompat.js
 function get(opt, path) {
   var pathArr = path.split(",");
   var obj = opt;
@@ -11776,7 +11776,7 @@ function globalBackwardCompat(option, isTheme) {
   });
 }
 
-// ../../node_modules/echarts/lib/processor/dataStack.js
+// node_modules/echarts/lib/processor/dataStack.js
 function dataStack(ecModel) {
   var stackInfoMap = createHashMap();
   ecModel.eachSeries(function(seriesModel) {
@@ -11858,7 +11858,7 @@ function calculateStack(stackInfoList) {
   });
 }
 
-// ../../node_modules/echarts/lib/visual/style.js
+// node_modules/echarts/lib/visual/style.js
 var inner5 = makeInner();
 var defaultStyleMappers = {
   itemStyle: makeStyleMapper(ITEM_STYLE_KEY_MAP, true),
@@ -12008,7 +12008,7 @@ var dataColorPaletteTask = {
   }
 };
 
-// ../../node_modules/echarts/lib/loading/default.js
+// node_modules/echarts/lib/loading/default.js
 var PI3 = Math.PI;
 function defaultLoading(api, opts) {
   opts = opts || {};
@@ -12110,7 +12110,7 @@ function defaultLoading(api, opts) {
   return group;
 }
 
-// ../../node_modules/echarts/lib/core/Scheduler.js
+// node_modules/echarts/lib/core/Scheduler.js
 var Scheduler = (
   /** @class */
   (function() {
@@ -12461,7 +12461,7 @@ function mockMethods(target, Clz) {
 }
 var Scheduler_default = Scheduler;
 
-// ../../node_modules/echarts/lib/theme/dark.js
+// node_modules/echarts/lib/theme/dark.js
 var color2 = tokens_default.darkColor;
 var backgroundColor = color2.background;
 var axisCommon = function() {
@@ -12753,7 +12753,7 @@ var theme = {
 theme.categoryAxis.splitLine.show = false;
 var dark_default = theme;
 
-// ../../node_modules/echarts/lib/util/ECEventProcessor.js
+// node_modules/echarts/lib/util/ECEventProcessor.js
 var ECEventProcessor = (
   /** @class */
   (function() {
@@ -12829,7 +12829,7 @@ var ECEventProcessor = (
   })()
 );
 
-// ../../node_modules/echarts/lib/visual/symbol.js
+// node_modules/echarts/lib/visual/symbol.js
 var SYMBOL_PROPS_WITH_CB = ["symbol", "symbolSize", "symbolRotate", "symbolOffset"];
 var SYMBOL_PROPS = SYMBOL_PROPS_WITH_CB.concat(["symbolKeepAspect"]);
 var seriesSymbolTask = {
@@ -12907,7 +12907,7 @@ var dataSymbolTask = {
   }
 };
 
-// ../../node_modules/echarts/lib/visual/helper.js
+// node_modules/echarts/lib/visual/helper.js
 function getItemVisualFromData(data, dataIndex, key) {
   switch (key) {
     case "color":
@@ -12964,7 +12964,7 @@ function setItemVisualFromData(data, dataIndex, key, value) {
   }
 }
 
-// ../../node_modules/echarts/lib/legacy/dataSelectAction.js
+// node_modules/echarts/lib/legacy/dataSelectAction.js
 function createLegacyDataSelectAction(seriesType2, ecRegisterAction) {
   function getSeriesIndices(ecModel, payload) {
     var seriesIndices = [];
@@ -13034,7 +13034,7 @@ function handleLegacySelectEvents(messageCenter, ecIns, api) {
   });
 }
 
-// ../../node_modules/echarts/lib/util/event.js
+// node_modules/echarts/lib/util/event.js
 function findEventDispatcher(target, det, returnFirstMatch) {
   var found;
   while (target) {
@@ -13049,7 +13049,7 @@ function findEventDispatcher(target, det, returnFirstMatch) {
   return found;
 }
 
-// ../../node_modules/zrender/lib/core/WeakMap.js
+// node_modules/zrender/lib/core/WeakMap.js
 var wmUniqueIndex = Math.round(Math.random() * 9);
 var supportDefineProperty = typeof Object.defineProperty === "function";
 var WeakMap = (function() {
@@ -13092,7 +13092,7 @@ var WeakMap = (function() {
 })();
 var WeakMap_default = WeakMap;
 
-// ../../node_modules/echarts/lib/util/symbol.js
+// node_modules/echarts/lib/util/symbol.js
 var Triangle = Path_default.extend({
   type: "triangle",
   shape: {
@@ -13345,7 +13345,7 @@ function normalizeSymbolOffset(symbolOffset, symbolSize) {
   return [parsePercent2(symbolOffset[0], symbolSize[0]) || 0, parsePercent2(retrieve2(symbolOffset[1], symbolOffset[0]), symbolSize[1]) || 0];
 }
 
-// ../../node_modules/echarts/lib/util/decal.js
+// node_modules/echarts/lib/util/decal.js
 var decalMap = new WeakMap_default();
 var decalCache = new LRU_default(100);
 var decalKeys = ["symbol", "symbolSize", "symbolKeepAspect", "color", "backgroundColor", "dashArrayX", "dashArrayY", "maxTileWidth", "maxTileHeight"];
@@ -13628,7 +13628,7 @@ function getLineBlockLengthY(dash) {
   return blockLength;
 }
 
-// ../../node_modules/echarts/lib/visual/decal.js
+// node_modules/echarts/lib/visual/decal.js
 function decalVisual(ecModel, api) {
   ecModel.eachRawSeries(function(seriesModel) {
     if (ecModel.isSeriesFiltered(seriesModel)) {
@@ -13652,11 +13652,11 @@ function decalVisual(ecModel, api) {
   });
 }
 
-// ../../node_modules/echarts/lib/core/lifecycle.js
+// node_modules/echarts/lib/core/lifecycle.js
 var lifecycle = new Eventful_default();
 var lifecycle_default = lifecycle;
 
-// ../../node_modules/echarts/lib/core/impl.js
+// node_modules/echarts/lib/core/impl.js
 var implsStore = {};
 function registerImpl(name, impl) {
   if (true) {
@@ -13675,7 +13675,7 @@ function getImpl(name) {
   return implsStore[name];
 }
 
-// ../../node_modules/echarts/lib/chart/custom/customSeriesRegister.js
+// node_modules/echarts/lib/chart/custom/customSeriesRegister.js
 var customRenderers = {};
 function registerCustomSeries(type, renderItem) {
   customRenderers[type] = renderItem;
@@ -13684,7 +13684,7 @@ function getCustomSeries(type) {
   return customRenderers[type];
 }
 
-// ../../node_modules/echarts/lib/core/echarts.js
+// node_modules/echarts/lib/core/echarts.js
 var version = "6.0.0";
 var dependencies = {
   zrender: "6.0.0"
@@ -15581,7 +15581,7 @@ registerTheme("default", {});
 registerTheme("dark", dark_default);
 var dataTool = {};
 
-// ../../node_modules/echarts/lib/extension.js
+// node_modules/echarts/lib/extension.js
 var extensions = [];
 var extensionRegisters = {
   registerPreprocessor,
@@ -15644,7 +15644,7 @@ function use(ext) {
   ext.install(extensionRegisters);
 }
 
-// ../../node_modules/echarts/lib/scale/helper.js
+// node_modules/echarts/lib/scale/helper.js
 function isValueNice(val) {
   var exp10 = Math.pow(10, quantityExponent(Math.abs(val)));
   var f = Math.abs(val / exp10);
@@ -15738,7 +15738,7 @@ function logTransform(base2, extent, noClampNegative) {
   ];
 }
 
-// ../../node_modules/echarts/lib/scale/Scale.js
+// node_modules/echarts/lib/scale/Scale.js
 var Scale = (
   /** @class */
   (function() {
@@ -15815,7 +15815,7 @@ var Scale = (
 enableClassManagement(Scale);
 var Scale_default = Scale;
 
-// ../../node_modules/echarts/lib/data/OrdinalMeta.js
+// node_modules/echarts/lib/data/OrdinalMeta.js
 var uidBase = 0;
 var OrdinalMeta = (
   /** @class */
@@ -15883,7 +15883,7 @@ function getName(obj) {
 }
 var OrdinalMeta_default = OrdinalMeta;
 
-// ../../node_modules/echarts/lib/scale/Ordinal.js
+// node_modules/echarts/lib/scale/Ordinal.js
 var OrdinalScale = (
   /** @class */
   (function(_super) {
@@ -15999,7 +15999,7 @@ var OrdinalScale = (
 Scale_default.registerClass(OrdinalScale);
 var Ordinal_default = OrdinalScale;
 
-// ../../node_modules/echarts/lib/scale/Interval.js
+// node_modules/echarts/lib/scale/Interval.js
 var roundNumber = round;
 var IntervalScale = (
   /** @class */
@@ -16212,7 +16212,7 @@ var IntervalScale = (
 Scale_default.registerClass(IntervalScale);
 var Interval_default = IntervalScale;
 
-// ../../node_modules/echarts/lib/data/helper/dataStackHelper.js
+// node_modules/echarts/lib/data/helper/dataStackHelper.js
 function enableDataStack(seriesModel, dimensionsInput, opt) {
   opt = opt || {};
   var byIndex = opt.byIndex;
@@ -16314,7 +16314,7 @@ function getStackedDimension(data, targetDim) {
   return isDimensionStacked(data, targetDim) ? data.getCalculationInfo("stackResultDimension") : targetDim;
 }
 
-// ../../node_modules/echarts/lib/util/vendor.js
+// node_modules/echarts/lib/util/vendor.js
 var supportFloat32Array = typeof Float32Array !== "undefined";
 var Float32ArrayCtor = !supportFloat32Array ? Array : Float32Array;
 function createFloat32Array(arg) {
@@ -16324,7 +16324,7 @@ function createFloat32Array(arg) {
   return new Float32ArrayCtor(arg);
 }
 
-// ../../node_modules/echarts/lib/layout/barGrid.js
+// node_modules/echarts/lib/layout/barGrid.js
 var STACK_PREFIX = "__ec_stack_";
 function getSeriesStackId(seriesModel) {
   return seriesModel.get("stack") || STACK_PREFIX + seriesModel.seriesIndex;
@@ -16711,7 +16711,7 @@ function getValueAxisStart(baseAxis, valueAxis) {
   return valueAxis.toGlobalCoord(valueAxis.dataToCoord(valueAxis.type === "log" ? startValue > 0 ? startValue : 1 : startValue));
 }
 
-// ../../node_modules/echarts/lib/scale/Time.js
+// node_modules/echarts/lib/scale/Time.js
 var bisect = function(a, x, lo, hi) {
   while (lo < hi) {
     var mid = lo + hi >>> 1;
@@ -17097,7 +17097,7 @@ function getIntervalTicks(bottomUnitName, approxInterval, isUTC, extent, extentS
 Scale_default.registerClass(TimeScale);
 var Time_default = TimeScale;
 
-// ../../node_modules/echarts/lib/scale/Log.js
+// node_modules/echarts/lib/scale/Log.js
 var fixRound = round;
 var mathFloor = Math.floor;
 var mathCeil = Math.ceil;
@@ -17227,7 +17227,7 @@ function fixRoundingError(val, originalVal) {
 Scale_default.registerClass(LogScale);
 var Log_default = LogScale;
 
-// ../../node_modules/echarts/lib/coord/scaleRawExtentInfo.js
+// node_modules/echarts/lib/coord/scaleRawExtentInfo.js
 var ScaleRawExtentInfo = (
   /** @class */
   (function() {
@@ -17365,7 +17365,7 @@ function parseAxisModelMinMax(scale3, minMax) {
   return minMax == null ? null : eqNaN(minMax) ? NaN : scale3.parse(minMax);
 }
 
-// ../../node_modules/echarts/lib/coord/axisHelper.js
+// node_modules/echarts/lib/coord/axisHelper.js
 function getScaleExtent(scale3, model) {
   var scaleType = scale3.type;
   var rawExtentResult = ensureScaleRawExtentInfo(scale3, model, scale3.getExtent()).calculate();
@@ -17567,7 +17567,7 @@ function isSupportAxisBreak(axis) {
   return (axis.dim === "x" || axis.dim === "y" || axis.dim === "z" || axis.dim === "single") && axis.type !== "category";
 }
 
-// ../../node_modules/echarts/lib/coord/axisTickLabelBuilder.js
+// node_modules/echarts/lib/coord/axisTickLabelBuilder.js
 var modelInner = makeInner();
 var axisInner = makeInner();
 var AxisTickLabelComputingKind = {
@@ -17883,7 +17883,7 @@ function makeLabelsByCustomizedCategoryInterval(axis, categoryInterval, onlyTick
   return result;
 }
 
-// ../../node_modules/echarts/lib/coord/Axis.js
+// node_modules/echarts/lib/coord/Axis.js
 var NORMALIZED_EXTENT = [0, 1];
 var Axis = (
   /** @class */
@@ -18067,7 +18067,7 @@ function fixOnBandTicksCoords(axis, ticksCoords, alignWithLabel, clamp2) {
 }
 var Axis_default = Axis;
 
-// ../../node_modules/zrender/lib/contain/polygon.js
+// node_modules/zrender/lib/contain/polygon.js
 var EPSILON = 1e-8;
 function isAroundEqual(a, b) {
   return Math.abs(a - b) < EPSILON;
@@ -18090,7 +18090,7 @@ function contain2(points2, x, y) {
   return w !== 0;
 }
 
-// ../../node_modules/echarts/lib/coord/geo/Region.js
+// node_modules/echarts/lib/coord/geo/Region.js
 var TMP_TRANSFORM = [];
 function transformPoints(points2, transform) {
   for (var p = 0; p < points2.length; p++) {
@@ -18314,7 +18314,7 @@ var GeoSVGRegion = (
   })(Region)
 );
 
-// ../../node_modules/echarts/lib/coord/geo/parseGeoJson.js
+// node_modules/echarts/lib/coord/geo/parseGeoJson.js
 function decode(json) {
   if (!json.UTF8Encoding) {
     return json;
@@ -18405,7 +18405,7 @@ function parseGeoJSON(geoJson, nameProperty) {
   });
 }
 
-// ../../node_modules/echarts/lib/coord/axisModelCommonMixin.js
+// node_modules/echarts/lib/coord/axisModelCommonMixin.js
 var AxisModelCommonMixin = (
   /** @class */
   (function() {
@@ -18422,7 +18422,7 @@ var AxisModelCommonMixin = (
   })()
 );
 
-// ../../node_modules/echarts/lib/label/labelLayoutHelper.js
+// node_modules/echarts/lib/label/labelLayoutHelper.js
 var LABEL_LAYOUT_BASE_PROPS = ["label", "labelLine", "layoutOption", "priority", "defaultAttr", "marginForce", "minMarginForce", "marginDefault", "suggestIgnore"];
 var LABEL_LAYOUT_DIRTY_BIT_OTHERS = 1;
 var LABEL_LAYOUT_DIRTY_BIT_OBB = 2;
@@ -19009,4 +19009,4 @@ export {
   GeoSVGRegion,
   parseGeoJSON
 };
-//# sourceMappingURL=chunk-EIGRPIHO.js.map
+//# sourceMappingURL=chunk-VWF55U7M.js.map

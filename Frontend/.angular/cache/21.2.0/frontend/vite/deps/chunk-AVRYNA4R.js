@@ -22,7 +22,7 @@ import {
   makeSeriesEncodeForAxisCoordSys,
   normalizeToArray,
   shouldOmitUnusedDimensions
-} from "./chunk-EIGRPIHO.js";
+} from "./chunk-VWF55U7M.js";
 import {
   PathProxy_default,
   Path_default,
@@ -45,9 +45,9 @@ import {
   quadraticProjectPoint,
   retrieve,
   retrieve2
-} from "./chunk-ZCRFLGZC.js";
+} from "./chunk-R6Z5RNJY.js";
 
-// ../../node_modules/echarts/lib/data/helper/createDimensions.js
+// node_modules/echarts/lib/data/helper/createDimensions.js
 function createDimensions(source, opt) {
   return prepareSeriesDataSchema(source, opt).dimensions;
 }
@@ -252,7 +252,7 @@ function genCoordDimName(name, map2, fromZero) {
   return name;
 }
 
-// ../../node_modules/echarts/lib/model/referHelper.js
+// node_modules/echarts/lib/model/referHelper.js
 var CoordSysInfo = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -375,7 +375,7 @@ function isCategory(axisModel) {
   return axisModel.get("type") === "category";
 }
 
-// ../../node_modules/echarts/lib/chart/helper/createSeriesData.js
+// node_modules/echarts/lib/chart/helper/createSeriesData.js
 function getCoordSysDimDefs(seriesModel, coordSysInfo) {
   var coordSysName = seriesModel.get("coordinateSystem");
   var registeredCoordSys = CoordinateSystem_default.get(coordSysName);
@@ -481,7 +481,7 @@ function firstDataNotNull(arr) {
 }
 var createSeriesData_default = createSeriesData;
 
-// ../../node_modules/echarts/lib/label/labelGuideHelper.js
+// node_modules/echarts/lib/label/labelGuideHelper.js
 var PI2 = Math.PI * 2;
 var CMD = PathProxy_default.CMD;
 var DEFAULT_SEARCH_SPACE = ["top", "right", "bottom", "left"];
@@ -919,4 +919,4 @@ export {
   setLabelLineStyle,
   getLabelLineStatesModels
 };
-//# sourceMappingURL=chunk-T4RUZCYX.js.map
+//# sourceMappingURL=chunk-AVRYNA4R.js.map

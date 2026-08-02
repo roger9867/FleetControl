@@ -21,27 +21,27 @@
         </label>
 
         <label>
-          Marke
+          Marke *
           <input type="text" [(ngModel)]="newVehicle.brand">
         </label>
 
         <label>
-          Modell
+          Modell *
           <input type="text" [(ngModel)]="newVehicle.modelName">
         </label>
 
         <label>
-          Baujahr
+          Baujahr *
           <input type="number" [(ngModel)]="newVehicle.year">
         </label>
 
         <label>
-          Fahrzeug-Identnr.
+          Fahrzeug-Identnr. *
           <input type="text" [(ngModel)]="newVehicle.identNr">
         </label>
 
         <label>
-          Benötigter Führerschein
+          Benötigter Führerschein *
           <select [(ngModel)]="newVehicle.requiredLicense">
             <option value="" disabled>Bitte wählen</option>
             <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
@@ -49,12 +49,12 @@
         </label>
 
         <label>
-          Leistung (PS)
+          Leistung (PS) *
           <input type="number" [(ngModel)]="newVehicle.powerPs">
         </label>
 
         <label>
-          Farbe
+          Farbe *
           <input type="text" [(ngModel)]="newVehicle.color">
         </label>
 
@@ -66,9 +66,13 @@
 
       <button class="save-btn"
               (click)="createVehicle()"
-              [disabled]="!newVehicle.licensePlate">
+              [disabled]="!newVehicle.modelName || !newVehicle.identNr || !newVehicle.brand
+                          || !newVehicle.year || !newVehicle.requiredLicense
+                          || !newVehicle.powerPs || !newVehicle.color">
         Speichern
       </button>
+
+      <div class="form-error" *ngIf="createError">{{ createError }}</div>
     </div>
 
     <div class="list">
@@ -103,7 +107,14 @@
           <div><span>Benötigter Führerschein:</span> {{ vehicle.requiredLicense }}</div>
           <div><span>Leistung:</span> {{ vehicle.powerPs }} PS</div>
           <div><span>Farbe:</span> {{ vehicle.color }}</div>
-          <div><span>Erstzulassung:</span> {{ vehicle.firstRegistration }}</div>
+
+          <div>
+            <span>Erstzulassung:</span>
+            <ng-container *ngIf="editingIndex === i; else firstRegistrationView">
+              <input type="date" class="inline-input" [(ngModel)]="vehicle.firstRegistration">
+            </ng-container>
+            <ng-template #firstRegistrationView>{{ vehicle.firstRegistration }}</ng-template>
+          </div>
 
           <div>
             <span>Telemetrie-Einheit:</span>
@@ -119,15 +130,23 @@
           </div>
 
           <div><span>Zugewiesene Person:</span> {{ vehicle.assignedPersonId || 'keine' }}</div>
+
+          <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
         </div>
 
-        <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
-          <button class="action-btn">Löschen</button>
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, vehicle)">
+            {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+          </button>
 
           <div class="actions-right">
-            <button class="action-btn" (click)="collapseItem()">Abbrechen</button>
-            <button class="action-btn" (click)="toggleEdit(i)">
-              {{ editingIndex === i ? 'Fertig' : 'Bearbeiten' }}
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+            <button class="action-btn"
+                    [class.dirty]="editingIndex === i && isEditDirty(vehicle)"
+                    (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+              {{ editingIndex === i ? (isEditDirty(vehicle) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
             <button class="action-btn">Fahrten</button>
           </div>

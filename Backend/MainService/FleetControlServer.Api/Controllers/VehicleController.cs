@@ -16,6 +16,15 @@ public class VehicleController : ControllerBase
     }
 
 
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var vehicles = await _service.GetAllAsync();
+
+        return Ok(vehicles);
+    }
+
+
     [HttpPost]
     public async Task<IActionResult> Save([FromBody] VehicleDto dto)
     {

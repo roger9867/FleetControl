@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -26,6 +26,11 @@ export class Vehicles implements OnInit
 
   selectedIndex: number | null = null;
   editingIndex: number | null = null;
+  deleteConfirmIndex: number | null = null;
+
+  createError: string | null = null;
+  editError: string | null = null;
+  editSnapshot: Vehicle | null = null;
 
   dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
 
@@ -93,9 +98,16 @@ export class Vehicles implements OnInit
     if (this.personAutocompleteRef && !this.personAutocompleteRef.nativeElement.contains(target)) {
       this.showPersonOptions = false;
     }
+
+    if (this.deleteConfirmIndex !== null) {
+      const targetEl = target as HTMLElement;
+      if (!targetEl.closest || !targetEl.closest('.delete-btn')) {
+        this.deleteConfirmIndex = null;
+      }
+    }
   }
 
-  constructor(private vehicleService: VehicleService) {}
+  constructor(private vehicleService: VehicleService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.vehicles = this.generateDummyVehicles(40);
@@ -106,6 +118,7 @@ export class Vehicles implements OnInit
         if (vehicles?.length) {
           this.vehicles = vehicles;
         }
+        this.cdr.detectChanges();
       },
       error: () => {
         // No backend yet — keep the dummy vehicles.
@@ -348,15 +361,96 @@ export class Vehicles implements OnInit
   selectItem(index: number): void {
     this.selectedIndex = index;
     this.editingIndex = null;
+    this.editError = null;
+    this.deleteConfirmIndex = null;
   }
 
   collapseItem(): void {
     this.selectedIndex = null;
     this.editingIndex = null;
+    this.editError = null;
+    this.editSnapshot = null;
+    this.deleteConfirmIndex = null;
+  }
+
+  onActionMouseDown(event: MouseEvent): void {
+    // Fires before the currently focused input's blur, so the action
+    // triggers on the first click instead of just defocusing the input.
+    event.preventDefault();
+  }
+
+  onActionsClick(event: MouseEvent): void {
+    event.stopPropagation();
+
+    const target = event.target as HTMLElement;
+    if (this.deleteConfirmIndex !== null && (!target.closest || !target.closest('.delete-btn'))) {
+      this.deleteConfirmIndex = null;
+    }
   }
 
   toggleEdit(index: number): void {
-    this.editingIndex = this.editingIndex === index ? null : index;
+    if (this.editingIndex === index) {
+      this.saveEdit(index);
+      return;
+    }
+
+    this.editingIndex = index;
+    this.editError = null;
+    this.editSnapshot = { ...this.pagedVehicles[index] };
+    this.deleteConfirmIndex = null;
+  }
+
+  isEditDirty(vehicle: Vehicle): boolean {
+    if (!this.editSnapshot) return false;
+
+    return vehicle.licensePlate !== this.editSnapshot.licensePlate
+      || vehicle.firstRegistration !== this.editSnapshot.firstRegistration
+      || (vehicle.telemetryUnit?.id ?? '') !== (this.editSnapshot.telemetryUnit?.id ?? '');
+  }
+
+  private saveEdit(index: number): void {
+    const vehicle = this.pagedVehicles[index];
+    this.editError = null;
+
+    this.vehicleService.update(vehicle).subscribe({
+      next: (updated) => {
+        Object.assign(vehicle, updated);
+        this.editingIndex = null;
+        this.editSnapshot = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.editError = err?.message ?? 'Aktualisieren fehlgeschlagen.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  confirmDelete(index: number, vehicle: Vehicle): void {
+    if (this.deleteConfirmIndex !== index) {
+      this.deleteConfirmIndex = index;
+      return;
+    }
+
+    this.deleteVehicle(vehicle);
+  }
+
+  private deleteVehicle(vehicle: Vehicle): void {
+    this.editError = null;
+
+    this.vehicleService.delete(vehicle.Id).subscribe({
+      next: () => {
+        this.vehicles = this.vehicles.filter(v => v !== vehicle);
+        this.deleteConfirmIndex = null;
+        this.collapseItem();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.editError = err?.message ?? 'Löschen fehlgeschlagen.';
+        this.deleteConfirmIndex = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onTelemetryChange(vehicle: Vehicle, value: string): void {
@@ -367,28 +461,30 @@ export class Vehicles implements OnInit
     this.showCreateForm = !this.showCreateForm;
     if (!this.showCreateForm) {
       this.newVehicle = this.emptyVehicle();
+      this.createError = null;
     }
   }
 
   createVehicle(): void {
-    if (!this.newVehicle.licensePlate) return;
+    if (!this.newVehicle.modelName || !this.newVehicle.identNr || !this.newVehicle.brand
+      || !this.newVehicle.year || !this.newVehicle.requiredLicense
+      || !this.newVehicle.powerPs || !this.newVehicle.color) return;
 
-    this.vehicles.unshift({
-      Id: crypto.randomUUID(),
-      licensePlate: this.newVehicle.licensePlate,
-      brand: this.newVehicle.brand,
-      modelName: this.newVehicle.modelName,
-      year: this.newVehicle.year,
-      identNr: this.newVehicle.identNr,
-      requiredLicense: this.newVehicle.requiredLicense,
-      powerPs: this.newVehicle.powerPs,
-      color: this.newVehicle.color,
-      firstRegistration: this.newVehicle.firstRegistration
+    this.createError = null;
+
+    this.vehicleService.save(this.newVehicle).subscribe({
+      next: (created) => {
+        this.vehicles.unshift(created);
+        this.newVehicle = this.emptyVehicle();
+        this.showCreateForm = false;
+        this.currentPage = 1;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.createError = err?.message ?? 'Speichern fehlgeschlagen.';
+        this.cdr.detectChanges();
+      }
     });
-
-    this.newVehicle = this.emptyVehicle();
-    this.showCreateForm = false;
-    this.currentPage = 1;
   }
 
   private emptyVehicle(): Vehicle {
