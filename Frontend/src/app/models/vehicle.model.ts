@@ -14,4 +14,11 @@ export interface Vehicle {
   firstRegistration?: string;
 
   telemetryUnit?: TelemetryUnit | null;
+  assignedPersonId?: string | null;
+
+  lastLocation?: {
+    lat: number;
+    lng: number;
+    timestamp: string;
+  };
 }

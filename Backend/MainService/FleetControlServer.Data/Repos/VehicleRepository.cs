@@ -6,25 +6,37 @@ namespace FleetControlServer.Data.Repos;
 
 public class VehicleRepository : IVehicleRepository
 {
-    
+
     private readonly AppDbContext _context;
 
     public VehicleRepository(AppDbContext context)
     {
         _context = context;
     }
-    
-    
+
+
     public async Task<IEnumerable<Vehicle>> GetAllAsync()
     {
-        return await _context.Vehicles.ToListAsync();
+        return await _context.Vehicles
+            .Include(v => v.TelemetryUnit)
+            .ToListAsync();
     }
 
-    public async Task<(bool Success, string? Error)> CreateAsync(Vehicle vehicle)
+    public async Task<(bool Success, string? Error)> UpsertAsync(Vehicle vehicle)
     {
         try
         {
-            _context.Vehicles.Add(vehicle);
+            var existing = await _context.Vehicles
+                .FirstOrDefaultAsync(v => v.Id == vehicle.Id);
+
+            if (existing == null)
+            {
+                _context.Vehicles.Add(vehicle);
+            }
+            else
+            {
+                _context.Entry(existing).CurrentValues.SetValues(vehicle);
+            }
 
             await _context.SaveChangesAsync();
 
@@ -39,11 +51,14 @@ public class VehicleRepository : IVehicleRepository
                 {
                     return pgEx.ConstraintName switch
                     {
-                        "UX_Vehicle_IdentificationNumber" =>
+                        "IX_Vehicles_IdentificationNumber" =>
                             (false, "Identification number already exists."),
 
-                        "UX_Vehicle_LicensePlateNumber" =>
+                        "IX_Vehicles_LicensePlateNumber" =>
                             (false, "License plate number already exists."),
+
+                        "IX_Vehicles_FirstRegistration" =>
+                            (false, "First registration date already exists."),
 
                         _ => (false, "A unique constraint was violated.")
                     };
@@ -79,6 +94,7 @@ public class VehicleRepository : IVehicleRepository
         try
         {
             var vehicle = await _context.Vehicles
+                .Include(v => v.TelemetryUnit)
                 .FirstOrDefaultAsync(v => v.Id == id);
 
             if (vehicle == null)
@@ -92,5 +108,10 @@ public class VehicleRepository : IVehicleRepository
         {
             return (false, null, "Failed to retrieve vehicle.");
         }
+    }
+
+    public async Task<bool> DriverExistsAsync(Guid id)
+    {
+        return await _context.VehicleDrivers.AnyAsync(d => d.Id == id);
     }
 }

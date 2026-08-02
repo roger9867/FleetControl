@@ -39,6 +39,7 @@
         <div class="details-full" *ngIf="selectedIndex === i">
           <div><span>Fahrzeug:</span> {{ trip.vehicleId }}</div>
           <div><span>Telemetrie-Einheit:</span> {{ trip.telemetryUnitId }}</div>
+          <div><span>Fahrer:</span> {{ trip.driverId }}</div>
           <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
           <div><span>Stopp:</span> {{ trip.end | date:'dd.MM.yyyy HH:mm' }}</div>
           <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
@@ -193,6 +194,63 @@
 
       <div class="limit-hint" *ngIf="filterTelemetryUnitIds.length >= maxTelemetryUnitFilters">
         Maximal {{ maxTelemetryUnitFilters }} Einheiten
+      </div>
+    </div>
+
+    <div class="autocomplete" #personAutocomplete>
+      <div class="label-row">
+        <span>Person</span>
+        <button type="button" class="advanced-btn" (click)="toggleAdvancedPersonFilter()">
+          {{ showAdvancedPersonFilter ? 'Erweitert ▲' : 'Erweitert ▼' }}
+        </button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Person suchen..."
+                 [(ngModel)]="personSearch"
+                 (ngModelChange)="onPersonSearchChange()"
+                 (focus)="showPersonOptions = true">
+
+          <div class="options" *ngIf="showPersonOptions && filteredPersonOptions.length">
+            <div class="option"
+                 *ngFor="let person of filteredPersonOptions"
+                 (click)="selectPerson(person)">
+              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.employeeNr }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterPersonId || filterPersonIds.length >= maxPersonFilters"
+                (click)="addPersonFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterPersonIds.length">
+        <div class="chip" *ngFor="let personId of filterPersonIds">
+          {{ personId }}
+          <span class="chip-remove" (click)="removePersonFilter(personId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterPersonIds.length >= maxPersonFilters">
+        Maximal {{ maxPersonFilters }} Personen
+      </div>
+
+      <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
+        <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
+        <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
+        <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedPersonFilter.employeeNr">
+
+        <div class="field-label">Geburtsdatum</div>
+        <div class="year-range">
+          <input type="date" placeholder="Geburtsdatum von" [(ngModel)]="advancedPersonFilter.birthDateFrom">
+          <input type="date" placeholder="Geburtsdatum bis" [(ngModel)]="advancedPersonFilter.birthDateTo">
+        </div>
       </div>
     </div>
 

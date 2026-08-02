@@ -32,7 +32,8 @@ namespace FleetControlServer.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("VehicleId")
+                        .IsUnique();
 
                     b.ToTable("TelemetryUnits");
                 });
@@ -65,22 +66,42 @@ namespace FleetControlServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Brand")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly?>("FirstRegistration")
+                        .HasColumnType("date");
+
                     b.Property<string>("IdentificationNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LicensePlateNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ModelName")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("PowerPs")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RequiredLicense")
+                        .HasColumnType("integer");
+
                     b.Property<Guid?>("VehicleDriverId")
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("Year")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("FirstRegistration")
+                        .IsUnique();
 
                     b.HasIndex("IdentificationNumber")
                         .IsUnique();
@@ -126,8 +147,9 @@ namespace FleetControlServer.Data.Migrations
             modelBuilder.Entity("FleetControlServer.Domain.TelemetryUnit", b =>
                 {
                     b.HasOne("FleetControlServer.Domain.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId");
+                        .WithOne("TelemetryUnit")
+                        .HasForeignKey("FleetControlServer.Domain.TelemetryUnit", "VehicleId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Vehicle");
                 });
@@ -147,9 +169,15 @@ namespace FleetControlServer.Data.Migrations
                 {
                     b.HasOne("FleetControlServer.Domain.VehicleDriver", "VehicleDriver")
                         .WithMany()
-                        .HasForeignKey("VehicleDriverId");
+                        .HasForeignKey("VehicleDriverId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("VehicleDriver");
+                });
+
+            modelBuilder.Entity("FleetControlServer.Domain.Vehicle", b =>
+                {
+                    b.Navigation("TelemetryUnit");
                 });
 #pragma warning restore 612, 618
         }

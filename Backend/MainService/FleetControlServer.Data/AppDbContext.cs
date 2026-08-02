@@ -29,6 +29,26 @@ public class AppDbContext : DbContext
                .HasIndex(v => v.LicensePlateNumber)
                .IsUnique();
 
+           modelBuilder.Entity<Vehicle>()
+               .HasIndex(v => v.FirstRegistration)
+               .IsUnique();
+
+        // Vehicle is the principal; the FK column lives on TelemetryUnit. Deleting a
+        // Vehicle must only unlink its TelemetryUnit, never delete it.
+        modelBuilder.Entity<Vehicle>()
+            .HasOne(v => v.TelemetryUnit)
+            .WithOne(t => t.Vehicle)
+            .HasForeignKey<TelemetryUnit>(t => t.VehicleId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Vehicle is the dependent here, so deleting a Vehicle never touches the
+        // VehicleDriver row; SetNull only matters if the driver itself gets deleted.
+        modelBuilder.Entity<Vehicle>()
+            .HasOne(v => v.VehicleDriver)
+            .WithMany()
+            .HasForeignKey(v => v.VehicleDriverId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<Trip>()
             .HasOne(t => t.TelemetryUnit)
             .WithMany()

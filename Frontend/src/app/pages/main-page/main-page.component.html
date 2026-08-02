@@ -74,18 +74,19 @@
     <!-- Central dynamically switched content of UI -->
     <div class="content">
       
+      <!--
       <div *ngIf="activeTab === 'Statistik'">
         <h1>Hier stehen Statistiken</h1>
         <app-card-widget></app-card-widget>
       </div>
+      -->
 
       <div *ngIf="activeTab === 'Fahrten'">
           <app-layout></app-layout>
       </div>
 
       <div *ngIf="activeTab === 'Personen'">
-        <h1>Personen</h1>
-        <p>Hier stehen deine Personen.</p>
+        <app-personen></app-personen>
       </div>
 
       <div *ngIf="activeTab === 'Fahrzeuge'">

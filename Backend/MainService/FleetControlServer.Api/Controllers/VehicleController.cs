@@ -14,22 +14,36 @@ public class VehicleController : ControllerBase
     {
         _service = service;
     }
-    
-    
+
+
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] VehicleDto dto)
+    public async Task<IActionResult> Save([FromBody] VehicleDto dto)
     {
-        var result = await _service.CreateAsync(dto);
+        var result = await _service.UpsertAsync(Guid.NewGuid(), dto);
 
         if (!result.Success)
         {
             return BadRequest(result.Error);
         }
 
-        return Ok();
+        return Ok(result.Vehicle);
     }
-    
-    
+
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] VehicleDto dto)
+    {
+        var result = await _service.UpsertAsync(id, dto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok(result.Vehicle);
+    }
+
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -42,8 +56,8 @@ public class VehicleController : ControllerBase
 
         return Ok(result.Vehicle);
     }
-    
-    
+
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {

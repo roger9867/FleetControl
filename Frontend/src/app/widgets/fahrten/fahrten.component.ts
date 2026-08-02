@@ -6,6 +6,7 @@ import { CardWidget } from '../card-widget/card-widget.component';
 import { TripChart } from '../trip-chart/trip-chart.component';
 import { Trip, TripPoint } from '../../models/trip.model';
 import { Vehicle } from '../../models/vehicle.model';
+import { Person } from '../../models/person.model';
 
 @Component({
   selector: 'app-layout',
@@ -30,6 +31,14 @@ export class LayoutComponent implements OnInit {
 
   dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
 
+  dummyPersons: Person[] = [
+    { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', employeeNr: 'MA-1000', birthDate: '1970-05-20' },
+    { Id: 'p2', firstName: 'Ben', lastName: 'Müller', employeeNr: 'MA-1001', birthDate: '1971-05-20' },
+    { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', employeeNr: 'MA-1002', birthDate: '1972-05-20' },
+    { Id: 'p4', firstName: 'David', lastName: 'Weber', employeeNr: 'MA-1003', birthDate: '1973-05-20' },
+    { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', employeeNr: 'MA-1004', birthDate: '1974-05-20' }
+  ];
+
   licenseClasses: string[] = [
     'AM', 'A1', 'A2', 'A', 'B', 'BE',
     'C1', 'C1E', 'C', 'CE', 'D1', 'D1E', 'D', 'DE'
@@ -38,6 +47,10 @@ export class LayoutComponent implements OnInit {
   showAdvancedVehicleFilter = false;
   advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
   appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+
+  showAdvancedPersonFilter = false;
+  advancedPersonFilter = this.emptyAdvancedPersonFilter();
+  appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
 
   sampleIntervals: { label: string; seconds: number }[] = [
     { label: '1/s', seconds: 1 },
@@ -49,17 +62,21 @@ export class LayoutComponent implements OnInit {
 
   readonly maxVehicleFilters = 10;
   readonly maxTelemetryUnitFilters = 10;
+  readonly maxPersonFilters = 10;
 
   filterVehicleId = '';
   filterVehicleIds: string[] = [];
   filterTelemetryUnitId = '';
   filterTelemetryUnitIds: string[] = [];
+  filterPersonId = '';
+  filterPersonIds: string[] = [];
   filterStart = '';
   filterStop = '';
   sampleIntervalSeconds = 30;
 
   appliedFilterVehicleIds: string[] = [];
   appliedFilterTelemetryUnitIds: string[] = [];
+  appliedFilterPersonIds: string[] = [];
   appliedFilterStart = '';
   appliedFilterStop = '';
   appliedSampleIntervalSeconds = 30;
@@ -70,8 +87,12 @@ export class LayoutComponent implements OnInit {
   telemetrySearch = '';
   showTelemetryOptions = false;
 
+  personSearch = '';
+  showPersonOptions = false;
+
   @ViewChild('vehicleAutocomplete') vehicleAutocompleteRef?: ElementRef<HTMLElement>;
   @ViewChild('telemetryAutocomplete') telemetryAutocompleteRef?: ElementRef<HTMLElement>;
+  @ViewChild('personAutocomplete') personAutocompleteRef?: ElementRef<HTMLElement>;
 
   selectedIndex: number | null = null;
 
@@ -89,6 +110,10 @@ export class LayoutComponent implements OnInit {
     if (this.telemetryAutocompleteRef && !this.telemetryAutocompleteRef.nativeElement.contains(target)) {
       this.showTelemetryOptions = false;
     }
+
+    if (this.personAutocompleteRef && !this.personAutocompleteRef.nativeElement.contains(target)) {
+      this.showPersonOptions = false;
+    }
   }
 
   ngOnInit(): void {
@@ -99,6 +124,7 @@ export class LayoutComponent implements OnInit {
     return this.trips.filter(trip => {
       if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(trip.vehicleId)) return false;
       if (this.appliedFilterTelemetryUnitIds.length && !this.appliedFilterTelemetryUnitIds.includes(trip.telemetryUnitId)) return false;
+      if (this.appliedFilterPersonIds.length && !this.appliedFilterPersonIds.includes(trip.driverId)) return false;
       if (this.appliedFilterStart && new Date(trip.start) < new Date(this.appliedFilterStart)) return false;
       if (this.appliedFilterStop && new Date(trip.end) > new Date(this.appliedFilterStop)) return false;
       return true;
@@ -169,6 +195,23 @@ export class LayoutComponent implements OnInit {
     return this.dummyTelemetryUnits.filter(u => u.toLowerCase().includes(term));
   }
 
+  get filteredPersonOptions(): Person[] {
+    const term = this.personSearch.toLowerCase();
+    const f = this.appliedAdvancedPersonFilter;
+
+    return this.dummyPersons.filter(p => {
+      const fullName = `${p.firstName ?? ''} ${p.lastName ?? ''}`.toLowerCase();
+      const matchesSearch = !term || fullName.includes(term) || (p.employeeNr ?? '').toLowerCase().includes(term);
+      const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
+      const matchesLastName = !f.lastName || (p.lastName ?? '').toLowerCase().includes(f.lastName.toLowerCase());
+      const matchesEmployeeNr = !f.employeeNr || (p.employeeNr ?? '').toLowerCase().includes(f.employeeNr.toLowerCase());
+      const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? '') >= f.birthDateFrom;
+      const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? '') <= f.birthDateTo;
+
+      return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr && matchesBirthFrom && matchesBirthTo;
+    });
+  }
+
   onVehicleSearchChange(): void {
     this.showVehicleOptions = true;
     if (!this.vehicleSearch) this.filterVehicleId = '';
@@ -181,10 +224,12 @@ export class LayoutComponent implements OnInit {
   applyFilters(): void {
     this.appliedFilterVehicleIds = [...this.filterVehicleIds];
     this.appliedFilterTelemetryUnitIds = [...this.filterTelemetryUnitIds];
+    this.appliedFilterPersonIds = [...this.filterPersonIds];
     this.appliedFilterStart = this.filterStart;
     this.appliedFilterStop = this.filterStop;
     this.appliedSampleIntervalSeconds = this.sampleIntervalSeconds;
     this.appliedAdvancedVehicleFilter = { ...this.advancedVehicleFilter };
+    this.appliedAdvancedPersonFilter = { ...this.advancedPersonFilter };
     this.currentTripPage = 1;
     this.selectedIndex = null;
   }
@@ -236,6 +281,36 @@ export class LayoutComponent implements OnInit {
     this.filterTelemetryUnitIds = this.filterTelemetryUnitIds.filter(id => id !== unitId);
   }
 
+  onPersonSearchChange(): void {
+    this.showPersonOptions = true;
+    if (!this.personSearch) this.filterPersonId = '';
+  }
+
+  toggleAdvancedPersonFilter(): void {
+    this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
+  }
+
+  selectPerson(person: Person): void {
+    this.filterPersonId = person.employeeNr ?? '';
+    this.personSearch = person.employeeNr ?? '';
+    this.showPersonOptions = false;
+  }
+
+  addPersonFilter(): void {
+    if (this.filterPersonId
+      && !this.filterPersonIds.includes(this.filterPersonId)
+      && this.filterPersonIds.length < this.maxPersonFilters) {
+      this.filterPersonIds.push(this.filterPersonId);
+    }
+
+    this.filterPersonId = '';
+    this.personSearch = '';
+  }
+
+  removePersonFilter(personId: string): void {
+    this.filterPersonIds = this.filterPersonIds.filter(id => id !== personId);
+  }
+
   selectItem(index: number): void {
     this.selectedIndex = this.selectedIndex === index ? null : index;
   }
@@ -264,19 +339,36 @@ export class LayoutComponent implements OnInit {
     this.filterVehicleIds = [];
     this.filterTelemetryUnitId = '';
     this.filterTelemetryUnitIds = [];
+    this.filterPersonId = '';
+    this.filterPersonIds = [];
     this.filterStart = '';
     this.filterStop = '';
     this.sampleIntervalSeconds = 30;
     this.appliedFilterVehicleIds = [];
     this.appliedFilterTelemetryUnitIds = [];
+    this.appliedFilterPersonIds = [];
     this.appliedFilterStart = '';
     this.appliedFilterStop = '';
     this.appliedSampleIntervalSeconds = 30;
     this.vehicleSearch = '';
     this.telemetrySearch = '';
+    this.personSearch = '';
     this.showAdvancedVehicleFilter = false;
+    this.showAdvancedPersonFilter = false;
     this.advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
     this.appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+    this.advancedPersonFilter = this.emptyAdvancedPersonFilter();
+    this.appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
+  }
+
+  private emptyAdvancedPersonFilter() {
+    return {
+      firstName: '',
+      lastName: '',
+      employeeNr: '',
+      birthDateFrom: '',
+      birthDateTo: ''
+    };
   }
 
   private emptyAdvancedVehicleFilter() {
@@ -347,6 +439,7 @@ export class LayoutComponent implements OnInit {
         id: `Fahrt ${tripIndex + 1}`,
         vehicleId: this.dummyVehicles[tripIndex % this.dummyVehicles.length].licensePlate ?? '',
         telemetryUnitId: this.dummyTelemetryUnits[tripIndex % this.dummyTelemetryUnits.length],
+        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].employeeNr ?? '',
         start: points[0].timestamp,
         end: points[points.length - 1].timestamp,
         points

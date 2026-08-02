@@ -36,8 +36,20 @@ public class TelemetryUnitRepository : ITelemetryUnitRepository
 
         if (entity == null)
             return false;
-        
+
         _context.TelemetryUnits.Remove(entity);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> SetVehicleAsync(Guid telemetryUnitId, Guid? vehicleId)
+    {
+        TelemetryUnit entity = await _context.TelemetryUnits.FindAsync(telemetryUnitId);
+
+        if (entity == null)
+            return false;
+
+        entity.VehicleId = vehicleId;
         await _context.SaveChangesAsync();
         return true;
     }

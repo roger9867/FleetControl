@@ -8,15 +8,11 @@ public class DriversLicense
     
     [Required]
     public DriversLicenseType LicenseType { get; private set; }
-    
-    [Required]
-    public VehicleClass VehicleClass { get; private set; }
-    
+
     public DriversLicense() {}
 
-    public DriversLicense(DriversLicenseType type, VehicleClass vehicleClass)
+    public DriversLicense(DriversLicenseType type)
     {
         LicenseType = type;
-        VehicleClass = vehicleClass;
     }
 }

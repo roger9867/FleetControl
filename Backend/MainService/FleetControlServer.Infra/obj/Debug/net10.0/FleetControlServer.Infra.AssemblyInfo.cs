@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FleetControlServer.Infra")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5778c684ee65368940940afc9b5fa79ff8d71136")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0345dce7ac24a71d6d2d32030e6b100177a68872")]
 [assembly: System.Reflection.AssemblyProductAttribute("FleetControlServer.Infra")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FleetControlServer.Infra")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

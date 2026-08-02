@@ -3048,13 +3048,13 @@ var require_leaflet_src = __commonJS({
           var topLeft = this._getNewPixelOrigin(center2, zoom2);
           return this.project(latlng, zoom2)._subtract(topLeft);
         },
-        _latLngBoundsToNewLayerBounds: function(latLngBounds2, zoom2, center2) {
+        _latLngBoundsToNewLayerBounds: function(latLngBounds3, zoom2, center2) {
           var topLeft = this._getNewPixelOrigin(center2, zoom2);
           return toBounds([
-            this.project(latLngBounds2.getSouthWest(), zoom2)._subtract(topLeft),
-            this.project(latLngBounds2.getNorthWest(), zoom2)._subtract(topLeft),
-            this.project(latLngBounds2.getSouthEast(), zoom2)._subtract(topLeft),
-            this.project(latLngBounds2.getNorthEast(), zoom2)._subtract(topLeft)
+            this.project(latLngBounds3.getSouthWest(), zoom2)._subtract(topLeft),
+            this.project(latLngBounds3.getNorthWest(), zoom2)._subtract(topLeft),
+            this.project(latLngBounds3.getSouthEast(), zoom2)._subtract(topLeft),
+            this.project(latLngBounds3.getNorthEast(), zoom2)._subtract(topLeft)
           ]);
         },
         // layer point of the current center
@@ -3229,13 +3229,13 @@ var require_leaflet_src = __commonJS({
         // @method setPosition(position: string): this
         // Sets the position of the control.
         setPosition: function(position) {
-          var map5 = this._map;
-          if (map5) {
-            map5.removeControl(this);
+          var map6 = this._map;
+          if (map6) {
+            map6.removeControl(this);
           }
           this.options.position = position;
-          if (map5) {
-            map5.addControl(this);
+          if (map6) {
+            map6.addControl(this);
           }
           return this;
         },
@@ -3246,10 +3246,10 @@ var require_leaflet_src = __commonJS({
         },
         // @method addTo(map: Map): this
         // Adds the control to the given map.
-        addTo: function(map5) {
+        addTo: function(map6) {
           this.remove();
-          this._map = map5;
-          var container = this._container = this.onAdd(map5), pos = this.getPosition(), corner = map5._controlCorners[pos];
+          this._map = map6;
+          var container = this._container = this.onAdd(map6), pos = this.getPosition(), corner = map6._controlCorners[pos];
           addClass(container, "leaflet-control");
           if (pos.indexOf("bottom") !== -1) {
             corner.insertBefore(container, corner.firstChild);
@@ -3357,18 +3357,18 @@ var require_leaflet_src = __commonJS({
             this._addLayer(overlays[i], i, true);
           }
         },
-        onAdd: function(map5) {
+        onAdd: function(map6) {
           this._initLayout();
           this._update();
-          this._map = map5;
-          map5.on("zoomend", this._checkDisabledLayers, this);
+          this._map = map6;
+          map6.on("zoomend", this._checkDisabledLayers, this);
           for (var i = 0; i < this._layers.length; i++) {
             this._layers[i].layer.on("add remove", this._onLayerChange, this);
           }
           return this._container;
         },
-        addTo: function(map5) {
-          Control.prototype.addTo.call(this, map5);
+        addTo: function(map6) {
+          Control.prototype.addTo.call(this, map6);
           return this._expandIfNotCollapsed();
         },
         onRemove: function() {
@@ -3623,7 +3623,7 @@ var require_leaflet_src = __commonJS({
           // The title set on the 'zoom out' button.
           zoomOutTitle: "Zoom out"
         },
-        onAdd: function(map5) {
+        onAdd: function(map6) {
           var zoomName = "leaflet-control-zoom", container = create$1("div", zoomName + " leaflet-bar"), options = this.options;
           this._zoomInButton = this._createButton(
             options.zoomInText,
@@ -3640,11 +3640,11 @@ var require_leaflet_src = __commonJS({
             this._zoomOut
           );
           this._updateDisabled();
-          map5.on("zoomend zoomlevelschange", this._updateDisabled, this);
+          map6.on("zoomend zoomlevelschange", this._updateDisabled, this);
           return container;
         },
-        onRemove: function(map5) {
-          map5.off("zoomend zoomlevelschange", this._updateDisabled, this);
+        onRemove: function(map6) {
+          map6.off("zoomend zoomlevelschange", this._updateDisabled, this);
         },
         disable: function() {
           this._disabled = true;
@@ -3680,16 +3680,16 @@ var require_leaflet_src = __commonJS({
           return link;
         },
         _updateDisabled: function() {
-          var map5 = this._map, className = "leaflet-disabled";
+          var map6 = this._map, className = "leaflet-disabled";
           removeClass(this._zoomInButton, className);
           removeClass(this._zoomOutButton, className);
           this._zoomInButton.setAttribute("aria-disabled", "false");
           this._zoomOutButton.setAttribute("aria-disabled", "false");
-          if (this._disabled || map5._zoom === map5.getMinZoom()) {
+          if (this._disabled || map6._zoom === map6.getMinZoom()) {
             addClass(this._zoomOutButton, className);
             this._zoomOutButton.setAttribute("aria-disabled", "true");
           }
-          if (this._disabled || map5._zoom === map5.getMaxZoom()) {
+          if (this._disabled || map6._zoom === map6.getMaxZoom()) {
             addClass(this._zoomInButton, className);
             this._zoomInButton.setAttribute("aria-disabled", "true");
           }
@@ -3724,15 +3724,15 @@ var require_leaflet_src = __commonJS({
           // @option updateWhenIdle: Boolean = false
           // If `true`, the control is updated on [`moveend`](#map-moveend), otherwise it's always up-to-date (updated on [`move`](#map-move)).
         },
-        onAdd: function(map5) {
+        onAdd: function(map6) {
           var className = "leaflet-control-scale", container = create$1("div", className), options = this.options;
           this._addScales(options, className + "-line", container);
-          map5.on(options.updateWhenIdle ? "moveend" : "move", this._update, this);
-          map5.whenReady(this._update, this);
+          map6.on(options.updateWhenIdle ? "moveend" : "move", this._update, this);
+          map6.whenReady(this._update, this);
           return container;
         },
-        onRemove: function(map5) {
-          map5.off(this.options.updateWhenIdle ? "moveend" : "move", this._update, this);
+        onRemove: function(map6) {
+          map6.off(this.options.updateWhenIdle ? "moveend" : "move", this._update, this);
         },
         _addScales: function(options, className, container) {
           if (options.metric) {
@@ -3743,10 +3743,10 @@ var require_leaflet_src = __commonJS({
           }
         },
         _update: function() {
-          var map5 = this._map, y = map5.getSize().y / 2;
-          var maxMeters = map5.distance(
-            map5.containerPointToLatLng([0, y]),
-            map5.containerPointToLatLng([this.options.maxWidth, y])
+          var map6 = this._map, y = map6.getSize().y / 2;
+          var maxMeters = map6.distance(
+            map6.containerPointToLatLng([0, y]),
+            map6.containerPointToLatLng([this.options.maxWidth, y])
           );
           this._updateScales(maxMeters);
         },
@@ -3800,21 +3800,21 @@ var require_leaflet_src = __commonJS({
           setOptions(this, options);
           this._attributions = {};
         },
-        onAdd: function(map5) {
-          map5.attributionControl = this;
+        onAdd: function(map6) {
+          map6.attributionControl = this;
           this._container = create$1("div", "leaflet-control-attribution");
           disableClickPropagation(this._container);
-          for (var i in map5._layers) {
-            if (map5._layers[i].getAttribution) {
-              this.addAttribution(map5._layers[i].getAttribution());
+          for (var i in map6._layers) {
+            if (map6._layers[i].getAttribution) {
+              this.addAttribution(map6._layers[i].getAttribution());
             }
           }
           this._update();
-          map5.on("layeradd", this._addAttribution, this);
+          map6.on("layeradd", this._addAttribution, this);
           return this._container;
         },
-        onRemove: function(map5) {
-          map5.off("layeradd", this._addAttribution, this);
+        onRemove: function(map6) {
+          map6.off("layeradd", this._addAttribution, this);
         },
         _addAttribution: function(ev) {
           if (ev.layer.getAttribution) {
@@ -3896,8 +3896,8 @@ var require_leaflet_src = __commonJS({
       control.scale = scale4;
       control.attribution = attribution;
       var Handler2 = Class.extend({
-        initialize: function(map5) {
-          this._map = map5;
+        initialize: function(map6) {
+          this._map = map6;
         },
         // @method enable(): this
         // Enables the handler
@@ -3931,8 +3931,8 @@ var require_leaflet_src = __commonJS({
         // @method removeHooks()
         // Called when the handler is disabled, should remove the event hooks added previously.
       });
-      Handler2.addTo = function(map5, name) {
-        map5.addHandler(name, this);
+      Handler2.addTo = function(map6, name) {
+        map6.addHandler(name, this);
         return this;
       };
       var Mixin = { Events };
@@ -4442,8 +4442,8 @@ var require_leaflet_src = __commonJS({
          * @method addTo(map: Map|LayerGroup): this
          * Adds the layer to the given map or layer group.
          */
-        addTo: function(map5) {
-          map5.addLayer(this);
+        addTo: function(map6) {
+          map6.addLayer(this);
           return this;
         },
         // @method remove: this
@@ -4482,22 +4482,22 @@ var require_leaflet_src = __commonJS({
           return this.options.attribution;
         },
         _layerAdd: function(e2) {
-          var map5 = e2.target;
-          if (!map5.hasLayer(this)) {
+          var map6 = e2.target;
+          if (!map6.hasLayer(this)) {
             return;
           }
-          this._map = map5;
-          this._zoomAnimated = map5._zoomAnimated;
+          this._map = map6;
+          this._zoomAnimated = map6._zoomAnimated;
           if (this.getEvents) {
             var events = this.getEvents();
-            map5.on(events, this);
+            map6.on(events, this);
             this.once("remove", function() {
-              map5.off(events, this);
+              map6.off(events, this);
             }, this);
           }
-          this.onAdd(map5);
+          this.onAdd(map6);
           this.fire("add");
-          map5.fire("layeradd", { layer: this });
+          map6.fire("layeradd", { layer: this });
         }
       });
       Map2.include({
@@ -4657,11 +4657,11 @@ var require_leaflet_src = __commonJS({
           }
           return this;
         },
-        onAdd: function(map5) {
-          this.eachLayer(map5.addLayer, map5);
+        onAdd: function(map6) {
+          this.eachLayer(map6.addLayer, map6);
         },
-        onRemove: function(map5) {
-          this.eachLayer(map5.removeLayer, map5);
+        onRemove: function(map6) {
+          this.eachLayer(map6.removeLayer, map6);
         },
         // @method eachLayer(fn: Function, context?: Object): this
         // Iterates over the layers of the group, optionally specifying context of the iterator function.
@@ -4699,7 +4699,7 @@ var require_leaflet_src = __commonJS({
           return stamp(layer);
         }
       });
-      var layerGroup2 = function(layers2, options) {
+      var layerGroup3 = function(layers2, options) {
         return new LayerGroup(layers2, options);
       };
       var FeatureGroup = LayerGroup.extend({
@@ -4930,7 +4930,7 @@ var require_leaflet_src = __commonJS({
           return this._draggable && this._draggable._moved;
         },
         _adjustPan: function(e2) {
-          var marker2 = this._marker, map5 = marker2._map, speed = this._marker.options.autoPanSpeed, padding = this._marker.options.autoPanPadding, iconPos = getPosition(marker2._icon), bounds = map5.getPixelBounds(), origin = map5.getPixelOrigin();
+          var marker2 = this._marker, map6 = marker2._map, speed = this._marker.options.autoPanSpeed, padding = this._marker.options.autoPanPadding, iconPos = getPosition(marker2._icon), bounds = map6.getPixelBounds(), origin = map6.getPixelOrigin();
           var panBounds = toBounds(
             bounds.min._subtract(origin).add(padding),
             bounds.max._subtract(origin).subtract(padding)
@@ -4940,7 +4940,7 @@ var require_leaflet_src = __commonJS({
               (Math.max(panBounds.max.x, iconPos.x) - panBounds.max.x) / (bounds.max.x - panBounds.max.x) - (Math.min(panBounds.min.x, iconPos.x) - panBounds.min.x) / (bounds.min.x - panBounds.min.x),
               (Math.max(panBounds.max.y, iconPos.y) - panBounds.max.y) / (bounds.max.y - panBounds.max.y) - (Math.min(panBounds.min.y, iconPos.y) - panBounds.min.y) / (bounds.min.y - panBounds.min.y)
             ).multiplyBy(speed);
-            map5.panBy(movement, { animate: false });
+            map6.panBy(movement, { animate: false });
             this._draggable._newPos._add(movement);
             this._draggable._startPos._add(movement);
             setPosition(marker2._icon, this._draggable._newPos);
@@ -5047,22 +5047,22 @@ var require_leaflet_src = __commonJS({
           setOptions(this, options);
           this._latlng = toLatLng(latlng);
         },
-        onAdd: function(map5) {
-          this._zoomAnimated = this._zoomAnimated && map5.options.markerZoomAnimation;
+        onAdd: function(map6) {
+          this._zoomAnimated = this._zoomAnimated && map6.options.markerZoomAnimation;
           if (this._zoomAnimated) {
-            map5.on("zoomanim", this._animateZoom, this);
+            map6.on("zoomanim", this._animateZoom, this);
           }
           this._initIcon();
           this.update();
         },
-        onRemove: function(map5) {
+        onRemove: function(map6) {
           if (this.dragging && this.dragging.enabled()) {
             this.options.draggable = true;
             this.dragging.removeHooks();
           }
           delete this.dragging;
           if (this._zoomAnimated) {
-            map5.off("zoomanim", this._animateZoom, this);
+            map6.off("zoomanim", this._animateZoom, this);
           }
           this._removeIcon();
           this._removeShadow();
@@ -5253,14 +5253,14 @@ var require_leaflet_src = __commonJS({
           this._updateZIndex(0);
         },
         _panOnFocus: function() {
-          var map5 = this._map;
-          if (!map5) {
+          var map6 = this._map;
+          if (!map6) {
             return;
           }
           var iconOpts = this.options.icon.options;
           var size = iconOpts.iconSize ? toPoint(iconOpts.iconSize) : toPoint(0, 0);
           var anchor = iconOpts.iconAnchor ? toPoint(iconOpts.iconAnchor) : toPoint(0, 0);
-          map5.panInside(this._latlng, {
+          map6.panInside(this._latlng, {
             paddingTopLeft: anchor,
             paddingBottomRight: size.subtract(anchor)
           });
@@ -5323,8 +5323,8 @@ var require_leaflet_src = __commonJS({
           // (unless [`L.DomEvent.stopPropagation`](#domevent-stoppropagation) is used).
           bubblingMouseEvents: true
         },
-        beforeAdd: function(map5) {
-          this._renderer = map5.getRenderer(this);
+        beforeAdd: function(map6) {
+          this._renderer = map6.getRenderer(this);
         },
         onAdd: function() {
           this._renderer._initPath(this);
@@ -5449,7 +5449,7 @@ var require_leaflet_src = __commonJS({
           return p.distanceTo(this._point) <= this._radius + this._clickTolerance();
         }
       });
-      function circleMarker2(latlng, options) {
+      function circleMarker3(latlng, options) {
         return new CircleMarker(latlng, options);
       }
       var Circle2 = CircleMarker.extend({
@@ -5486,19 +5486,19 @@ var require_leaflet_src = __commonJS({
         },
         setStyle: Path2.prototype.setStyle,
         _project: function() {
-          var lng = this._latlng.lng, lat = this._latlng.lat, map5 = this._map, crs = map5.options.crs;
+          var lng = this._latlng.lng, lat = this._latlng.lat, map6 = this._map, crs = map6.options.crs;
           if (crs.distance === Earth.distance) {
-            var d = Math.PI / 180, latR = this._mRadius / Earth.R / d, top = map5.project([lat + latR, lng]), bottom = map5.project([lat - latR, lng]), p = top.add(bottom).divideBy(2), lat2 = map5.unproject(p).lat, lngR = Math.acos((Math.cos(latR * d) - Math.sin(lat * d) * Math.sin(lat2 * d)) / (Math.cos(lat * d) * Math.cos(lat2 * d))) / d;
+            var d = Math.PI / 180, latR = this._mRadius / Earth.R / d, top = map6.project([lat + latR, lng]), bottom = map6.project([lat - latR, lng]), p = top.add(bottom).divideBy(2), lat2 = map6.unproject(p).lat, lngR = Math.acos((Math.cos(latR * d) - Math.sin(lat * d) * Math.sin(lat2 * d)) / (Math.cos(lat * d) * Math.cos(lat2 * d))) / d;
             if (isNaN(lngR) || lngR === 0) {
               lngR = latR / Math.cos(Math.PI / 180 * lat);
             }
-            this._point = p.subtract(map5.getPixelOrigin());
-            this._radius = isNaN(lngR) ? 0 : p.x - map5.project([lat2, lng - lngR]).x;
+            this._point = p.subtract(map6.getPixelOrigin());
+            this._radius = isNaN(lngR) ? 0 : p.x - map6.project([lat2, lng - lngR]).x;
             this._radiusY = p.y - top.y;
           } else {
             var latlng2 = crs.unproject(crs.project(this._latlng).subtract([this._mRadius, 0]));
-            this._point = map5.latLngToLayerPoint(this._latlng);
-            this._radius = this._point.x - map5.latLngToLayerPoint(latlng2).x;
+            this._point = map6.latLngToLayerPoint(this._latlng);
+            this._radius = this._point.x - map6.latLngToLayerPoint(latlng2).x;
           }
           this._updateBounds();
         }
@@ -6386,10 +6386,10 @@ var require_leaflet_src = __commonJS({
         // @method openOn(map: Map): this
         // Adds the overlay to the map.
         // Alternative to `map.openPopup(popup)`/`.openTooltip(tooltip)`.
-        openOn: function(map5) {
-          map5 = arguments.length ? map5 : this._source._map;
-          if (!map5.hasLayer(this)) {
-            map5.addLayer(this);
+        openOn: function(map6) {
+          map6 = arguments.length ? map6 : this._source._map;
+          if (!map6.hasLayer(this)) {
+            map6.addLayer(this);
           }
           return this;
         },
@@ -6421,18 +6421,18 @@ var require_leaflet_src = __commonJS({
           }
           return this;
         },
-        onAdd: function(map5) {
-          this._zoomAnimated = map5._zoomAnimated;
+        onAdd: function(map6) {
+          this._zoomAnimated = map6._zoomAnimated;
           if (!this._container) {
             this._initLayout();
           }
-          if (map5._fadeAnimated) {
+          if (map6._fadeAnimated) {
             setOpacity(this._container, 0);
           }
           clearTimeout(this._removeTimeout);
           this.getPane().appendChild(this._container);
           this.update();
-          if (map5._fadeAnimated) {
+          if (map6._fadeAnimated) {
             setOpacity(this._container, 1);
           }
           this.bringToFront();
@@ -6441,8 +6441,8 @@ var require_leaflet_src = __commonJS({
             this.addInteractiveTarget(this._container);
           }
         },
-        onRemove: function(map5) {
-          if (map5._fadeAnimated) {
+        onRemove: function(map6) {
+          if (map6._fadeAnimated) {
             setOpacity(this._container, 0);
             this._removeTimeout = setTimeout(bind4(remove2, void 0, this._container), 200);
           } else {
@@ -6690,17 +6690,17 @@ var require_leaflet_src = __commonJS({
         // @method openOn(map: Map): this
         // Alternative to `map.openPopup(popup)`.
         // Adds the popup to the map and closes the previous one.
-        openOn: function(map5) {
-          map5 = arguments.length ? map5 : this._source._map;
-          if (!map5.hasLayer(this) && map5._popup && map5._popup.options.autoClose) {
-            map5.removeLayer(map5._popup);
+        openOn: function(map6) {
+          map6 = arguments.length ? map6 : this._source._map;
+          if (!map6.hasLayer(this) && map6._popup && map6._popup.options.autoClose) {
+            map6.removeLayer(map6._popup);
           }
-          map5._popup = this;
-          return DivOverlay.prototype.openOn.call(this, map5);
+          map6._popup = this;
+          return DivOverlay.prototype.openOn.call(this, map6);
         },
-        onAdd: function(map5) {
-          DivOverlay.prototype.onAdd.call(this, map5);
-          map5.fire("popupopen", { popup: this });
+        onAdd: function(map6) {
+          DivOverlay.prototype.onAdd.call(this, map6);
+          map6.fire("popupopen", { popup: this });
           if (this._source) {
             this._source.fire("popupopen", { popup: this }, true);
             if (!(this._source instanceof Path2)) {
@@ -6708,9 +6708,9 @@ var require_leaflet_src = __commonJS({
             }
           }
         },
-        onRemove: function(map5) {
-          DivOverlay.prototype.onRemove.call(this, map5);
-          map5.fire("popupclose", { popup: this });
+        onRemove: function(map6) {
+          DivOverlay.prototype.onRemove.call(this, map6);
+          map6.fire("popupclose", { popup: this });
           if (this._source) {
             this._source.fire("popupclose", { popup: this }, true);
             if (!(this._source instanceof Path2)) {
@@ -6786,9 +6786,9 @@ var require_leaflet_src = __commonJS({
             this._autopanning = false;
             return;
           }
-          var map5 = this._map, marginBottom = parseInt(getStyle2(this._container, "marginBottom"), 10) || 0, containerHeight = this._container.offsetHeight + marginBottom, containerWidth = this._containerWidth, layerPos = new Point2(this._containerLeft, -containerHeight - this._containerBottom);
+          var map6 = this._map, marginBottom = parseInt(getStyle2(this._container, "marginBottom"), 10) || 0, containerHeight = this._container.offsetHeight + marginBottom, containerWidth = this._containerWidth, layerPos = new Point2(this._containerLeft, -containerHeight - this._containerBottom);
           layerPos._add(getPosition(this._container));
-          var containerPos = map5.layerPointToContainerPoint(layerPos), padding = toPoint(this.options.autoPanPadding), paddingTL = toPoint(this.options.autoPanPaddingTopLeft || padding), paddingBR = toPoint(this.options.autoPanPaddingBottomRight || padding), size = map5.getSize(), dx = 0, dy = 0;
+          var containerPos = map6.layerPointToContainerPoint(layerPos), padding = toPoint(this.options.autoPanPadding), paddingTL = toPoint(this.options.autoPanPaddingTopLeft || padding), paddingBR = toPoint(this.options.autoPanPaddingBottomRight || padding), size = map6.getSize(), dx = 0, dy = 0;
           if (containerPos.x + containerWidth + paddingBR.x > size.x) {
             dx = containerPos.x + containerWidth - size.x + paddingBR.x;
           }
@@ -6805,7 +6805,7 @@ var require_leaflet_src = __commonJS({
             if (this.options.keepInView) {
               this._autopanning = true;
             }
-            map5.fire("autopanstart").panBy([dx, dy]);
+            map6.fire("autopanstart").panBy([dx, dy]);
           }
         },
         _getAnchor: function() {
@@ -6970,18 +6970,18 @@ var require_leaflet_src = __commonJS({
           // Tooltip container opacity.
           opacity: 0.9
         },
-        onAdd: function(map5) {
-          DivOverlay.prototype.onAdd.call(this, map5);
+        onAdd: function(map6) {
+          DivOverlay.prototype.onAdd.call(this, map6);
           this.setOpacity(this.options.opacity);
-          map5.fire("tooltipopen", { tooltip: this });
+          map6.fire("tooltipopen", { tooltip: this });
           if (this._source) {
             this.addEventParent(this._source);
             this._source.fire("tooltipopen", { tooltip: this }, true);
           }
         },
-        onRemove: function(map5) {
-          DivOverlay.prototype.onRemove.call(this, map5);
-          map5.fire("tooltipclose", { tooltip: this });
+        onRemove: function(map6) {
+          DivOverlay.prototype.onRemove.call(this, map6);
+          map6.fire("tooltipclose", { tooltip: this });
           if (this._source) {
             this.removeEventParent(this._source);
             this._source.fire("tooltipclose", { tooltip: this }, true);
@@ -7005,7 +7005,7 @@ var require_leaflet_src = __commonJS({
         _adjustPan: function() {
         },
         _setPosition: function(pos) {
-          var subX, subY, map5 = this._map, container = this._container, centerPoint = map5.latLngToContainerPoint(map5.getCenter()), tooltipPoint = map5.layerPointToContainerPoint(pos), direction = this.options.direction, tooltipWidth = container.offsetWidth, tooltipHeight = container.offsetHeight, offset = toPoint(this.options.offset), anchor = this._getAnchor();
+          var subX, subY, map6 = this._map, container = this._container, centerPoint = map6.latLngToContainerPoint(map6.getCenter()), tooltipPoint = map6.layerPointToContainerPoint(pos), direction = this.options.direction, tooltipWidth = container.offsetWidth, tooltipHeight = container.offsetHeight, offset = toPoint(this.options.offset), anchor = this._getAnchor();
           if (direction === "top") {
             subX = tooltipWidth / 2;
             subY = tooltipHeight;
@@ -7338,13 +7338,13 @@ var require_leaflet_src = __commonJS({
           this._tiles = {};
           this._resetView();
         },
-        beforeAdd: function(map5) {
-          map5._addZoomLimit(this);
+        beforeAdd: function(map6) {
+          map6._addZoomLimit(this);
         },
-        onRemove: function(map5) {
+        onRemove: function(map6) {
           this._removeAllTiles();
           remove2(this._container);
-          map5._removeZoomLimit(this);
+          map6._removeZoomLimit(this);
           this._container = null;
           this._tileZoom = void 0;
         },
@@ -7520,14 +7520,14 @@ var require_leaflet_src = __commonJS({
               delete this._levels[z];
             }
           }
-          var level = this._levels[zoom2], map5 = this._map;
+          var level = this._levels[zoom2], map6 = this._map;
           if (!level) {
             level = this._levels[zoom2] = {};
             level.el = create$1("div", "leaflet-tile-container leaflet-zoom-animated", this._container);
             level.el.style.zIndex = maxZoom;
-            level.origin = map5.project(map5.unproject(map5.getPixelOrigin()), zoom2).round();
+            level.origin = map6.project(map6.unproject(map6.getPixelOrigin()), zoom2).round();
             level.zoom = zoom2;
-            this._setZoomTransform(level, map5.getCenter(), map5.getZoom());
+            this._setZoomTransform(level, map6.getCenter(), map6.getZoom());
             falseFn(level.el.offsetWidth);
             this._onCreateLevel(level);
           }
@@ -7677,18 +7677,18 @@ var require_leaflet_src = __commonJS({
           }
         },
         _resetGrid: function() {
-          var map5 = this._map, crs = map5.options.crs, tileSize = this._tileSize = this.getTileSize(), tileZoom = this._tileZoom;
+          var map6 = this._map, crs = map6.options.crs, tileSize = this._tileSize = this.getTileSize(), tileZoom = this._tileZoom;
           var bounds = this._map.getPixelWorldBounds(this._tileZoom);
           if (bounds) {
             this._globalTileRange = this._pxBoundsToTileRange(bounds);
           }
           this._wrapX = crs.wrapLng && !this.options.noWrap && [
-            Math.floor(map5.project([0, crs.wrapLng[0]], tileZoom).x / tileSize.x),
-            Math.ceil(map5.project([0, crs.wrapLng[1]], tileZoom).x / tileSize.y)
+            Math.floor(map6.project([0, crs.wrapLng[0]], tileZoom).x / tileSize.x),
+            Math.ceil(map6.project([0, crs.wrapLng[1]], tileZoom).x / tileSize.y)
           ];
           this._wrapY = crs.wrapLat && !this.options.noWrap && [
-            Math.floor(map5.project([crs.wrapLat[0], 0], tileZoom).y / tileSize.x),
-            Math.ceil(map5.project([crs.wrapLat[1], 0], tileZoom).y / tileSize.y)
+            Math.floor(map6.project([crs.wrapLat[0], 0], tileZoom).y / tileSize.x),
+            Math.ceil(map6.project([crs.wrapLat[1], 0], tileZoom).y / tileSize.y)
           ];
         },
         _onMoveEnd: function() {
@@ -7698,18 +7698,18 @@ var require_leaflet_src = __commonJS({
           this._update();
         },
         _getTiledPixelBounds: function(center2) {
-          var map5 = this._map, mapZoom = map5._animatingZoom ? Math.max(map5._animateToZoom, map5.getZoom()) : map5.getZoom(), scale5 = map5.getZoomScale(mapZoom, this._tileZoom), pixelCenter = map5.project(center2, this._tileZoom).floor(), halfSize = map5.getSize().divideBy(scale5 * 2);
+          var map6 = this._map, mapZoom = map6._animatingZoom ? Math.max(map6._animateToZoom, map6.getZoom()) : map6.getZoom(), scale5 = map6.getZoomScale(mapZoom, this._tileZoom), pixelCenter = map6.project(center2, this._tileZoom).floor(), halfSize = map6.getSize().divideBy(scale5 * 2);
           return new Bounds(pixelCenter.subtract(halfSize), pixelCenter.add(halfSize));
         },
         // Private method to load tiles in the grid's active zoom level according to map bounds
         _update: function(center2) {
-          var map5 = this._map;
-          if (!map5) {
+          var map6 = this._map;
+          if (!map6) {
             return;
           }
-          var zoom2 = this._clampZoom(map5.getZoom());
+          var zoom2 = this._clampZoom(map6.getZoom());
           if (center2 === void 0) {
-            center2 = map5.getCenter();
+            center2 = map6.getCenter();
           }
           if (this._tileZoom === void 0) {
             return;
@@ -7779,7 +7779,7 @@ var require_leaflet_src = __commonJS({
           return this._tileCoordsToBounds(this._keyToTileCoords(key));
         },
         _tileCoordsToNwSe: function(coords) {
-          var map5 = this._map, tileSize = this.getTileSize(), nwPoint = coords.scaleBy(tileSize), sePoint = nwPoint.add(tileSize), nw = map5.unproject(nwPoint, coords.z), se = map5.unproject(sePoint, coords.z);
+          var map6 = this._map, tileSize = this.getTileSize(), nwPoint = coords.scaleBy(tileSize), sePoint = nwPoint.add(tileSize), nw = map6.unproject(nwPoint, coords.z), se = map6.unproject(sePoint, coords.z);
           return [nw, se];
         },
         // converts tile coordinates to its geographical bounds
@@ -8094,7 +8094,7 @@ var require_leaflet_src = __commonJS({
           return GridLayer.prototype._tileReady.call(this, coords, err, tile);
         }
       });
-      function tileLayer2(url, options) {
+      function tileLayer3(url, options) {
         return new TileLayer(url, options);
       }
       var TileLayerWMS = TileLayer.extend({
@@ -8146,12 +8146,12 @@ var require_leaflet_src = __commonJS({
           wmsParams.height = tileSize.y * realRetina;
           this.wmsParams = wmsParams;
         },
-        onAdd: function(map5) {
-          this._crs = this.options.crs || map5.options.crs;
+        onAdd: function(map6) {
+          this._crs = this.options.crs || map6.options.crs;
           this._wmsVersion = parseFloat(this.wmsParams.version);
           var projectionKey = this._wmsVersion >= 1.3 ? "crs" : "srs";
           this.wmsParams[projectionKey] = this._crs.code;
-          TileLayer.prototype.onAdd.call(this, map5);
+          TileLayer.prototype.onAdd.call(this, map6);
         },
         getTileUrl: function(coords) {
           var tileBounds = this._tileCoordsToNwSe(coords), crs = this._crs, bounds = toBounds(crs.project(tileBounds[0]), crs.project(tileBounds[1])), min3 = bounds.min, max3 = bounds.max, bbox = (this._wmsVersion >= 1.3 && this._crs === EPSG4326 ? [min3.y, min3.x, max3.y, max3.x] : [min3.x, min3.y, max3.x, max3.y]).join(","), url = TileLayer.prototype.getTileUrl.call(this, coords);
@@ -8171,7 +8171,7 @@ var require_leaflet_src = __commonJS({
         return new TileLayerWMS(url, options);
       }
       TileLayer.WMS = TileLayerWMS;
-      tileLayer2.wms = tileLayerWMS;
+      tileLayer3.wms = tileLayerWMS;
       var Renderer = Layer2.extend({
         // @section
         // @aka Renderer options
@@ -8839,26 +8839,26 @@ var require_leaflet_src = __commonJS({
         }
       });
       var Rectangle = Polygon2.extend({
-        initialize: function(latLngBounds2, options) {
-          Polygon2.prototype.initialize.call(this, this._boundsToLatLngs(latLngBounds2), options);
+        initialize: function(latLngBounds3, options) {
+          Polygon2.prototype.initialize.call(this, this._boundsToLatLngs(latLngBounds3), options);
         },
         // @method setBounds(latLngBounds: LatLngBounds): this
         // Redraws the rectangle with the passed bounds.
-        setBounds: function(latLngBounds2) {
-          return this.setLatLngs(this._boundsToLatLngs(latLngBounds2));
+        setBounds: function(latLngBounds3) {
+          return this.setLatLngs(this._boundsToLatLngs(latLngBounds3));
         },
-        _boundsToLatLngs: function(latLngBounds2) {
-          latLngBounds2 = toLatLngBounds(latLngBounds2);
+        _boundsToLatLngs: function(latLngBounds3) {
+          latLngBounds3 = toLatLngBounds(latLngBounds3);
           return [
-            latLngBounds2.getSouthWest(),
-            latLngBounds2.getNorthWest(),
-            latLngBounds2.getNorthEast(),
-            latLngBounds2.getSouthEast()
+            latLngBounds3.getSouthWest(),
+            latLngBounds3.getNorthWest(),
+            latLngBounds3.getNorthEast(),
+            latLngBounds3.getSouthEast()
           ];
         }
       });
-      function rectangle(latLngBounds2, options) {
-        return new Rectangle(latLngBounds2, options);
+      function rectangle(latLngBounds3, options) {
+        return new Rectangle(latLngBounds3, options);
       }
       SVG.create = create3;
       SVG.pointsToPath = pointsToPath;
@@ -8876,12 +8876,12 @@ var require_leaflet_src = __commonJS({
         boxZoom: true
       });
       var BoxZoom = Handler2.extend({
-        initialize: function(map5) {
-          this._map = map5;
-          this._container = map5._container;
-          this._pane = map5._panes.overlayPane;
+        initialize: function(map6) {
+          this._map = map6;
+          this._container = map6._container;
+          this._pane = map6._panes.overlayPane;
           this._resetStateTimeout = 0;
-          map5.on("unload", this._destroy, this);
+          map6.on("unload", this._destroy, this);
         },
         addHooks: function() {
           on(this._container, "mousedown", this._onMouseDown, this);
@@ -8990,11 +8990,11 @@ var require_leaflet_src = __commonJS({
           this._map.off("dblclick", this._onDoubleClick, this);
         },
         _onDoubleClick: function(e2) {
-          var map5 = this._map, oldZoom = map5.getZoom(), delta = map5.options.zoomDelta, zoom2 = e2.originalEvent.shiftKey ? oldZoom - delta : oldZoom + delta;
-          if (map5.options.doubleClickZoom === "center") {
-            map5.setZoom(zoom2);
+          var map6 = this._map, oldZoom = map6.getZoom(), delta = map6.options.zoomDelta, zoom2 = e2.originalEvent.shiftKey ? oldZoom - delta : oldZoom + delta;
+          if (map6.options.doubleClickZoom === "center") {
+            map6.setZoom(zoom2);
           } else {
-            map5.setZoomAround(e2.containerPoint, zoom2);
+            map6.setZoomAround(e2.containerPoint, zoom2);
           }
         }
       });
@@ -9037,18 +9037,18 @@ var require_leaflet_src = __commonJS({
       var Drag = Handler2.extend({
         addHooks: function() {
           if (!this._draggable) {
-            var map5 = this._map;
-            this._draggable = new Draggable2(map5._mapPane, map5._container);
+            var map6 = this._map;
+            this._draggable = new Draggable2(map6._mapPane, map6._container);
             this._draggable.on({
               dragstart: this._onDragStart,
               drag: this._onDrag,
               dragend: this._onDragEnd
             }, this);
             this._draggable.on("predrag", this._onPreDragLimit, this);
-            if (map5.options.worldCopyJump) {
+            if (map6.options.worldCopyJump) {
               this._draggable.on("predrag", this._onPreDragWrap, this);
-              map5.on("zoomend", this._onZoomEnd, this);
-              map5.whenReady(this._onZoomEnd, this);
+              map6.on("zoomend", this._onZoomEnd, this);
+              map6.whenReady(this._onZoomEnd, this);
             }
           }
           addClass(this._map._container, "leaflet-grab leaflet-touch-drag");
@@ -9068,8 +9068,8 @@ var require_leaflet_src = __commonJS({
           return this._draggable && this._draggable._moving;
         },
         _onDragStart: function() {
-          var map5 = this._map;
-          map5._stop();
+          var map6 = this._map;
+          map6._stop();
           if (this._map.options.maxBounds && this._map.options.maxBoundsViscosity) {
             var bounds = toLatLngBounds(this._map.options.maxBounds);
             this._offsetLimit = toBounds(
@@ -9080,8 +9080,8 @@ var require_leaflet_src = __commonJS({
           } else {
             this._offsetLimit = null;
           }
-          map5.fire("movestart").fire("dragstart");
-          if (map5.options.inertia) {
+          map6.fire("movestart").fire("dragstart");
+          if (map6.options.inertia) {
             this._positions = [];
             this._times = [];
           }
@@ -9135,19 +9135,19 @@ var require_leaflet_src = __commonJS({
           this._draggable._newPos.x = newX;
         },
         _onDragEnd: function(e2) {
-          var map5 = this._map, options = map5.options, noInertia = !options.inertia || e2.noInertia || this._times.length < 2;
-          map5.fire("dragend", e2);
+          var map6 = this._map, options = map6.options, noInertia = !options.inertia || e2.noInertia || this._times.length < 2;
+          map6.fire("dragend", e2);
           if (noInertia) {
-            map5.fire("moveend");
+            map6.fire("moveend");
           } else {
             this._prunePositions(+/* @__PURE__ */ new Date());
             var direction = this._lastPos.subtract(this._positions[0]), duration = (this._lastTime - this._times[0]) / 1e3, ease = options.easeLinearity, speedVector = direction.multiplyBy(ease / duration), speed = speedVector.distanceTo([0, 0]), limitedSpeed = Math.min(options.inertiaMaxSpeed, speed), limitedSpeedVector = speedVector.multiplyBy(limitedSpeed / speed), decelerationDuration = limitedSpeed / (options.inertiaDeceleration * ease), offset = limitedSpeedVector.multiplyBy(-decelerationDuration / 2).round();
             if (!offset.x && !offset.y) {
-              map5.fire("moveend");
+              map6.fire("moveend");
             } else {
-              offset = map5._limitOffset(offset, map5.options.maxBounds);
+              offset = map6._limitOffset(offset, map6.options.maxBounds);
               requestAnimFrame(function() {
-                map5.panBy(offset, {
+                map6.panBy(offset, {
                   duration: decelerationDuration,
                   easeLinearity: ease,
                   noMoveStart: true,
@@ -9177,10 +9177,10 @@ var require_leaflet_src = __commonJS({
           zoomIn: [187, 107, 61, 171],
           zoomOut: [189, 109, 54, 173]
         },
-        initialize: function(map5) {
-          this._map = map5;
-          this._setPanDelta(map5.options.keyboardPanDelta);
-          this._setZoomDelta(map5.options.zoomDelta);
+        initialize: function(map6) {
+          this._map = map6;
+          this._setPanDelta(map6.options.keyboardPanDelta);
+          this._setZoomDelta(map6.options.zoomDelta);
         },
         addHooks: function() {
           var container = this._map._container;
@@ -9259,27 +9259,27 @@ var require_leaflet_src = __commonJS({
           if (e2.altKey || e2.ctrlKey || e2.metaKey) {
             return;
           }
-          var key = e2.keyCode, map5 = this._map, offset;
+          var key = e2.keyCode, map6 = this._map, offset;
           if (key in this._panKeys) {
-            if (!map5._panAnim || !map5._panAnim._inProgress) {
+            if (!map6._panAnim || !map6._panAnim._inProgress) {
               offset = this._panKeys[key];
               if (e2.shiftKey) {
                 offset = toPoint(offset).multiplyBy(3);
               }
-              if (map5.options.maxBounds) {
-                offset = map5._limitOffset(toPoint(offset), map5.options.maxBounds);
+              if (map6.options.maxBounds) {
+                offset = map6._limitOffset(toPoint(offset), map6.options.maxBounds);
               }
-              if (map5.options.worldCopyJump) {
-                var newLatLng = map5.wrapLatLng(map5.unproject(map5.project(map5.getCenter()).add(offset)));
-                map5.panTo(newLatLng);
+              if (map6.options.worldCopyJump) {
+                var newLatLng = map6.wrapLatLng(map6.unproject(map6.project(map6.getCenter()).add(offset)));
+                map6.panTo(newLatLng);
               } else {
-                map5.panBy(offset);
+                map6.panBy(offset);
               }
             }
           } else if (key in this._zoomKeys) {
-            map5.setZoom(map5.getZoom() + (e2.shiftKey ? 3 : 1) * this._zoomKeys[key]);
-          } else if (key === 27 && map5._popup && map5._popup.options.closeOnEscapeKey) {
-            map5.closePopup();
+            map6.setZoom(map6.getZoom() + (e2.shiftKey ? 3 : 1) * this._zoomKeys[key]);
+          } else if (key === 27 && map6._popup && map6._popup.options.closeOnEscapeKey) {
+            map6.closePopup();
           } else {
             return;
           }
@@ -9325,18 +9325,18 @@ var require_leaflet_src = __commonJS({
           stop2(e2);
         },
         _performZoom: function() {
-          var map5 = this._map, zoom2 = map5.getZoom(), snap = this._map.options.zoomSnap || 0;
-          map5._stop();
-          var d2 = this._delta / (this._map.options.wheelPxPerZoomLevel * 4), d3 = 4 * Math.log(2 / (1 + Math.exp(-Math.abs(d2)))) / Math.LN2, d4 = snap ? Math.ceil(d3 / snap) * snap : d3, delta = map5._limitZoom(zoom2 + (this._delta > 0 ? d4 : -d4)) - zoom2;
+          var map6 = this._map, zoom2 = map6.getZoom(), snap = this._map.options.zoomSnap || 0;
+          map6._stop();
+          var d2 = this._delta / (this._map.options.wheelPxPerZoomLevel * 4), d3 = 4 * Math.log(2 / (1 + Math.exp(-Math.abs(d2)))) / Math.LN2, d4 = snap ? Math.ceil(d3 / snap) * snap : d3, delta = map6._limitZoom(zoom2 + (this._delta > 0 ? d4 : -d4)) - zoom2;
           this._delta = 0;
           this._startTime = null;
           if (!delta) {
             return;
           }
-          if (map5.options.scrollWheelZoom === "center") {
-            map5.setZoom(zoom2 + delta);
+          if (map6.options.scrollWheelZoom === "center") {
+            map6.setZoom(zoom2 + delta);
           } else {
-            map5.setZoomAround(this._lastMousePos, zoom2 + delta);
+            map6.setZoomAround(this._lastMousePos, zoom2 + delta);
           }
         }
       });
@@ -9435,21 +9435,21 @@ var require_leaflet_src = __commonJS({
           off(this._map._container, "touchstart", this._onTouchStart, this);
         },
         _onTouchStart: function(e2) {
-          var map5 = this._map;
-          if (!e2.touches || e2.touches.length !== 2 || map5._animatingZoom || this._zooming) {
+          var map6 = this._map;
+          if (!e2.touches || e2.touches.length !== 2 || map6._animatingZoom || this._zooming) {
             return;
           }
-          var p1 = map5.mouseEventToContainerPoint(e2.touches[0]), p2 = map5.mouseEventToContainerPoint(e2.touches[1]);
-          this._centerPoint = map5.getSize()._divideBy(2);
-          this._startLatLng = map5.containerPointToLatLng(this._centerPoint);
-          if (map5.options.touchZoom !== "center") {
-            this._pinchStartLatLng = map5.containerPointToLatLng(p1.add(p2)._divideBy(2));
+          var p1 = map6.mouseEventToContainerPoint(e2.touches[0]), p2 = map6.mouseEventToContainerPoint(e2.touches[1]);
+          this._centerPoint = map6.getSize()._divideBy(2);
+          this._startLatLng = map6.containerPointToLatLng(this._centerPoint);
+          if (map6.options.touchZoom !== "center") {
+            this._pinchStartLatLng = map6.containerPointToLatLng(p1.add(p2)._divideBy(2));
           }
           this._startDist = p1.distanceTo(p2);
-          this._startZoom = map5.getZoom();
+          this._startZoom = map6.getZoom();
           this._moved = false;
           this._zooming = true;
-          map5._stop();
+          map6._stop();
           on(document, "touchmove", this._onTouchMove, this);
           on(document, "touchend touchcancel", this._onTouchEnd, this);
           preventDefault(e2);
@@ -9458,12 +9458,12 @@ var require_leaflet_src = __commonJS({
           if (!e2.touches || e2.touches.length !== 2 || !this._zooming) {
             return;
           }
-          var map5 = this._map, p1 = map5.mouseEventToContainerPoint(e2.touches[0]), p2 = map5.mouseEventToContainerPoint(e2.touches[1]), scale5 = p1.distanceTo(p2) / this._startDist;
-          this._zoom = map5.getScaleZoom(scale5, this._startZoom);
-          if (!map5.options.bounceAtZoomLimits && (this._zoom < map5.getMinZoom() && scale5 < 1 || this._zoom > map5.getMaxZoom() && scale5 > 1)) {
-            this._zoom = map5._limitZoom(this._zoom);
+          var map6 = this._map, p1 = map6.mouseEventToContainerPoint(e2.touches[0]), p2 = map6.mouseEventToContainerPoint(e2.touches[1]), scale5 = p1.distanceTo(p2) / this._startDist;
+          this._zoom = map6.getScaleZoom(scale5, this._startZoom);
+          if (!map6.options.bounceAtZoomLimits && (this._zoom < map6.getMinZoom() && scale5 < 1 || this._zoom > map6.getMaxZoom() && scale5 > 1)) {
+            this._zoom = map6._limitZoom(this._zoom);
           }
-          if (map5.options.touchZoom === "center") {
+          if (map6.options.touchZoom === "center") {
             this._center = this._startLatLng;
             if (scale5 === 1) {
               return;
@@ -9473,14 +9473,14 @@ var require_leaflet_src = __commonJS({
             if (scale5 === 1 && delta.x === 0 && delta.y === 0) {
               return;
             }
-            this._center = map5.unproject(map5.project(this._pinchStartLatLng, this._zoom).subtract(delta), this._zoom);
+            this._center = map6.unproject(map6.project(this._pinchStartLatLng, this._zoom).subtract(delta), this._zoom);
           }
           if (!this._moved) {
-            map5._moveStart(true, false);
+            map6._moveStart(true, false);
             this._moved = true;
           }
           cancelAnimFrame(this._animRequest);
-          var moveFn = bind4(map5._move, map5, this._center, this._zoom, { pinch: true, round: false }, void 0);
+          var moveFn = bind4(map6._move, map6, this._center, this._zoom, { pinch: true, round: false }, void 0);
           this._animRequest = requestAnimFrame(moveFn, this, true);
           preventDefault(e2);
         },
@@ -9557,7 +9557,7 @@ var require_leaflet_src = __commonJS({
       exports2.bounds = toBounds;
       exports2.canvas = canvas;
       exports2.circle = circle;
-      exports2.circleMarker = circleMarker2;
+      exports2.circleMarker = circleMarker3;
       exports2.control = control;
       exports2.divIcon = divIcon;
       exports2.extend = extend2;
@@ -9569,7 +9569,7 @@ var require_leaflet_src = __commonJS({
       exports2.imageOverlay = imageOverlay;
       exports2.latLng = toLatLng;
       exports2.latLngBounds = toLatLngBounds;
-      exports2.layerGroup = layerGroup2;
+      exports2.layerGroup = layerGroup3;
       exports2.map = createMap;
       exports2.marker = marker;
       exports2.point = toPoint;
@@ -9581,7 +9581,7 @@ var require_leaflet_src = __commonJS({
       exports2.stamp = stamp;
       exports2.svg = svg;
       exports2.svgOverlay = svgOverlay;
-      exports2.tileLayer = tileLayer2;
+      exports2.tileLayer = tileLayer3;
       exports2.tooltip = tooltip;
       exports2.transformation = toTransformation;
       exports2.version = version3;
@@ -21984,9 +21984,9 @@ var ComponentFactoryResolver2 = class extends ComponentFactoryResolver$1 {
     return new ComponentFactory2(componentDef, this.ngModule);
   }
 };
-function toInputRefArray(map5) {
-  return Object.keys(map5).map((name) => {
-    const [propName, flags, transform] = map5[name];
+function toInputRefArray(map6) {
+  return Object.keys(map6).map((name) => {
+    const [propName, flags, transform] = map6[name];
     const inputData = {
       propName,
       templateName: name,
@@ -21998,9 +21998,9 @@ function toInputRefArray(map5) {
     return inputData;
   });
 }
-function toOutputRefArray(map5) {
-  return Object.keys(map5).map((name) => ({
-    propName: map5[name],
+function toOutputRefArray(map6) {
+  return Object.keys(map6).map((name) => ({
+    propName: map6[name],
     templateName: name
   }));
 }
@@ -32796,19 +32796,19 @@ var DefaultKeyValueDiffer = class {
       fn(record);
     }
   }
-  diff(map5) {
-    if (!map5) {
-      map5 = /* @__PURE__ */ new Map();
-    } else if (!(map5 instanceof Map || isJsObject(map5))) {
-      throw new RuntimeError(900, ngDevMode && `Error trying to diff '${stringify(map5)}'. Only maps and objects are allowed`);
+  diff(map6) {
+    if (!map6) {
+      map6 = /* @__PURE__ */ new Map();
+    } else if (!(map6 instanceof Map || isJsObject(map6))) {
+      throw new RuntimeError(900, ngDevMode && `Error trying to diff '${stringify(map6)}'. Only maps and objects are allowed`);
     }
-    return this.check(map5) ? this : null;
+    return this.check(map6) ? this : null;
   }
-  check(map5) {
+  check(map6) {
     this._reset();
     let insertBefore = this._mapHead;
     this._appendAfter = null;
-    this._forEach(map5, (value, key) => {
+    this._forEach(map6, (value, key) => {
       if (insertBefore && insertBefore.key === key) {
         this._maybeAddToChanges(insertBefore, value);
         this._appendAfter = insertBefore;
@@ -38926,18 +38926,18 @@ var HttpUrlEncodingCodec = class {
   }
 };
 function paramParser(rawParams, codec) {
-  const map5 = /* @__PURE__ */ new Map();
+  const map6 = /* @__PURE__ */ new Map();
   if (rawParams.length > 0) {
     const params = rawParams.replace(/^\?/, "").split("&");
     params.forEach((param) => {
       const eqIdx = param.indexOf("=");
       const [key, val] = eqIdx == -1 ? [codec.decodeKey(param), ""] : [codec.decodeKey(param.slice(0, eqIdx)), codec.decodeValue(param.slice(eqIdx + 1))];
-      const list = map5.get(key) || [];
+      const list = map6.get(key) || [];
       list.push(val);
-      map5.set(key, list);
+      map6.set(key, list);
     });
   }
-  return map5;
+  return map6;
 }
 var STANDARD_ENCODING_REGEX = /%(\d[a-f0-9])/gi;
 var STANDARD_ENCODING_REPLACEMENTS = {
@@ -42654,11 +42654,11 @@ var TreeNode = class {
   }
 };
 function nodeChildrenAsMap(node) {
-  const map5 = {};
+  const map6 = {};
   if (node) {
-    node.children.forEach((child) => map5[child.value.outlet] = child);
+    node.children.forEach((child) => map6[child.value.outlet] = child);
   }
-  return map5;
+  return map6;
 }
 var RouterState = class extends Tree {
   snapshot;
@@ -47886,16 +47886,16 @@ var OFFSET = 20;
 var SCALE = 100;
 var defaultWidthMapStr = "007LLmW'55;N0500LLLLLLLLLL00NNNLzWW\\\\WQb\\0FWLg\\bWb\\WQ\\WrWWQ000CL5LLFLL0LL**F*gLLLL5F0LF\\FFF5.5N";
 function getTextWidthMap(mapStr) {
-  var map5 = {};
+  var map6 = {};
   if (typeof JSON === "undefined") {
-    return map5;
+    return map6;
   }
   for (var i = 0; i < mapStr.length; i++) {
     var char = String.fromCharCode(i + 32);
     var size = (mapStr.charCodeAt(i) - OFFSET) / SCALE;
-    map5[char] = size;
+    map6[char] = size;
   }
-  return map5;
+  return map6;
 }
 var DEFAULT_TEXT_WIDTH_MAP = getTextWidthMap(defaultWidthMapStr);
 var platformApi = {
@@ -51360,15 +51360,15 @@ var LRU = (function() {
   }
   LRU2.prototype.put = function(key, value) {
     var list = this._list;
-    var map5 = this._map;
+    var map6 = this._map;
     var removed = null;
-    if (map5[key] == null) {
+    if (map6[key] == null) {
       var len2 = list.len();
       var entry = this._lastRemovedEntry;
       if (len2 >= this._maxSize && len2 > 0) {
         var leastUsedEntry = list.head;
         list.remove(leastUsedEntry);
-        delete map5[leastUsedEntry.key];
+        delete map6[leastUsedEntry.key];
         removed = leastUsedEntry.value;
         this._lastRemovedEntry = leastUsedEntry;
       }
@@ -51379,7 +51379,7 @@ var LRU = (function() {
       }
       entry.key = key;
       list.insertEntry(entry);
-      map5[key] = entry;
+      map6[key] = entry;
     }
     return removed;
   };
@@ -51730,14 +51730,14 @@ function rgba2hsla(rgba) {
   var vMin = Math.min(R, G, B);
   var vMax = Math.max(R, G, B);
   var delta = vMax - vMin;
-  var L3 = (vMax + vMin) / 2;
+  var L4 = (vMax + vMin) / 2;
   var H;
   var S;
   if (delta === 0) {
     H = 0;
     S = 0;
   } else {
-    if (L3 < 0.5) {
+    if (L4 < 0.5) {
       S = delta / (vMax + vMin);
     } else {
       S = delta / (2 - vMax - vMin);
@@ -51759,7 +51759,7 @@ function rgba2hsla(rgba) {
       H -= 1;
     }
   }
-  var hsla = [H * 360, S, L3];
+  var hsla = [H * 360, S, L4];
   if (rgba[3] != null) {
     hsla.push(rgba[3]);
   }
@@ -59844,7 +59844,7 @@ function transformPath(path, m2) {
   var p;
   var M = CMD3.M;
   var C = CMD3.C;
-  var L3 = CMD3.L;
+  var L4 = CMD3.L;
   var R = CMD3.R;
   var A = CMD3.A;
   var Q = CMD3.Q;
@@ -59856,7 +59856,7 @@ function transformPath(path, m2) {
       case M:
         nPoint = 1;
         break;
-      case L3:
+      case L4:
         nPoint = 1;
         break;
       case C:
@@ -73032,25 +73032,25 @@ var DataDiffer = (
         newDataIndexMap[newKey] = null;
       }
     };
-    DataDiffer2.prototype._initIndexMap = function(arr, map5, keyArr, keyGetterName) {
+    DataDiffer2.prototype._initIndexMap = function(arr, map6, keyArr, keyGetterName) {
       var cbModeMultiple = this._diffModeMultiple;
       for (var i = 0; i < arr.length; i++) {
         var key = "_ec_" + this[keyGetterName](arr[i], i);
         if (!cbModeMultiple) {
           keyArr[i] = key;
         }
-        if (!map5) {
+        if (!map6) {
           continue;
         }
-        var idxMapVal = map5[key];
+        var idxMapVal = map6[key];
         var idxMapValLen = dataIndexMapValueLength(idxMapVal);
         if (idxMapValLen === 0) {
-          map5[key] = i;
+          map6[key] = i;
           if (cbModeMultiple) {
             keyArr.push(key);
           }
         } else if (idxMapValLen === 1) {
-          map5[key] = [idxMapVal, i];
+          map6[key] = [idxMapVal, i];
         } else {
           idxMapVal.push(i);
         }
@@ -74184,15 +74184,15 @@ function getDimCount(source, sysDims, dimsDef, optDimCount) {
   });
   return dimCount;
 }
-function genCoordDimName(name, map5, fromZero) {
-  if (fromZero || map5.hasKey(name)) {
+function genCoordDimName(name, map6, fromZero) {
+  if (fromZero || map6.hasKey(name)) {
     var i = 0;
-    while (map5.hasKey(name + i)) {
+    while (map6.hasKey(name + i)) {
       i++;
     }
     name += i;
   }
-  map5.set(name, true);
+  map6.set(name, true);
   return name;
 }
 
@@ -74737,13 +74737,13 @@ var OrdinalMeta = (
         this._onCollect && this._onCollect(category, index);
         return index;
       }
-      var map5 = this._getOrCreateMap();
-      index = map5.get(category);
+      var map6 = this._getOrCreateMap();
+      index = map6.get(category);
       if (index == null) {
         if (needCollect) {
           index = this.categories.length;
           this.categories[index] = category;
-          map5.set(category, index);
+          map6.set(category, index);
           this._onCollect && this._onCollect(category, index);
         } else {
           index = NaN;
@@ -87990,13 +87990,13 @@ var SliderZoomView = (
   })(DataZoomView_default)
 );
 function getOtherDim(thisDim) {
-  var map5 = {
+  var map6 = {
     x: "y",
     y: "x",
     radius: "angle",
     angle: "radius"
   };
-  return map5[thisDim];
+  return map6[thisDim];
 }
 function getCursor(orient) {
   return orient === "vertical" ? "ns-resize" : "ew-resize";
@@ -93881,9 +93881,10 @@ var TripChart = class _TripChart {
 // src/app/widgets/fahrten/fahrten.component.ts
 var _c0 = ["vehicleAutocomplete"];
 var _c1 = ["telemetryAutocomplete"];
+var _c2 = ["personAutocomplete"];
 function LayoutComponent_app_card_widget_5_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "app-card-widget", 34);
+    \u0275\u0275element(0, "app-card-widget", 36);
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
@@ -93892,7 +93893,7 @@ function LayoutComponent_app_card_widget_5_Template(rf, ctx) {
 }
 function LayoutComponent_app_trip_chart_6_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "app-trip-chart", 34);
+    \u0275\u0275element(0, "app-trip-chart", 36);
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
@@ -93901,21 +93902,21 @@ function LayoutComponent_app_trip_chart_6_Template(rf, ctx) {
 }
 function LayoutComponent_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 35);
+    \u0275\u0275elementStart(0, "div", 37);
     \u0275\u0275text(1, " W\xE4hle eine Fahrt aus der Liste aus, um die Details zu sehen. ");
     \u0275\u0275elementEnd();
   }
 }
 function LayoutComponent_div_14_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 36);
+    \u0275\u0275elementStart(0, "div", 38);
     \u0275\u0275text(1, " Keine Fahrten f\xFCr die gew\xE4hlten Filter gefunden. ");
     \u0275\u0275elementEnd();
   }
 }
 function LayoutComponent_div_15_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 41);
+    \u0275\u0275elementStart(0, "div", 43);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -93927,7 +93928,7 @@ function LayoutComponent_div_15_div_3_Template(rf, ctx) {
 }
 function LayoutComponent_div_15_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 42)(1, "div")(2, "span");
+    \u0275\u0275elementStart(0, "div", 44)(1, "div")(2, "span");
     \u0275\u0275text(3, "Fahrzeug:");
     \u0275\u0275elementEnd();
     \u0275\u0275text(4);
@@ -93938,21 +93939,26 @@ function LayoutComponent_div_15_div_4_Template(rf, ctx) {
     \u0275\u0275text(8);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(9, "div")(10, "span");
-    \u0275\u0275text(11, "Start:");
+    \u0275\u0275text(11, "Fahrer:");
     \u0275\u0275elementEnd();
     \u0275\u0275text(12);
-    \u0275\u0275pipe(13, "date");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "div")(15, "span");
-    \u0275\u0275text(16, "Stopp:");
+    \u0275\u0275elementStart(13, "div")(14, "span");
+    \u0275\u0275text(15, "Start:");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(17);
-    \u0275\u0275pipe(18, "date");
+    \u0275\u0275text(16);
+    \u0275\u0275pipe(17, "date");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(19, "div")(20, "span");
-    \u0275\u0275text(21, "Datenpunkte:");
+    \u0275\u0275elementStart(18, "div")(19, "span");
+    \u0275\u0275text(20, "Stopp:");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(22);
+    \u0275\u0275text(21);
+    \u0275\u0275pipe(22, "date");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(23, "div")(24, "span");
+    \u0275\u0275text(25, "Datenpunkte:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(26);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
@@ -93962,9 +93968,11 @@ function LayoutComponent_div_15_div_4_Template(rf, ctx) {
     \u0275\u0275advance(4);
     \u0275\u0275textInterpolate1(" ", trip_r5.telemetryUnitId);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind2(13, 5, trip_r5.start, "dd.MM.yyyy HH:mm"));
+    \u0275\u0275textInterpolate1(" ", trip_r5.driverId);
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind2(17, 6, trip_r5.start, "dd.MM.yyyy HH:mm"));
     \u0275\u0275advance(5);
-    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind2(18, 8, trip_r5.end, "dd.MM.yyyy HH:mm"));
+    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind2(22, 9, trip_r5.end, "dd.MM.yyyy HH:mm"));
     \u0275\u0275advance(5);
     \u0275\u0275textInterpolate1(" ", trip_r5.points.length);
   }
@@ -93972,16 +93980,16 @@ function LayoutComponent_div_15_div_4_Template(rf, ctx) {
 function LayoutComponent_div_15_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 37);
+    \u0275\u0275elementStart(0, "div", 39);
     \u0275\u0275listener("click", function LayoutComponent_div_15_Template_div_click_0_listener() {
       const i_r4 = \u0275\u0275restoreView(_r3).index;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.selectItem(i_r4));
     });
-    \u0275\u0275elementStart(1, "div", 38);
+    \u0275\u0275elementStart(1, "div", 40);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, LayoutComponent_div_15_div_3_Template, 2, 1, "div", 39)(4, LayoutComponent_div_15_div_4_Template, 23, 11, "div", 40);
+    \u0275\u0275template(3, LayoutComponent_div_15_div_3_Template, 2, 1, "div", 41)(4, LayoutComponent_div_15_div_4_Template, 27, 12, "div", 42);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94000,7 +94008,7 @@ function LayoutComponent_div_15_Template(rf, ctx) {
 function LayoutComponent_div_16_button_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 47);
+    \u0275\u0275elementStart(0, "button", 49);
     \u0275\u0275listener("click", function LayoutComponent_div_16_button_4_Template_button_click_0_listener() {
       const page_r8 = \u0275\u0275restoreView(_r7).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -94020,23 +94028,23 @@ function LayoutComponent_div_16_button_4_Template(rf, ctx) {
 function LayoutComponent_div_16_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 43)(1, "button", 44);
+    \u0275\u0275elementStart(0, "div", 45)(1, "button", 46);
     \u0275\u0275listener("click", function LayoutComponent_div_16_Template_button_click_1_listener() {
       \u0275\u0275restoreView(_r6);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.prevTripPage());
     });
-    \u0275\u0275elementStart(2, "span", 45);
+    \u0275\u0275elementStart(2, "span", 47);
     \u0275\u0275text(3, "chevron_left");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(4, LayoutComponent_div_16_button_4_Template, 2, 3, "button", 46);
-    \u0275\u0275elementStart(5, "button", 44);
+    \u0275\u0275template(4, LayoutComponent_div_16_button_4_Template, 2, 3, "button", 48);
+    \u0275\u0275elementStart(5, "button", 46);
     \u0275\u0275listener("click", function LayoutComponent_div_16_Template_button_click_5_listener() {
       \u0275\u0275restoreView(_r6);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.nextTripPage());
     });
-    \u0275\u0275elementStart(6, "span", 45);
+    \u0275\u0275elementStart(6, "span", 47);
     \u0275\u0275text(7, "chevron_right");
     \u0275\u0275elementEnd()()();
   }
@@ -94053,7 +94061,7 @@ function LayoutComponent_div_16_Template(rf, ctx) {
 function LayoutComponent_div_36_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275elementStart(0, "div", 52);
     \u0275\u0275listener("click", function LayoutComponent_div_36_div_1_Template_div_click_0_listener() {
       const vehicle_r10 = \u0275\u0275restoreView(_r9).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -94070,8 +94078,8 @@ function LayoutComponent_div_36_div_1_Template(rf, ctx) {
 }
 function LayoutComponent_div_36_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 48);
-    \u0275\u0275template(1, LayoutComponent_div_36_div_1_Template, 2, 3, "div", 49);
+    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275template(1, LayoutComponent_div_36_div_1_Template, 2, 3, "div", 51);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94083,9 +94091,9 @@ function LayoutComponent_div_36_Template(rf, ctx) {
 function LayoutComponent_div_39_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275elementStart(0, "div", 55);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 54);
+    \u0275\u0275elementStart(2, "span", 56);
     \u0275\u0275listener("click", function LayoutComponent_div_39_div_1_Template_span_click_2_listener() {
       const vehicleId_r12 = \u0275\u0275restoreView(_r11).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -94102,8 +94110,8 @@ function LayoutComponent_div_39_div_1_Template(rf, ctx) {
 }
 function LayoutComponent_div_39_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 51);
-    \u0275\u0275template(1, LayoutComponent_div_39_div_1_Template, 4, 1, "div", 52);
+    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275template(1, LayoutComponent_div_39_div_1_Template, 4, 1, "div", 54);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94114,7 +94122,7 @@ function LayoutComponent_div_39_Template(rf, ctx) {
 }
 function LayoutComponent_div_40_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 55);
+    \u0275\u0275elementStart(0, "div", 57);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94126,7 +94134,7 @@ function LayoutComponent_div_40_Template(rf, ctx) {
 }
 function LayoutComponent_div_41_option_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 71);
+    \u0275\u0275elementStart(0, "option", 73);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94140,7 +94148,7 @@ function LayoutComponent_div_41_option_8_Template(rf, ctx) {
 function LayoutComponent_div_41_Template(rf, ctx) {
   if (rf & 1) {
     const _r13 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 56)(1, "input", 57);
+    \u0275\u0275elementStart(0, "div", 58)(1, "input", 59);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94148,7 +94156,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "input", 58);
+    \u0275\u0275elementStart(2, "input", 60);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_2_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94156,7 +94164,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 59);
+    \u0275\u0275elementStart(3, "input", 61);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_3_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94164,7 +94172,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "input", 60);
+    \u0275\u0275elementStart(4, "input", 62);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_4_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94172,19 +94180,19 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "select", 29);
+    \u0275\u0275elementStart(5, "select", 31);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_select_ngModelChange_5_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.requiredLicense, $event) || (ctx_r1.advancedVehicleFilter.requiredLicense = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(6, "option", 61);
+    \u0275\u0275elementStart(6, "option", 63);
     \u0275\u0275text(7, "F\xFChrerschein (alle)");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(8, LayoutComponent_div_41_option_8_Template, 2, 2, "option", 62);
+    \u0275\u0275template(8, LayoutComponent_div_41_option_8_Template, 2, 2, "option", 64);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(9, "div", 63)(10, "input", 64);
+    \u0275\u0275elementStart(9, "div", 65)(10, "input", 66);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_10_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94192,7 +94200,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "input", 65);
+    \u0275\u0275elementStart(11, "input", 67);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_11_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94200,7 +94208,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(12, "div", 63)(13, "input", 66);
+    \u0275\u0275elementStart(12, "div", 65)(13, "input", 68);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_13_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94208,7 +94216,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "input", 67);
+    \u0275\u0275elementStart(14, "input", 69);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_14_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94216,10 +94224,10 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(15, "div", 68);
+    \u0275\u0275elementStart(15, "div", 70);
     \u0275\u0275text(16, "Erstzulassung");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(17, "div", 63)(18, "input", 69);
+    \u0275\u0275elementStart(17, "div", 65)(18, "input", 71);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_18_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94227,7 +94235,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(19, "input", 70);
+    \u0275\u0275elementStart(19, "input", 72);
     \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_19_listener($event) {
       \u0275\u0275restoreView(_r13);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -94267,7 +94275,7 @@ function LayoutComponent_div_41_Template(rf, ctx) {
 function LayoutComponent_div_49_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r15 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275elementStart(0, "div", 52);
     \u0275\u0275listener("click", function LayoutComponent_div_49_div_1_Template_div_click_0_listener() {
       const unitId_r16 = \u0275\u0275restoreView(_r15).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -94284,8 +94292,8 @@ function LayoutComponent_div_49_div_1_Template(rf, ctx) {
 }
 function LayoutComponent_div_49_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 48);
-    \u0275\u0275template(1, LayoutComponent_div_49_div_1_Template, 2, 1, "div", 49);
+    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275template(1, LayoutComponent_div_49_div_1_Template, 2, 1, "div", 51);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94297,9 +94305,9 @@ function LayoutComponent_div_49_Template(rf, ctx) {
 function LayoutComponent_div_52_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r17 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275elementStart(0, "div", 55);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 54);
+    \u0275\u0275elementStart(2, "span", 56);
     \u0275\u0275listener("click", function LayoutComponent_div_52_div_1_Template_span_click_2_listener() {
       const unitId_r18 = \u0275\u0275restoreView(_r17).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -94316,8 +94324,8 @@ function LayoutComponent_div_52_div_1_Template(rf, ctx) {
 }
 function LayoutComponent_div_52_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 51);
-    \u0275\u0275template(1, LayoutComponent_div_52_div_1_Template, 4, 1, "div", 52);
+    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275template(1, LayoutComponent_div_52_div_1_Template, 4, 1, "div", 54);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94328,7 +94336,7 @@ function LayoutComponent_div_52_Template(rf, ctx) {
 }
 function LayoutComponent_div_53_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 55);
+    \u0275\u0275elementStart(0, "div", 57);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94338,17 +94346,152 @@ function LayoutComponent_div_53_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Maximal ", ctx_r1.maxTelemetryUnitFilters, " Einheiten ");
   }
 }
-function LayoutComponent_option_57_Template(rf, ctx) {
+function LayoutComponent_div_64_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 72);
+    const _r19 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 52);
+    \u0275\u0275listener("click", function LayoutComponent_div_64_div_1_Template_div_click_0_listener() {
+      const person_r20 = \u0275\u0275restoreView(_r19).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.selectPerson(person_r20));
+    });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const option_r19 = ctx.$implicit;
-    \u0275\u0275property("ngValue", option_r19.seconds);
+    const person_r20 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", option_r19.label, " ");
+    \u0275\u0275textInterpolate3(" ", person_r20.firstName, " ", person_r20.lastName, " \u2014 ", person_r20.employeeNr, " ");
+  }
+}
+function LayoutComponent_div_64_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 50);
+    \u0275\u0275template(1, LayoutComponent_div_64_div_1_Template, 2, 3, "div", 51);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r1.filteredPersonOptions);
+  }
+}
+function LayoutComponent_div_67_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r21 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 55);
+    \u0275\u0275text(1);
+    \u0275\u0275elementStart(2, "span", 56);
+    \u0275\u0275listener("click", function LayoutComponent_div_67_div_1_Template_span_click_2_listener() {
+      const personId_r22 = \u0275\u0275restoreView(_r21).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.removePersonFilter(personId_r22));
+    });
+    \u0275\u0275text(3, "\xD7");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const personId_r22 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", personId_r22, " ");
+  }
+}
+function LayoutComponent_div_67_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275template(1, LayoutComponent_div_67_div_1_Template, 4, 1, "div", 54);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r1.filterPersonIds);
+  }
+}
+function LayoutComponent_div_68_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 57);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" Maximal ", ctx_r1.maxPersonFilters, " Personen ");
+  }
+}
+function LayoutComponent_div_69_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r23 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 58)(1, "input", 74);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r23);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.firstName, $event) || (ctx_r1.advancedPersonFilter.firstName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(2, "input", 75);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_2_listener($event) {
+      \u0275\u0275restoreView(_r23);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.lastName, $event) || (ctx_r1.advancedPersonFilter.lastName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "input", 76);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_3_listener($event) {
+      \u0275\u0275restoreView(_r23);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.employeeNr, $event) || (ctx_r1.advancedPersonFilter.employeeNr = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(4, "div", 70);
+    \u0275\u0275text(5, "Geburtsdatum");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(6, "div", 65)(7, "input", 77);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_7_listener($event) {
+      \u0275\u0275restoreView(_r23);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.birthDateFrom, $event) || (ctx_r1.advancedPersonFilter.birthDateFrom = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(8, "input", 78);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_8_listener($event) {
+      \u0275\u0275restoreView(_r23);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.birthDateTo, $event) || (ctx_r1.advancedPersonFilter.birthDateTo = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.firstName);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.lastName);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.employeeNr);
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.birthDateFrom);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.birthDateTo);
+  }
+}
+function LayoutComponent_option_73_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 79);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const option_r24 = ctx.$implicit;
+    \u0275\u0275property("ngValue", option_r24.seconds);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", option_r24.label, " ");
   }
 }
 var LayoutComponent = class _LayoutComponent {
@@ -94362,6 +94505,13 @@ var LayoutComponent = class _LayoutComponent {
     { Id: "v5", licensePlate: "FL-1004", brand: "Ford", modelName: "Transit", year: 2016, color: "Rot", identNr: "100005", requiredLicense: "C1", powerPs: 130, firstRegistration: "2016-11-30" }
   ];
   dummyTelemetryUnits = ["TU-1001", "TU-1002", "TU-1003"];
+  dummyPersons = [
+    { Id: "p1", firstName: "Anna", lastName: "Schmidt", employeeNr: "MA-1000", birthDate: "1970-05-20" },
+    { Id: "p2", firstName: "Ben", lastName: "M\xFCller", employeeNr: "MA-1001", birthDate: "1971-05-20" },
+    { Id: "p3", firstName: "Clara", lastName: "Fischer", employeeNr: "MA-1002", birthDate: "1972-05-20" },
+    { Id: "p4", firstName: "David", lastName: "Weber", employeeNr: "MA-1003", birthDate: "1973-05-20" },
+    { Id: "p5", firstName: "Emma", lastName: "Meyer", employeeNr: "MA-1004", birthDate: "1974-05-20" }
+  ];
   licenseClasses = [
     "AM",
     "A1",
@@ -94381,6 +94531,9 @@ var LayoutComponent = class _LayoutComponent {
   showAdvancedVehicleFilter = false;
   advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
   appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+  showAdvancedPersonFilter = false;
+  advancedPersonFilter = this.emptyAdvancedPersonFilter();
+  appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
   sampleIntervals = [
     { label: "1/s", seconds: 1 },
     { label: "1/10s", seconds: 10 },
@@ -94390,15 +94543,19 @@ var LayoutComponent = class _LayoutComponent {
   ];
   maxVehicleFilters = 10;
   maxTelemetryUnitFilters = 10;
+  maxPersonFilters = 10;
   filterVehicleId = "";
   filterVehicleIds = [];
   filterTelemetryUnitId = "";
   filterTelemetryUnitIds = [];
+  filterPersonId = "";
+  filterPersonIds = [];
   filterStart = "";
   filterStop = "";
   sampleIntervalSeconds = 30;
   appliedFilterVehicleIds = [];
   appliedFilterTelemetryUnitIds = [];
+  appliedFilterPersonIds = [];
   appliedFilterStart = "";
   appliedFilterStop = "";
   appliedSampleIntervalSeconds = 30;
@@ -94406,8 +94563,11 @@ var LayoutComponent = class _LayoutComponent {
   showVehicleOptions = false;
   telemetrySearch = "";
   showTelemetryOptions = false;
+  personSearch = "";
+  showPersonOptions = false;
   vehicleAutocompleteRef;
   telemetryAutocompleteRef;
+  personAutocompleteRef;
   selectedIndex = null;
   tripPageSize = 10;
   currentTripPage = 1;
@@ -94419,6 +94579,9 @@ var LayoutComponent = class _LayoutComponent {
     if (this.telemetryAutocompleteRef && !this.telemetryAutocompleteRef.nativeElement.contains(target)) {
       this.showTelemetryOptions = false;
     }
+    if (this.personAutocompleteRef && !this.personAutocompleteRef.nativeElement.contains(target)) {
+      this.showPersonOptions = false;
+    }
   }
   ngOnInit() {
     this.trips = this.generateDummyTrips();
@@ -94428,6 +94591,8 @@ var LayoutComponent = class _LayoutComponent {
       if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(trip.vehicleId))
         return false;
       if (this.appliedFilterTelemetryUnitIds.length && !this.appliedFilterTelemetryUnitIds.includes(trip.telemetryUnitId))
+        return false;
+      if (this.appliedFilterPersonIds.length && !this.appliedFilterPersonIds.includes(trip.driverId))
         return false;
       if (this.appliedFilterStart && new Date(trip.start) < new Date(this.appliedFilterStart))
         return false;
@@ -94485,6 +94650,20 @@ var LayoutComponent = class _LayoutComponent {
     const term = this.telemetrySearch.toLowerCase();
     return this.dummyTelemetryUnits.filter((u2) => u2.toLowerCase().includes(term));
   }
+  get filteredPersonOptions() {
+    const term = this.personSearch.toLowerCase();
+    const f = this.appliedAdvancedPersonFilter;
+    return this.dummyPersons.filter((p) => {
+      const fullName = `${p.firstName ?? ""} ${p.lastName ?? ""}`.toLowerCase();
+      const matchesSearch = !term || fullName.includes(term) || (p.employeeNr ?? "").toLowerCase().includes(term);
+      const matchesFirstName = !f.firstName || (p.firstName ?? "").toLowerCase().includes(f.firstName.toLowerCase());
+      const matchesLastName = !f.lastName || (p.lastName ?? "").toLowerCase().includes(f.lastName.toLowerCase());
+      const matchesEmployeeNr = !f.employeeNr || (p.employeeNr ?? "").toLowerCase().includes(f.employeeNr.toLowerCase());
+      const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? "") >= f.birthDateFrom;
+      const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? "") <= f.birthDateTo;
+      return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr && matchesBirthFrom && matchesBirthTo;
+    });
+  }
   onVehicleSearchChange() {
     this.showVehicleOptions = true;
     if (!this.vehicleSearch)
@@ -94496,10 +94675,12 @@ var LayoutComponent = class _LayoutComponent {
   applyFilters() {
     this.appliedFilterVehicleIds = [...this.filterVehicleIds];
     this.appliedFilterTelemetryUnitIds = [...this.filterTelemetryUnitIds];
+    this.appliedFilterPersonIds = [...this.filterPersonIds];
     this.appliedFilterStart = this.filterStart;
     this.appliedFilterStop = this.filterStop;
     this.appliedSampleIntervalSeconds = this.sampleIntervalSeconds;
     this.appliedAdvancedVehicleFilter = __spreadValues({}, this.advancedVehicleFilter);
+    this.appliedAdvancedPersonFilter = __spreadValues({}, this.advancedPersonFilter);
     this.currentTripPage = 1;
     this.selectedIndex = null;
   }
@@ -94538,6 +94719,29 @@ var LayoutComponent = class _LayoutComponent {
   removeTelemetryUnitFilter(unitId) {
     this.filterTelemetryUnitIds = this.filterTelemetryUnitIds.filter((id) => id !== unitId);
   }
+  onPersonSearchChange() {
+    this.showPersonOptions = true;
+    if (!this.personSearch)
+      this.filterPersonId = "";
+  }
+  toggleAdvancedPersonFilter() {
+    this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
+  }
+  selectPerson(person) {
+    this.filterPersonId = person.employeeNr ?? "";
+    this.personSearch = person.employeeNr ?? "";
+    this.showPersonOptions = false;
+  }
+  addPersonFilter() {
+    if (this.filterPersonId && !this.filterPersonIds.includes(this.filterPersonId) && this.filterPersonIds.length < this.maxPersonFilters) {
+      this.filterPersonIds.push(this.filterPersonId);
+    }
+    this.filterPersonId = "";
+    this.personSearch = "";
+  }
+  removePersonFilter(personId) {
+    this.filterPersonIds = this.filterPersonIds.filter((id) => id !== personId);
+  }
   selectItem(index) {
     this.selectedIndex = this.selectedIndex === index ? null : index;
   }
@@ -94563,19 +94767,35 @@ var LayoutComponent = class _LayoutComponent {
     this.filterVehicleIds = [];
     this.filterTelemetryUnitId = "";
     this.filterTelemetryUnitIds = [];
+    this.filterPersonId = "";
+    this.filterPersonIds = [];
     this.filterStart = "";
     this.filterStop = "";
     this.sampleIntervalSeconds = 30;
     this.appliedFilterVehicleIds = [];
     this.appliedFilterTelemetryUnitIds = [];
+    this.appliedFilterPersonIds = [];
     this.appliedFilterStart = "";
     this.appliedFilterStop = "";
     this.appliedSampleIntervalSeconds = 30;
     this.vehicleSearch = "";
     this.telemetrySearch = "";
+    this.personSearch = "";
     this.showAdvancedVehicleFilter = false;
+    this.showAdvancedPersonFilter = false;
     this.advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
     this.appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+    this.advancedPersonFilter = this.emptyAdvancedPersonFilter();
+    this.appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
+  }
+  emptyAdvancedPersonFilter() {
+    return {
+      firstName: "",
+      lastName: "",
+      employeeNr: "",
+      birthDateFrom: "",
+      birthDateTo: ""
+    };
   }
   emptyAdvancedVehicleFilter() {
     return {
@@ -94634,6 +94854,7 @@ var LayoutComponent = class _LayoutComponent {
         id: `Fahrt ${tripIndex + 1}`,
         vehicleId: this.dummyVehicles[tripIndex % this.dummyVehicles.length].licensePlate ?? "",
         telemetryUnitId: this.dummyTelemetryUnits[tripIndex % this.dummyTelemetryUnits.length],
+        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].employeeNr ?? "",
         start: points2[0].timestamp,
         end: points2[points2.length - 1].timestamp,
         points: points2
@@ -94645,12 +94866,13 @@ var LayoutComponent = class _LayoutComponent {
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _LayoutComponent, selectors: [["app-layout"]], viewQuery: function LayoutComponent_Query(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275viewQuery(_c0, 5)(_c1, 5);
+      \u0275\u0275viewQuery(_c0, 5)(_c1, 5)(_c2, 5);
     }
     if (rf & 2) {
       let _t;
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.vehicleAutocompleteRef = _t.first);
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.telemetryAutocompleteRef = _t.first);
+      \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.personAutocompleteRef = _t.first);
     }
   }, hostBindings: function LayoutComponent_HostBindings(rf, ctx) {
     if (rf & 1) {
@@ -94658,37 +94880,37 @@ var LayoutComponent = class _LayoutComponent {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 63, vars: 26, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "trips", 4, "ngIf"], ["class", "chart-placeholder", 4, "ngIf"], [1, "view-toggle"], [3, "click"], [1, "list"], ["class", "empty-hint", 4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [1, "sidebar"], [1, "filter-title"], ["type", "datetime-local", 3, "ngModelChange", "ngModel"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue", 4, "ngFor", "ngForOf"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [3, "trips"], [1, "chart-placeholder"], [1, "empty-hint"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 4, "ngIf"], [1, "details"], [1, "details-full"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], [3, "value"], [3, "ngValue"]], template: function LayoutComponent_Template(rf, ctx) {
+  }, decls: 79, vars: 33, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "trips", 4, "ngIf"], ["class", "chart-placeholder", 4, "ngIf"], [1, "view-toggle"], [3, "click"], [1, "list"], ["class", "empty-hint", 4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [1, "sidebar"], [1, "filter-title"], ["type", "datetime-local", 3, "ngModelChange", "ngModel"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue", 4, "ngFor", "ngForOf"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [3, "trips"], [1, "chart-placeholder"], [1, "empty-hint"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 4, "ngIf"], [1, "details"], [1, "details-full"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], [3, "value"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"], [3, "ngValue"]], template: function LayoutComponent_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
-      \u0275\u0275elementStart(0, "h1", 2);
+      \u0275\u0275elementStart(0, "h1", 3);
       \u0275\u0275text(1, "Dokumentierte Fahrten");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(2, "div", 3)(3, "div", 4)(4, "div", 5);
-      \u0275\u0275template(5, LayoutComponent_app_card_widget_5_Template, 1, 1, "app-card-widget", 6)(6, LayoutComponent_app_trip_chart_6_Template, 1, 1, "app-trip-chart", 6)(7, LayoutComponent_div_7_Template, 2, 0, "div", 7);
-      \u0275\u0275elementStart(8, "div", 8)(9, "button", 9);
+      \u0275\u0275elementStart(2, "div", 4)(3, "div", 5)(4, "div", 6);
+      \u0275\u0275template(5, LayoutComponent_app_card_widget_5_Template, 1, 1, "app-card-widget", 7)(6, LayoutComponent_app_trip_chart_6_Template, 1, 1, "app-trip-chart", 7)(7, LayoutComponent_div_7_Template, 2, 0, "div", 8);
+      \u0275\u0275elementStart(8, "div", 9)(9, "button", 10);
       \u0275\u0275listener("click", function LayoutComponent_Template_button_click_9_listener() {
         return ctx.setViewMode("routen");
       });
       \u0275\u0275text(10, "Routen");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "button", 9);
+      \u0275\u0275elementStart(11, "button", 10);
       \u0275\u0275listener("click", function LayoutComponent_Template_button_click_11_listener() {
         return ctx.setViewMode("details");
       });
       \u0275\u0275text(12, "Details");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(13, "div", 10);
-      \u0275\u0275template(14, LayoutComponent_div_14_Template, 2, 0, "div", 11)(15, LayoutComponent_div_15_Template, 5, 6, "div", 12);
+      \u0275\u0275elementStart(13, "div", 11);
+      \u0275\u0275template(14, LayoutComponent_div_14_Template, 2, 0, "div", 12)(15, LayoutComponent_div_15_Template, 5, 6, "div", 13);
       \u0275\u0275elementEnd();
-      \u0275\u0275template(16, LayoutComponent_div_16_Template, 8, 3, "div", 13);
+      \u0275\u0275template(16, LayoutComponent_div_16_Template, 8, 3, "div", 14);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(17, "div", 14)(18, "div", 15);
+      \u0275\u0275elementStart(17, "div", 15)(18, "div", 16);
       \u0275\u0275text(19, "Filter");
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(20, "label");
       \u0275\u0275text(21, " Start (Datum & Uhrzeit) ");
-      \u0275\u0275elementStart(22, "input", 16);
+      \u0275\u0275elementStart(22, "input", 17);
       \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_22_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.filterStart, $event) || (ctx.filterStart = $event);
@@ -94697,23 +94919,23 @@ var LayoutComponent = class _LayoutComponent {
       \u0275\u0275elementEnd()();
       \u0275\u0275elementStart(23, "label");
       \u0275\u0275text(24, " Stopp (Datum & Uhrzeit) ");
-      \u0275\u0275elementStart(25, "input", 16);
+      \u0275\u0275elementStart(25, "input", 17);
       \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_25_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.filterStop, $event) || (ctx.filterStop = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(26, "div", 17, 0)(28, "div", 18)(29, "span");
+      \u0275\u0275elementStart(26, "div", 18, 0)(28, "div", 19)(29, "span");
       \u0275\u0275text(30, "Fahrzeug");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(31, "button", 19);
+      \u0275\u0275elementStart(31, "button", 20);
       \u0275\u0275listener("click", function LayoutComponent_Template_button_click_31_listener() {
         return ctx.toggleAdvancedVehicleFilter();
       });
       \u0275\u0275text(32);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(33, "div", 20)(34, "div", 21)(35, "input", 22);
+      \u0275\u0275elementStart(33, "div", 21)(34, "div", 22)(35, "input", 23);
       \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_35_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.vehicleSearch, $event) || (ctx.vehicleSearch = $event);
@@ -94725,20 +94947,20 @@ var LayoutComponent = class _LayoutComponent {
         return ctx.showVehicleOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(36, LayoutComponent_div_36_Template, 2, 1, "div", 23);
+      \u0275\u0275template(36, LayoutComponent_div_36_Template, 2, 1, "div", 24);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(37, "button", 24);
+      \u0275\u0275elementStart(37, "button", 25);
       \u0275\u0275listener("click", function LayoutComponent_Template_button_click_37_listener() {
         return ctx.addVehicleFilter();
       });
       \u0275\u0275text(38, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(39, LayoutComponent_div_39_Template, 2, 1, "div", 25)(40, LayoutComponent_div_40_Template, 2, 1, "div", 26)(41, LayoutComponent_div_41_Template, 20, 12, "div", 27);
+      \u0275\u0275template(39, LayoutComponent_div_39_Template, 2, 1, "div", 26)(40, LayoutComponent_div_40_Template, 2, 1, "div", 27)(41, LayoutComponent_div_41_Template, 20, 12, "div", 28);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(42, "div", 17, 1)(44, "span");
+      \u0275\u0275elementStart(42, "div", 18, 1)(44, "span");
       \u0275\u0275text(45, "Telemetrie-Einheit");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(46, "div", 20)(47, "div", 21)(48, "input", 28);
+      \u0275\u0275elementStart(46, "div", 21)(47, "div", 22)(48, "input", 29);
       \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_48_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.telemetrySearch, $event) || (ctx.telemetrySearch = $event);
@@ -94750,37 +94972,68 @@ var LayoutComponent = class _LayoutComponent {
         return ctx.showTelemetryOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(49, LayoutComponent_div_49_Template, 2, 1, "div", 23);
+      \u0275\u0275template(49, LayoutComponent_div_49_Template, 2, 1, "div", 24);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(50, "button", 24);
+      \u0275\u0275elementStart(50, "button", 25);
       \u0275\u0275listener("click", function LayoutComponent_Template_button_click_50_listener() {
         return ctx.addTelemetryUnitFilter();
       });
       \u0275\u0275text(51, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(52, LayoutComponent_div_52_Template, 2, 1, "div", 25)(53, LayoutComponent_div_53_Template, 2, 1, "div", 26);
+      \u0275\u0275template(52, LayoutComponent_div_52_Template, 2, 1, "div", 26)(53, LayoutComponent_div_53_Template, 2, 1, "div", 27);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(54, "label");
-      \u0275\u0275text(55, " Datenpunkt-Rate ");
-      \u0275\u0275elementStart(56, "select", 29);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_select_ngModelChange_56_listener($event) {
+      \u0275\u0275elementStart(54, "div", 18, 2)(56, "div", 19)(57, "span");
+      \u0275\u0275text(58, "Person");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(59, "button", 20);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_59_listener() {
+        return ctx.toggleAdvancedPersonFilter();
+      });
+      \u0275\u0275text(60);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(61, "div", 21)(62, "div", 22)(63, "input", 30);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_63_listener($event) {
+        \u0275\u0275restoreView(_r1);
+        \u0275\u0275twoWayBindingSet(ctx.personSearch, $event) || (ctx.personSearch = $event);
+        return \u0275\u0275resetView($event);
+      });
+      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_63_listener() {
+        return ctx.onPersonSearchChange();
+      })("focus", function LayoutComponent_Template_input_focus_63_listener() {
+        return ctx.showPersonOptions = true;
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(64, LayoutComponent_div_64_Template, 2, 1, "div", 24);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(65, "button", 25);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_65_listener() {
+        return ctx.addPersonFilter();
+      });
+      \u0275\u0275text(66, " + ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(67, LayoutComponent_div_67_Template, 2, 1, "div", 26)(68, LayoutComponent_div_68_Template, 2, 1, "div", 27)(69, LayoutComponent_div_69_Template, 9, 5, "div", 28);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(70, "label");
+      \u0275\u0275text(71, " Datenpunkt-Rate ");
+      \u0275\u0275elementStart(72, "select", 31);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_select_ngModelChange_72_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.sampleIntervalSeconds, $event) || (ctx.sampleIntervalSeconds = $event);
         return \u0275\u0275resetView($event);
       });
-      \u0275\u0275template(57, LayoutComponent_option_57_Template, 2, 2, "option", 30);
+      \u0275\u0275template(73, LayoutComponent_option_73_Template, 2, 2, "option", 32);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(58, "div", 31)(59, "button", 32);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_59_listener() {
+      \u0275\u0275elementStart(74, "div", 33)(75, "button", 34);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_75_listener() {
         return ctx.applyFilters();
       });
-      \u0275\u0275text(60, "Anwenden");
+      \u0275\u0275text(76, "Anwenden");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(61, "button", 33);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_61_listener() {
+      \u0275\u0275elementStart(77, "button", 35);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_77_listener() {
         return ctx.resetFilters();
       });
-      \u0275\u0275text(62, "Zur\xFCcksetzen");
+      \u0275\u0275text(78, "Zur\xFCcksetzen");
       \u0275\u0275elementEnd()()()();
     }
     if (rf & 2) {
@@ -94828,6 +95081,20 @@ var LayoutComponent = class _LayoutComponent {
       \u0275\u0275property("ngIf", ctx.filterTelemetryUnitIds.length);
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.filterTelemetryUnitIds.length >= ctx.maxTelemetryUnitFilters);
+      \u0275\u0275advance(7);
+      \u0275\u0275textInterpolate1(" ", ctx.showAdvancedPersonFilter ? "Erweitert \u25B2" : "Erweitert \u25BC", " ");
+      \u0275\u0275advance(3);
+      \u0275\u0275twoWayProperty("ngModel", ctx.personSearch);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showPersonOptions && ctx.filteredPersonOptions.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("disabled", !ctx.filterPersonId || ctx.filterPersonIds.length >= ctx.maxPersonFilters);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("ngIf", ctx.filterPersonIds.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.filterPersonIds.length >= ctx.maxPersonFilters);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showAdvancedPersonFilter);
       \u0275\u0275advance(3);
       \u0275\u0275twoWayProperty("ngModel", ctx.sampleIntervalSeconds);
       \u0275\u0275advance();
@@ -94879,6 +95146,7 @@ var LayoutComponent = class _LayoutComponent {
         <div class="details-full" *ngIf="selectedIndex === i">
           <div><span>Fahrzeug:</span> {{ trip.vehicleId }}</div>
           <div><span>Telemetrie-Einheit:</span> {{ trip.telemetryUnitId }}</div>
+          <div><span>Fahrer:</span> {{ trip.driverId }}</div>
           <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
           <div><span>Stopp:</span> {{ trip.end | date:'dd.MM.yyyy HH:mm' }}</div>
           <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
@@ -95036,6 +95304,63 @@ var LayoutComponent = class _LayoutComponent {
       </div>
     </div>
 
+    <div class="autocomplete" #personAutocomplete>
+      <div class="label-row">
+        <span>Person</span>
+        <button type="button" class="advanced-btn" (click)="toggleAdvancedPersonFilter()">
+          {{ showAdvancedPersonFilter ? 'Erweitert \u25B2' : 'Erweitert \u25BC' }}
+        </button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Person suchen..."
+                 [(ngModel)]="personSearch"
+                 (ngModelChange)="onPersonSearchChange()"
+                 (focus)="showPersonOptions = true">
+
+          <div class="options" *ngIf="showPersonOptions && filteredPersonOptions.length">
+            <div class="option"
+                 *ngFor="let person of filteredPersonOptions"
+                 (click)="selectPerson(person)">
+              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.employeeNr }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterPersonId || filterPersonIds.length >= maxPersonFilters"
+                (click)="addPersonFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterPersonIds.length">
+        <div class="chip" *ngFor="let personId of filterPersonIds">
+          {{ personId }}
+          <span class="chip-remove" (click)="removePersonFilter(personId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterPersonIds.length >= maxPersonFilters">
+        Maximal {{ maxPersonFilters }} Personen
+      </div>
+
+      <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
+        <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
+        <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
+        <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedPersonFilter.employeeNr">
+
+        <div class="field-label">Geburtsdatum</div>
+        <div class="year-range">
+          <input type="date" placeholder="Geburtsdatum von" [(ngModel)]="advancedPersonFilter.birthDateFrom">
+          <input type="date" placeholder="Geburtsdatum bis" [(ngModel)]="advancedPersonFilter.birthDateTo">
+        </div>
+      </div>
+    </div>
+
     <label>
       Datenpunkt-Rate
       <select [(ngModel)]="sampleIntervalSeconds">
@@ -95059,13 +95384,16 @@ var LayoutComponent = class _LayoutComponent {
   }], telemetryAutocompleteRef: [{
     type: ViewChild,
     args: ["telemetryAutocomplete"]
+  }], personAutocompleteRef: [{
+    type: ViewChild,
+    args: ["personAutocomplete"]
   }], onDocumentClick: [{
     type: HostListener,
     args: ["document:click", ["$event"]]
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(LayoutComponent, { className: "LayoutComponent", filePath: "src/app/widgets/fahrten/fahrten.component.ts", lineNumber: 17 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(LayoutComponent, { className: "LayoutComponent", filePath: "src/app/widgets/fahrten/fahrten.component.ts", lineNumber: 18 });
 })();
 
 // src/environments/environment.ts
@@ -95374,259 +95702,365 @@ var TelemetryUnits = class _TelemetryUnits {
   (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(TelemetryUnits, { className: "TelemetryUnits", filePath: "src/app/widgets/telemetry-units/telemetry-units.component.ts", lineNumber: 16 });
 })();
 
+// src/app/widgets/vehicle-map/vehicle-map.component.ts
+var L3 = __toESM(require_leaflet_src());
+var VehicleMap = class _VehicleMap {
+  points = [];
+  map;
+  mapInitialized = false;
+  markerLayer = L3.layerGroup();
+  ngAfterViewInit() {
+    this.map = L3.map("vehicle-map", {
+      attributionControl: false
+    }).setView([50.9271, 11.5892], 13);
+    L3.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; OpenStreetMap contributors',
+      maxZoom: 20,
+      detectRetina: true,
+      tileSize: 512,
+      zoomOffset: -1
+    }).addTo(this.map);
+    this.markerLayer.addTo(this.map);
+    this.mapInitialized = true;
+    this.renderPoints();
+  }
+  ngAfterViewChecked() {
+    if (this.mapInitialized) {
+      this.map.invalidateSize();
+    }
+  }
+  ngOnChanges(changes) {
+    if (changes["points"] && this.mapInitialized) {
+      this.renderPoints();
+    }
+  }
+  renderPoints() {
+    this.markerLayer.clearLayers();
+    const coordinates = [];
+    this.points.forEach((point) => {
+      const coord = [point.lat, point.lng];
+      coordinates.push(coord);
+      const marker = L3.circleMarker(coord, {
+        radius: 7,
+        color: "#373669",
+        fillColor: "#7376e0",
+        fillOpacity: 0.9,
+        weight: 2
+      }).addTo(this.markerLayer);
+      marker.bindTooltip(point.label, { permanent: false, direction: "top" });
+    });
+    if (coordinates.length) {
+      this.map.fitBounds(L3.latLngBounds(coordinates), { padding: [40, 40] });
+    }
+  }
+  static \u0275fac = function VehicleMap_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _VehicleMap)();
+  };
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _VehicleMap, selectors: [["app-vehicle-map"]], inputs: { points: "points" }, features: [\u0275\u0275NgOnChangesFeature], decls: 1, vars: 0, consts: [["id", "vehicle-map"]], template: function VehicleMap_Template(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275domElement(0, "div", 0);
+    }
+  }, styles: ["\n\n#vehicle-map[_ngcontent-%COMP%] {\n  width: 800px;\n  height: 600px;\n  border: 1px solid #2a2b33;\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: #2b2d30;\n}\n.leaflet-tile[_ngcontent-%COMP%] {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: #1e1e1e;\n}\n.leaflet-tile-container[_ngcontent-%COMP%] {\n  background: #1e1e1e;\n}\n/*# sourceMappingURL=vehicle-map.component.css.map */"] });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(VehicleMap, [{
+    type: Component,
+    args: [{ selector: "app-vehicle-map", imports: [], template: '<div id="vehicle-map"></div>\n', styles: ["/* src/app/widgets/vehicle-map/vehicle-map.component.scss */\n#vehicle-map {\n  width: 800px;\n  height: 600px;\n  border: 1px solid #2a2b33;\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: #2b2d30;\n}\n.leaflet-tile {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: #1e1e1e;\n}\n.leaflet-tile-container {\n  background: #1e1e1e;\n}\n/*# sourceMappingURL=vehicle-map.component.css.map */\n"] }]
+  }], null, { points: [{
+    type: Input
+  }] });
+})();
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(VehicleMap, { className: "VehicleMap", filePath: "src/app/widgets/vehicle-map/vehicle-map.component.ts", lineNumber: 17 });
+})();
+
+// src/app/services/vehicle.service.ts
+var VehicleService = class _VehicleService {
+  http;
+  baseUrl = environment.apiUrl;
+  constructor(http) {
+    this.http = http;
+  }
+  loadAll() {
+    return this.http.get(`${this.baseUrl}/Vehicle`);
+  }
+  save(vehicle) {
+    return this.http.post(`${this.baseUrl}/Vehicle`, vehicle);
+  }
+  update(vehicle) {
+    return this.http.put(`${this.baseUrl}/Vehicle/${vehicle.Id}`, vehicle);
+  }
+  delete(id) {
+    return this.http.delete(`${this.baseUrl}/Vehicle/${id}`);
+  }
+  static \u0275fac = function VehicleService_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _VehicleService)(\u0275\u0275inject(HttpClient));
+  };
+  static \u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({ token: _VehicleService, factory: _VehicleService.\u0275fac, providedIn: "root" });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(VehicleService, [{
+    type: Injectable,
+    args: [{ providedIn: "root" }]
+  }], () => [{ type: HttpClient }], null);
+})();
+
 // src/app/widgets/vehicles/vehicles.component.ts
-function Vehicles_div_7_option_22_Template(rf, ctx) {
+var _c02 = ["vehicleAutocomplete"];
+var _c12 = ["telemetryAutocomplete"];
+var _c22 = ["personAutocomplete"];
+function Vehicles_div_9_option_22_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 24);
+    \u0275\u0275elementStart(0, "option", 47);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const license_r3 = ctx.$implicit;
-    \u0275\u0275property("value", license_r3);
+    const license_r4 = ctx.$implicit;
+    \u0275\u0275property("value", license_r4);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(license_r3);
+    \u0275\u0275textInterpolate(license_r4);
   }
 }
-function Vehicles_div_7_Template(rf, ctx) {
+function Vehicles_div_9_Template(rf, ctx) {
   if (rf & 1) {
-    const _r1 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 15)(1, "div", 16)(2, "label");
+    const _r2 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 38)(1, "div", 39)(2, "label");
     \u0275\u0275text(3, " Kennzeichen ");
-    \u0275\u0275elementStart(4, "input", 17);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_4_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.licensePlate, $event) || (ctx_r1.newVehicle.licensePlate = $event);
+    \u0275\u0275elementStart(4, "input", 40);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_4_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.licensePlate, $event) || (ctx_r2.newVehicle.licensePlate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(5, "label");
     \u0275\u0275text(6, " Marke ");
-    \u0275\u0275elementStart(7, "input", 17);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_7_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.brand, $event) || (ctx_r1.newVehicle.brand = $event);
+    \u0275\u0275elementStart(7, "input", 40);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_7_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.brand, $event) || (ctx_r2.newVehicle.brand = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "label");
     \u0275\u0275text(9, " Modell ");
-    \u0275\u0275elementStart(10, "input", 17);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_10_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.modelName, $event) || (ctx_r1.newVehicle.modelName = $event);
+    \u0275\u0275elementStart(10, "input", 40);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_10_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.modelName, $event) || (ctx_r2.newVehicle.modelName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(11, "label");
     \u0275\u0275text(12, " Baujahr ");
-    \u0275\u0275elementStart(13, "input", 18);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_13_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.year, $event) || (ctx_r1.newVehicle.year = $event);
+    \u0275\u0275elementStart(13, "input", 41);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_13_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.year, $event) || (ctx_r2.newVehicle.year = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(14, "label");
     \u0275\u0275text(15, " Fahrzeug-Identnr. ");
-    \u0275\u0275elementStart(16, "input", 17);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_16_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.identNr, $event) || (ctx_r1.newVehicle.identNr = $event);
+    \u0275\u0275elementStart(16, "input", 40);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_16_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.identNr, $event) || (ctx_r2.newVehicle.identNr = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(17, "label");
     \u0275\u0275text(18, " Ben\xF6tigter F\xFChrerschein ");
-    \u0275\u0275elementStart(19, "select", 19);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_select_ngModelChange_19_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.requiredLicense, $event) || (ctx_r1.newVehicle.requiredLicense = $event);
+    \u0275\u0275elementStart(19, "select", 42);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_select_ngModelChange_19_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.requiredLicense, $event) || (ctx_r2.newVehicle.requiredLicense = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(20, "option", 20);
+    \u0275\u0275elementStart(20, "option", 43);
     \u0275\u0275text(21, "Bitte w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(22, Vehicles_div_7_option_22_Template, 2, 2, "option", 21);
+    \u0275\u0275template(22, Vehicles_div_9_option_22_Template, 2, 2, "option", 44);
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(23, "label");
     \u0275\u0275text(24, " Leistung (PS) ");
-    \u0275\u0275elementStart(25, "input", 18);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_25_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.powerPs, $event) || (ctx_r1.newVehicle.powerPs = $event);
+    \u0275\u0275elementStart(25, "input", 41);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_25_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.powerPs, $event) || (ctx_r2.newVehicle.powerPs = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(26, "label");
     \u0275\u0275text(27, " Farbe ");
-    \u0275\u0275elementStart(28, "input", 17);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_28_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.color, $event) || (ctx_r1.newVehicle.color = $event);
+    \u0275\u0275elementStart(28, "input", 40);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_28_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.color, $event) || (ctx_r2.newVehicle.color = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(29, "label");
     \u0275\u0275text(30, " Erstzulassung ");
-    \u0275\u0275elementStart(31, "input", 22);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_7_Template_input_ngModelChange_31_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.firstRegistration, $event) || (ctx_r1.newVehicle.firstRegistration = $event);
+    \u0275\u0275elementStart(31, "input", 45);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_31_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.newVehicle.firstRegistration, $event) || (ctx_r2.newVehicle.firstRegistration = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(32, "button", 23);
-    \u0275\u0275listener("click", function Vehicles_div_7_Template_button_click_32_listener() {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.createVehicle());
+    \u0275\u0275elementStart(32, "button", 46);
+    \u0275\u0275listener("click", function Vehicles_div_9_Template_button_click_32_listener() {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.createVehicle());
     });
     \u0275\u0275text(33, " Speichern ");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const ctx_r1 = \u0275\u0275nextContext();
+    const ctx_r2 = \u0275\u0275nextContext();
     \u0275\u0275advance(4);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.licensePlate);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.licensePlate);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.brand);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.brand);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.modelName);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.modelName);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.year);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.year);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.identNr);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.identNr);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.requiredLicense);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.requiredLicense);
     \u0275\u0275advance(3);
-    \u0275\u0275property("ngForOf", ctx_r1.licenseClasses);
+    \u0275\u0275property("ngForOf", ctx_r2.licenseClasses);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.powerPs);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.powerPs);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.color);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.color);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.firstRegistration);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.newVehicle.firstRegistration);
     \u0275\u0275advance();
-    \u0275\u0275property("disabled", !ctx_r1.newVehicle.licensePlate);
+    \u0275\u0275property("disabled", !ctx_r2.newVehicle.licensePlate);
   }
 }
-function Vehicles_div_9_Template(rf, ctx) {
+function Vehicles_div_11_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
-    \u0275\u0275text(1, " Keine Fahrzeuge angelegt. ");
+    \u0275\u0275text(1, " Keine Fahrzeuge gefunden. ");
     \u0275\u0275elementEnd();
   }
 }
-function Vehicles_div_10_div_3_Template(rf, ctx) {
+function Vehicles_div_12_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 30);
+    \u0275\u0275elementStart(0, "div", 53);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const vehicle_r6 = \u0275\u0275nextContext().$implicit;
+    const vehicle_r7 = \u0275\u0275nextContext().$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" Baujahr: ", vehicle_r6.year, " ");
+    \u0275\u0275textInterpolate1(" Baujahr: ", vehicle_r7.year, " ");
   }
 }
-function Vehicles_div_10_div_4_ng_container_4_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
-    const _r7 = \u0275\u0275getCurrentView();
+    const _r8 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 33);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_10_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r7);
-      const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
-      \u0275\u0275twoWayBindingSet(vehicle_r6.licensePlate, $event) || (vehicle_r6.licensePlate = $event);
+    \u0275\u0275elementStart(1, "input", 56);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r8);
+      const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+      \u0275\u0275twoWayBindingSet(vehicle_r7.licensePlate, $event) || (vehicle_r7.licensePlate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
+    const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
     \u0275\u0275advance();
-    \u0275\u0275twoWayProperty("ngModel", vehicle_r6.licensePlate);
+    \u0275\u0275twoWayProperty("ngModel", vehicle_r7.licensePlate);
   }
 }
-function Vehicles_div_10_div_4_ng_template_5_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
   if (rf & 2) {
-    const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
-    \u0275\u0275textInterpolate(vehicle_r6.licensePlate);
+    const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(vehicle_r7.licensePlate);
   }
 }
-function Vehicles_div_10_div_4_ng_container_42_option_4_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_container_42_option_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 24);
+    \u0275\u0275elementStart(0, "option", 47);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const unitId_r9 = ctx.$implicit;
-    \u0275\u0275property("value", unitId_r9);
+    const unitId_r10 = ctx.$implicit;
+    \u0275\u0275property("value", unitId_r10);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(unitId_r9);
+    \u0275\u0275textInterpolate(unitId_r10);
   }
 }
-function Vehicles_div_10_div_4_ng_container_42_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_container_42_Template(rf, ctx) {
   if (rf & 1) {
-    const _r8 = \u0275\u0275getCurrentView();
+    const _r9 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "select", 34);
-    \u0275\u0275listener("ngModelChange", function Vehicles_div_10_div_4_ng_container_42_Template_select_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r8);
-      const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
-      const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.onTelemetryChange(vehicle_r6, $event));
+    \u0275\u0275elementStart(1, "select", 57);
+    \u0275\u0275listener("ngModelChange", function Vehicles_div_12_div_4_ng_container_42_Template_select_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r9);
+      const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.onTelemetryChange(vehicle_r7, $event));
     });
-    \u0275\u0275elementStart(2, "option", 35);
+    \u0275\u0275elementStart(2, "option", 58);
     \u0275\u0275text(3, "nicht verbunden");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Vehicles_div_10_div_4_ng_container_42_option_4_Template, 2, 2, "option", 21);
+    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_42_option_4_Template, 2, 2, "option", 44);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
-    const ctx_r1 = \u0275\u0275nextContext();
+    const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+    const ctx_r2 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275property("ngModel", (vehicle_r6.telemetryUnit == null ? null : vehicle_r6.telemetryUnit.id) || "");
+    \u0275\u0275property("ngModel", (vehicle_r7.telemetryUnit == null ? null : vehicle_r7.telemetryUnit.id) || "");
     \u0275\u0275advance(3);
-    \u0275\u0275property("ngForOf", ctx_r1.dummyTelemetryUnits);
+    \u0275\u0275property("ngForOf", ctx_r2.dummyTelemetryUnits);
   }
 }
-function Vehicles_div_10_div_4_ng_template_43_Template(rf, ctx) {
+function Vehicles_div_12_div_4_ng_template_43_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
   if (rf & 2) {
-    const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
-    \u0275\u0275textInterpolate((vehicle_r6.telemetryUnit == null ? null : vehicle_r6.telemetryUnit.id) || "nicht verbunden");
+    const vehicle_r7 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate((vehicle_r7.telemetryUnit == null ? null : vehicle_r7.telemetryUnit.id) || "nicht verbunden");
   }
 }
-function Vehicles_div_10_div_4_Template(rf, ctx) {
+function Vehicles_div_12_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 31);
-    \u0275\u0275listener("click", function Vehicles_div_10_div_4_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 54);
+    \u0275\u0275listener("click", function Vehicles_div_12_div_4_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
     \u0275\u0275elementStart(1, "div")(2, "span");
     \u0275\u0275text(3, "Kennzeichen:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Vehicles_div_10_div_4_ng_container_4_Template, 2, 1, "ng-container", 32)(5, Vehicles_div_10_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_4_Template, 2, 1, "ng-container", 55)(5, Vehicles_div_12_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(7, "div")(8, "span");
     \u0275\u0275text(9, "Marke:");
@@ -95671,135 +96105,573 @@ function Vehicles_div_10_div_4_Template(rf, ctx) {
     \u0275\u0275elementStart(39, "div")(40, "span");
     \u0275\u0275text(41, "Telemetrie-Einheit:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(42, Vehicles_div_10_div_4_ng_container_42_Template, 5, 2, "ng-container", 32)(43, Vehicles_div_10_div_4_ng_template_43_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(42, Vehicles_div_12_div_4_ng_container_42_Template, 5, 2, "ng-container", 55)(43, Vehicles_div_12_div_4_ng_template_43_Template, 1, 1, "ng-template", null, 4, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(45, "div")(46, "span");
+    \u0275\u0275text(47, "Zugewiesene Person:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(48);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const plateView_r10 = \u0275\u0275reference(6);
-    const unitView_r11 = \u0275\u0275reference(44);
-    const ctx_r11 = \u0275\u0275nextContext();
-    const vehicle_r6 = ctx_r11.$implicit;
-    const i_r5 = ctx_r11.index;
-    const ctx_r1 = \u0275\u0275nextContext();
+    const plateView_r11 = \u0275\u0275reference(6);
+    const unitView_r12 = \u0275\u0275reference(44);
+    const ctx_r12 = \u0275\u0275nextContext();
+    const vehicle_r7 = ctx_r12.$implicit;
+    const i_r6 = ctx_r12.index;
+    const ctx_r2 = \u0275\u0275nextContext();
     \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r5)("ngIfElse", plateView_r10);
+    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", plateView_r11);
     \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.brand);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.brand);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.modelName);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.modelName);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.year);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.year);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.identNr);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.identNr);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.requiredLicense);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.requiredLicense);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.powerPs, " PS");
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.powerPs, " PS");
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.color);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.color);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", vehicle_r6.firstRegistration);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.firstRegistration);
     \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r5)("ngIfElse", unitView_r11);
+    \u0275\u0275property("ngIf", ctx_r2.editingIndex === i_r6)("ngIfElse", unitView_r12);
+    \u0275\u0275advance(6);
+    \u0275\u0275textInterpolate1(" ", vehicle_r7.assignedPersonId || "keine");
   }
 }
-function Vehicles_div_10_div_5_Template(rf, ctx) {
+function Vehicles_div_12_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r13 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 36);
-    \u0275\u0275listener("click", function Vehicles_div_10_div_5_Template_div_click_0_listener($event) {
+    const _r14 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 59);
+    \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(1, "button", 37);
+    \u0275\u0275elementStart(1, "button", 60);
     \u0275\u0275text(2, "L\xF6schen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 38)(4, "button", 39);
-    \u0275\u0275listener("click", function Vehicles_div_10_div_5_Template_button_click_4_listener() {
-      \u0275\u0275restoreView(_r13);
-      const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.collapseItem());
+    \u0275\u0275elementStart(3, "div", 61)(4, "button", 62);
+    \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_button_click_4_listener() {
+      \u0275\u0275restoreView(_r14);
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.collapseItem());
     });
     \u0275\u0275text(5, "Abbrechen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 39);
-    \u0275\u0275listener("click", function Vehicles_div_10_div_5_Template_button_click_6_listener() {
-      \u0275\u0275restoreView(_r13);
-      const i_r5 = \u0275\u0275nextContext().index;
-      const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.toggleEdit(i_r5));
+    \u0275\u0275elementStart(6, "button", 62);
+    \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_button_click_6_listener() {
+      \u0275\u0275restoreView(_r14);
+      const i_r6 = \u0275\u0275nextContext().index;
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.toggleEdit(i_r6));
     });
     \u0275\u0275text(7);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "button", 37);
+    \u0275\u0275elementStart(8, "button", 60);
     \u0275\u0275text(9, "Fahrten");
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
-    const i_r5 = \u0275\u0275nextContext().index;
-    const ctx_r1 = \u0275\u0275nextContext();
+    const i_r6 = \u0275\u0275nextContext().index;
+    const ctx_r2 = \u0275\u0275nextContext();
     \u0275\u0275advance(7);
-    \u0275\u0275textInterpolate1(" ", ctx_r1.editingIndex === i_r5 ? "Fertig" : "Bearbeiten", " ");
+    \u0275\u0275textInterpolate1(" ", ctx_r2.editingIndex === i_r6 ? "Fertig" : "Bearbeiten", " ");
   }
 }
-function Vehicles_div_10_Template(rf, ctx) {
+function Vehicles_div_12_Template(rf, ctx) {
   if (rf & 1) {
-    const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 25);
-    \u0275\u0275listener("click", function Vehicles_div_10_Template_div_click_0_listener() {
-      const i_r5 = \u0275\u0275restoreView(_r4).index;
-      const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.selectItem(i_r5));
+    const _r5 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 48);
+    \u0275\u0275listener("click", function Vehicles_div_12_Template_div_click_0_listener() {
+      const i_r6 = \u0275\u0275restoreView(_r5).index;
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.selectItem(i_r6));
     });
-    \u0275\u0275elementStart(1, "div", 26);
+    \u0275\u0275elementStart(1, "div", 49);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Vehicles_div_10_div_3_Template, 2, 1, "div", 27)(4, Vehicles_div_10_div_4_Template, 45, 12, "div", 28)(5, Vehicles_div_10_div_5_Template, 10, 1, "div", 29);
+    \u0275\u0275template(3, Vehicles_div_12_div_3_Template, 2, 1, "div", 50)(4, Vehicles_div_12_div_4_Template, 49, 13, "div", 51)(5, Vehicles_div_12_div_5_Template, 10, 1, "div", 52);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const vehicle_r6 = ctx.$implicit;
-    const i_r5 = ctx.index;
-    const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("active", ctx_r1.selectedIndex === i_r5);
+    const vehicle_r7 = ctx.$implicit;
+    const i_r6 = ctx.index;
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275classProp("active", ctx_r2.selectedIndex === i_r6);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate3("", vehicle_r6.brand, " ", vehicle_r6.modelName, " - ", vehicle_r6.identNr);
+    \u0275\u0275textInterpolate3("", vehicle_r7.brand, " ", vehicle_r7.modelName, " - ", vehicle_r7.identNr);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r1.selectedIndex !== i_r5);
+    \u0275\u0275property("ngIf", ctx_r2.selectedIndex !== i_r6);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r5);
+    \u0275\u0275property("ngIf", ctx_r2.selectedIndex === i_r6);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r5);
+    \u0275\u0275property("ngIf", ctx_r2.selectedIndex === i_r6);
   }
 }
-function Vehicles_button_15_Template(rf, ctx) {
+function Vehicles_button_17_Template(rf, ctx) {
   if (rf & 1) {
-    const _r14 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 40);
-    \u0275\u0275listener("click", function Vehicles_button_15_Template_button_click_0_listener() {
-      const page_r15 = \u0275\u0275restoreView(_r14).$implicit;
-      const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.goToPage(page_r15));
+    const _r15 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 63);
+    \u0275\u0275listener("click", function Vehicles_button_17_Template_button_click_0_listener() {
+      const page_r16 = \u0275\u0275restoreView(_r15).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.goToPage(page_r16));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const page_r15 = ctx.$implicit;
-    const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("active", page_r15 === ctx_r1.currentPage);
+    const page_r16 = ctx.$implicit;
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275classProp("active", page_r16 === ctx_r2.currentPage);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", page_r15, " ");
+    \u0275\u0275textInterpolate1(" ", page_r16, " ");
+  }
+}
+function Vehicles_div_34_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r17 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 66);
+    \u0275\u0275listener("click", function Vehicles_div_34_div_1_Template_div_click_0_listener() {
+      const vehicle_r18 = \u0275\u0275restoreView(_r17).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.selectVehicle(vehicle_r18));
+    });
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const vehicle_r18 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate3(" ", vehicle_r18.licensePlate, " \u2014 ", vehicle_r18.brand, " ", vehicle_r18.modelName, " ");
+  }
+}
+function Vehicles_div_34_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 64);
+    \u0275\u0275template(1, Vehicles_div_34_div_1_Template, 2, 3, "div", 65);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r2.filteredVehicleOptions);
+  }
+}
+function Vehicles_div_37_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r19 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 69);
+    \u0275\u0275text(1);
+    \u0275\u0275elementStart(2, "span", 70);
+    \u0275\u0275listener("click", function Vehicles_div_37_div_1_Template_span_click_2_listener() {
+      const vehicleId_r20 = \u0275\u0275restoreView(_r19).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.removeVehicleFilter(vehicleId_r20));
+    });
+    \u0275\u0275text(3, "\xD7");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const vehicleId_r20 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", vehicleId_r20, " ");
+  }
+}
+function Vehicles_div_37_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 67);
+    \u0275\u0275template(1, Vehicles_div_37_div_1_Template, 4, 1, "div", 68);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r2.filterVehicleIds);
+  }
+}
+function Vehicles_div_38_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" Maximal ", ctx_r2.maxVehicleFilters, " Fahrzeuge ");
+  }
+}
+function Vehicles_div_39_option_8_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 47);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const license_r22 = ctx.$implicit;
+    \u0275\u0275property("value", license_r22);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(license_r22);
+  }
+}
+function Vehicles_div_39_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r21 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 72)(1, "input", 73);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.brand, $event) || (ctx_r2.advancedVehicleFilter.brand = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(2, "input", 74);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_2_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.modelName, $event) || (ctx_r2.advancedVehicleFilter.modelName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "input", 75);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_3_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.color, $event) || (ctx_r2.advancedVehicleFilter.color = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(4, "input", 76);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_4_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.identNr, $event) || (ctx_r2.advancedVehicleFilter.identNr = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "select", 42);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_select_ngModelChange_5_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.requiredLicense, $event) || (ctx_r2.advancedVehicleFilter.requiredLicense = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementStart(6, "option", 58);
+    \u0275\u0275text(7, "F\xFChrerschein (alle)");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(8, Vehicles_div_39_option_8_Template, 2, 2, "option", 44);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(9, "div", 77)(10, "input", 78);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_10_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.yearFrom, $event) || (ctx_r2.advancedVehicleFilter.yearFrom = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(11, "input", 79);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_11_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.yearTo, $event) || (ctx_r2.advancedVehicleFilter.yearTo = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(12, "div", 77)(13, "input", 80);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_13_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.powerPsFrom, $event) || (ctx_r2.advancedVehicleFilter.powerPsFrom = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(14, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_14_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.powerPsTo, $event) || (ctx_r2.advancedVehicleFilter.powerPsTo = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(15, "div", 82);
+    \u0275\u0275text(16, "Erstzulassung");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(17, "div", 77)(18, "input", 83);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_18_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.firstRegistrationFrom, $event) || (ctx_r2.advancedVehicleFilter.firstRegistrationFrom = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(19, "input", 84);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_39_Template_input_ngModelChange_19_listener($event) {
+      \u0275\u0275restoreView(_r21);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedVehicleFilter.firstRegistrationTo, $event) || (ctx_r2.advancedVehicleFilter.firstRegistrationTo = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.brand);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.modelName);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.color);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.identNr);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.requiredLicense);
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r2.licenseClasses);
+    \u0275\u0275advance(2);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.yearFrom);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.yearTo);
+    \u0275\u0275advance(2);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.powerPsFrom);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.powerPsTo);
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.firstRegistrationFrom);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedVehicleFilter.firstRegistrationTo);
+  }
+}
+function Vehicles_div_47_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r23 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 66);
+    \u0275\u0275listener("click", function Vehicles_div_47_div_1_Template_div_click_0_listener() {
+      const unitId_r24 = \u0275\u0275restoreView(_r23).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.selectTelemetryUnit(unitId_r24));
+    });
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const unitId_r24 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", unitId_r24, " ");
+  }
+}
+function Vehicles_div_47_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 64);
+    \u0275\u0275template(1, Vehicles_div_47_div_1_Template, 2, 1, "div", 65);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r2.filteredTelemetryOptions);
+  }
+}
+function Vehicles_div_50_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r25 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 69);
+    \u0275\u0275text(1);
+    \u0275\u0275elementStart(2, "span", 70);
+    \u0275\u0275listener("click", function Vehicles_div_50_div_1_Template_span_click_2_listener() {
+      const unitId_r26 = \u0275\u0275restoreView(_r25).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.removeTelemetryUnitFilter(unitId_r26));
+    });
+    \u0275\u0275text(3, "\xD7");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const unitId_r26 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", unitId_r26, " ");
+  }
+}
+function Vehicles_div_50_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 67);
+    \u0275\u0275template(1, Vehicles_div_50_div_1_Template, 4, 1, "div", 68);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r2.filterTelemetryUnitIds);
+  }
+}
+function Vehicles_div_51_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" Maximal ", ctx_r2.maxTelemetryUnitFilters, " Einheiten ");
+  }
+}
+function Vehicles_div_62_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r27 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 66);
+    \u0275\u0275listener("click", function Vehicles_div_62_div_1_Template_div_click_0_listener() {
+      const person_r28 = \u0275\u0275restoreView(_r27).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.selectPerson(person_r28));
+    });
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const person_r28 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate3(" ", person_r28.firstName, " ", person_r28.lastName, " \u2014 ", person_r28.employeeNr, " ");
+  }
+}
+function Vehicles_div_62_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 64);
+    \u0275\u0275template(1, Vehicles_div_62_div_1_Template, 2, 3, "div", 65);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r2.filteredPersonOptions);
+  }
+}
+function Vehicles_div_65_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r29 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 69);
+    \u0275\u0275text(1);
+    \u0275\u0275elementStart(2, "span", 70);
+    \u0275\u0275listener("click", function Vehicles_div_65_div_1_Template_span_click_2_listener() {
+      const personId_r30 = \u0275\u0275restoreView(_r29).$implicit;
+      const ctx_r2 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r2.removePersonFilter(personId_r30));
+    });
+    \u0275\u0275text(3, "\xD7");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const personId_r30 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", personId_r30, " ");
+  }
+}
+function Vehicles_div_65_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 67);
+    \u0275\u0275template(1, Vehicles_div_65_div_1_Template, 4, 1, "div", 68);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r2.filterPersonIds);
+  }
+}
+function Vehicles_div_66_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" Maximal ", ctx_r2.maxPersonFilters, " Personen ");
+  }
+}
+function Vehicles_div_67_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r31 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 72)(1, "input", 85);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r31);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.firstName, $event) || (ctx_r2.advancedPersonFilter.firstName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(2, "input", 86);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_2_listener($event) {
+      \u0275\u0275restoreView(_r31);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.lastName, $event) || (ctx_r2.advancedPersonFilter.lastName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "input", 87);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_3_listener($event) {
+      \u0275\u0275restoreView(_r31);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.employeeNr, $event) || (ctx_r2.advancedPersonFilter.employeeNr = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(4, "div", 82);
+    \u0275\u0275text(5, "Geburtsdatum");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(6, "div", 77)(7, "input", 88);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_7_listener($event) {
+      \u0275\u0275restoreView(_r31);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.birthDateFrom, $event) || (ctx_r2.advancedPersonFilter.birthDateFrom = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(8, "input", 89);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_8_listener($event) {
+      \u0275\u0275restoreView(_r31);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.birthDateTo, $event) || (ctx_r2.advancedPersonFilter.birthDateTo = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.firstName);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.lastName);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.employeeNr);
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.birthDateFrom);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.birthDateTo);
   }
 }
 var Vehicles = class _Vehicles {
+  vehicleService;
   vehicles = [];
-  pageSize = 20;
+  pageSize = 10;
   currentPage = 1;
   showCreateForm = false;
   newVehicle = this.emptyVehicle();
   selectedIndex = null;
   editingIndex = null;
   dummyTelemetryUnits = ["TU-1001", "TU-1002", "TU-1003"];
+  dummyPersons = [
+    { Id: "p1", firstName: "Anna", lastName: "Schmidt", employeeNr: "MA-1000", birthDate: "1970-05-20" },
+    { Id: "p2", firstName: "Ben", lastName: "M\xFCller", employeeNr: "MA-1001", birthDate: "1971-05-20" },
+    { Id: "p3", firstName: "Clara", lastName: "Fischer", employeeNr: "MA-1002", birthDate: "1972-05-20" },
+    { Id: "p4", firstName: "David", lastName: "Weber", employeeNr: "MA-1003", birthDate: "1973-05-20" },
+    { Id: "p5", firstName: "Emma", lastName: "Meyer", employeeNr: "MA-1004", birthDate: "1974-05-20" }
+  ];
   licenseClasses = [
     "AM",
     "A1",
@@ -95816,18 +96688,234 @@ var Vehicles = class _Vehicles {
     "D",
     "DE"
   ];
+  maxVehicleFilters = 10;
+  maxTelemetryUnitFilters = 10;
+  maxPersonFilters = 10;
+  filterVehicleId = "";
+  filterVehicleIds = [];
+  filterTelemetryUnitId = "";
+  filterTelemetryUnitIds = [];
+  filterPersonId = "";
+  filterPersonIds = [];
+  appliedFilterVehicleIds = [];
+  appliedFilterTelemetryUnitIds = [];
+  appliedFilterPersonIds = [];
+  vehicleSearch = "";
+  showVehicleOptions = false;
+  telemetrySearch = "";
+  showTelemetryOptions = false;
+  personSearch = "";
+  showPersonOptions = false;
+  showAdvancedVehicleFilter = false;
+  advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+  appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+  showAdvancedPersonFilter = false;
+  advancedPersonFilter = this.emptyAdvancedPersonFilter();
+  appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
+  vehicleAutocompleteRef;
+  telemetryAutocompleteRef;
+  personAutocompleteRef;
+  onDocumentClick(event) {
+    const target = event.target;
+    if (this.vehicleAutocompleteRef && !this.vehicleAutocompleteRef.nativeElement.contains(target)) {
+      this.showVehicleOptions = false;
+    }
+    if (this.telemetryAutocompleteRef && !this.telemetryAutocompleteRef.nativeElement.contains(target)) {
+      this.showTelemetryOptions = false;
+    }
+    if (this.personAutocompleteRef && !this.personAutocompleteRef.nativeElement.contains(target)) {
+      this.showPersonOptions = false;
+    }
+  }
+  constructor(vehicleService) {
+    this.vehicleService = vehicleService;
+  }
   ngOnInit() {
     this.vehicles = this.generateDummyVehicles(40);
+    this.vehicleService.loadAll().subscribe({
+      next: (vehicles) => {
+        if (vehicles?.length) {
+          this.vehicles = vehicles;
+        }
+      },
+      error: () => {
+      }
+    });
+  }
+  get filteredVehicles() {
+    const f = this.appliedAdvancedVehicleFilter;
+    return this.vehicles.filter((v) => {
+      if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(v.licensePlate ?? ""))
+        return false;
+      if (this.appliedFilterTelemetryUnitIds.length && !this.appliedFilterTelemetryUnitIds.includes(v.telemetryUnit?.id ?? ""))
+        return false;
+      if (this.appliedFilterPersonIds.length && !this.appliedFilterPersonIds.includes(v.assignedPersonId ?? ""))
+        return false;
+      const matchesBrand = !f.brand || (v.brand ?? "").toLowerCase().includes(f.brand.toLowerCase());
+      const matchesModel = !f.modelName || (v.modelName ?? "").toLowerCase().includes(f.modelName.toLowerCase());
+      const matchesColor = !f.color || (v.color ?? "").toLowerCase().includes(f.color.toLowerCase());
+      const matchesYearFrom = f.yearFrom == null || (v.year ?? 0) >= f.yearFrom;
+      const matchesYearTo = f.yearTo == null || (v.year ?? 0) <= f.yearTo;
+      const matchesIdentNr = !f.identNr || (v.identNr ?? "").toLowerCase().includes(f.identNr.toLowerCase());
+      const matchesLicense = !f.requiredLicense || v.requiredLicense === f.requiredLicense;
+      const matchesPowerFrom = f.powerPsFrom == null || (v.powerPs ?? 0) >= f.powerPsFrom;
+      const matchesPowerTo = f.powerPsTo == null || (v.powerPs ?? 0) <= f.powerPsTo;
+      const matchesRegFrom = !f.firstRegistrationFrom || (v.firstRegistration ?? "") >= f.firstRegistrationFrom;
+      const matchesRegTo = !f.firstRegistrationTo || (v.firstRegistration ?? "") <= f.firstRegistrationTo;
+      return matchesBrand && matchesModel && matchesColor && matchesYearFrom && matchesYearTo && matchesIdentNr && matchesLicense && matchesPowerFrom && matchesPowerTo && matchesRegFrom && matchesRegTo;
+    });
   }
   get totalPages() {
-    return Math.max(1, Math.ceil(this.vehicles.length / this.pageSize));
+    return Math.max(1, Math.ceil(this.filteredVehicles.length / this.pageSize));
   }
   get pageNumbers() {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
   get pagedVehicles() {
     const start2 = (this.currentPage - 1) * this.pageSize;
-    return this.vehicles.slice(start2, start2 + this.pageSize);
+    return this.filteredVehicles.slice(start2, start2 + this.pageSize);
+  }
+  get mapPoints() {
+    return this.pagedVehicles.filter((v) => v.lastLocation).map((v) => ({
+      id: v.Id,
+      label: `${v.licensePlate ?? ""} \u2014 ${v.brand ?? ""} ${v.modelName ?? ""}`,
+      lat: v.lastLocation.lat,
+      lng: v.lastLocation.lng
+    }));
+  }
+  get filteredVehicleOptions() {
+    const term = this.vehicleSearch.toLowerCase();
+    const f = this.advancedVehicleFilter;
+    return this.vehicles.filter((v) => {
+      const matchesSearch = !term || (v.licensePlate ?? "").toLowerCase().includes(term);
+      const matchesBrand = !f.brand || (v.brand ?? "").toLowerCase().includes(f.brand.toLowerCase());
+      const matchesModel = !f.modelName || (v.modelName ?? "").toLowerCase().includes(f.modelName.toLowerCase());
+      const matchesColor = !f.color || (v.color ?? "").toLowerCase().includes(f.color.toLowerCase());
+      const matchesYearFrom = f.yearFrom == null || (v.year ?? 0) >= f.yearFrom;
+      const matchesYearTo = f.yearTo == null || (v.year ?? 0) <= f.yearTo;
+      const matchesIdentNr = !f.identNr || (v.identNr ?? "").toLowerCase().includes(f.identNr.toLowerCase());
+      const matchesLicense = !f.requiredLicense || v.requiredLicense === f.requiredLicense;
+      const matchesPowerFrom = f.powerPsFrom == null || (v.powerPs ?? 0) >= f.powerPsFrom;
+      const matchesPowerTo = f.powerPsTo == null || (v.powerPs ?? 0) <= f.powerPsTo;
+      const matchesRegFrom = !f.firstRegistrationFrom || (v.firstRegistration ?? "") >= f.firstRegistrationFrom;
+      const matchesRegTo = !f.firstRegistrationTo || (v.firstRegistration ?? "") <= f.firstRegistrationTo;
+      return matchesSearch && matchesBrand && matchesModel && matchesColor && matchesYearFrom && matchesYearTo && matchesIdentNr && matchesLicense && matchesPowerFrom && matchesPowerTo && matchesRegFrom && matchesRegTo;
+    });
+  }
+  get filteredTelemetryOptions() {
+    const term = this.telemetrySearch.toLowerCase();
+    return this.dummyTelemetryUnits.filter((u2) => u2.toLowerCase().includes(term));
+  }
+  get filteredPersonOptions() {
+    const term = this.personSearch.toLowerCase();
+    const f = this.advancedPersonFilter;
+    return this.dummyPersons.filter((p) => {
+      const fullName = `${p.firstName ?? ""} ${p.lastName ?? ""}`.toLowerCase();
+      const matchesSearch = !term || fullName.includes(term) || (p.employeeNr ?? "").toLowerCase().includes(term);
+      const matchesFirstName = !f.firstName || (p.firstName ?? "").toLowerCase().includes(f.firstName.toLowerCase());
+      const matchesLastName = !f.lastName || (p.lastName ?? "").toLowerCase().includes(f.lastName.toLowerCase());
+      const matchesEmployeeNr = !f.employeeNr || (p.employeeNr ?? "").toLowerCase().includes(f.employeeNr.toLowerCase());
+      const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? "") >= f.birthDateFrom;
+      const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? "") <= f.birthDateTo;
+      return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr && matchesBirthFrom && matchesBirthTo;
+    });
+  }
+  onVehicleSearchChange() {
+    this.showVehicleOptions = true;
+    if (!this.vehicleSearch)
+      this.filterVehicleId = "";
+  }
+  toggleAdvancedVehicleFilter() {
+    this.showAdvancedVehicleFilter = !this.showAdvancedVehicleFilter;
+  }
+  selectVehicle(vehicle) {
+    this.filterVehicleId = vehicle.licensePlate ?? "";
+    this.vehicleSearch = vehicle.licensePlate ?? "";
+    this.showVehicleOptions = false;
+  }
+  addVehicleFilter() {
+    if (this.filterVehicleId && !this.filterVehicleIds.includes(this.filterVehicleId) && this.filterVehicleIds.length < this.maxVehicleFilters) {
+      this.filterVehicleIds.push(this.filterVehicleId);
+    }
+    this.filterVehicleId = "";
+    this.vehicleSearch = "";
+  }
+  removeVehicleFilter(vehicleId) {
+    this.filterVehicleIds = this.filterVehicleIds.filter((id) => id !== vehicleId);
+  }
+  onTelemetrySearchChange() {
+    this.showTelemetryOptions = true;
+    if (!this.telemetrySearch)
+      this.filterTelemetryUnitId = "";
+  }
+  selectTelemetryUnit(unitId) {
+    this.filterTelemetryUnitId = unitId;
+    this.telemetrySearch = unitId;
+    this.showTelemetryOptions = false;
+  }
+  addTelemetryUnitFilter() {
+    if (this.filterTelemetryUnitId && !this.filterTelemetryUnitIds.includes(this.filterTelemetryUnitId) && this.filterTelemetryUnitIds.length < this.maxTelemetryUnitFilters) {
+      this.filterTelemetryUnitIds.push(this.filterTelemetryUnitId);
+    }
+    this.filterTelemetryUnitId = "";
+    this.telemetrySearch = "";
+  }
+  removeTelemetryUnitFilter(unitId) {
+    this.filterTelemetryUnitIds = this.filterTelemetryUnitIds.filter((id) => id !== unitId);
+  }
+  onPersonSearchChange() {
+    this.showPersonOptions = true;
+    if (!this.personSearch)
+      this.filterPersonId = "";
+  }
+  toggleAdvancedPersonFilter() {
+    this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
+  }
+  selectPerson(person) {
+    this.filterPersonId = person.employeeNr ?? "";
+    this.personSearch = person.employeeNr ?? "";
+    this.showPersonOptions = false;
+  }
+  addPersonFilter() {
+    if (this.filterPersonId && !this.filterPersonIds.includes(this.filterPersonId) && this.filterPersonIds.length < this.maxPersonFilters) {
+      this.filterPersonIds.push(this.filterPersonId);
+    }
+    this.filterPersonId = "";
+    this.personSearch = "";
+  }
+  removePersonFilter(personId) {
+    this.filterPersonIds = this.filterPersonIds.filter((id) => id !== personId);
+  }
+  applyFilters() {
+    this.appliedFilterVehicleIds = [...this.filterVehicleIds];
+    this.appliedFilterTelemetryUnitIds = [...this.filterTelemetryUnitIds];
+    this.appliedFilterPersonIds = [...this.filterPersonIds];
+    this.appliedAdvancedVehicleFilter = __spreadValues({}, this.advancedVehicleFilter);
+    this.appliedAdvancedPersonFilter = __spreadValues({}, this.advancedPersonFilter);
+    this.currentPage = 1;
+    this.selectedIndex = null;
+  }
+  resetFilters() {
+    this.filterVehicleId = "";
+    this.filterVehicleIds = [];
+    this.filterTelemetryUnitId = "";
+    this.filterTelemetryUnitIds = [];
+    this.filterPersonId = "";
+    this.filterPersonIds = [];
+    this.appliedFilterVehicleIds = [];
+    this.appliedFilterTelemetryUnitIds = [];
+    this.appliedFilterPersonIds = [];
+    this.vehicleSearch = "";
+    this.telemetrySearch = "";
+    this.personSearch = "";
+    this.showAdvancedVehicleFilter = false;
+    this.showAdvancedPersonFilter = false;
+    this.advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+    this.appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
+    this.advancedPersonFilter = this.emptyAdvancedPersonFilter();
+    this.appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
+    this.currentPage = 1;
+    this.selectedIndex = null;
   }
   prevPage() {
     if (this.currentPage > 1)
@@ -95899,12 +96987,39 @@ var Vehicles = class _Vehicles {
       firstRegistration: ""
     };
   }
+  emptyAdvancedVehicleFilter() {
+    return {
+      brand: "",
+      modelName: "",
+      color: "",
+      yearFrom: null,
+      yearTo: null,
+      identNr: "",
+      requiredLicense: "",
+      powerPsFrom: null,
+      powerPsTo: null,
+      firstRegistrationFrom: "",
+      firstRegistrationTo: ""
+    };
+  }
+  emptyAdvancedPersonFilter() {
+    return {
+      firstName: "",
+      lastName: "",
+      employeeNr: "",
+      birthDateFrom: "",
+      birthDateTo: ""
+    };
+  }
   generateDummyVehicles(count) {
     const brands = ["VW", "Mercedes", "BMW", "Audi", "Ford", "Opel", "Renault", "Toyota"];
     const models = ["Transporter", "Sprinter", "X3", "A4", "Transit", "Astra", "Trafic", "Hilux"];
     const colors = ["Schwarz", "Wei\xDF", "Silber", "Blau", "Rot", "Grau"];
+    const baseLat = 50.9271;
+    const baseLng = 11.5892;
     return Array.from({ length: count }, (_, i) => {
       const year = 2010 + i % 15;
+      const offset = i % 10 - 5;
       return {
         Id: `veh-${i + 1}`,
         brand: brands[i % brands.length],
@@ -95915,46 +97030,176 @@ var Vehicles = class _Vehicles {
         requiredLicense: this.licenseClasses[i % this.licenseClasses.length],
         powerPs: 90 + i * 15 % 300,
         color: colors[i % colors.length],
-        firstRegistration: `01.01.${year}`
+        firstRegistration: `${year}-01-01`,
+        assignedPersonId: i % 3 === 0 ? this.dummyPersons[i % this.dummyPersons.length].employeeNr ?? null : null,
+        lastLocation: {
+          lat: baseLat + offset * 3e-3 + (Math.random() - 0.5) * 1e-3,
+          lng: baseLng + offset * 3e-3 + (Math.random() - 0.5) * 1e-3,
+          timestamp: new Date(2026, 6, 20, 8, i % 60, 0).toISOString()
+        }
       };
     });
   }
   static \u0275fac = function Vehicles_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _Vehicles)();
+    return new (__ngFactoryType__ || _Vehicles)(\u0275\u0275directiveInject(VehicleService));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Vehicles, selectors: [["app-vehicles"]], decls: 19, vars: 7, consts: [["plateView", ""], ["unitView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], [3, "value"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [1, "actions", 3, "click"], [1, "action-btn"], [1, "actions-right"], [1, "action-btn", 3, "click"], [1, "page-number", 3, "click"]], template: function Vehicles_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Vehicles, selectors: [["app-vehicles"]], viewQuery: function Vehicles_Query(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275elementStart(0, "h1", 2);
-      \u0275\u0275text(1, "Fahrzeuge");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(2, "div", 3)(3, "div", 4)(4, "div", 5)(5, "button", 6);
-      \u0275\u0275listener("click", function Vehicles_Template_button_click_5_listener() {
-        return ctx.toggleCreateForm();
-      });
-      \u0275\u0275text(6);
-      \u0275\u0275elementEnd()();
-      \u0275\u0275template(7, Vehicles_div_7_Template, 34, 11, "div", 7);
-      \u0275\u0275elementStart(8, "div", 8);
-      \u0275\u0275template(9, Vehicles_div_9_Template, 2, 0, "div", 9)(10, Vehicles_div_10_Template, 6, 8, "div", 10);
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "div", 11)(12, "button", 12);
-      \u0275\u0275listener("click", function Vehicles_Template_button_click_12_listener() {
-        return ctx.prevPage();
-      });
-      \u0275\u0275elementStart(13, "span", 13);
-      \u0275\u0275text(14, "chevron_left");
-      \u0275\u0275elementEnd()();
-      \u0275\u0275template(15, Vehicles_button_15_Template, 2, 3, "button", 14);
-      \u0275\u0275elementStart(16, "button", 12);
-      \u0275\u0275listener("click", function Vehicles_Template_button_click_16_listener() {
-        return ctx.nextPage();
-      });
-      \u0275\u0275elementStart(17, "span", 13);
-      \u0275\u0275text(18, "chevron_right");
-      \u0275\u0275elementEnd()()()()();
+      \u0275\u0275viewQuery(_c02, 5)(_c12, 5)(_c22, 5);
     }
     if (rf & 2) {
-      \u0275\u0275advance(6);
+      let _t;
+      \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.vehicleAutocompleteRef = _t.first);
+      \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.telemetryAutocompleteRef = _t.first);
+      \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.personAutocompleteRef = _t.first);
+    }
+  }, hostBindings: function Vehicles_HostBindings(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275listener("click", function Vehicles_click_HostBindingHandler($event) {
+        return ctx.onDocumentClick($event);
+      }, \u0275\u0275resolveDocument);
+    }
+  }, decls: 73, vars: 27, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], ["plateView", ""], ["unitView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "sidebar"], [1, "filter-title"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], [3, "value"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [1, "actions", 3, "click"], [1, "action-btn"], [1, "actions-right"], [1, "action-btn", 3, "click"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"]], template: function Vehicles_Template(rf, ctx) {
+    if (rf & 1) {
+      const _r1 = \u0275\u0275getCurrentView();
+      \u0275\u0275elementStart(0, "h1", 5);
+      \u0275\u0275text(1, "Fahrzeuge");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(2, "div", 6)(3, "div", 7)(4, "div", 8);
+      \u0275\u0275element(5, "app-vehicle-map", 9);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(6, "div", 10)(7, "button", 11);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_7_listener() {
+        return ctx.toggleCreateForm();
+      });
+      \u0275\u0275text(8);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(9, Vehicles_div_9_Template, 34, 11, "div", 12);
+      \u0275\u0275elementStart(10, "div", 13);
+      \u0275\u0275template(11, Vehicles_div_11_Template, 2, 0, "div", 14)(12, Vehicles_div_12_Template, 6, 8, "div", 15);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(13, "div", 16)(14, "button", 17);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_14_listener() {
+        return ctx.prevPage();
+      });
+      \u0275\u0275elementStart(15, "span", 18);
+      \u0275\u0275text(16, "chevron_left");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(17, Vehicles_button_17_Template, 2, 3, "button", 19);
+      \u0275\u0275elementStart(18, "button", 17);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_18_listener() {
+        return ctx.nextPage();
+      });
+      \u0275\u0275elementStart(19, "span", 18);
+      \u0275\u0275text(20, "chevron_right");
+      \u0275\u0275elementEnd()()()();
+      \u0275\u0275elementStart(21, "div", 20)(22, "div", 21);
+      \u0275\u0275text(23, "Filter");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(24, "div", 22, 0)(26, "div", 23)(27, "span");
+      \u0275\u0275text(28, "Fahrzeug");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(29, "button", 24);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_29_listener() {
+        return ctx.toggleAdvancedVehicleFilter();
+      });
+      \u0275\u0275text(30);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(31, "div", 25)(32, "div", 26)(33, "input", 27);
+      \u0275\u0275twoWayListener("ngModelChange", function Vehicles_Template_input_ngModelChange_33_listener($event) {
+        \u0275\u0275restoreView(_r1);
+        \u0275\u0275twoWayBindingSet(ctx.vehicleSearch, $event) || (ctx.vehicleSearch = $event);
+        return \u0275\u0275resetView($event);
+      });
+      \u0275\u0275listener("ngModelChange", function Vehicles_Template_input_ngModelChange_33_listener() {
+        return ctx.onVehicleSearchChange();
+      })("focus", function Vehicles_Template_input_focus_33_listener() {
+        return ctx.showVehicleOptions = true;
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(34, Vehicles_div_34_Template, 2, 1, "div", 28);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(35, "button", 29);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_35_listener() {
+        return ctx.addVehicleFilter();
+      });
+      \u0275\u0275text(36, " + ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(37, Vehicles_div_37_Template, 2, 1, "div", 30)(38, Vehicles_div_38_Template, 2, 1, "div", 31)(39, Vehicles_div_39_Template, 20, 12, "div", 32);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(40, "div", 22, 1)(42, "span");
+      \u0275\u0275text(43, "Telemetrie-Einheit");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(44, "div", 25)(45, "div", 26)(46, "input", 33);
+      \u0275\u0275twoWayListener("ngModelChange", function Vehicles_Template_input_ngModelChange_46_listener($event) {
+        \u0275\u0275restoreView(_r1);
+        \u0275\u0275twoWayBindingSet(ctx.telemetrySearch, $event) || (ctx.telemetrySearch = $event);
+        return \u0275\u0275resetView($event);
+      });
+      \u0275\u0275listener("ngModelChange", function Vehicles_Template_input_ngModelChange_46_listener() {
+        return ctx.onTelemetrySearchChange();
+      })("focus", function Vehicles_Template_input_focus_46_listener() {
+        return ctx.showTelemetryOptions = true;
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(47, Vehicles_div_47_Template, 2, 1, "div", 28);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(48, "button", 29);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_48_listener() {
+        return ctx.addTelemetryUnitFilter();
+      });
+      \u0275\u0275text(49, " + ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(50, Vehicles_div_50_Template, 2, 1, "div", 30)(51, Vehicles_div_51_Template, 2, 1, "div", 31);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(52, "div", 22, 2)(54, "div", 23)(55, "span");
+      \u0275\u0275text(56, "Person");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(57, "button", 24);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_57_listener() {
+        return ctx.toggleAdvancedPersonFilter();
+      });
+      \u0275\u0275text(58);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275elementStart(59, "div", 25)(60, "div", 26)(61, "input", 34);
+      \u0275\u0275twoWayListener("ngModelChange", function Vehicles_Template_input_ngModelChange_61_listener($event) {
+        \u0275\u0275restoreView(_r1);
+        \u0275\u0275twoWayBindingSet(ctx.personSearch, $event) || (ctx.personSearch = $event);
+        return \u0275\u0275resetView($event);
+      });
+      \u0275\u0275listener("ngModelChange", function Vehicles_Template_input_ngModelChange_61_listener() {
+        return ctx.onPersonSearchChange();
+      })("focus", function Vehicles_Template_input_focus_61_listener() {
+        return ctx.showPersonOptions = true;
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(62, Vehicles_div_62_Template, 2, 1, "div", 28);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(63, "button", 29);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_63_listener() {
+        return ctx.addPersonFilter();
+      });
+      \u0275\u0275text(64, " + ");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(65, Vehicles_div_65_Template, 2, 1, "div", 30)(66, Vehicles_div_66_Template, 2, 1, "div", 31)(67, Vehicles_div_67_Template, 9, 5, "div", 32);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(68, "div", 35)(69, "button", 36);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_69_listener() {
+        return ctx.applyFilters();
+      });
+      \u0275\u0275text(70, "Anwenden");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(71, "button", 37);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_71_listener() {
+        return ctx.resetFilters();
+      });
+      \u0275\u0275text(72, "Zur\xFCcksetzen");
+      \u0275\u0275elementEnd()()()();
+    }
+    if (rf & 2) {
+      \u0275\u0275advance(5);
+      \u0275\u0275property("points", ctx.mapPoints);
+      \u0275\u0275advance(3);
       \u0275\u0275textInterpolate1(" ", ctx.showCreateForm ? "Abbrechen" : "Neu anlegen", " ");
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.showCreateForm);
@@ -95968,16 +97213,58 @@ var Vehicles = class _Vehicles {
       \u0275\u0275property("ngForOf", ctx.pageNumbers);
       \u0275\u0275advance();
       \u0275\u0275property("disabled", ctx.currentPage === ctx.totalPages);
+      \u0275\u0275advance(12);
+      \u0275\u0275textInterpolate1(" ", ctx.showAdvancedVehicleFilter ? "Erweitert \u25B2" : "Erweitert \u25BC", " ");
+      \u0275\u0275advance(3);
+      \u0275\u0275twoWayProperty("ngModel", ctx.vehicleSearch);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showVehicleOptions && ctx.filteredVehicleOptions.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("disabled", !ctx.filterVehicleId || ctx.filterVehicleIds.length >= ctx.maxVehicleFilters);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("ngIf", ctx.filterVehicleIds.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.filterVehicleIds.length >= ctx.maxVehicleFilters);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showAdvancedVehicleFilter);
+      \u0275\u0275advance(7);
+      \u0275\u0275twoWayProperty("ngModel", ctx.telemetrySearch);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showTelemetryOptions && ctx.filteredTelemetryOptions.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("disabled", !ctx.filterTelemetryUnitId || ctx.filterTelemetryUnitIds.length >= ctx.maxTelemetryUnitFilters);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("ngIf", ctx.filterTelemetryUnitIds.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.filterTelemetryUnitIds.length >= ctx.maxTelemetryUnitFilters);
+      \u0275\u0275advance(7);
+      \u0275\u0275textInterpolate1(" ", ctx.showAdvancedPersonFilter ? "Erweitert \u25B2" : "Erweitert \u25BC", " ");
+      \u0275\u0275advance(3);
+      \u0275\u0275twoWayProperty("ngModel", ctx.personSearch);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showPersonOptions && ctx.filteredPersonOptions.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("disabled", !ctx.filterPersonId || ctx.filterPersonIds.length >= ctx.maxPersonFilters);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("ngIf", ctx.filterPersonIds.length);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.filterPersonIds.length >= ctx.maxPersonFilters);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showAdvancedPersonFilter);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, VehicleMap], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  width: 260px;\n  min-height: 600px;\n  background: #1b1b21;\n  color: white;\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid #2a2b33;\n  margin-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: #aaa;\n  gap: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: #8b8fd9;\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: #72757c;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: #d98c8c;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: #16161b;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: #72757c;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: white;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: #33333d;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Vehicles, [{
     type: Component,
-    args: [{ selector: "app-vehicles", standalone: true, imports: [CommonModule, FormsModule], template: `<h1 class="header">Fahrzeuge</h1>
+    args: [{ selector: "app-vehicles", standalone: true, imports: [CommonModule, FormsModule, VehicleMap], template: `<h1 class="header">Fahrzeuge</h1>
 
 <div class="container">
   <div class="main">
+
+    <div class="card">
+      <app-vehicle-map [points]="mapPoints"></app-vehicle-map>
+    </div>
 
     <div class="toolbar">
       <button class="create-btn" (click)="toggleCreateForm()">
@@ -96045,7 +97332,7 @@ var Vehicles = class _Vehicles {
 
     <div class="list">
       <div *ngIf="pagedVehicles.length === 0">
-        Keine Fahrzeuge angelegt.
+        Keine Fahrzeuge gefunden.
       </div>
 
       <div class="box"
@@ -96089,6 +97376,8 @@ var Vehicles = class _Vehicles {
             </ng-container>
             <ng-template #unitView>{{ vehicle.telemetryUnit?.id || 'nicht verbunden' }}</ng-template>
           </div>
+
+          <div><span>Zugewiesene Person:</span> {{ vehicle.assignedPersonId || 'keine' }}</div>
         </div>
 
         <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
@@ -96127,12 +97416,1178 @@ var Vehicles = class _Vehicles {
     </div>
 
   </div>
+
+  <div class="sidebar">
+    <div class="filter-title">Filter</div>
+
+    <div class="autocomplete" #vehicleAutocomplete>
+      <div class="label-row">
+        <span>Fahrzeug</span>
+        <button type="button" class="advanced-btn" (click)="toggleAdvancedVehicleFilter()">
+          {{ showAdvancedVehicleFilter ? 'Erweitert \u25B2' : 'Erweitert \u25BC' }}
+        </button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Fahrzeug suchen..."
+                 [(ngModel)]="vehicleSearch"
+                 (ngModelChange)="onVehicleSearchChange()"
+                 (focus)="showVehicleOptions = true">
+
+          <div class="options" *ngIf="showVehicleOptions && filteredVehicleOptions.length">
+            <div class="option"
+                 *ngFor="let vehicle of filteredVehicleOptions"
+                 (click)="selectVehicle(vehicle)">
+              {{ vehicle.licensePlate }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterVehicleId || filterVehicleIds.length >= maxVehicleFilters"
+                (click)="addVehicleFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterVehicleIds.length">
+        <div class="chip" *ngFor="let vehicleId of filterVehicleIds">
+          {{ vehicleId }}
+          <span class="chip-remove" (click)="removeVehicleFilter(vehicleId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterVehicleIds.length >= maxVehicleFilters">
+        Maximal {{ maxVehicleFilters }} Fahrzeuge
+      </div>
+
+      <div class="advanced-filter" *ngIf="showAdvancedVehicleFilter">
+        <input type="text" placeholder="Marke" [(ngModel)]="advancedVehicleFilter.brand">
+        <input type="text" placeholder="Modell" [(ngModel)]="advancedVehicleFilter.modelName">
+        <input type="text" placeholder="Farbe" [(ngModel)]="advancedVehicleFilter.color">
+        <input type="text" placeholder="Fahrzeug-Identnr." [(ngModel)]="advancedVehicleFilter.identNr">
+
+        <select [(ngModel)]="advancedVehicleFilter.requiredLicense">
+          <option value="">F\xFChrerschein (alle)</option>
+          <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+        </select>
+
+        <div class="year-range">
+          <input type="number" placeholder="Baujahr von" [(ngModel)]="advancedVehicleFilter.yearFrom">
+          <input type="number" placeholder="Baujahr bis" [(ngModel)]="advancedVehicleFilter.yearTo">
+        </div>
+
+        <div class="year-range">
+          <input type="number" placeholder="PS von" [(ngModel)]="advancedVehicleFilter.powerPsFrom">
+          <input type="number" placeholder="PS bis" [(ngModel)]="advancedVehicleFilter.powerPsTo">
+        </div>
+
+        <div class="field-label">Erstzulassung</div>
+        <div class="year-range">
+          <input type="date" placeholder="Erstzulassung von" [(ngModel)]="advancedVehicleFilter.firstRegistrationFrom">
+          <input type="date" placeholder="Erstzulassung bis" [(ngModel)]="advancedVehicleFilter.firstRegistrationTo">
+        </div>
+      </div>
+    </div>
+
+    <div class="autocomplete" #telemetryAutocomplete>
+      <span>Telemetrie-Einheit</span>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Einheit suchen..."
+                 [(ngModel)]="telemetrySearch"
+                 (ngModelChange)="onTelemetrySearchChange()"
+                 (focus)="showTelemetryOptions = true">
+
+          <div class="options" *ngIf="showTelemetryOptions && filteredTelemetryOptions.length">
+            <div class="option"
+                 *ngFor="let unitId of filteredTelemetryOptions"
+                 (click)="selectTelemetryUnit(unitId)">
+              {{ unitId }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterTelemetryUnitId || filterTelemetryUnitIds.length >= maxTelemetryUnitFilters"
+                (click)="addTelemetryUnitFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterTelemetryUnitIds.length">
+        <div class="chip" *ngFor="let unitId of filterTelemetryUnitIds">
+          {{ unitId }}
+          <span class="chip-remove" (click)="removeTelemetryUnitFilter(unitId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterTelemetryUnitIds.length >= maxTelemetryUnitFilters">
+        Maximal {{ maxTelemetryUnitFilters }} Einheiten
+      </div>
+    </div>
+
+    <div class="autocomplete" #personAutocomplete>
+      <div class="label-row">
+        <span>Person</span>
+        <button type="button" class="advanced-btn" (click)="toggleAdvancedPersonFilter()">
+          {{ showAdvancedPersonFilter ? 'Erweitert \u25B2' : 'Erweitert \u25BC' }}
+        </button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrapper">
+          <input type="text"
+                 placeholder="Person suchen..."
+                 [(ngModel)]="personSearch"
+                 (ngModelChange)="onPersonSearchChange()"
+                 (focus)="showPersonOptions = true">
+
+          <div class="options" *ngIf="showPersonOptions && filteredPersonOptions.length">
+            <div class="option"
+                 *ngFor="let person of filteredPersonOptions"
+                 (click)="selectPerson(person)">
+              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.employeeNr }}
+            </div>
+          </div>
+        </div>
+
+        <button type="button"
+                class="add-btn"
+                [disabled]="!filterPersonId || filterPersonIds.length >= maxPersonFilters"
+                (click)="addPersonFilter()">
+          +
+        </button>
+      </div>
+
+      <div class="chips" *ngIf="filterPersonIds.length">
+        <div class="chip" *ngFor="let personId of filterPersonIds">
+          {{ personId }}
+          <span class="chip-remove" (click)="removePersonFilter(personId)">&times;</span>
+        </div>
+      </div>
+
+      <div class="limit-hint" *ngIf="filterPersonIds.length >= maxPersonFilters">
+        Maximal {{ maxPersonFilters }} Personen
+      </div>
+
+      <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
+        <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
+        <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
+        <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedPersonFilter.employeeNr">
+
+        <div class="field-label">Geburtsdatum</div>
+        <div class="year-range">
+          <input type="date" placeholder="Geburtsdatum von" [(ngModel)]="advancedPersonFilter.birthDateFrom">
+          <input type="date" placeholder="Geburtsdatum bis" [(ngModel)]="advancedPersonFilter.birthDateTo">
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <button class="apply-btn" (click)="applyFilters()">Anwenden</button>
+      <button class="reset-btn" (click)="resetFilters()">Zur\xFCcksetzen</button>
+    </div>
+  </div>
+
 </div>
-`, styles: ["/* src/app/widgets/vehicles/vehicles.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box.active {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */\n"] }]
+`, styles: ["/* src/app/widgets/vehicles/vehicles.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  justify-content: center;\n}\n.container .sidebar {\n  width: 260px;\n  min-height: 600px;\n  background: #1b1b21;\n  color: white;\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid #2a2b33;\n  margin-top: 18px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container .sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container .sidebar label,\n.container .sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: #aaa;\n  gap: 6px;\n}\n.container .sidebar .autocomplete {\n  position: relative;\n}\n.container .sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container .sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: #8b8fd9;\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container .sidebar .autocomplete .advanced-btn:hover {\n  color: white;\n}\n.container .sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container .sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container .sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.container .sidebar .autocomplete .add-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container .sidebar .autocomplete .add-btn:hover {\n  background-color: #4a4890;\n}\n.container .sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container .sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container .sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: #72757c;\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: white;\n}\n.container .sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: #d98c8c;\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: #16161b;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n}\n.container .sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: #72757c;\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.container .sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: white;\n  cursor: pointer;\n}\n.container .sidebar .autocomplete .options .option:hover {\n  background: #2a2b33;\n}\n.container .sidebar input,\n.container .sidebar select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.container .sidebar input:focus,\n.container .sidebar select:focus {\n  border-color: #373669;\n}\n.container .sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container .sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .sidebar .filter-actions .apply-btn {\n  background-color: #373669;\n  color: white;\n}\n.container .sidebar .filter-actions .apply-btn:hover {\n  background-color: #4a4890;\n}\n.container .sidebar .filter-actions .reset-btn {\n  background-color: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n}\n.container .sidebar .filter-actions .reset-btn:hover {\n  background-color: #33333d;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box.active {\n  min-height: 460px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=vehicles.component.css.map */\n"] }]
+  }], () => [{ type: VehicleService }], { vehicleAutocompleteRef: [{
+    type: ViewChild,
+    args: ["vehicleAutocomplete"]
+  }], telemetryAutocompleteRef: [{
+    type: ViewChild,
+    args: ["telemetryAutocomplete"]
+  }], personAutocompleteRef: [{
+    type: ViewChild,
+    args: ["personAutocomplete"]
+  }], onDocumentClick: [{
+    type: HostListener,
+    args: ["document:click", ["$event"]]
+  }] });
+})();
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Vehicles, { className: "Vehicles", filePath: "src/app/widgets/vehicles/vehicles.component.ts", lineNumber: 17 });
+})();
+
+// src/app/widgets/personen/personen.component.ts
+function Personen_div_7_option_19_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const plate_r3 = ctx.$implicit;
+    \u0275\u0275property("value", plate_r3);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(plate_r3);
+  }
+}
+function Personen_div_7_option_27_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const license_r4 = ctx.$implicit;
+    \u0275\u0275property("value", license_r4);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(license_r4);
+  }
+}
+function Personen_div_7_div_31_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r5 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275text(1);
+    \u0275\u0275elementStart(2, "span", 34);
+    \u0275\u0275listener("click", function Personen_div_7_div_31_div_1_Template_span_click_2_listener() {
+      const license_r6 = \u0275\u0275restoreView(_r5).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext(3);
+      return \u0275\u0275resetView(ctx_r1.removeLicenseFromNewPerson(license_r6.licenseClass));
+    });
+    \u0275\u0275text(3, "\xD7");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const license_r6 = ctx.$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate2(" ", license_r6.licenseClass, " (seit ", license_r6.obtainedDate, ") ");
+  }
+}
+function Personen_div_7_div_31_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 31);
+    \u0275\u0275template(1, Personen_div_7_div_31_div_1_Template, 4, 2, "div", 32);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r1.newPerson.licenses);
+  }
+}
+function Personen_div_7_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r1 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 16)(1, "div", 17)(2, "label");
+    \u0275\u0275text(3, " Vorname ");
+    \u0275\u0275elementStart(4, "input", 18);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_4_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.firstName, $event) || (ctx_r1.newPerson.firstName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(5, "label");
+    \u0275\u0275text(6, " Nachname ");
+    \u0275\u0275elementStart(7, "input", 18);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_7_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.lastName, $event) || (ctx_r1.newPerson.lastName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(8, "label");
+    \u0275\u0275text(9, " Mitarbeiter-Nr. ");
+    \u0275\u0275elementStart(10, "input", 18);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_10_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.employeeNr, $event) || (ctx_r1.newPerson.employeeNr = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(11, "label");
+    \u0275\u0275text(12, " Geburtsdatum ");
+    \u0275\u0275elementStart(13, "input", 19);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_13_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.birthDate, $event) || (ctx_r1.newPerson.birthDate = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(14, "label");
+    \u0275\u0275text(15, " Zugewiesenes Fahrzeug ");
+    \u0275\u0275elementStart(16, "select", 20);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_16_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.assignedVehicleId, $event) || (ctx_r1.newPerson.assignedVehicleId = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementStart(17, "option", 21);
+    \u0275\u0275text(18, "Kein Fahrzeug");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(19, Personen_div_7_option_19_Template, 2, 2, "option", 22);
+    \u0275\u0275elementEnd()()();
+    \u0275\u0275elementStart(20, "div", 23)(21, "div", 24);
+    \u0275\u0275text(22, "F\xFChrerscheine");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(23, "div", 25)(24, "select", 20);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_24_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newLicenseClass, $event) || (ctx_r1.newLicenseClass = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementStart(25, "option", 26);
+    \u0275\u0275text(26, "Klasse w\xE4hlen");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(27, Personen_div_7_option_27_Template, 2, 2, "option", 22);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(28, "input", 19);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_28_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r1.newLicenseDate, $event) || (ctx_r1.newLicenseDate = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(29, "button", 27);
+    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_29_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.addLicenseToNewPerson());
+    });
+    \u0275\u0275text(30, " + ");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275template(31, Personen_div_7_div_31_Template, 2, 1, "div", 28);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(32, "button", 29);
+    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_32_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.createPerson());
+    });
+    \u0275\u0275text(33, " Speichern ");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.firstName);
+    \u0275\u0275advance(3);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.lastName);
+    \u0275\u0275advance(3);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.employeeNr);
+    \u0275\u0275advance(3);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.birthDate);
+    \u0275\u0275advance(3);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.assignedVehicleId);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngValue", null);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("ngForOf", ctx_r1.dummyVehicles);
+    \u0275\u0275advance(5);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newLicenseClass);
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r1.licenseClasses);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newLicenseDate);
+    \u0275\u0275advance();
+    \u0275\u0275property("disabled", !ctx_r1.newLicenseClass || !ctx_r1.newLicenseDate);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("ngIf", ctx_r1.newPerson.licenses == null ? null : ctx_r1.newPerson.licenses.length);
+    \u0275\u0275advance();
+    \u0275\u0275property("disabled", !ctx_r1.newPerson.firstName || !ctx_r1.newPerson.lastName);
+  }
+}
+function Personen_div_9_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div");
+    \u0275\u0275text(1, " Keine Personen angelegt. ");
+    \u0275\u0275elementEnd();
+  }
+}
+function Personen_div_10_div_3_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 40);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext().$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" Geburtsdatum: ", person_r9.birthDate, " ");
+  }
+}
+function Personen_div_10_div_4_ng_container_4_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r10 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275elementStart(1, "input", 45);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r10);
+      const person_r9 = \u0275\u0275nextContext(2).$implicit;
+      \u0275\u0275twoWayBindingSet(person_r9.firstName, $event) || (person_r9.firstName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", person_r9.firstName);
+  }
+}
+function Personen_div_10_div_4_ng_template_5_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275text(0);
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(person_r9.firstName);
+  }
+}
+function Personen_div_10_div_4_ng_container_10_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r11 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275elementStart(1, "input", 45);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_10_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r11);
+      const person_r9 = \u0275\u0275nextContext(2).$implicit;
+      \u0275\u0275twoWayBindingSet(person_r9.lastName, $event) || (person_r9.lastName = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", person_r9.lastName);
+  }
+}
+function Personen_div_10_div_4_ng_template_11_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275text(0);
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(person_r9.lastName);
+  }
+}
+function Personen_div_10_div_4_ng_container_24_option_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const plate_r13 = ctx.$implicit;
+    \u0275\u0275property("value", plate_r13);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(plate_r13);
+  }
+}
+function Personen_div_10_div_4_ng_container_24_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r12 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275elementStart(1, "select", 46);
+    \u0275\u0275listener("ngModelChange", function Personen_div_10_div_4_ng_container_24_Template_select_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r12);
+      const person_r9 = \u0275\u0275nextContext(2).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onVehicleAssignmentChange(person_r9, $event));
+    });
+    \u0275\u0275elementStart(2, "option", 47);
+    \u0275\u0275text(3, "kein Fahrzeug");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_24_option_4_Template, 2, 2, "option", 22);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngModel", person_r9.assignedVehicleId || "");
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r1.dummyVehicles);
+  }
+}
+function Personen_div_10_div_4_ng_template_25_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275text(0);
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(person_r9.assignedVehicleId || "kein Fahrzeug");
+  }
+}
+function Personen_div_10_div_4_div_30_div_1_span_2_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r14 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "span", 34);
+    \u0275\u0275listener("click", function Personen_div_10_div_4_div_30_div_1_span_2_Template_span_click_0_listener() {
+      \u0275\u0275restoreView(_r14);
+      const license_r15 = \u0275\u0275nextContext().$implicit;
+      const person_r9 = \u0275\u0275nextContext(3).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.removeLicenseFromPerson(person_r9, license_r15.licenseClass));
+    });
+    \u0275\u0275text(1, " \xD7 ");
+    \u0275\u0275elementEnd();
+  }
+}
+function Personen_div_10_div_4_div_30_div_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275text(1);
+    \u0275\u0275template(2, Personen_div_10_div_4_div_30_div_1_span_2_Template, 2, 0, "span", 48);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const license_r15 = ctx.$implicit;
+    const i_r8 = \u0275\u0275nextContext(3).index;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate2(" ", license_r15.licenseClass, " (seit ", license_r15.obtainedDate, ") ");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8);
+  }
+}
+function Personen_div_10_div_4_div_30_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 31);
+    \u0275\u0275template(1, Personen_div_10_div_4_div_30_div_1_Template, 3, 3, "div", 32);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", person_r9.licenses);
+  }
+}
+function Personen_div_10_div_4_div_31_option_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const license_r17 = ctx.$implicit;
+    \u0275\u0275property("value", license_r17);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(license_r17);
+  }
+}
+function Personen_div_10_div_4_div_31_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r16 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 25)(1, "select", 20);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_31_Template_select_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r16);
+      const ctx_r1 = \u0275\u0275nextContext(3);
+      \u0275\u0275twoWayBindingSet(ctx_r1.editLicenseClass, $event) || (ctx_r1.editLicenseClass = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementStart(2, "option", 26);
+    \u0275\u0275text(3, "Klasse w\xE4hlen");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(4, Personen_div_10_div_4_div_31_option_4_Template, 2, 2, "option", 22);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(5, "input", 19);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_31_Template_input_ngModelChange_5_listener($event) {
+      \u0275\u0275restoreView(_r16);
+      const ctx_r1 = \u0275\u0275nextContext(3);
+      \u0275\u0275twoWayBindingSet(ctx_r1.editLicenseDate, $event) || (ctx_r1.editLicenseDate = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(6, "button", 27);
+    \u0275\u0275listener("click", function Personen_div_10_div_4_div_31_Template_button_click_6_listener() {
+      \u0275\u0275restoreView(_r16);
+      const person_r9 = \u0275\u0275nextContext(2).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.addLicenseToPerson(person_r9));
+    });
+    \u0275\u0275text(7, " + ");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(3);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.editLicenseClass);
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r1.licenseClasses);
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", ctx_r1.editLicenseDate);
+    \u0275\u0275advance();
+    \u0275\u0275property("disabled", !ctx_r1.editLicenseClass || !ctx_r1.editLicenseDate);
+  }
+}
+function Personen_div_10_div_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 41);
+    \u0275\u0275listener("click", function Personen_div_10_div_4_Template_div_click_0_listener($event) {
+      return $event.stopPropagation();
+    });
+    \u0275\u0275elementStart(1, "div")(2, "span");
+    \u0275\u0275text(3, "Vorname:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_4_Template, 2, 1, "ng-container", 42)(5, Personen_div_10_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(7, "div")(8, "span");
+    \u0275\u0275text(9, "Nachname:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(10, Personen_div_10_div_4_ng_container_10_Template, 2, 1, "ng-container", 42)(11, Personen_div_10_div_4_ng_template_11_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(13, "div")(14, "span");
+    \u0275\u0275text(15, "Mitarbeiter-Nr.:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(16);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(17, "div")(18, "span");
+    \u0275\u0275text(19, "Geburtsdatum:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(20);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(21, "div")(22, "span");
+    \u0275\u0275text(23, "Zugewiesenes Fahrzeug:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(24, Personen_div_10_div_4_ng_container_24_Template, 5, 2, "ng-container", 42)(25, Personen_div_10_div_4_ng_template_25_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(27, "div", 43)(28, "span");
+    \u0275\u0275text(29, "F\xFChrerscheine:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(30, Personen_div_10_div_4_div_30_Template, 2, 1, "div", 28)(31, Personen_div_10_div_4_div_31_Template, 8, 4, "div", 44);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const firstNameView_r18 = \u0275\u0275reference(6);
+    const lastNameView_r19 = \u0275\u0275reference(12);
+    const vehicleView_r20 = \u0275\u0275reference(26);
+    const ctx_r20 = \u0275\u0275nextContext();
+    const person_r9 = ctx_r20.$implicit;
+    const i_r8 = ctx_r20.index;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(4);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", firstNameView_r18);
+    \u0275\u0275advance(6);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", lastNameView_r19);
+    \u0275\u0275advance(6);
+    \u0275\u0275textInterpolate1(" ", person_r9.employeeNr);
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", person_r9.birthDate);
+    \u0275\u0275advance(4);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", vehicleView_r20);
+    \u0275\u0275advance(6);
+    \u0275\u0275property("ngIf", person_r9.licenses == null ? null : person_r9.licenses.length);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8);
+  }
+}
+function Personen_div_10_div_5_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r22 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 49);
+    \u0275\u0275listener("click", function Personen_div_10_div_5_Template_div_click_0_listener($event) {
+      return $event.stopPropagation();
+    });
+    \u0275\u0275elementStart(1, "button", 50);
+    \u0275\u0275text(2, "L\xF6schen");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "div", 51)(4, "button", 52);
+    \u0275\u0275listener("click", function Personen_div_10_div_5_Template_button_click_4_listener() {
+      \u0275\u0275restoreView(_r22);
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.collapseItem());
+    });
+    \u0275\u0275text(5, "Abbrechen");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(6, "button", 52);
+    \u0275\u0275listener("click", function Personen_div_10_div_5_Template_button_click_6_listener() {
+      \u0275\u0275restoreView(_r22);
+      const i_r8 = \u0275\u0275nextContext().index;
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.toggleEdit(i_r8));
+    });
+    \u0275\u0275text(7);
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const i_r8 = \u0275\u0275nextContext().index;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(7);
+    \u0275\u0275textInterpolate1(" ", ctx_r1.editingIndex === i_r8 ? "Fertig" : "Bearbeiten", " ");
+  }
+}
+function Personen_div_10_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r7 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 35);
+    \u0275\u0275listener("click", function Personen_div_10_Template_div_click_0_listener() {
+      const i_r8 = \u0275\u0275restoreView(_r7).index;
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.selectItem(i_r8));
+    });
+    \u0275\u0275elementStart(1, "div", 36);
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(3, Personen_div_10_div_3_Template, 2, 1, "div", 37)(4, Personen_div_10_div_4_Template, 32, 10, "div", 38)(5, Personen_div_10_div_5_Template, 8, 1, "div", 39);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = ctx.$implicit;
+    const i_r8 = ctx.index;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275classProp("active", ctx_r1.selectedIndex === i_r8);
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate3("", person_r9.firstName, " ", person_r9.lastName, " - ", person_r9.employeeNr);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.selectedIndex !== i_r8);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r8);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r8);
+  }
+}
+function Personen_button_15_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r23 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 53);
+    \u0275\u0275listener("click", function Personen_button_15_Template_button_click_0_listener() {
+      const page_r24 = \u0275\u0275restoreView(_r23).$implicit;
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.goToPage(page_r24));
+    });
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const page_r24 = ctx.$implicit;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275classProp("active", page_r24 === ctx_r1.currentPage);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", page_r24, " ");
+  }
+}
+var Personen = class _Personen {
+  persons = [];
+  pageSize = 10;
+  currentPage = 1;
+  showCreateForm = false;
+  newPerson = this.emptyPerson();
+  newLicenseClass = "";
+  newLicenseDate = "";
+  selectedIndex = null;
+  editingIndex = null;
+  editLicenseClass = "";
+  editLicenseDate = "";
+  licenseClasses = [
+    "AM",
+    "A1",
+    "A2",
+    "A",
+    "B",
+    "BE",
+    "C1",
+    "C1E",
+    "C",
+    "CE",
+    "D1",
+    "D1E",
+    "D",
+    "DE"
+  ];
+  dummyVehicles = ["FL-1000", "FL-1001", "FL-1002", "FL-1003", "FL-1004"];
+  ngOnInit() {
+    this.persons = this.generateDummyPersons(24);
+  }
+  get totalPages() {
+    return Math.max(1, Math.ceil(this.persons.length / this.pageSize));
+  }
+  get pageNumbers() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+  get pagedPersons() {
+    const start2 = (this.currentPage - 1) * this.pageSize;
+    return this.persons.slice(start2, start2 + this.pageSize);
+  }
+  prevPage() {
+    if (this.currentPage > 1)
+      this.currentPage--;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+  nextPage() {
+    if (this.currentPage < this.totalPages)
+      this.currentPage++;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+  goToPage(page) {
+    this.currentPage = page;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+  selectItem(index) {
+    this.selectedIndex = index;
+    this.editingIndex = null;
+  }
+  collapseItem() {
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+  toggleEdit(index) {
+    this.editingIndex = this.editingIndex === index ? null : index;
+    this.editLicenseClass = "";
+    this.editLicenseDate = "";
+  }
+  onVehicleAssignmentChange(person, value) {
+    person.assignedVehicleId = value || null;
+  }
+  addLicenseToNewPerson() {
+    if (!this.newLicenseClass || !this.newLicenseDate)
+      return;
+    this.newPerson.licenses = this.newPerson.licenses ?? [];
+    if (this.newPerson.licenses.some((l) => l.licenseClass === this.newLicenseClass))
+      return;
+    this.newPerson.licenses.push({ licenseClass: this.newLicenseClass, obtainedDate: this.newLicenseDate });
+    this.newLicenseClass = "";
+    this.newLicenseDate = "";
+  }
+  removeLicenseFromNewPerson(licenseClass) {
+    this.newPerson.licenses = (this.newPerson.licenses ?? []).filter((l) => l.licenseClass !== licenseClass);
+  }
+  addLicenseToPerson(person) {
+    if (!this.editLicenseClass || !this.editLicenseDate)
+      return;
+    person.licenses = person.licenses ?? [];
+    if (person.licenses.some((l) => l.licenseClass === this.editLicenseClass))
+      return;
+    person.licenses.push({ licenseClass: this.editLicenseClass, obtainedDate: this.editLicenseDate });
+    this.editLicenseClass = "";
+    this.editLicenseDate = "";
+  }
+  removeLicenseFromPerson(person, licenseClass) {
+    person.licenses = (person.licenses ?? []).filter((l) => l.licenseClass !== licenseClass);
+  }
+  toggleCreateForm() {
+    this.showCreateForm = !this.showCreateForm;
+    if (!this.showCreateForm) {
+      this.newPerson = this.emptyPerson();
+      this.newLicenseClass = "";
+      this.newLicenseDate = "";
+    }
+  }
+  createPerson() {
+    if (!this.newPerson.firstName || !this.newPerson.lastName)
+      return;
+    this.persons.unshift({
+      Id: crypto.randomUUID(),
+      firstName: this.newPerson.firstName,
+      lastName: this.newPerson.lastName,
+      employeeNr: this.newPerson.employeeNr,
+      birthDate: this.newPerson.birthDate,
+      licenses: this.newPerson.licenses ?? [],
+      assignedVehicleId: this.newPerson.assignedVehicleId ?? null
+    });
+    this.newPerson = this.emptyPerson();
+    this.showCreateForm = false;
+    this.currentPage = 1;
+  }
+  emptyPerson() {
+    return {
+      Id: "",
+      firstName: "",
+      lastName: "",
+      employeeNr: "",
+      birthDate: "",
+      licenses: [],
+      assignedVehicleId: null
+    };
+  }
+  generateDummyPersons(count) {
+    const firstNames = ["Anna", "Ben", "Clara", "David", "Emma", "Felix", "Greta", "Hannes", "Ida", "Jonas"];
+    const lastNames = ["Schmidt", "M\xFCller", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann", "Koch"];
+    return Array.from({ length: count }, (_, i) => {
+      const birthYear = 1970 + i % 40;
+      const licenseCount = 1 + i % 3;
+      const licenses = Array.from({ length: licenseCount }, (_2, l) => ({
+        licenseClass: this.licenseClasses[(i + l) % this.licenseClasses.length],
+        obtainedDate: `${birthYear + 18 + l}-0${1 + l % 9}-15`
+      }));
+      return {
+        Id: `person-${i + 1}`,
+        firstName: firstNames[i % firstNames.length],
+        lastName: lastNames[i % lastNames.length],
+        employeeNr: `MA-${1e3 + i}`,
+        birthDate: `${birthYear}-05-20`,
+        licenses,
+        assignedVehicleId: i % 3 === 0 ? this.dummyVehicles[i % this.dummyVehicles.length] : null
+      };
+    });
+  }
+  static \u0275fac = function Personen_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _Personen)();
+  };
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Personen, selectors: [["app-personen"]], decls: 19, vars: 7, consts: [["firstNameView", ""], ["lastNameView", ""], ["vehicleView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "date", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue"], [3, "value", 4, "ngFor", "ngForOf"], [1, "license-editor"], [1, "field-label"], [1, "license-row"], ["value", "", "disabled", ""], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], [1, "save-btn", 3, "click", "disabled"], [3, "value"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], [1, "license-section"], ["class", "license-row", 4, "ngIf"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], ["class", "chip-remove", 3, "click", 4, "ngIf"], [1, "actions", 3, "click"], [1, "action-btn"], [1, "actions-right"], [1, "action-btn", 3, "click"], [1, "page-number", 3, "click"]], template: function Personen_Template(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275elementStart(0, "h1", 3);
+      \u0275\u0275text(1, "Personen");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(2, "div", 4)(3, "div", 5)(4, "div", 6)(5, "button", 7);
+      \u0275\u0275listener("click", function Personen_Template_button_click_5_listener() {
+        return ctx.toggleCreateForm();
+      });
+      \u0275\u0275text(6);
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(7, Personen_div_7_Template, 34, 13, "div", 8);
+      \u0275\u0275elementStart(8, "div", 9);
+      \u0275\u0275template(9, Personen_div_9_Template, 2, 0, "div", 10)(10, Personen_div_10_Template, 6, 8, "div", 11);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(11, "div", 12)(12, "button", 13);
+      \u0275\u0275listener("click", function Personen_Template_button_click_12_listener() {
+        return ctx.prevPage();
+      });
+      \u0275\u0275elementStart(13, "span", 14);
+      \u0275\u0275text(14, "chevron_left");
+      \u0275\u0275elementEnd()();
+      \u0275\u0275template(15, Personen_button_15_Template, 2, 3, "button", 15);
+      \u0275\u0275elementStart(16, "button", 13);
+      \u0275\u0275listener("click", function Personen_Template_button_click_16_listener() {
+        return ctx.nextPage();
+      });
+      \u0275\u0275elementStart(17, "span", 14);
+      \u0275\u0275text(18, "chevron_right");
+      \u0275\u0275elementEnd()()()()();
+    }
+    if (rf & 2) {
+      \u0275\u0275advance(6);
+      \u0275\u0275textInterpolate1(" ", ctx.showCreateForm ? "Abbrechen" : "Neu anlegen", " ");
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.showCreateForm);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("ngIf", ctx.pagedPersons.length === 0);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngForOf", ctx.pagedPersons);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("disabled", ctx.currentPage === 1);
+      \u0275\u0275advance(3);
+      \u0275\u0275property("ngForOf", ctx.pageNumbers);
+      \u0275\u0275advance();
+      \u0275\u0275property("disabled", ctx.currentPage === ctx.totalPages);
+    }
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor[_ngcontent-%COMP%] {\n  margin-bottom: 16px;\n}\n.license-editor[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 13px;\n  color: #72757c;\n  margin-bottom: 8px;\n}\n.license-section[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.license-section[_ngcontent-%COMP%]   .license-row[_ngcontent-%COMP%] {\n  margin-top: 8px;\n}\n.license-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%], \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus, \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 160px;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: #72757c;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 520px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=personen.component.css.map */"] });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Personen, [{
+    type: Component,
+    args: [{ selector: "app-personen", standalone: true, imports: [CommonModule, FormsModule], template: `<h1 class="header">Personen</h1>
+
+<div class="container">
+  <div class="main">
+
+    <div class="toolbar">
+      <button class="create-btn" (click)="toggleCreateForm()">
+        {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
+      </button>
+    </div>
+
+    <div class="create-form" *ngIf="showCreateForm">
+      <div class="form-grid">
+        <label>
+          Vorname
+          <input type="text" [(ngModel)]="newPerson.firstName">
+        </label>
+
+        <label>
+          Nachname
+          <input type="text" [(ngModel)]="newPerson.lastName">
+        </label>
+
+        <label>
+          Mitarbeiter-Nr.
+          <input type="text" [(ngModel)]="newPerson.employeeNr">
+        </label>
+
+        <label>
+          Geburtsdatum
+          <input type="date" [(ngModel)]="newPerson.birthDate">
+        </label>
+
+        <label>
+          Zugewiesenes Fahrzeug
+          <select [(ngModel)]="newPerson.assignedVehicleId">
+            <option [ngValue]="null">Kein Fahrzeug</option>
+            <option *ngFor="let plate of dummyVehicles" [value]="plate">{{ plate }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="license-editor">
+        <div class="field-label">F\xFChrerscheine</div>
+
+        <div class="license-row">
+          <select [(ngModel)]="newLicenseClass">
+            <option value="" disabled>Klasse w\xE4hlen</option>
+            <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+          </select>
+
+          <input type="date" [(ngModel)]="newLicenseDate">
+
+          <button type="button"
+                  class="add-btn"
+                  [disabled]="!newLicenseClass || !newLicenseDate"
+                  (click)="addLicenseToNewPerson()">
+            +
+          </button>
+        </div>
+
+        <div class="chips" *ngIf="newPerson.licenses?.length">
+          <div class="chip" *ngFor="let license of newPerson.licenses">
+            {{ license.licenseClass }} (seit {{ license.obtainedDate }})
+            <span class="chip-remove" (click)="removeLicenseFromNewPerson(license.licenseClass)">&times;</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="save-btn"
+              (click)="createPerson()"
+              [disabled]="!newPerson.firstName || !newPerson.lastName">
+        Speichern
+      </button>
+    </div>
+
+    <div class="list">
+      <div *ngIf="pagedPersons.length === 0">
+        Keine Personen angelegt.
+      </div>
+
+      <div class="box"
+           *ngFor="let person of pagedPersons; let i = index"
+           (click)="selectItem(i)"
+           [class.active]="selectedIndex === i">
+
+        <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.employeeNr }}</div>
+
+        <div class="details" *ngIf="selectedIndex !== i">
+          Geburtsdatum: {{ person.birthDate }}
+        </div>
+
+        <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+          <div>
+            <span>Vorname:</span>
+            <ng-container *ngIf="editingIndex === i; else firstNameView">
+              <input type="text" class="inline-input" [(ngModel)]="person.firstName">
+            </ng-container>
+            <ng-template #firstNameView>{{ person.firstName }}</ng-template>
+          </div>
+
+          <div>
+            <span>Nachname:</span>
+            <ng-container *ngIf="editingIndex === i; else lastNameView">
+              <input type="text" class="inline-input" [(ngModel)]="person.lastName">
+            </ng-container>
+            <ng-template #lastNameView>{{ person.lastName }}</ng-template>
+          </div>
+
+          <div><span>Mitarbeiter-Nr.:</span> {{ person.employeeNr }}</div>
+          <div><span>Geburtsdatum:</span> {{ person.birthDate }}</div>
+
+          <div>
+            <span>Zugewiesenes Fahrzeug:</span>
+            <ng-container *ngIf="editingIndex === i; else vehicleView">
+              <select class="inline-input"
+                      [ngModel]="person.assignedVehicleId || ''"
+                      (ngModelChange)="onVehicleAssignmentChange(person, $event)">
+                <option value="">kein Fahrzeug</option>
+                <option *ngFor="let plate of dummyVehicles" [value]="plate">{{ plate }}</option>
+              </select>
+            </ng-container>
+            <ng-template #vehicleView>{{ person.assignedVehicleId || 'kein Fahrzeug' }}</ng-template>
+          </div>
+
+          <div class="license-section">
+            <span>F\xFChrerscheine:</span>
+
+            <div class="chips" *ngIf="person.licenses?.length">
+              <div class="chip" *ngFor="let license of person.licenses">
+                {{ license.licenseClass }} (seit {{ license.obtainedDate }})
+                <span class="chip-remove"
+                      *ngIf="editingIndex === i"
+                      (click)="removeLicenseFromPerson(person, license.licenseClass)">
+                  &times;
+                </span>
+              </div>
+            </div>
+
+            <div class="license-row" *ngIf="editingIndex === i">
+              <select [(ngModel)]="editLicenseClass">
+                <option value="" disabled>Klasse w\xE4hlen</option>
+                <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+              </select>
+
+              <input type="date" [(ngModel)]="editLicenseDate">
+
+              <button type="button"
+                      class="add-btn"
+                      [disabled]="!editLicenseClass || !editLicenseDate"
+                      (click)="addLicenseToPerson(person)">
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+          <button class="action-btn">L\xF6schen</button>
+
+          <div class="actions-right">
+            <button class="action-btn" (click)="collapseItem()">Abbrechen</button>
+            <button class="action-btn" (click)="toggleEdit(i)">
+              {{ editingIndex === i ? 'Fertig' : 'Bearbeiten' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+`, styles: ["/* src/app/widgets/personen/personen.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor {\n  margin-bottom: 16px;\n}\n.license-editor .field-label {\n  font-size: 13px;\n  color: #72757c;\n  margin-bottom: 8px;\n}\n.license-section span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.license-section .license-row {\n  margin-top: 8px;\n}\n.license-row {\n  display: flex;\n  gap: 8px;\n}\n.license-row select,\n.license-row input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.license-row select:focus,\n.license-row input:focus {\n  border-color: #373669;\n}\n.license-row select {\n  flex: 1;\n}\n.license-row input {\n  width: 160px;\n}\n.license-row .add-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row .add-btn:hover {\n  background-color: #4a4890;\n}\n.license-row .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.chips .chip .chip-remove {\n  cursor: pointer;\n  color: #72757c;\n}\n.chips .chip .chip-remove:hover {\n  color: white;\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box.active {\n  min-height: 520px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=personen.component.css.map */\n"] }]
   }], null, null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Vehicles, { className: "Vehicles", filePath: "src/app/widgets/vehicles/vehicles.component.ts", lineNumber: 14 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Personen, { className: "Personen", filePath: "src/app/widgets/personen/personen.component.ts", lineNumber: 14 });
 })();
 
 // src/app/pages/main-page/main-page.component.ts
@@ -96199,52 +98654,40 @@ function MainPageComponent_div_21_Template(rf, ctx) {
 }
 function MainPageComponent_div_24_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div")(1, "h1");
-    \u0275\u0275text(2, "Hier stehen Statistiken");
-    \u0275\u0275elementEnd();
-    \u0275\u0275element(3, "app-card-widget");
+    \u0275\u0275elementStart(0, "div");
+    \u0275\u0275element(1, "app-layout");
     \u0275\u0275elementEnd();
   }
 }
 function MainPageComponent_div_25_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "app-layout");
+    \u0275\u0275element(1, "app-personen");
     \u0275\u0275elementEnd();
   }
 }
 function MainPageComponent_div_26_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "div")(1, "h1");
-    \u0275\u0275text(2, "Personen");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "p");
-    \u0275\u0275text(4, "Hier stehen deine Personen.");
-    \u0275\u0275elementEnd()();
-  }
-}
-function MainPageComponent_div_27_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
     \u0275\u0275element(1, "app-vehicles");
     \u0275\u0275elementEnd();
   }
 }
-function MainPageComponent_div_28_Template(rf, ctx) {
+function MainPageComponent_div_27_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
     \u0275\u0275element(1, "app-telemetry-units");
     \u0275\u0275elementEnd();
   }
 }
-function MainPageComponent_div_29_Template(rf, ctx) {
+function MainPageComponent_div_28_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 27)(1, "h2");
     \u0275\u0275text(2, "Person anlegen");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(3, "form", 28, 0);
-    \u0275\u0275listener("ngSubmit", function MainPageComponent_div_29_Template_form_ngSubmit_3_listener() {
+    \u0275\u0275listener("ngSubmit", function MainPageComponent_div_28_Template_form_ngSubmit_3_listener() {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.submitPerson());
@@ -96252,7 +98695,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     \u0275\u0275elementStart(5, "label");
     \u0275\u0275text(6, " Vorname: ");
     \u0275\u0275elementStart(7, "input", 29);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_7_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.firstName, $event) || (ctx_r2.person.firstName = $event);
@@ -96262,7 +98705,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     \u0275\u0275elementStart(8, "label");
     \u0275\u0275text(9, " Nachname: ");
     \u0275\u0275elementStart(10, "input", 30);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_10_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_10_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.lastName, $event) || (ctx_r2.person.lastName = $event);
@@ -96272,7 +98715,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     \u0275\u0275elementStart(11, "label");
     \u0275\u0275text(12, " Geburtsdatum: ");
     \u0275\u0275elementStart(13, "input", 31);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_13_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_13_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.birthDate, $event) || (ctx_r2.person.birthDate = $event);
@@ -96282,7 +98725,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     \u0275\u0275elementStart(14, "label");
     \u0275\u0275text(15, " Geburtsort: ");
     \u0275\u0275elementStart(16, "input", 32);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_16_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_16_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.birthPlace, $event) || (ctx_r2.person.birthPlace = $event);
@@ -96292,7 +98735,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     \u0275\u0275elementStart(17, "label");
     \u0275\u0275text(18, " Email: ");
     \u0275\u0275elementStart(19, "input", 33);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_19_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_19_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.email, $event) || (ctx_r2.person.email = $event);
@@ -96302,7 +98745,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     \u0275\u0275elementStart(20, "label");
     \u0275\u0275text(21, " Adresse: ");
     \u0275\u0275elementStart(22, "input", 34);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_22_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_22_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.address, $event) || (ctx_r2.person.address = $event);
@@ -96310,7 +98753,7 @@ function MainPageComponent_div_29_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(23, "label", 35)(24, "input", 36);
-    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_29_Template_input_ngModelChange_24_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_28_Template_input_ngModelChange_24_listener($event) {
       \u0275\u0275restoreView(_r7);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.isAdmin, $event) || (ctx_r2.person.isAdmin = $event);
@@ -96367,8 +98810,14 @@ var MainPageComponent = class _MainPageComponent {
       isAdmin: false
     };
   }
-  tabs = ["Statistik", "Fahrten", "Fahrzeuge", "Datenerfassungseinheiten", "Personen"];
-  activeTab = "Fahrten";
+  tabs = [
+    // 'Statistik',
+    "Fahrzeuge",
+    "Fahrten",
+    "Personen",
+    "Datenerfassungseinheiten"
+  ];
+  activeTab = "Fahrzeuge";
   selectTab(tab) {
     this.activeTab = tab;
   }
@@ -96408,7 +98857,7 @@ var MainPageComponent = class _MainPageComponent {
   static \u0275fac = function MainPageComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MainPageComponent)(\u0275\u0275directiveInject(TelemetryUnitService));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MainPageComponent, selectors: [["app-main-page"]], decls: 30, vars: 14, consts: [["personForm", "ngForm"], ["rel", "stylesheet", "href", \u0275\u0275trustConstantResourceUrl`https://unpkg.com/leaflet/dist/leaflet.css`], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0`, "rel", "stylesheet"], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/icon?family=Material+Icons`, "rel", "stylesheet"], [1, "header"], [1, "material-symbols-outlined", "app-menu", 3, "click"], [1, "tabs"], [3, "active", "click", 4, "ngFor", "ngForOf"], [1, "header-right"], [1, "material-symbols-outlined", "header-icon", 3, "click"], [1, "login-btn"], [1, "layout"], [1, "stripe"], [1, "tabs-vertical"], [1, "uuid-section"], [1, "uuid-title"], [1, "uuid-list"], ["class", "uuid-item", 4, "ngFor", "ngForOf"], [1, "main"], [1, "content"], [4, "ngIf"], ["class", "person-form", 4, "ngIf"], [3, "click"], [1, "material-symbols-outlined"], [1, "tab-label"], [1, "uuid-item"], [1, "material-icons"], [1, "person-form"], [3, "ngSubmit"], ["type", "text", "name", "firstName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "lastName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "date", "name", "birthDate", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "birthPlace", 3, "ngModelChange", "ngModel"], ["type", "email", "name", "email", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "address", 3, "ngModelChange", "ngModel"], [1, "checkbox-label"], ["type", "checkbox", "name", "isAdmin", 3, "ngModelChange", "ngModel"], ["type", "submit", 3, "disabled"]], template: function MainPageComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MainPageComponent, selectors: [["app-main-page"]], decls: 29, vars: 13, consts: [["personForm", "ngForm"], ["rel", "stylesheet", "href", \u0275\u0275trustConstantResourceUrl`https://unpkg.com/leaflet/dist/leaflet.css`], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0`, "rel", "stylesheet"], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/icon?family=Material+Icons`, "rel", "stylesheet"], [1, "header"], [1, "material-symbols-outlined", "app-menu", 3, "click"], [1, "tabs"], [3, "active", "click", 4, "ngFor", "ngForOf"], [1, "header-right"], [1, "material-symbols-outlined", "header-icon", 3, "click"], [1, "login-btn"], [1, "layout"], [1, "stripe"], [1, "tabs-vertical"], [1, "uuid-section"], [1, "uuid-title"], [1, "uuid-list"], ["class", "uuid-item", 4, "ngFor", "ngForOf"], [1, "main"], [1, "content"], [4, "ngIf"], ["class", "person-form", 4, "ngIf"], [3, "click"], [1, "material-symbols-outlined"], [1, "tab-label"], [1, "uuid-item"], [1, "material-icons"], [1, "person-form"], [3, "ngSubmit"], ["type", "text", "name", "firstName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "lastName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "date", "name", "birthDate", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "birthPlace", 3, "ngModelChange", "ngModel"], ["type", "email", "name", "email", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "address", 3, "ngModelChange", "ngModel"], [1, "checkbox-label"], ["type", "checkbox", "name", "isAdmin", 3, "ngModelChange", "ngModel"], ["type", "submit", 3, "disabled"]], template: function MainPageComponent_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275element(0, "link", 1)(1, "link", 2)(2, "link", 3);
       \u0275\u0275elementStart(3, "header", 4)(4, "span", 5);
@@ -96439,7 +98888,7 @@ var MainPageComponent = class _MainPageComponent {
       \u0275\u0275template(21, MainPageComponent_div_21_Template, 5, 1, "div", 17);
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(22, "div", 18)(23, "div", 19);
-      \u0275\u0275template(24, MainPageComponent_div_24_Template, 4, 0, "div", 20)(25, MainPageComponent_div_25_Template, 2, 0, "div", 20)(26, MainPageComponent_div_26_Template, 5, 0, "div", 20)(27, MainPageComponent_div_27_Template, 2, 0, "div", 20)(28, MainPageComponent_div_28_Template, 2, 0, "div", 20)(29, MainPageComponent_div_29_Template, 28, 8, "div", 21);
+      \u0275\u0275template(24, MainPageComponent_div_24_Template, 2, 0, "div", 20)(25, MainPageComponent_div_25_Template, 2, 0, "div", 20)(26, MainPageComponent_div_26_Template, 2, 0, "div", 20)(27, MainPageComponent_div_27_Template, 2, 0, "div", 20)(28, MainPageComponent_div_28_Template, 28, 8, "div", 21);
       \u0275\u0275elementEnd()()();
     }
     if (rf & 2) {
@@ -96456,8 +98905,6 @@ var MainPageComponent = class _MainPageComponent {
       \u0275\u0275advance(4);
       \u0275\u0275property("ngForOf", ctx.uuids);
       \u0275\u0275advance(3);
-      \u0275\u0275property("ngIf", ctx.activeTab === "Statistik");
-      \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.activeTab === "Fahrten");
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.activeTab === "Personen");
@@ -96481,10 +98928,11 @@ var MainPageComponent = class _MainPageComponent {
     RequiredValidator,
     NgModel,
     NgForm,
-    CardWidget,
+    // CardWidget,
     LayoutComponent,
     TelemetryUnits,
-    Vehicles
+    Vehicles,
+    Personen
   ], styles: ['\n\nhtml[_ngcontent-%COMP%], \nbody[_ngcontent-%COMP%] {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n.app[_ngcontent-%COMP%] {\n  min-height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  height: 80px;\n  padding: 0 10px;\n  background-color: #222222;\n  border-bottom: 1px solid #424242;\n  position: sticky;\n}\n.app-logo[_ngcontent-%COMP%] {\n  height: 40px;\n  width: auto;\n  display: block;\n}\n.main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n}\n.widget-container[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 400px);\n  gap: 20px;\n}\n.widget-container[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%] {\n  flex: 0 0 400px;\n}\n.layout[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  flex-direction: row;\n  background-color: #101014;\n}\n.content[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 20px;\n  color: rgba(255, 255, 255, 0.847);\n}\n.leaflet-popup-content[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.leaflet-popup-content-wrapper[_ngcontent-%COMP%] {\n  padding: 8px 12px;\n}\n.leaflet-tooltip[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.app-menu[_ngcontent-%COMP%] {\n  font-variation-settings: "wght" 400;\n  font-size: 40px;\n  font-weight: 400;\n  color: white;\n  cursor: pointer;\n  margin-right: 30px;\n  width: 44px;\n  height: 44px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 20%;\n}\n.app-menu[_ngcontent-%COMP%]:hover {\n  background: rgba(255, 255, 255, 0.1);\n}\n.tab-container[_ngcontent-%COMP%] {\n  margin-top: 200px;\n  width: 100%;\n}\n.tabs[_ngcontent-%COMP%] {\n  margin-left: 130px;\n}\n.tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  margin-right: 20px;\n  background: transparent;\n  border: none;\n  color: #999;\n  cursor: pointer;\n  font-size: 16px;\n  transition: color 0.2s;\n}\n.tabs[_ngcontent-%COMP%]   button.active[_ngcontent-%COMP%] {\n  color: white;\n}\n.tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.line[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 20px auto;\n  border-bottom: 2px solid black;\n}\n.stripe[_ngcontent-%COMP%] {\n  width: 220px;\n  background-color: #222222;\n  transition: width 0.3s ease;\n  position: relative;\n  overflow: hidden;\n}\n.stripe.closed[_ngcontent-%COMP%] {\n  width: 60px;\n}\n.stripe.closed[_ngcontent-%COMP%]   .tab-label[_ngcontent-%COMP%] {\n  display: none;\n}\n.stripe.closed[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%] {\n  transform: rotate(180deg);\n}\n.stripe[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  font-size: 24px;\n  color: white;\n  cursor: pointer;\n  transition: transform 0.3s, color 0.2s;\n}\n.stripe[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 50px 10px 10px 10px;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  background: transparent;\n  border: none;\n  color: #aaa;\n  cursor: pointer;\n  transition: color 0.2s;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]   .material-icons-outlined[_ngcontent-%COMP%] {\n  font-size: 24px;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]   .tab-label[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.person-form[_ngcontent-%COMP%] {\n  max-width: 500px;\n  margin-left: 20px 0 20px 0;\n  padding: 20px;\n  background: #2c2c2c;\n  border-radius: 8px;\n  color: white;\n}\n.person-form[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  text-align: left;\n  margin-bottom: 20px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 15px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=text][_ngcontent-%COMP%], \n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=email][_ngcontent-%COMP%], \n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=date][_ngcontent-%COMP%] {\n  margin-top: 5px;\n  padding: 8px;\n  border-radius: 4px;\n  border: none;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   .checkbox-label[_ngcontent-%COMP%] {\n  flex-direction: row;\n  align-items: left;\n  gap: 10px;\n  font-size: 14px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  margin-top: 10px;\n  padding: 10px;\n  background-color: #444;\n  border: none;\n  border-radius: 4px;\n  color: white;\n  cursor: pointer;\n  font-size: 16px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  background-color: #666;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:disabled {\n  background-color: #333;\n  cursor: not-allowed;\n}\n.header-right[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 0 20px;\n  justify-content: flex-end;\n  margin-left: auto;\n  color: #999;\n}\n.header-icon[_ngcontent-%COMP%] {\n  font-size: 24px;\n  font-variation-settings: "FILL" 1;\n  cursor: pointer;\n  color: white;\n  width: 32px;\n  height: 32px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.header-icon[_ngcontent-%COMP%]:hover {\n  background: rgba(255, 255, 255, 0.1);\n}\n.profile-icon[_ngcontent-%COMP%] {\n  font-size: 36px;\n  color: white;\n  width: 38px;\n  height: 38px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.profile-icon[_ngcontent-%COMP%]:hover {\n  background: rgba(255, 255, 255, 0.1);\n}\n.login-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  padding: 8px 20px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n}\n.login-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.header-name[_ngcontent-%COMP%] {\n  font-size: 16px;\n  font-weight: 500;\n}\n.uuid-section[_ngcontent-%COMP%] {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  width: 220px;\n  border-top: 1px solid #ccc;\n  padding: 10px;\n  color: white;\n  font-size: 8px;\n  z-index: 1000;\n}\n.uuid-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  margin-bottom: 5px;\n}\n.uuid-list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.uuid-item[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.cpu-icon[_ngcontent-%COMP%] {\n  font-size: 18px;\n  line-height: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.uuid-section[_ngcontent-%COMP%] {\n  opacity: 1;\n  transform: translateY(0);\n  transition: opacity 0.25s ease, transform 0.25s ease;\n}\n.uuid-section.closed[_ngcontent-%COMP%] {\n  opacity: 0;\n  transform: translateY(10px);\n  pointer-events: none;\n}\n/*# sourceMappingURL=main-page.component.css.map */'] });
 };
 (() => {
@@ -96493,10 +98941,11 @@ var MainPageComponent = class _MainPageComponent {
     args: [{ selector: "app-main-page", standalone: true, imports: [
       CommonModule,
       FormsModule,
-      CardWidget,
+      // CardWidget,
       LayoutComponent,
       TelemetryUnits,
-      Vehicles
+      Vehicles,
+      Personen
     ], template: `<!-- Library imports -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet">
@@ -96573,18 +99022,19 @@ var MainPageComponent = class _MainPageComponent {
     <!-- Central dynamically switched content of UI -->
     <div class="content">
       
+      <!--
       <div *ngIf="activeTab === 'Statistik'">
         <h1>Hier stehen Statistiken</h1>
         <app-card-widget></app-card-widget>
       </div>
+      -->
 
       <div *ngIf="activeTab === 'Fahrten'">
           <app-layout></app-layout>
       </div>
 
       <div *ngIf="activeTab === 'Personen'">
-        <h1>Personen</h1>
-        <p>Hier stehen deine Personen.</p>
+        <app-personen></app-personen>
       </div>
 
       <div *ngIf="activeTab === 'Fahrzeuge'">
@@ -96646,7 +99096,7 @@ var MainPageComponent = class _MainPageComponent {
   }], () => [{ type: TelemetryUnitService }], null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(MainPageComponent, { className: "MainPageComponent", filePath: "src/app/pages/main-page/main-page.component.ts", lineNumber: 28 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(MainPageComponent, { className: "MainPageComponent", filePath: "src/app/pages/main-page/main-page.component.ts", lineNumber: 30 });
 })();
 
 // src/app/app.routes.ts

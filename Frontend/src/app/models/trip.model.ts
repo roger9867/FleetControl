@@ -10,6 +10,7 @@ export interface Trip {
   id: string;
   vehicleId: string;
   telemetryUnitId: string;
+  driverId: string;
   start: string;
   end: string;
   points: TripPoint[];

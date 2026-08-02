@@ -2,10 +2,11 @@ import { Component, AfterViewInit, AfterViewChecked, ViewChild, ElementRef } fro
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { CardWidget } from '../../widgets/card-widget/card-widget.component';
+// import { CardWidget } from '../../widgets/card-widget/card-widget.component';
 import { LayoutComponent } from '../../widgets/fahrten/fahrten.component';
 import { TelemetryUnits } from '../../widgets/telemetry-units/telemetry-units.component';
 import { Vehicles } from '../../widgets/vehicles/vehicles.component';
+import { Personen } from '../../widgets/personen/personen.component';
 
 
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
@@ -17,10 +18,11 @@ import { TelemetryUnitService } from '../../services/telemetry-unit.service';
   imports: [
     CommonModule,
     FormsModule,
-    CardWidget,
+    // CardWidget,
     LayoutComponent,
     TelemetryUnits,
-    Vehicles
+    Vehicles,
+    Personen
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
@@ -51,8 +53,11 @@ person = {
     };
   }
 
-  tabs = ['Statistik', 'Fahrten', 'Fahrzeuge',  'Datenerfassungseinheiten', 'Personen'];
-  activeTab = 'Fahrten';
+  tabs = [
+    // 'Statistik',
+    'Fahrzeuge', 'Fahrten', 'Personen', 'Datenerfassungseinheiten'
+  ];
+  activeTab = 'Fahrzeuge';
 
   selectTab(tab: string) {
     this.activeTab = tab;
