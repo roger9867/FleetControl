@@ -13,4 +13,8 @@ public interface IVehicleRepository
     public Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(Guid id);
 
     public Task<bool> DriverExistsAsync(Guid id);
+
+    public Task<bool> SetDriverAsync(Guid vehicleId, Guid? driverId);
+
+    public Task ClearDriverFromOtherVehiclesAsync(Guid driverId, Guid? exceptVehicleId);
 }

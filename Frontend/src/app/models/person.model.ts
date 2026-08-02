@@ -4,10 +4,11 @@ export interface DrivingLicense {
 }
 
 export interface Person {
+  // Server-generated UUID — also displayed as the "Mitarbeiter-Nr.", there is no
+  // separate employee number field.
   Id: string;
   firstName?: string;
   lastName?: string;
-  employeeNr?: string;
   birthDate?: string;
   licenses?: DrivingLicense[];
   assignedVehicleId?: string | null;

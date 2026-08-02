@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     
     public DbSet<TelemetryUnit> TelemetryUnits { get; set; }
     public DbSet<VehicleDriver> VehicleDrivers { get; set; }
+    public DbSet<DriversLicense> DriversLicenses { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Trip> Trips { get; set; }
 
@@ -54,6 +55,13 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(t => t.TelemetryUnitId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Licenses belong to exactly one driver; deleting the driver deletes them.
+        modelBuilder.Entity<VehicleDriver>()
+            .HasMany(d => d.Licenses)
+            .WithOne(l => l.VehicleDriver)
+            .HasForeignKey(l => l.VehicleDriverId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
     
 }

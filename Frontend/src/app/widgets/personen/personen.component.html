@@ -22,11 +22,6 @@
         </label>
 
         <label>
-          Mitarbeiter-Nr.
-          <input type="text" [(ngModel)]="newPerson.employeeNr">
-        </label>
-
-        <label>
           Geburtsdatum
           <input type="date" [(ngModel)]="newPerson.birthDate">
         </label>
@@ -69,9 +64,11 @@
 
       <button class="save-btn"
               (click)="createPerson()"
-              [disabled]="!newPerson.firstName || !newPerson.lastName">
+              [disabled]="!newPerson.firstName || !newPerson.lastName || !newPerson.birthDate">
         Speichern
       </button>
+
+      <div class="form-error" *ngIf="createError">{{ createError }}</div>
     </div>
 
     <div class="list">
@@ -84,7 +81,7 @@
            (click)="selectItem(i)"
            [class.active]="selectedIndex === i">
 
-        <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.employeeNr }}</div>
+        <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.Id }}</div>
 
         <div class="details" *ngIf="selectedIndex !== i">
           Geburtsdatum: {{ person.birthDate }}
@@ -107,8 +104,15 @@
             <ng-template #lastNameView>{{ person.lastName }}</ng-template>
           </div>
 
-          <div><span>Mitarbeiter-Nr.:</span> {{ person.employeeNr }}</div>
-          <div><span>Geburtsdatum:</span> {{ person.birthDate }}</div>
+          <div><span>Mitarbeiter-Nr.:</span> {{ person.Id }}</div>
+
+          <div>
+            <span>Geburtsdatum:</span>
+            <ng-container *ngIf="editingIndex === i; else birthDateView">
+              <input type="date" class="inline-input" [(ngModel)]="person.birthDate">
+            </ng-container>
+            <ng-template #birthDateView>{{ person.birthDate }}</ng-template>
+          </div>
 
           <div>
             <span>Zugewiesenes Fahrzeug:</span>
@@ -153,15 +157,23 @@
               </button>
             </div>
           </div>
+
+          <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
         </div>
 
-        <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
-          <button class="action-btn">Löschen</button>
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, person)">
+            {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+          </button>
 
           <div class="actions-right">
-            <button class="action-btn" (click)="collapseItem()">Abbrechen</button>
-            <button class="action-btn" (click)="toggleEdit(i)">
-              {{ editingIndex === i ? 'Fertig' : 'Bearbeiten' }}
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+            <button class="action-btn"
+                    [class.dirty]="editingIndex === i && isEditDirty(person)"
+                    (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+              {{ editingIndex === i ? (isEditDirty(person) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
           </div>
         </div>

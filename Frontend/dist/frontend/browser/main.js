@@ -94361,7 +94361,7 @@ function LayoutComponent_div_64_div_1_Template(rf, ctx) {
   if (rf & 2) {
     const person_r20 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate3(" ", person_r20.firstName, " ", person_r20.lastName, " \u2014 ", person_r20.employeeNr, " ");
+    \u0275\u0275textInterpolate3(" ", person_r20.firstName, " ", person_r20.lastName, " \u2014 ", person_r20.Id, " ");
   }
 }
 function LayoutComponent_div_64_Template(rf, ctx) {
@@ -94439,27 +94439,19 @@ function LayoutComponent_div_69_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 76);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_3_listener($event) {
-      \u0275\u0275restoreView(_r23);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.employeeNr, $event) || (ctx_r1.advancedPersonFilter.employeeNr = $event);
-      return \u0275\u0275resetView($event);
-    });
+    \u0275\u0275elementStart(3, "div", 70);
+    \u0275\u0275text(4, "Geburtsdatum");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "div", 70);
-    \u0275\u0275text(5, "Geburtsdatum");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "div", 65)(7, "input", 77);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_7_listener($event) {
+    \u0275\u0275elementStart(5, "div", 65)(6, "input", 76);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_6_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.birthDateFrom, $event) || (ctx_r1.advancedPersonFilter.birthDateFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "input", 78);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_8_listener($event) {
+    \u0275\u0275elementStart(7, "input", 77);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.birthDateTo, $event) || (ctx_r1.advancedPersonFilter.birthDateTo = $event);
@@ -94473,8 +94465,6 @@ function LayoutComponent_div_69_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.firstName);
     \u0275\u0275advance();
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.lastName);
-    \u0275\u0275advance();
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.employeeNr);
     \u0275\u0275advance(4);
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.birthDateFrom);
     \u0275\u0275advance();
@@ -94483,7 +94473,7 @@ function LayoutComponent_div_69_Template(rf, ctx) {
 }
 function LayoutComponent_option_73_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 79);
+    \u0275\u0275elementStart(0, "option", 78);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94506,11 +94496,11 @@ var LayoutComponent = class _LayoutComponent {
   ];
   dummyTelemetryUnits = ["TU-1001", "TU-1002", "TU-1003"];
   dummyPersons = [
-    { Id: "p1", firstName: "Anna", lastName: "Schmidt", employeeNr: "MA-1000", birthDate: "1970-05-20" },
-    { Id: "p2", firstName: "Ben", lastName: "M\xFCller", employeeNr: "MA-1001", birthDate: "1971-05-20" },
-    { Id: "p3", firstName: "Clara", lastName: "Fischer", employeeNr: "MA-1002", birthDate: "1972-05-20" },
-    { Id: "p4", firstName: "David", lastName: "Weber", employeeNr: "MA-1003", birthDate: "1973-05-20" },
-    { Id: "p5", firstName: "Emma", lastName: "Meyer", employeeNr: "MA-1004", birthDate: "1974-05-20" }
+    { Id: "p1", firstName: "Anna", lastName: "Schmidt", birthDate: "1970-05-20" },
+    { Id: "p2", firstName: "Ben", lastName: "M\xFCller", birthDate: "1971-05-20" },
+    { Id: "p3", firstName: "Clara", lastName: "Fischer", birthDate: "1972-05-20" },
+    { Id: "p4", firstName: "David", lastName: "Weber", birthDate: "1973-05-20" },
+    { Id: "p5", firstName: "Emma", lastName: "Meyer", birthDate: "1974-05-20" }
   ];
   licenseClasses = [
     "AM",
@@ -94655,13 +94645,12 @@ var LayoutComponent = class _LayoutComponent {
     const f = this.appliedAdvancedPersonFilter;
     return this.dummyPersons.filter((p) => {
       const fullName = `${p.firstName ?? ""} ${p.lastName ?? ""}`.toLowerCase();
-      const matchesSearch = !term || fullName.includes(term) || (p.employeeNr ?? "").toLowerCase().includes(term);
+      const matchesSearch = !term || fullName.includes(term) || p.Id.toLowerCase().includes(term);
       const matchesFirstName = !f.firstName || (p.firstName ?? "").toLowerCase().includes(f.firstName.toLowerCase());
       const matchesLastName = !f.lastName || (p.lastName ?? "").toLowerCase().includes(f.lastName.toLowerCase());
-      const matchesEmployeeNr = !f.employeeNr || (p.employeeNr ?? "").toLowerCase().includes(f.employeeNr.toLowerCase());
       const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? "") >= f.birthDateFrom;
       const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? "") <= f.birthDateTo;
-      return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr && matchesBirthFrom && matchesBirthTo;
+      return matchesSearch && matchesFirstName && matchesLastName && matchesBirthFrom && matchesBirthTo;
     });
   }
   onVehicleSearchChange() {
@@ -94728,8 +94717,8 @@ var LayoutComponent = class _LayoutComponent {
     this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
   }
   selectPerson(person) {
-    this.filterPersonId = person.employeeNr ?? "";
-    this.personSearch = person.employeeNr ?? "";
+    this.filterPersonId = person.Id;
+    this.personSearch = person.Id;
     this.showPersonOptions = false;
   }
   addPersonFilter() {
@@ -94792,7 +94781,6 @@ var LayoutComponent = class _LayoutComponent {
     return {
       firstName: "",
       lastName: "",
-      employeeNr: "",
       birthDateFrom: "",
       birthDateTo: ""
     };
@@ -94854,7 +94842,7 @@ var LayoutComponent = class _LayoutComponent {
         id: `Fahrt ${tripIndex + 1}`,
         vehicleId: this.dummyVehicles[tripIndex % this.dummyVehicles.length].licensePlate ?? "",
         telemetryUnitId: this.dummyTelemetryUnits[tripIndex % this.dummyTelemetryUnits.length],
-        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].employeeNr ?? "",
+        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].Id,
         start: points2[0].timestamp,
         end: points2[points2.length - 1].timestamp,
         points: points2
@@ -94880,7 +94868,7 @@ var LayoutComponent = class _LayoutComponent {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 79, vars: 33, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "trips", 4, "ngIf"], ["class", "chart-placeholder", 4, "ngIf"], [1, "view-toggle"], [3, "click"], [1, "list"], ["class", "empty-hint", 4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [1, "sidebar"], [1, "filter-title"], ["type", "datetime-local", 3, "ngModelChange", "ngModel"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue", 4, "ngFor", "ngForOf"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [3, "trips"], [1, "chart-placeholder"], [1, "empty-hint"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 4, "ngIf"], [1, "details"], [1, "details-full"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], [3, "value"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"], [3, "ngValue"]], template: function LayoutComponent_Template(rf, ctx) {
+  }, decls: 79, vars: 33, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "trips", 4, "ngIf"], ["class", "chart-placeholder", 4, "ngIf"], [1, "view-toggle"], [3, "click"], [1, "list"], ["class", "empty-hint", 4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [1, "sidebar"], [1, "filter-title"], ["type", "datetime-local", 3, "ngModelChange", "ngModel"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue", 4, "ngFor", "ngForOf"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [3, "trips"], [1, "chart-placeholder"], [1, "empty-hint"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 4, "ngIf"], [1, "details"], [1, "details-full"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], [3, "value"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"], [3, "ngValue"]], template: function LayoutComponent_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
       \u0275\u0275elementStart(0, "h1", 3);
@@ -95011,7 +94999,7 @@ var LayoutComponent = class _LayoutComponent {
       });
       \u0275\u0275text(66, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(67, LayoutComponent_div_67_Template, 2, 1, "div", 26)(68, LayoutComponent_div_68_Template, 2, 1, "div", 27)(69, LayoutComponent_div_69_Template, 9, 5, "div", 28);
+      \u0275\u0275template(67, LayoutComponent_div_67_Template, 2, 1, "div", 26)(68, LayoutComponent_div_68_Template, 2, 1, "div", 27)(69, LayoutComponent_div_69_Template, 8, 4, "div", 28);
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(70, "label");
       \u0275\u0275text(71, " Datenpunkt-Rate ");
@@ -95324,7 +95312,7 @@ var LayoutComponent = class _LayoutComponent {
             <div class="option"
                  *ngFor="let person of filteredPersonOptions"
                  (click)="selectPerson(person)">
-              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.employeeNr }}
+              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.Id }}
             </div>
           </div>
         </div>
@@ -95351,7 +95339,6 @@ var LayoutComponent = class _LayoutComponent {
       <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
         <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
         <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
-        <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedPersonFilter.employeeNr">
 
         <div class="field-label">Geburtsdatum</div>
         <div class="year-range">
@@ -96674,7 +96661,7 @@ function Vehicles_div_62_div_1_Template(rf, ctx) {
   if (rf & 2) {
     const person_r30 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate3(" ", person_r30.firstName, " ", person_r30.lastName, " \u2014 ", person_r30.employeeNr, " ");
+    \u0275\u0275textInterpolate3(" ", person_r30.firstName, " ", person_r30.lastName, " \u2014 ", person_r30.Id, " ");
   }
 }
 function Vehicles_div_62_Template(rf, ctx) {
@@ -96752,27 +96739,19 @@ function Vehicles_div_67_Template(rf, ctx) {
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 92);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_3_listener($event) {
-      \u0275\u0275restoreView(_r33);
-      const ctx_r2 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.employeeNr, $event) || (ctx_r2.advancedPersonFilter.employeeNr = $event);
-      return \u0275\u0275resetView($event);
-    });
+    \u0275\u0275elementStart(3, "div", 87);
+    \u0275\u0275text(4, "Geburtsdatum");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "div", 87);
-    \u0275\u0275text(5, "Geburtsdatum");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "div", 82)(7, "input", 93);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_7_listener($event) {
+    \u0275\u0275elementStart(5, "div", 82)(6, "input", 92);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_6_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.birthDateFrom, $event) || (ctx_r2.advancedPersonFilter.birthDateFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "input", 94);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_8_listener($event) {
+    \u0275\u0275elementStart(7, "input", 93);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_67_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.advancedPersonFilter.birthDateTo, $event) || (ctx_r2.advancedPersonFilter.birthDateTo = $event);
@@ -96786,8 +96765,6 @@ function Vehicles_div_67_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.firstName);
     \u0275\u0275advance();
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.lastName);
-    \u0275\u0275advance();
-    \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.employeeNr);
     \u0275\u0275advance(4);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.advancedPersonFilter.birthDateFrom);
     \u0275\u0275advance();
@@ -96810,11 +96787,11 @@ var Vehicles = class _Vehicles {
   editSnapshot = null;
   dummyTelemetryUnits = ["TU-1001", "TU-1002", "TU-1003"];
   dummyPersons = [
-    { Id: "p1", firstName: "Anna", lastName: "Schmidt", employeeNr: "MA-1000", birthDate: "1970-05-20" },
-    { Id: "p2", firstName: "Ben", lastName: "M\xFCller", employeeNr: "MA-1001", birthDate: "1971-05-20" },
-    { Id: "p3", firstName: "Clara", lastName: "Fischer", employeeNr: "MA-1002", birthDate: "1972-05-20" },
-    { Id: "p4", firstName: "David", lastName: "Weber", employeeNr: "MA-1003", birthDate: "1973-05-20" },
-    { Id: "p5", firstName: "Emma", lastName: "Meyer", employeeNr: "MA-1004", birthDate: "1974-05-20" }
+    { Id: "p1", firstName: "Anna", lastName: "Schmidt", birthDate: "1970-05-20" },
+    { Id: "p2", firstName: "Ben", lastName: "M\xFCller", birthDate: "1971-05-20" },
+    { Id: "p3", firstName: "Clara", lastName: "Fischer", birthDate: "1972-05-20" },
+    { Id: "p4", firstName: "David", lastName: "Weber", birthDate: "1973-05-20" },
+    { Id: "p5", firstName: "Emma", lastName: "Meyer", birthDate: "1974-05-20" }
   ];
   licenseClasses = [
     "AM",
@@ -96963,13 +96940,12 @@ var Vehicles = class _Vehicles {
     const f = this.advancedPersonFilter;
     return this.dummyPersons.filter((p) => {
       const fullName = `${p.firstName ?? ""} ${p.lastName ?? ""}`.toLowerCase();
-      const matchesSearch = !term || fullName.includes(term) || (p.employeeNr ?? "").toLowerCase().includes(term);
+      const matchesSearch = !term || fullName.includes(term) || p.Id.toLowerCase().includes(term);
       const matchesFirstName = !f.firstName || (p.firstName ?? "").toLowerCase().includes(f.firstName.toLowerCase());
       const matchesLastName = !f.lastName || (p.lastName ?? "").toLowerCase().includes(f.lastName.toLowerCase());
-      const matchesEmployeeNr = !f.employeeNr || (p.employeeNr ?? "").toLowerCase().includes(f.employeeNr.toLowerCase());
       const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? "") >= f.birthDateFrom;
       const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? "") <= f.birthDateTo;
-      return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr && matchesBirthFrom && matchesBirthTo;
+      return matchesSearch && matchesFirstName && matchesLastName && matchesBirthFrom && matchesBirthTo;
     });
   }
   onVehicleSearchChange() {
@@ -97024,8 +97000,8 @@ var Vehicles = class _Vehicles {
     this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
   }
   selectPerson(person) {
-    this.filterPersonId = person.employeeNr ?? "";
-    this.personSearch = person.employeeNr ?? "";
+    this.filterPersonId = person.Id;
+    this.personSearch = person.Id;
     this.showPersonOptions = false;
   }
   addPersonFilter() {
@@ -97224,7 +97200,6 @@ var Vehicles = class _Vehicles {
     return {
       firstName: "",
       lastName: "",
-      employeeNr: "",
       birthDateFrom: "",
       birthDateTo: ""
     };
@@ -97249,7 +97224,7 @@ var Vehicles = class _Vehicles {
         powerPs: 90 + i * 15 % 300,
         color: colors[i % colors.length],
         firstRegistration: `${year}-01-01`,
-        assignedPersonId: i % 3 === 0 ? this.dummyPersons[i % this.dummyPersons.length].employeeNr ?? null : null,
+        assignedPersonId: i % 3 === 0 ? this.dummyPersons[i % this.dummyPersons.length].Id : null,
         lastLocation: {
           lat: baseLat + offset * 3e-3 + (Math.random() - 0.5) * 1e-3,
           lng: baseLng + offset * 3e-3 + (Math.random() - 0.5) * 1e-3,
@@ -97277,7 +97252,7 @@ var Vehicles = class _Vehicles {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 73, vars: 27, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], ["plateView", ""], ["firstRegistrationView", ""], ["unitView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "sidebar"], [1, "filter-title"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [3, "value"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "action-btn"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"]], template: function Vehicles_Template(rf, ctx) {
+  }, decls: 73, vars: 27, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], ["plateView", ""], ["firstRegistrationView", ""], ["unitView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "sidebar"], [1, "filter-title"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [3, "value"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "action-btn"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"]], template: function Vehicles_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
       \u0275\u0275elementStart(0, "h1", 6);
@@ -97399,7 +97374,7 @@ var Vehicles = class _Vehicles {
       });
       \u0275\u0275text(64, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(65, Vehicles_div_65_Template, 2, 1, "div", 31)(66, Vehicles_div_66_Template, 2, 1, "div", 32)(67, Vehicles_div_67_Template, 9, 5, "div", 33);
+      \u0275\u0275template(65, Vehicles_div_65_Template, 2, 1, "div", 31)(66, Vehicles_div_66_Template, 2, 1, "div", 32)(67, Vehicles_div_67_Template, 8, 4, "div", 33);
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(68, "div", 36)(69, "button", 37);
       \u0275\u0275listener("click", function Vehicles_Template_button_click_69_listener() {
@@ -97790,7 +97765,7 @@ var Vehicles = class _Vehicles {
             <div class="option"
                  *ngFor="let person of filteredPersonOptions"
                  (click)="selectPerson(person)">
-              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.employeeNr }}
+              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.Id }}
             </div>
           </div>
         </div>
@@ -97817,7 +97792,6 @@ var Vehicles = class _Vehicles {
       <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
         <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
         <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
-        <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedPersonFilter.employeeNr">
 
         <div class="field-label">Geburtsdatum</div>
         <div class="year-range">
@@ -97853,10 +97827,93 @@ var Vehicles = class _Vehicles {
   (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Vehicles, { className: "Vehicles", filePath: "src/app/widgets/vehicles/vehicles.component.ts", lineNumber: 17 });
 })();
 
+// src/app/services/person.service.ts
+var LICENSE_TYPES2 = [
+  "AM",
+  "A1",
+  "A2",
+  "A",
+  "B",
+  "B96",
+  "BE",
+  "C1",
+  "C1E",
+  "C",
+  "CE",
+  "D1",
+  "D1E",
+  "D",
+  "DE",
+  "L",
+  "T"
+];
+var PersonService = class _PersonService {
+  http;
+  baseUrl = environment.apiUrl;
+  constructor(http) {
+    this.http = http;
+  }
+  loadAll() {
+    return this.http.get(`${this.baseUrl}/Person`).pipe(map((list) => list.map((dto) => this.toPerson(dto))), catchError((err) => this.rethrow(err)));
+  }
+  save(person) {
+    return this.http.post(`${this.baseUrl}/Person`, this.toRequestDto(person)).pipe(map((dto) => this.toPerson(dto, person.assignedVehicleId)), catchError((err) => this.rethrow(err)));
+  }
+  update(person) {
+    return this.http.put(`${this.baseUrl}/Person/${person.Id}`, this.toRequestDto(person)).pipe(map((dto) => this.toPerson(dto, person.assignedVehicleId)), catchError((err) => this.rethrow(err)));
+  }
+  delete(id) {
+    return this.http.delete(`${this.baseUrl}/Person/${id}`).pipe(catchError((err) => this.rethrow(err)));
+  }
+  rethrow(err) {
+    const message = typeof err.error === "string" && err.error ? err.error : `Fehler ${err.status}: ${err.statusText}`;
+    return throwError(() => new Error(message));
+  }
+  toRequestDto(person) {
+    return {
+      firstName: person.firstName ?? "",
+      lastName: person.lastName ?? "",
+      birthDate: person.birthDate ?? "",
+      licenses: (person.licenses ?? []).map((l) => ({
+        licenseClass: l.licenseClass,
+        obtainedDate: l.obtainedDate
+      })),
+      assignedVehicleId: person.assignedVehicleId || null
+    };
+  }
+  // The backend's VehicleDriver has no inverse "assigned vehicle" field (the FK
+  // lives on Vehicle), so it can't be read back from the response — the caller
+  // passes through what it just submitted for save()/update().
+  toPerson(dto, assignedVehicleId) {
+    const licenses = (dto.licenses ?? []).map((l) => ({
+      licenseClass: LICENSE_TYPES2[l.licenseType] ?? "",
+      obtainedDate: l.obtainedDate
+    }));
+    return {
+      Id: dto.id,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      birthDate: dto.dateOfBirth,
+      licenses,
+      assignedVehicleId: assignedVehicleId ?? null
+    };
+  }
+  static \u0275fac = function PersonService_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _PersonService)(\u0275\u0275inject(HttpClient));
+  };
+  static \u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({ token: _PersonService, factory: _PersonService.\u0275fac, providedIn: "root" });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(PersonService, [{
+    type: Injectable,
+    args: [{ providedIn: "root" }]
+  }], () => [{ type: HttpClient }], null);
+})();
+
 // src/app/widgets/personen/personen.component.ts
-function Personen_div_7_option_19_Template(rf, ctx) {
+function Personen_div_7_option_16_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275elementStart(0, "option", 32);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97867,9 +97924,9 @@ function Personen_div_7_option_19_Template(rf, ctx) {
     \u0275\u0275textInterpolate(plate_r3);
   }
 }
-function Personen_div_7_option_27_Template(rf, ctx) {
+function Personen_div_7_option_24_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275elementStart(0, "option", 32);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97880,13 +97937,13 @@ function Personen_div_7_option_27_Template(rf, ctx) {
     \u0275\u0275textInterpolate(license_r4);
   }
 }
-function Personen_div_7_div_31_div_1_Template(rf, ctx) {
+function Personen_div_7_div_28_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275elementStart(0, "div", 35);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 34);
-    \u0275\u0275listener("click", function Personen_div_7_div_31_div_1_Template_span_click_2_listener() {
+    \u0275\u0275elementStart(2, "span", 36);
+    \u0275\u0275listener("click", function Personen_div_7_div_28_div_1_Template_span_click_2_listener() {
       const license_r6 = \u0275\u0275restoreView(_r5).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.removeLicenseFromNewPerson(license_r6.licenseClass));
@@ -97900,10 +97957,10 @@ function Personen_div_7_div_31_div_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate2(" ", license_r6.licenseClass, " (seit ", license_r6.obtainedDate, ") ");
   }
 }
-function Personen_div_7_div_31_Template(rf, ctx) {
+function Personen_div_7_div_28_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 31);
-    \u0275\u0275template(1, Personen_div_7_div_31_div_1_Template, 4, 2, "div", 32);
+    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275template(1, Personen_div_7_div_28_div_1_Template, 4, 2, "div", 34);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -97912,12 +97969,24 @@ function Personen_div_7_div_31_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.newPerson.licenses);
   }
 }
+function Personen_div_7_div_31_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 37);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r1.createError);
+  }
+}
 function Personen_div_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 16)(1, "div", 17)(2, "label");
+    \u0275\u0275elementStart(0, "div", 17)(1, "div", 18)(2, "label");
     \u0275\u0275text(3, " Vorname ");
-    \u0275\u0275elementStart(4, "input", 18);
+    \u0275\u0275elementStart(4, "input", 19);
     \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_4_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97927,7 +97996,7 @@ function Personen_div_7_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(5, "label");
     \u0275\u0275text(6, " Nachname ");
-    \u0275\u0275elementStart(7, "input", 18);
+    \u0275\u0275elementStart(7, "input", 19);
     \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97936,80 +98005,72 @@ function Personen_div_7_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "label");
-    \u0275\u0275text(9, " Mitarbeiter-Nr. ");
-    \u0275\u0275elementStart(10, "input", 18);
+    \u0275\u0275text(9, " Geburtsdatum ");
+    \u0275\u0275elementStart(10, "input", 20);
     \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_10_listener($event) {
-      \u0275\u0275restoreView(_r1);
-      const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.employeeNr, $event) || (ctx_r1.newPerson.employeeNr = $event);
-      return \u0275\u0275resetView($event);
-    });
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(11, "label");
-    \u0275\u0275text(12, " Geburtsdatum ");
-    \u0275\u0275elementStart(13, "input", 19);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_13_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.birthDate, $event) || (ctx_r1.newPerson.birthDate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(14, "label");
-    \u0275\u0275text(15, " Zugewiesenes Fahrzeug ");
-    \u0275\u0275elementStart(16, "select", 20);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_16_listener($event) {
+    \u0275\u0275elementStart(11, "label");
+    \u0275\u0275text(12, " Zugewiesenes Fahrzeug ");
+    \u0275\u0275elementStart(13, "select", 21);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_13_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.assignedVehicleId, $event) || (ctx_r1.newPerson.assignedVehicleId = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(17, "option", 21);
-    \u0275\u0275text(18, "Kein Fahrzeug");
+    \u0275\u0275elementStart(14, "option", 22);
+    \u0275\u0275text(15, "Kein Fahrzeug");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(19, Personen_div_7_option_19_Template, 2, 2, "option", 22);
+    \u0275\u0275template(16, Personen_div_7_option_16_Template, 2, 2, "option", 23);
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(20, "div", 23)(21, "div", 24);
-    \u0275\u0275text(22, "F\xFChrerscheine");
+    \u0275\u0275elementStart(17, "div", 24)(18, "div", 25);
+    \u0275\u0275text(19, "F\xFChrerscheine");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(23, "div", 25)(24, "select", 20);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_24_listener($event) {
+    \u0275\u0275elementStart(20, "div", 26)(21, "select", 21);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_21_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newLicenseClass, $event) || (ctx_r1.newLicenseClass = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(25, "option", 26);
-    \u0275\u0275text(26, "Klasse w\xE4hlen");
+    \u0275\u0275elementStart(22, "option", 27);
+    \u0275\u0275text(23, "Klasse w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(27, Personen_div_7_option_27_Template, 2, 2, "option", 22);
+    \u0275\u0275template(24, Personen_div_7_option_24_Template, 2, 2, "option", 23);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(28, "input", 19);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_28_listener($event) {
+    \u0275\u0275elementStart(25, "input", 20);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_25_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newLicenseDate, $event) || (ctx_r1.newLicenseDate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(29, "button", 27);
-    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_29_listener() {
+    \u0275\u0275elementStart(26, "button", 28);
+    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_26_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.addLicenseToNewPerson());
     });
-    \u0275\u0275text(30, " + ");
+    \u0275\u0275text(27, " + ");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(31, Personen_div_7_div_31_Template, 2, 1, "div", 28);
+    \u0275\u0275template(28, Personen_div_7_div_28_Template, 2, 1, "div", 29);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(32, "button", 29);
-    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_32_listener() {
+    \u0275\u0275elementStart(29, "button", 30);
+    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_29_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.createPerson());
     });
-    \u0275\u0275text(33, " Speichern ");
-    \u0275\u0275elementEnd()();
+    \u0275\u0275text(30, " Speichern ");
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(31, Personen_div_7_div_31_Template, 2, 1, "div", 31);
+    \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
@@ -98017,8 +98078,6 @@ function Personen_div_7_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.firstName);
     \u0275\u0275advance(3);
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.lastName);
-    \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.employeeNr);
     \u0275\u0275advance(3);
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.newPerson.birthDate);
     \u0275\u0275advance(3);
@@ -98038,7 +98097,9 @@ function Personen_div_7_Template(rf, ctx) {
     \u0275\u0275advance(2);
     \u0275\u0275property("ngIf", ctx_r1.newPerson.licenses == null ? null : ctx_r1.newPerson.licenses.length);
     \u0275\u0275advance();
-    \u0275\u0275property("disabled", !ctx_r1.newPerson.firstName || !ctx_r1.newPerson.lastName);
+    \u0275\u0275property("disabled", !ctx_r1.newPerson.firstName || !ctx_r1.newPerson.lastName || !ctx_r1.newPerson.birthDate);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("ngIf", ctx_r1.createError);
   }
 }
 function Personen_div_9_Template(rf, ctx) {
@@ -98050,7 +98111,7 @@ function Personen_div_9_Template(rf, ctx) {
 }
 function Personen_div_10_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 40);
+    \u0275\u0275elementStart(0, "div", 43);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -98064,7 +98125,7 @@ function Personen_div_10_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r10 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 45);
+    \u0275\u0275elementStart(1, "input", 48);
     \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r10);
       const person_r9 = \u0275\u0275nextContext(2).$implicit;
@@ -98093,7 +98154,7 @@ function Personen_div_10_div_4_ng_container_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 45);
+    \u0275\u0275elementStart(1, "input", 48);
     \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_10_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r11);
       const person_r9 = \u0275\u0275nextContext(2).$implicit;
@@ -98118,34 +98179,63 @@ function Personen_div_10_div_4_ng_template_11_Template(rf, ctx) {
     \u0275\u0275textInterpolate(person_r9.lastName);
   }
 }
-function Personen_div_10_div_4_ng_container_24_option_4_Template(rf, ctx) {
+function Personen_div_10_div_4_ng_container_20_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 30);
+    const _r12 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275elementStart(1, "input", 49);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_20_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r12);
+      const person_r9 = \u0275\u0275nextContext(2).$implicit;
+      \u0275\u0275twoWayBindingSet(person_r9.birthDate, $event) || (person_r9.birthDate = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275advance();
+    \u0275\u0275twoWayProperty("ngModel", person_r9.birthDate);
+  }
+}
+function Personen_div_10_div_4_ng_template_21_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275text(0);
+  }
+  if (rf & 2) {
+    const person_r9 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(person_r9.birthDate);
+  }
+}
+function Personen_div_10_div_4_ng_container_26_option_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "option", 32);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const plate_r13 = ctx.$implicit;
-    \u0275\u0275property("value", plate_r13);
+    const plate_r14 = ctx.$implicit;
+    \u0275\u0275property("value", plate_r14);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(plate_r13);
+    \u0275\u0275textInterpolate(plate_r14);
   }
 }
-function Personen_div_10_div_4_ng_container_24_Template(rf, ctx) {
+function Personen_div_10_div_4_ng_container_26_Template(rf, ctx) {
   if (rf & 1) {
-    const _r12 = \u0275\u0275getCurrentView();
+    const _r13 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "select", 46);
-    \u0275\u0275listener("ngModelChange", function Personen_div_10_div_4_ng_container_24_Template_select_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r12);
+    \u0275\u0275elementStart(1, "select", 50);
+    \u0275\u0275listener("ngModelChange", function Personen_div_10_div_4_ng_container_26_Template_select_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r13);
       const person_r9 = \u0275\u0275nextContext(2).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.onVehicleAssignmentChange(person_r9, $event));
     });
-    \u0275\u0275elementStart(2, "option", 47);
+    \u0275\u0275elementStart(2, "option", 51);
     \u0275\u0275text(3, "kein Fahrzeug");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_24_option_4_Template, 2, 2, "option", 22);
+    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_26_option_4_Template, 2, 2, "option", 23);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -98158,7 +98248,7 @@ function Personen_div_10_div_4_ng_container_24_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.dummyVehicles);
   }
 }
-function Personen_div_10_div_4_ng_template_25_Template(rf, ctx) {
+function Personen_div_10_div_4_ng_template_27_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -98167,42 +98257,42 @@ function Personen_div_10_div_4_ng_template_25_Template(rf, ctx) {
     \u0275\u0275textInterpolate(person_r9.assignedVehicleId || "kein Fahrzeug");
   }
 }
-function Personen_div_10_div_4_div_30_div_1_span_2_Template(rf, ctx) {
+function Personen_div_10_div_4_div_32_div_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    const _r14 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "span", 34);
-    \u0275\u0275listener("click", function Personen_div_10_div_4_div_30_div_1_span_2_Template_span_click_0_listener() {
-      \u0275\u0275restoreView(_r14);
-      const license_r15 = \u0275\u0275nextContext().$implicit;
+    const _r15 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "span", 36);
+    \u0275\u0275listener("click", function Personen_div_10_div_4_div_32_div_1_span_2_Template_span_click_0_listener() {
+      \u0275\u0275restoreView(_r15);
+      const license_r16 = \u0275\u0275nextContext().$implicit;
       const person_r9 = \u0275\u0275nextContext(3).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.removeLicenseFromPerson(person_r9, license_r15.licenseClass));
+      return \u0275\u0275resetView(ctx_r1.removeLicenseFromPerson(person_r9, license_r16.licenseClass));
     });
     \u0275\u0275text(1, " \xD7 ");
     \u0275\u0275elementEnd();
   }
 }
-function Personen_div_10_div_4_div_30_div_1_Template(rf, ctx) {
+function Personen_div_10_div_4_div_32_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275elementStart(0, "div", 35);
     \u0275\u0275text(1);
-    \u0275\u0275template(2, Personen_div_10_div_4_div_30_div_1_span_2_Template, 2, 0, "span", 48);
+    \u0275\u0275template(2, Personen_div_10_div_4_div_32_div_1_span_2_Template, 2, 0, "span", 52);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const license_r15 = ctx.$implicit;
+    const license_r16 = ctx.$implicit;
     const i_r8 = \u0275\u0275nextContext(3).index;
     const ctx_r1 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate2(" ", license_r15.licenseClass, " (seit ", license_r15.obtainedDate, ") ");
+    \u0275\u0275textInterpolate2(" ", license_r16.licenseClass, " (seit ", license_r16.obtainedDate, ") ");
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8);
   }
 }
-function Personen_div_10_div_4_div_30_Template(rf, ctx) {
+function Personen_div_10_div_4_div_32_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 31);
-    \u0275\u0275template(1, Personen_div_10_div_4_div_30_div_1_Template, 3, 3, "div", 32);
+    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275template(1, Personen_div_10_div_4_div_32_div_1_Template, 3, 3, "div", 34);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -98211,45 +98301,45 @@ function Personen_div_10_div_4_div_30_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", person_r9.licenses);
   }
 }
-function Personen_div_10_div_4_div_31_option_4_Template(rf, ctx) {
+function Personen_div_10_div_4_div_33_option_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 30);
+    \u0275\u0275elementStart(0, "option", 32);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const license_r17 = ctx.$implicit;
-    \u0275\u0275property("value", license_r17);
+    const license_r18 = ctx.$implicit;
+    \u0275\u0275property("value", license_r18);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(license_r17);
+    \u0275\u0275textInterpolate(license_r18);
   }
 }
-function Personen_div_10_div_4_div_31_Template(rf, ctx) {
+function Personen_div_10_div_4_div_33_Template(rf, ctx) {
   if (rf & 1) {
-    const _r16 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 25)(1, "select", 20);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_31_Template_select_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r16);
+    const _r17 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 26)(1, "select", 21);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_33_Template_select_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r17);
       const ctx_r1 = \u0275\u0275nextContext(3);
       \u0275\u0275twoWayBindingSet(ctx_r1.editLicenseClass, $event) || (ctx_r1.editLicenseClass = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(2, "option", 26);
+    \u0275\u0275elementStart(2, "option", 27);
     \u0275\u0275text(3, "Klasse w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Personen_div_10_div_4_div_31_option_4_Template, 2, 2, "option", 22);
+    \u0275\u0275template(4, Personen_div_10_div_4_div_33_option_4_Template, 2, 2, "option", 23);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "input", 19);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_31_Template_input_ngModelChange_5_listener($event) {
-      \u0275\u0275restoreView(_r16);
+    \u0275\u0275elementStart(5, "input", 20);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_33_Template_input_ngModelChange_5_listener($event) {
+      \u0275\u0275restoreView(_r17);
       const ctx_r1 = \u0275\u0275nextContext(3);
       \u0275\u0275twoWayBindingSet(ctx_r1.editLicenseDate, $event) || (ctx_r1.editLicenseDate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 27);
-    \u0275\u0275listener("click", function Personen_div_10_div_4_div_31_Template_button_click_6_listener() {
-      \u0275\u0275restoreView(_r16);
+    \u0275\u0275elementStart(6, "button", 28);
+    \u0275\u0275listener("click", function Personen_div_10_div_4_div_33_Template_button_click_6_listener() {
+      \u0275\u0275restoreView(_r17);
       const person_r9 = \u0275\u0275nextContext(2).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.addLicenseToPerson(person_r9));
@@ -98269,21 +98359,33 @@ function Personen_div_10_div_4_div_31_Template(rf, ctx) {
     \u0275\u0275property("disabled", !ctx_r1.editLicenseClass || !ctx_r1.editLicenseDate);
   }
 }
+function Personen_div_10_div_4_div_34_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 37);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(3);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r1.editError);
+  }
+}
 function Personen_div_10_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 41);
+    \u0275\u0275elementStart(0, "div", 44);
     \u0275\u0275listener("click", function Personen_div_10_div_4_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
     \u0275\u0275elementStart(1, "div")(2, "span");
     \u0275\u0275text(3, "Vorname:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_4_Template, 2, 1, "ng-container", 42)(5, Personen_div_10_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_4_Template, 2, 1, "ng-container", 45)(5, Personen_div_10_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(7, "div")(8, "span");
     \u0275\u0275text(9, "Nachname:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(10, Personen_div_10_div_4_ng_container_10_Template, 2, 1, "ng-container", 42)(11, Personen_div_10_div_4_ng_template_11_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(10, Personen_div_10_div_4_ng_container_10_Template, 2, 1, "ng-container", 45)(11, Personen_div_10_div_4_ng_template_11_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(13, "div")(14, "span");
     \u0275\u0275text(15, "Mitarbeiter-Nr.:");
@@ -98293,91 +98395,119 @@ function Personen_div_10_div_4_Template(rf, ctx) {
     \u0275\u0275elementStart(17, "div")(18, "span");
     \u0275\u0275text(19, "Geburtsdatum:");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(20);
+    \u0275\u0275template(20, Personen_div_10_div_4_ng_container_20_Template, 2, 1, "ng-container", 45)(21, Personen_div_10_div_4_ng_template_21_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(21, "div")(22, "span");
-    \u0275\u0275text(23, "Zugewiesenes Fahrzeug:");
+    \u0275\u0275elementStart(23, "div")(24, "span");
+    \u0275\u0275text(25, "Zugewiesenes Fahrzeug:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(24, Personen_div_10_div_4_ng_container_24_Template, 5, 2, "ng-container", 42)(25, Personen_div_10_div_4_ng_template_25_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(26, Personen_div_10_div_4_ng_container_26_Template, 5, 2, "ng-container", 45)(27, Personen_div_10_div_4_ng_template_27_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(27, "div", 43)(28, "span");
-    \u0275\u0275text(29, "F\xFChrerscheine:");
+    \u0275\u0275elementStart(29, "div", 46)(30, "span");
+    \u0275\u0275text(31, "F\xFChrerscheine:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(30, Personen_div_10_div_4_div_30_Template, 2, 1, "div", 28)(31, Personen_div_10_div_4_div_31_Template, 8, 4, "div", 44);
-    \u0275\u0275elementEnd()();
+    \u0275\u0275template(32, Personen_div_10_div_4_div_32_Template, 2, 1, "div", 29)(33, Personen_div_10_div_4_div_33_Template, 8, 4, "div", 47);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(34, Personen_div_10_div_4_div_34_Template, 2, 1, "div", 31);
+    \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const firstNameView_r18 = \u0275\u0275reference(6);
-    const lastNameView_r19 = \u0275\u0275reference(12);
-    const vehicleView_r20 = \u0275\u0275reference(26);
-    const ctx_r20 = \u0275\u0275nextContext();
-    const person_r9 = ctx_r20.$implicit;
-    const i_r8 = ctx_r20.index;
+    const firstNameView_r19 = \u0275\u0275reference(6);
+    const lastNameView_r20 = \u0275\u0275reference(12);
+    const birthDateView_r21 = \u0275\u0275reference(22);
+    const vehicleView_r22 = \u0275\u0275reference(28);
+    const ctx_r22 = \u0275\u0275nextContext();
+    const person_r9 = ctx_r22.$implicit;
+    const i_r8 = ctx_r22.index;
     const ctx_r1 = \u0275\u0275nextContext();
     \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", firstNameView_r18);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", firstNameView_r19);
     \u0275\u0275advance(6);
-    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", lastNameView_r19);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", lastNameView_r20);
     \u0275\u0275advance(6);
-    \u0275\u0275textInterpolate1(" ", person_r9.employeeNr);
+    \u0275\u0275textInterpolate1(" ", person_r9.Id);
     \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", person_r9.birthDate);
-    \u0275\u0275advance(4);
-    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", vehicleView_r20);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", birthDateView_r21);
+    \u0275\u0275advance(6);
+    \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8)("ngIfElse", vehicleView_r22);
     \u0275\u0275advance(6);
     \u0275\u0275property("ngIf", person_r9.licenses == null ? null : person_r9.licenses.length);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r8);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.editError && ctx_r1.selectedIndex === i_r8);
   }
 }
 function Personen_div_10_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r22 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 49);
+    const _r24 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 53);
     \u0275\u0275listener("click", function Personen_div_10_div_5_Template_div_click_0_listener($event) {
+      \u0275\u0275restoreView(_r24);
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.onActionsClick($event));
+    })("mousedown", function Personen_div_10_div_5_Template_div_mousedown_0_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(1, "button", 50);
-    \u0275\u0275text(2, "L\xF6schen");
+    \u0275\u0275elementStart(1, "button", 54);
+    \u0275\u0275listener("mousedown", function Personen_div_10_div_5_Template_button_mousedown_1_listener($event) {
+      \u0275\u0275restoreView(_r24);
+      const ctx_r22 = \u0275\u0275nextContext();
+      const person_r9 = ctx_r22.$implicit;
+      const i_r8 = ctx_r22.index;
+      const ctx_r1 = \u0275\u0275nextContext();
+      ctx_r1.onActionMouseDown($event);
+      return \u0275\u0275resetView(ctx_r1.confirmDelete(i_r8, person_r9));
+    });
+    \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 51)(4, "button", 52);
-    \u0275\u0275listener("click", function Personen_div_10_div_5_Template_button_click_4_listener() {
-      \u0275\u0275restoreView(_r22);
+    \u0275\u0275elementStart(3, "div", 55)(4, "button", 56);
+    \u0275\u0275listener("mousedown", function Personen_div_10_div_5_Template_button_mousedown_4_listener($event) {
+      \u0275\u0275restoreView(_r24);
       const ctx_r1 = \u0275\u0275nextContext(2);
+      ctx_r1.onActionMouseDown($event);
       return \u0275\u0275resetView(ctx_r1.collapseItem());
     });
     \u0275\u0275text(5, "Abbrechen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 52);
-    \u0275\u0275listener("click", function Personen_div_10_div_5_Template_button_click_6_listener() {
-      \u0275\u0275restoreView(_r22);
+    \u0275\u0275elementStart(6, "button", 56);
+    \u0275\u0275listener("mousedown", function Personen_div_10_div_5_Template_button_mousedown_6_listener($event) {
+      \u0275\u0275restoreView(_r24);
       const i_r8 = \u0275\u0275nextContext().index;
       const ctx_r1 = \u0275\u0275nextContext();
+      ctx_r1.onActionMouseDown($event);
       return \u0275\u0275resetView(ctx_r1.toggleEdit(i_r8));
     });
     \u0275\u0275text(7);
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
-    const i_r8 = \u0275\u0275nextContext().index;
+    const ctx_r22 = \u0275\u0275nextContext();
+    const person_r9 = ctx_r22.$implicit;
+    const i_r8 = ctx_r22.index;
     const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275advance(7);
-    \u0275\u0275textInterpolate1(" ", ctx_r1.editingIndex === i_r8 ? "Fertig" : "Bearbeiten", " ");
+    \u0275\u0275advance();
+    \u0275\u0275classProp("danger", ctx_r1.deleteConfirmIndex === i_r8);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", ctx_r1.deleteConfirmIndex === i_r8 ? "Wirklich L\xF6schen?" : "L\xF6schen", " ");
+    \u0275\u0275advance(4);
+    \u0275\u0275classProp("dirty", ctx_r1.editingIndex === i_r8 && ctx_r1.isEditDirty(person_r9));
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", ctx_r1.editingIndex === i_r8 ? ctx_r1.isEditDirty(person_r9) ? "Speichern" : "Fertig" : "Bearbeiten", " ");
   }
 }
 function Personen_div_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 35);
+    \u0275\u0275elementStart(0, "div", 38);
     \u0275\u0275listener("click", function Personen_div_10_Template_div_click_0_listener() {
       const i_r8 = \u0275\u0275restoreView(_r7).index;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.selectItem(i_r8));
     });
-    \u0275\u0275elementStart(1, "div", 36);
+    \u0275\u0275elementStart(1, "div", 39);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Personen_div_10_div_3_Template, 2, 1, "div", 37)(4, Personen_div_10_div_4_Template, 32, 10, "div", 38)(5, Personen_div_10_div_5_Template, 8, 1, "div", 39);
+    \u0275\u0275template(3, Personen_div_10_div_3_Template, 2, 1, "div", 40)(4, Personen_div_10_div_4_Template, 35, 12, "div", 41)(5, Personen_div_10_div_5_Template, 8, 6, "div", 42);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -98386,7 +98516,7 @@ function Personen_div_10_Template(rf, ctx) {
     const ctx_r1 = \u0275\u0275nextContext();
     \u0275\u0275classProp("active", ctx_r1.selectedIndex === i_r8);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate3("", person_r9.firstName, " ", person_r9.lastName, " - ", person_r9.employeeNr);
+    \u0275\u0275textInterpolate3("", person_r9.firstName, " ", person_r9.lastName, " - ", person_r9.Id);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r1.selectedIndex !== i_r8);
     \u0275\u0275advance();
@@ -98397,25 +98527,27 @@ function Personen_div_10_Template(rf, ctx) {
 }
 function Personen_button_15_Template(rf, ctx) {
   if (rf & 1) {
-    const _r23 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 53);
+    const _r25 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 57);
     \u0275\u0275listener("click", function Personen_button_15_Template_button_click_0_listener() {
-      const page_r24 = \u0275\u0275restoreView(_r23).$implicit;
+      const page_r26 = \u0275\u0275restoreView(_r25).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.goToPage(page_r24));
+      return \u0275\u0275resetView(ctx_r1.goToPage(page_r26));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const page_r24 = ctx.$implicit;
+    const page_r26 = ctx.$implicit;
     const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("active", page_r24 === ctx_r1.currentPage);
+    \u0275\u0275classProp("active", page_r26 === ctx_r1.currentPage);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", page_r24, " ");
+    \u0275\u0275textInterpolate1(" ", page_r26, " ");
   }
 }
 var Personen = class _Personen {
+  personService;
+  cdr;
   persons = [];
   pageSize = 10;
   currentPage = 1;
@@ -98425,8 +98557,12 @@ var Personen = class _Personen {
   newLicenseDate = "";
   selectedIndex = null;
   editingIndex = null;
+  deleteConfirmIndex = null;
   editLicenseClass = "";
   editLicenseDate = "";
+  createError = null;
+  editError = null;
+  editSnapshot = null;
   licenseClasses = [
     "AM",
     "A1",
@@ -98444,8 +98580,30 @@ var Personen = class _Personen {
     "DE"
   ];
   dummyVehicles = ["FL-1000", "FL-1001", "FL-1002", "FL-1003", "FL-1004"];
+  constructor(personService, cdr) {
+    this.personService = personService;
+    this.cdr = cdr;
+  }
+  onDocumentClick(event) {
+    if (this.deleteConfirmIndex !== null) {
+      const target = event.target;
+      if (!target.closest || !target.closest(".delete-btn")) {
+        this.deleteConfirmIndex = null;
+      }
+    }
+  }
   ngOnInit() {
     this.persons = this.generateDummyPersons(24);
+    this.personService.loadAll().subscribe({
+      next: (persons) => {
+        if (persons?.length) {
+          this.persons = persons;
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+      }
+    });
   }
   get totalPages() {
     return Math.max(1, Math.ceil(this.persons.length / this.pageSize));
@@ -98462,30 +98620,103 @@ var Personen = class _Personen {
       this.currentPage--;
     this.selectedIndex = null;
     this.editingIndex = null;
+    this.deleteConfirmIndex = null;
   }
   nextPage() {
     if (this.currentPage < this.totalPages)
       this.currentPage++;
     this.selectedIndex = null;
     this.editingIndex = null;
+    this.deleteConfirmIndex = null;
   }
   goToPage(page) {
     this.currentPage = page;
     this.selectedIndex = null;
     this.editingIndex = null;
+    this.deleteConfirmIndex = null;
   }
   selectItem(index) {
     this.selectedIndex = index;
     this.editingIndex = null;
+    this.editError = null;
+    this.deleteConfirmIndex = null;
   }
   collapseItem() {
     this.selectedIndex = null;
     this.editingIndex = null;
+    this.editError = null;
+    this.editSnapshot = null;
+    this.deleteConfirmIndex = null;
+  }
+  onActionMouseDown(event) {
+    event.preventDefault();
+  }
+  onActionsClick(event) {
+    event.stopPropagation();
+    const target = event.target;
+    if (this.deleteConfirmIndex !== null && (!target.closest || !target.closest(".delete-btn"))) {
+      this.deleteConfirmIndex = null;
+    }
   }
   toggleEdit(index) {
-    this.editingIndex = this.editingIndex === index ? null : index;
+    if (this.editingIndex === index) {
+      this.saveEdit(index);
+      return;
+    }
+    this.editingIndex = index;
+    this.editError = null;
+    this.editSnapshot = __spreadProps(__spreadValues({}, this.pagedPersons[index]), { licenses: [...this.pagedPersons[index].licenses ?? []] });
     this.editLicenseClass = "";
     this.editLicenseDate = "";
+    this.deleteConfirmIndex = null;
+  }
+  isEditDirty(person) {
+    if (!this.editSnapshot)
+      return false;
+    return person.firstName !== this.editSnapshot.firstName || person.lastName !== this.editSnapshot.lastName || person.birthDate !== this.editSnapshot.birthDate || (person.assignedVehicleId ?? "") !== (this.editSnapshot.assignedVehicleId ?? "") || JSON.stringify(person.licenses ?? []) !== JSON.stringify(this.editSnapshot.licenses ?? []);
+  }
+  saveEdit(index) {
+    const person = this.pagedPersons[index];
+    if (!person.licenses || person.licenses.length === 0) {
+      this.editError = "Mindestens ein F\xFChrerschein ist erforderlich.";
+      return;
+    }
+    this.editError = null;
+    this.personService.update(person).subscribe({
+      next: (updated) => {
+        Object.assign(person, updated);
+        this.editingIndex = null;
+        this.editSnapshot = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.editError = err?.message ?? "Aktualisieren fehlgeschlagen.";
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  confirmDelete(index, person) {
+    if (this.deleteConfirmIndex !== index) {
+      this.deleteConfirmIndex = index;
+      return;
+    }
+    this.deletePerson(person);
+  }
+  deletePerson(person) {
+    this.editError = null;
+    this.personService.delete(person.Id).subscribe({
+      next: () => {
+        this.persons = this.persons.filter((p) => p !== person);
+        this.deleteConfirmIndex = null;
+        this.collapseItem();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.editError = err?.message ?? "L\xF6schen fehlgeschlagen.";
+        this.deleteConfirmIndex = null;
+        this.cdr.detectChanges();
+      }
+    });
   }
   onVehicleAssignmentChange(person, value) {
     person.assignedVehicleId = value || null;
@@ -98522,30 +98753,36 @@ var Personen = class _Personen {
       this.newPerson = this.emptyPerson();
       this.newLicenseClass = "";
       this.newLicenseDate = "";
+      this.createError = null;
     }
   }
   createPerson() {
-    if (!this.newPerson.firstName || !this.newPerson.lastName)
+    if (!this.newPerson.firstName || !this.newPerson.lastName || !this.newPerson.birthDate)
       return;
-    this.persons.unshift({
-      Id: crypto.randomUUID(),
-      firstName: this.newPerson.firstName,
-      lastName: this.newPerson.lastName,
-      employeeNr: this.newPerson.employeeNr,
-      birthDate: this.newPerson.birthDate,
-      licenses: this.newPerson.licenses ?? [],
-      assignedVehicleId: this.newPerson.assignedVehicleId ?? null
+    if (!this.newPerson.licenses || this.newPerson.licenses.length === 0) {
+      this.createError = "Mindestens ein F\xFChrerschein ist erforderlich.";
+      return;
+    }
+    this.createError = null;
+    this.personService.save(this.newPerson).subscribe({
+      next: (created) => {
+        this.persons.unshift(created);
+        this.newPerson = this.emptyPerson();
+        this.showCreateForm = false;
+        this.currentPage = 1;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.createError = err?.message ?? "Speichern fehlgeschlagen.";
+        this.cdr.detectChanges();
+      }
     });
-    this.newPerson = this.emptyPerson();
-    this.showCreateForm = false;
-    this.currentPage = 1;
   }
   emptyPerson() {
     return {
       Id: "",
       firstName: "",
       lastName: "",
-      employeeNr: "",
       birthDate: "",
       licenses: [],
       assignedVehicleId: null
@@ -98565,7 +98802,6 @@ var Personen = class _Personen {
         Id: `person-${i + 1}`,
         firstName: firstNames[i % firstNames.length],
         lastName: lastNames[i % lastNames.length],
-        employeeNr: `MA-${1e3 + i}`,
         birthDate: `${birthYear}-05-20`,
         licenses,
         assignedVehicleId: i % 3 === 0 ? this.dummyVehicles[i % this.dummyVehicles.length] : null
@@ -98573,36 +98809,42 @@ var Personen = class _Personen {
     });
   }
   static \u0275fac = function Personen_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _Personen)();
+    return new (__ngFactoryType__ || _Personen)(\u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(ChangeDetectorRef));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Personen, selectors: [["app-personen"]], decls: 19, vars: 7, consts: [["firstNameView", ""], ["lastNameView", ""], ["vehicleView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "date", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue"], [3, "value", 4, "ngFor", "ngForOf"], [1, "license-editor"], [1, "field-label"], [1, "license-row"], ["value", "", "disabled", ""], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], [1, "save-btn", 3, "click", "disabled"], [3, "value"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], [1, "license-section"], ["class", "license-row", 4, "ngIf"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], ["class", "chip-remove", 3, "click", 4, "ngIf"], [1, "actions", 3, "click"], [1, "action-btn"], [1, "actions-right"], [1, "action-btn", 3, "click"], [1, "page-number", 3, "click"]], template: function Personen_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Personen, selectors: [["app-personen"]], hostBindings: function Personen_HostBindings(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275elementStart(0, "h1", 3);
+      \u0275\u0275listener("click", function Personen_click_HostBindingHandler($event) {
+        return ctx.onDocumentClick($event);
+      }, \u0275\u0275resolveDocument);
+    }
+  }, decls: 19, vars: 7, consts: [["firstNameView", ""], ["lastNameView", ""], ["birthDateView", ""], ["vehicleView", ""], [1, "header"], [1, "container"], [1, "main"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "date", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue"], [3, "value", 4, "ngFor", "ngForOf"], [1, "license-editor"], [1, "field-label"], [1, "license-row"], ["value", "", "disabled", ""], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [3, "value"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], [1, "license-section"], ["class", "license-row", 4, "ngIf"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], ["class", "chip-remove", 3, "click", 4, "ngIf"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "page-number", 3, "click"]], template: function Personen_Template(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275elementStart(0, "h1", 4);
       \u0275\u0275text(1, "Personen");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(2, "div", 4)(3, "div", 5)(4, "div", 6)(5, "button", 7);
+      \u0275\u0275elementStart(2, "div", 5)(3, "div", 6)(4, "div", 7)(5, "button", 8);
       \u0275\u0275listener("click", function Personen_Template_button_click_5_listener() {
         return ctx.toggleCreateForm();
       });
       \u0275\u0275text(6);
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(7, Personen_div_7_Template, 34, 13, "div", 8);
-      \u0275\u0275elementStart(8, "div", 9);
-      \u0275\u0275template(9, Personen_div_9_Template, 2, 0, "div", 10)(10, Personen_div_10_Template, 6, 8, "div", 11);
+      \u0275\u0275template(7, Personen_div_7_Template, 32, 13, "div", 9);
+      \u0275\u0275elementStart(8, "div", 10);
+      \u0275\u0275template(9, Personen_div_9_Template, 2, 0, "div", 11)(10, Personen_div_10_Template, 6, 8, "div", 12);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "div", 12)(12, "button", 13);
+      \u0275\u0275elementStart(11, "div", 13)(12, "button", 14);
       \u0275\u0275listener("click", function Personen_Template_button_click_12_listener() {
         return ctx.prevPage();
       });
-      \u0275\u0275elementStart(13, "span", 14);
+      \u0275\u0275elementStart(13, "span", 15);
       \u0275\u0275text(14, "chevron_left");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(15, Personen_button_15_Template, 2, 3, "button", 15);
-      \u0275\u0275elementStart(16, "button", 13);
+      \u0275\u0275template(15, Personen_button_15_Template, 2, 3, "button", 16);
+      \u0275\u0275elementStart(16, "button", 14);
       \u0275\u0275listener("click", function Personen_Template_button_click_16_listener() {
         return ctx.nextPage();
       });
-      \u0275\u0275elementStart(17, "span", 14);
+      \u0275\u0275elementStart(17, "span", 15);
       \u0275\u0275text(18, "chevron_right");
       \u0275\u0275elementEnd()()()()();
     }
@@ -98622,7 +98864,7 @@ var Personen = class _Personen {
       \u0275\u0275advance();
       \u0275\u0275property("disabled", ctx.currentPage === ctx.totalPages);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor[_ngcontent-%COMP%] {\n  margin-bottom: 16px;\n}\n.license-editor[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 13px;\n  color: #72757c;\n  margin-bottom: 8px;\n}\n.license-section[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.license-section[_ngcontent-%COMP%]   .license-row[_ngcontent-%COMP%] {\n  margin-top: 8px;\n}\n.license-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%], \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus, \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 160px;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: #72757c;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 520px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=personen.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor[_ngcontent-%COMP%] {\n  margin-bottom: 16px;\n}\n.license-editor[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 13px;\n  color: #72757c;\n  margin-bottom: 8px;\n}\n.license-section[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.license-section[_ngcontent-%COMP%]   .license-row[_ngcontent-%COMP%] {\n  margin-top: 8px;\n}\n.license-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%], \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus, \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 160px;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: #4a4890;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: #72757c;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: white;\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: #373669;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: #33333d;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n  color: white;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: #4a4890;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: #b03434;\n  border-color: #b03434;\n  color: white;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: #cc3d3d;\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 520px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: #e05252;\n  font-size: 13px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: #2a2b33;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=personen.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Personen, [{
@@ -98648,11 +98890,6 @@ var Personen = class _Personen {
         <label>
           Nachname
           <input type="text" [(ngModel)]="newPerson.lastName">
-        </label>
-
-        <label>
-          Mitarbeiter-Nr.
-          <input type="text" [(ngModel)]="newPerson.employeeNr">
         </label>
 
         <label>
@@ -98698,9 +98935,11 @@ var Personen = class _Personen {
 
       <button class="save-btn"
               (click)="createPerson()"
-              [disabled]="!newPerson.firstName || !newPerson.lastName">
+              [disabled]="!newPerson.firstName || !newPerson.lastName || !newPerson.birthDate">
         Speichern
       </button>
+
+      <div class="form-error" *ngIf="createError">{{ createError }}</div>
     </div>
 
     <div class="list">
@@ -98713,7 +98952,7 @@ var Personen = class _Personen {
            (click)="selectItem(i)"
            [class.active]="selectedIndex === i">
 
-        <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.employeeNr }}</div>
+        <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.Id }}</div>
 
         <div class="details" *ngIf="selectedIndex !== i">
           Geburtsdatum: {{ person.birthDate }}
@@ -98736,8 +98975,15 @@ var Personen = class _Personen {
             <ng-template #lastNameView>{{ person.lastName }}</ng-template>
           </div>
 
-          <div><span>Mitarbeiter-Nr.:</span> {{ person.employeeNr }}</div>
-          <div><span>Geburtsdatum:</span> {{ person.birthDate }}</div>
+          <div><span>Mitarbeiter-Nr.:</span> {{ person.Id }}</div>
+
+          <div>
+            <span>Geburtsdatum:</span>
+            <ng-container *ngIf="editingIndex === i; else birthDateView">
+              <input type="date" class="inline-input" [(ngModel)]="person.birthDate">
+            </ng-container>
+            <ng-template #birthDateView>{{ person.birthDate }}</ng-template>
+          </div>
 
           <div>
             <span>Zugewiesenes Fahrzeug:</span>
@@ -98782,15 +99028,23 @@ var Personen = class _Personen {
               </button>
             </div>
           </div>
+
+          <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
         </div>
 
-        <div class="actions" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
-          <button class="action-btn">L\xF6schen</button>
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, person)">
+            {{ deleteConfirmIndex === i ? 'Wirklich L\xF6schen?' : 'L\xF6schen' }}
+          </button>
 
           <div class="actions-right">
-            <button class="action-btn" (click)="collapseItem()">Abbrechen</button>
-            <button class="action-btn" (click)="toggleEdit(i)">
-              {{ editingIndex === i ? 'Fertig' : 'Bearbeiten' }}
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+            <button class="action-btn"
+                    [class.dirty]="editingIndex === i && isEditDirty(person)"
+                    (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+              {{ editingIndex === i ? (isEditDirty(person) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
           </div>
         </div>
@@ -98820,11 +99074,14 @@ var Personen = class _Personen {
 
   </div>
 </div>
-`, styles: ["/* src/app/widgets/personen/personen.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor {\n  margin-bottom: 16px;\n}\n.license-editor .field-label {\n  font-size: 13px;\n  color: #72757c;\n  margin-bottom: 8px;\n}\n.license-section span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.license-section .license-row {\n  margin-top: 8px;\n}\n.license-row {\n  display: flex;\n  gap: 8px;\n}\n.license-row select,\n.license-row input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.license-row select:focus,\n.license-row input:focus {\n  border-color: #373669;\n}\n.license-row select {\n  flex: 1;\n}\n.license-row input {\n  width: 160px;\n}\n.license-row .add-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row .add-btn:hover {\n  background-color: #4a4890;\n}\n.license-row .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.chips .chip .chip-remove {\n  cursor: pointer;\n  color: #72757c;\n}\n.chips .chip .chip-remove:hover {\n  color: white;\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box.active {\n  min-height: 520px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=personen.component.css.map */\n"] }]
-  }], null, null);
+`, styles: ["/* src/app/widgets/personen/personen.component.scss */\n.header {\n  text-align: center;\n  color: #72757c;\n  margin: 20px 0;\n  margin-top: 100px;\n}\n.container {\n  display: flex;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: #4a4890;\n}\n.create-form {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  border-radius: 16px;\n  padding: 20px;\n  color: white;\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: #373669;\n}\n.create-form .save-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: #4a4890;\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor {\n  margin-bottom: 16px;\n}\n.license-editor .field-label {\n  font-size: 13px;\n  color: #72757c;\n  margin-bottom: 8px;\n}\n.license-section span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.license-section .license-row {\n  margin-top: 8px;\n}\n.license-row {\n  display: flex;\n  gap: 8px;\n}\n.license-row select,\n.license-row input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.license-row select:focus,\n.license-row input:focus {\n  border-color: #373669;\n}\n.license-row select {\n  flex: 1;\n}\n.license-row input {\n  width: 160px;\n}\n.license-row .add-btn {\n  background-color: #373669;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row .add-btn:hover {\n  background-color: #4a4890;\n}\n.license-row .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: #26262e;\n  border: 1px solid #2a2b33;\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: white;\n}\n.chips .chip .chip-remove {\n  cursor: pointer;\n  color: #72757c;\n}\n.chips .chip .chip-remove:hover {\n  color: white;\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: white;\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: #1b1b21;\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid #2a2b33;\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: #72757c;\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: #72757c;\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: #101014;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: white;\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: #373669;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: #26262e;\n  color: white;\n  border: 1px solid #2a2b33;\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: #33333d;\n}\n.list .box .actions .action-btn.dirty {\n  background: #373669;\n  border-color: #373669;\n  color: white;\n}\n.list .box .actions .action-btn.dirty:hover {\n  background: #4a4890;\n}\n.list .box .actions .action-btn.danger {\n  background: #b03434;\n  border-color: #b03434;\n  color: white;\n}\n.list .box .actions .action-btn.danger:hover {\n  background: #cc3d3d;\n}\n.list .box.active {\n  min-height: 520px;\n  border-color: #373669;\n  padding-bottom: 60px;\n}\n.form-error {\n  margin-top: 12px;\n  color: #e05252;\n  font-size: 13px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: #1b1b21;\n  border: 1px solid #2a2b33;\n  color: white;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: #2a2b33;\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: #373669;\n  border-color: #373669;\n}\n/*# sourceMappingURL=personen.component.css.map */\n"] }]
+  }], () => [{ type: PersonService }, { type: ChangeDetectorRef }], { onDocumentClick: [{
+    type: HostListener,
+    args: ["document:click", ["$event"]]
+  }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Personen, { className: "Personen", filePath: "src/app/widgets/personen/personen.component.ts", lineNumber: 14 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Personen, { className: "Personen", filePath: "src/app/widgets/personen/personen.component.ts", lineNumber: 15 });
 })();
 
 // src/app/pages/main-page/main-page.component.ts

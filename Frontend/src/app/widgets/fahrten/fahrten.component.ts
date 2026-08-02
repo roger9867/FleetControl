@@ -32,11 +32,11 @@ export class LayoutComponent implements OnInit {
   dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
 
   dummyPersons: Person[] = [
-    { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', employeeNr: 'MA-1000', birthDate: '1970-05-20' },
-    { Id: 'p2', firstName: 'Ben', lastName: 'Müller', employeeNr: 'MA-1001', birthDate: '1971-05-20' },
-    { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', employeeNr: 'MA-1002', birthDate: '1972-05-20' },
-    { Id: 'p4', firstName: 'David', lastName: 'Weber', employeeNr: 'MA-1003', birthDate: '1973-05-20' },
-    { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', employeeNr: 'MA-1004', birthDate: '1974-05-20' }
+    { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
+    { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
+    { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
+    { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
+    { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
   ];
 
   licenseClasses: string[] = [
@@ -201,14 +201,13 @@ export class LayoutComponent implements OnInit {
 
     return this.dummyPersons.filter(p => {
       const fullName = `${p.firstName ?? ''} ${p.lastName ?? ''}`.toLowerCase();
-      const matchesSearch = !term || fullName.includes(term) || (p.employeeNr ?? '').toLowerCase().includes(term);
+      const matchesSearch = !term || fullName.includes(term) || p.Id.toLowerCase().includes(term);
       const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
       const matchesLastName = !f.lastName || (p.lastName ?? '').toLowerCase().includes(f.lastName.toLowerCase());
-      const matchesEmployeeNr = !f.employeeNr || (p.employeeNr ?? '').toLowerCase().includes(f.employeeNr.toLowerCase());
       const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? '') >= f.birthDateFrom;
       const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? '') <= f.birthDateTo;
 
-      return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr && matchesBirthFrom && matchesBirthTo;
+      return matchesSearch && matchesFirstName && matchesLastName && matchesBirthFrom && matchesBirthTo;
     });
   }
 
@@ -291,8 +290,8 @@ export class LayoutComponent implements OnInit {
   }
 
   selectPerson(person: Person): void {
-    this.filterPersonId = person.employeeNr ?? '';
-    this.personSearch = person.employeeNr ?? '';
+    this.filterPersonId = person.Id;
+    this.personSearch = person.Id;
     this.showPersonOptions = false;
   }
 
@@ -365,7 +364,6 @@ export class LayoutComponent implements OnInit {
     return {
       firstName: '',
       lastName: '',
-      employeeNr: '',
       birthDateFrom: '',
       birthDateTo: ''
     };
@@ -439,7 +437,7 @@ export class LayoutComponent implements OnInit {
         id: `Fahrt ${tripIndex + 1}`,
         vehicleId: this.dummyVehicles[tripIndex % this.dummyVehicles.length].licensePlate ?? '',
         telemetryUnitId: this.dummyTelemetryUnits[tripIndex % this.dummyTelemetryUnits.length],
-        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].employeeNr ?? '',
+        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].Id,
         start: points[0].timestamp,
         end: points[points.length - 1].timestamp,
         points

@@ -281,6 +281,26 @@
         &:hover {
           background: #33333d;
         }
+
+        &.dirty {
+          background: #373669;
+          border-color: #373669;
+          color: white;
+
+          &:hover {
+            background: #4a4890;
+          }
+        }
+
+        &.danger {
+          background: #b03434;
+          border-color: #b03434;
+          color: white;
+
+          &:hover {
+            background: #cc3d3d;
+          }
+        }
       }
     }
   }
@@ -290,6 +310,12 @@
     border-color: #373669;
     padding-bottom: 60px;
   }
+}
+
+.form-error {
+  margin-top: 12px;
+  color: #e05252;
+  font-size: 13px;
 }
 
 .pagination {

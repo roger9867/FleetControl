@@ -217,7 +217,7 @@
             <div class="option"
                  *ngFor="let person of filteredPersonOptions"
                  (click)="selectPerson(person)">
-              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.employeeNr }}
+              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.Id }}
             </div>
           </div>
         </div>
@@ -244,7 +244,6 @@
       <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
         <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
         <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
-        <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedPersonFilter.employeeNr">
 
         <div class="field-label">Geburtsdatum</div>
         <div class="year-range">

@@ -114,4 +114,33 @@ public class VehicleRepository : IVehicleRepository
     {
         return await _context.VehicleDrivers.AnyAsync(d => d.Id == id);
     }
+
+    public async Task<bool> SetDriverAsync(Guid vehicleId, Guid? driverId)
+    {
+        var vehicle = await _context.Vehicles.FindAsync(vehicleId);
+
+        if (vehicle == null)
+            return false;
+
+        vehicle.VehicleDriverId = driverId;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task ClearDriverFromOtherVehiclesAsync(Guid driverId, Guid? exceptVehicleId)
+    {
+        var vehicles = await _context.Vehicles
+            .Where(v => v.VehicleDriverId == driverId && v.Id != exceptVehicleId)
+            .ToListAsync();
+
+        if (vehicles.Count == 0)
+            return;
+
+        foreach (var vehicle in vehicles)
+        {
+            vehicle.VehicleDriverId = null;
+        }
+
+        await _context.SaveChangesAsync();
+    }
 }

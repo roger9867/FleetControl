@@ -43,9 +43,11 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.Services.AddScoped<IUsbVehicleTelemetryUnit, UsbVehicleTelemetryUnit>();
 builder.Services.AddScoped<ITelemetryUnitRepository, TelemetryUnitRepository>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<IVehicleDriverRepository, VehicleDriverRepository>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<TelemetryUnitService>();
 builder.Services.AddScoped<VehicleService>();
+builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<TripService>();
 
 builder.Services.AddControllers();
