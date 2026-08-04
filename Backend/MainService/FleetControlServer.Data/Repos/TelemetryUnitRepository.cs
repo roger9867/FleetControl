@@ -42,7 +42,7 @@ public class TelemetryUnitRepository : ITelemetryUnitRepository
         return true;
     }
 
-    public async Task<bool> SetVehicleAsync(Guid telemetryUnitId, Guid? vehicleId)
+    public async Task<bool> SetVehicleAsync(Guid telemetryUnitId, string? vehicleId)
     {
         TelemetryUnit entity = await _context.TelemetryUnits.FindAsync(telemetryUnitId);
 
@@ -52,5 +52,22 @@ public class TelemetryUnitRepository : ITelemetryUnitRepository
         entity.VehicleId = vehicleId;
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task ClearVehicleAsync(string vehicleId)
+    {
+        var units = await _context.TelemetryUnits
+            .Where(u => u.VehicleId == vehicleId)
+            .ToListAsync();
+
+        if (units.Count == 0)
+            return;
+
+        foreach (var unit in units)
+        {
+            unit.VehicleId = null;
+        }
+
+        await _context.SaveChangesAsync();
     }
 }

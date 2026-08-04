@@ -59,10 +59,11 @@ public class TelemetryUnitService
     {
         List<TelemetryUnit> allTelemetryUnits = _repository.GetAllAsync().Result;
 
-        List<TelemetryUnitDto> allTelemetryUnitDtos 
+        List<TelemetryUnitDto> allTelemetryUnitDtos
             = allTelemetryUnits.Select(unit => new TelemetryUnitDto()
                 {
-                    Id = unit.Id
+                    Id = unit.Id,
+                    VehicleId = unit.VehicleId
                 }).ToList();
 
         return allTelemetryUnitDtos;

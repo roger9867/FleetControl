@@ -30,7 +30,7 @@
           Zugewiesenes Fahrzeug
           <select [(ngModel)]="newPerson.assignedVehicleId">
             <option [ngValue]="null">Kein Fahrzeug</option>
-            <option *ngFor="let plate of dummyVehicles" [value]="plate">{{ plate }}</option>
+            <option *ngFor="let vehicle of vehicles" [value]="vehicle.Id">{{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}</option>
           </select>
         </label>
       </div>
@@ -121,7 +121,7 @@
                       [ngModel]="person.assignedVehicleId || ''"
                       (ngModelChange)="onVehicleAssignmentChange(person, $event)">
                 <option value="">kein Fahrzeug</option>
-                <option *ngFor="let plate of dummyVehicles" [value]="plate">{{ plate }}</option>
+                <option *ngFor="let vehicle of vehicles" [value]="vehicle.Id">{{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}</option>
               </select>
             </ng-container>
             <ng-template #vehicleView>{{ person.assignedVehicleId || 'kein Fahrzeug' }}</ng-template>
@@ -202,4 +202,13 @@
     </div>
 
   </div>
+
+  <app-filter-sidebar
+    [vehicles]="vehicles"
+    [telemetryUnitIds]="telemetryUnitIds"
+    [persons]="persons"
+    [licenseClasses]="licenseClasses"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filter-sidebar>
+
 </div>

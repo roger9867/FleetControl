@@ -10,7 +10,8 @@ public class TelemetryUnit
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public Guid Id { get; set; }
 
-    public Guid? VehicleId { get; set; }
+    [MaxLength(40)]
+    public string? VehicleId { get; set; }
 
     // Ignored to avoid a Vehicle <-> TelemetryUnit JSON cycle; Vehicle already exposes this unit.
     [JsonIgnore]

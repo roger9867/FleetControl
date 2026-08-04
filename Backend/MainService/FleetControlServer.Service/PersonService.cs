@@ -34,9 +34,9 @@ public class PersonService
         }
 
         // Vehicle assignment is optional, but if given it must exist.
-        if (dto.AssignedVehicleId.HasValue)
+        if (!string.IsNullOrEmpty(dto.AssignedVehicleId))
         {
-            var vehicleResult = await _vehicleRepo.GetByIdAsync(dto.AssignedVehicleId.Value);
+            var vehicleResult = await _vehicleRepo.GetByIdAsync(dto.AssignedVehicleId);
 
             if (!vehicleResult.Success)
             {
@@ -65,9 +65,9 @@ public class PersonService
         // then link the newly assigned one (if any).
         await _vehicleRepo.ClearDriverFromOtherVehiclesAsync(entity.Id, dto.AssignedVehicleId);
 
-        if (dto.AssignedVehicleId.HasValue)
+        if (!string.IsNullOrEmpty(dto.AssignedVehicleId))
         {
-            await _vehicleRepo.SetDriverAsync(dto.AssignedVehicleId.Value, entity.Id);
+            await _vehicleRepo.SetDriverAsync(dto.AssignedVehicleId, entity.Id);
         }
 
         return (true, entity, null);

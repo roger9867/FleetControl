@@ -19,5 +19,5 @@ public class PersonDto
 
     public List<DrivingLicenseDto> Licenses { get; set; } = new();
 
-    public Guid? AssignedVehicleId { get; set; }
+    public string? AssignedVehicleId { get; set; }
 }

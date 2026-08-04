@@ -12,5 +12,7 @@ public interface ITelemetryUnitRepository
 
     Task<bool> DeleteAsync(Guid id);
 
-    Task<bool> SetVehicleAsync(Guid telemetryUnitId, Guid? vehicleId);
+    Task<bool> SetVehicleAsync(Guid telemetryUnitId, string? vehicleId);
+
+    Task ClearVehicleAsync(string vehicleId);
 }

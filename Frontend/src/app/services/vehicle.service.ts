@@ -64,14 +64,14 @@ export class VehicleService {
   }
 
   update(vehicle: Vehicle): Observable<Vehicle> {
-    return this.http.put<VehicleResponseDto>(`${this.baseUrl}/Vehicle/${vehicle.Id}`, this.toRequestDto(vehicle)).pipe(
+    return this.http.put<VehicleResponseDto>(`${this.baseUrl}/Vehicle/${encodeURIComponent(vehicle.Id)}`, this.toRequestDto(vehicle)).pipe(
       map(dto => this.toVehicle(dto)),
       catchError(err => this.rethrow(err))
     );
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/Vehicle/${id}`).pipe(
+    return this.http.delete<void>(`${this.baseUrl}/Vehicle/${encodeURIComponent(id)}`).pipe(
       catchError(err => this.rethrow(err))
     );
   }

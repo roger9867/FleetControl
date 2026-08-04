@@ -14,8 +14,37 @@ public class VehicleService
         _telemetryUnitRepo = telemetryUnitRepo;
     }
 
-    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> UpsertAsync(Guid id, VehicleDto dto)
+    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> CreateAsync(VehicleDto dto)
     {
+        var id = dto.IdentificationNumber?.Trim();
+
+        if (string.IsNullOrEmpty(id))
+        {
+            return (false, null, "Identification number is required.");
+        }
+
+        if (id.Length > 40)
+        {
+            return (false, null, "Identification number must be at most 40 characters.");
+        }
+
+        var existing = await _repo.GetByIdAsync(id);
+        if (existing.Success)
+        {
+            return (false, null, "A vehicle with this identification number already exists.");
+        }
+
+        return await UpsertAsync(id, dto);
+    }
+
+    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> UpsertAsync(string id, VehicleDto dto)
+    {
+        // The Id doubles as the identification number, so the two must never drift apart.
+        if (!string.Equals(id, dto.IdentificationNumber?.Trim(), StringComparison.Ordinal))
+        {
+            return (false, null, "Identification number cannot be changed.");
+        }
+
         DriversLicenseType? requiredLicense = null;
         if (!string.IsNullOrWhiteSpace(dto.RequiredLicense))
         {
@@ -41,7 +70,7 @@ public class VehicleService
         var entity = new Vehicle
         {
             Id = id,
-            IdentificationNumber = dto.IdentificationNumber,
+            IdentificationNumber = id,
             LicensePlateNumber = dto.LicensePlateNumber,
             ModelName = dto.ModelName,
             Brand = dto.Brand,
@@ -64,8 +93,24 @@ public class VehicleService
         {
             await _telemetryUnitRepo.SetVehicleAsync(dto.TelemetryUnitId.Value, entity.Id);
         }
+        else
+        {
+            // "nicht verbunden" was chosen — release whatever unit was
+            // previously assigned to this vehicle instead of leaving it linked.
+            await _telemetryUnitRepo.ClearVehicleAsync(entity.Id);
+        }
 
-        return (true, entity, null);
+        // entity's TelemetryUnit navigation property was never populated above —
+        // the FK update happened on the TelemetryUnit row, not on this instance.
+        // Re-fetch so the response reflects the assignment that was just persisted.
+        var (found, refreshed, fetchError) = await _repo.GetByIdAsync(entity.Id);
+
+        if (!found)
+        {
+            return (false, null, fetchError);
+        }
+
+        return (true, refreshed, null);
     }
 
     public async Task<IEnumerable<Vehicle>> GetAllAsync()
@@ -73,12 +118,12 @@ public class VehicleService
         return await _repo.GetAllAsync();
     }
 
-    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(Guid id)
+    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(string id)
     {
         return await _repo.GetByIdAsync(id);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(string id)
     {
         Vehicle vehicle = new Vehicle()
         {

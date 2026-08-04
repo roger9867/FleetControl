@@ -10,11 +10,11 @@ public interface IVehicleRepository
 
     public Task DeleteAsync(Vehicle entity);
 
-    public Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(Guid id);
+    public Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(string id);
 
     public Task<bool> DriverExistsAsync(Guid id);
 
-    public Task<bool> SetDriverAsync(Guid vehicleId, Guid? driverId);
+    public Task<bool> SetDriverAsync(string vehicleId, Guid? driverId);
 
-    public Task ClearDriverFromOtherVehiclesAsync(Guid driverId, Guid? exceptVehicleId);
+    public Task ClearDriverFromOtherVehiclesAsync(Guid driverId, string? exceptVehicleId);
 }

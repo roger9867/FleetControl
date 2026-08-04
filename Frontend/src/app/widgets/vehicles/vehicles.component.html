@@ -119,17 +119,64 @@
           <div>
             <span>Telemetrie-Einheit:</span>
             <ng-container *ngIf="editingIndex === i; else unitView">
-              <select class="inline-input"
-                      [ngModel]="vehicle.telemetryUnit?.id || ''"
-                      (ngModelChange)="onTelemetryChange(vehicle, $event)">
-                <option value="">nicht verbunden</option>
-                <option *ngFor="let unitId of dummyTelemetryUnits" [value]="unitId">{{ unitId }}</option>
-              </select>
+              <div class="unit-select" [class.open]="openTelemetryDropdownIndex === i">
+                <button type="button"
+                        class="unit-select-trigger"
+                        (mousedown)="onActionMouseDown($event); toggleTelemetryDropdown(i, $event)">
+                  {{ vehicle.telemetryUnit?.id || 'nicht verbunden' }}
+                </button>
+
+                <div class="unit-options" *ngIf="openTelemetryDropdownIndex === i">
+                  <div class="unit-option" (mousedown)="onActionMouseDown($event); selectTelemetryUnit(vehicle, '')">nicht verbunden</div>
+                  <div class="unit-option"
+                       *ngFor="let unit of telemetryUnits"
+                       [class.disabled]="isUnitTakenByOtherVehicle(unit, vehicle)"
+                       (mousedown)="onActionMouseDown($event); selectTelemetryUnit(vehicle, unit.id, isUnitTakenByOtherVehicle(unit, vehicle))">
+                    {{ unit.id }}
+                  </div>
+                </div>
+              </div>
             </ng-container>
             <ng-template #unitView>{{ vehicle.telemetryUnit?.id || 'nicht verbunden' }}</ng-template>
           </div>
 
-          <div><span>Zugewiesene Person:</span> {{ vehicle.assignedPersonId || 'keine' }}</div>
+          <div>
+            <span>Fahrer:</span>
+            <ng-container *ngIf="editingIndex === i; else driverView">
+              <div class="driver-select" [class.open]="openDriverDropdownIndex === i">
+                <div class="driver-select-row">
+                  <button type="button"
+                          class="unit-select-trigger"
+                          (mousedown)="onActionMouseDown($event); toggleDriverDropdown(i, $event)">
+                    {{ getDriverLabel(vehicle) }}
+                  </button>
+
+                  <button type="button"
+                          class="advanced-btn"
+                          (mousedown)="onActionMouseDown($event); toggleAdvancedDriverFilter(i, $event)">
+                    {{ showAdvancedDriverFilter ? 'Erweitert ▲' : 'Erweitert ▼' }}
+                  </button>
+                </div>
+
+                <div class="advanced-filter" *ngIf="showAdvancedDriverFilter">
+                  <input type="text" placeholder="Vorname" [(ngModel)]="advancedDriverFilter.firstName">
+                  <input type="text" placeholder="Nachname" [(ngModel)]="advancedDriverFilter.lastName">
+                  <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedDriverFilter.employeeNr">
+                </div>
+
+                <div class="unit-options" *ngIf="openDriverDropdownIndex === i">
+                  <div class="unit-option" (mousedown)="onActionMouseDown($event); selectDriver(vehicle, '')">keinen</div>
+                  <div class="unit-option"
+                       *ngFor="let person of filteredDriverOptions"
+                       [class.disabled]="isPersonTakenByOtherVehicle(person, vehicle)"
+                       (mousedown)="onActionMouseDown($event); selectDriver(vehicle, person.Id, isPersonTakenByOtherVehicle(person, vehicle))">
+                    {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.Id }}
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #driverView>{{ getDriverLabel(vehicle) }}</ng-template>
+          </div>
 
           <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
         </div>
@@ -177,182 +224,12 @@
 
   </div>
 
-  <div class="sidebar">
-    <div class="filter-title">Filter</div>
-
-    <div class="autocomplete" #vehicleAutocomplete>
-      <div class="label-row">
-        <span>Fahrzeug</span>
-        <button type="button" class="advanced-btn" (click)="toggleAdvancedVehicleFilter()">
-          {{ showAdvancedVehicleFilter ? 'Erweitert ▲' : 'Erweitert ▼' }}
-        </button>
-      </div>
-
-      <div class="search-row">
-        <div class="search-wrapper">
-          <input type="text"
-                 placeholder="Fahrzeug suchen..."
-                 [(ngModel)]="vehicleSearch"
-                 (ngModelChange)="onVehicleSearchChange()"
-                 (focus)="showVehicleOptions = true">
-
-          <div class="options" *ngIf="showVehicleOptions && filteredVehicleOptions.length">
-            <div class="option"
-                 *ngFor="let vehicle of filteredVehicleOptions"
-                 (click)="selectVehicle(vehicle)">
-              {{ vehicle.licensePlate }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
-            </div>
-          </div>
-        </div>
-
-        <button type="button"
-                class="add-btn"
-                [disabled]="!filterVehicleId || filterVehicleIds.length >= maxVehicleFilters"
-                (click)="addVehicleFilter()">
-          +
-        </button>
-      </div>
-
-      <div class="chips" *ngIf="filterVehicleIds.length">
-        <div class="chip" *ngFor="let vehicleId of filterVehicleIds">
-          {{ vehicleId }}
-          <span class="chip-remove" (click)="removeVehicleFilter(vehicleId)">&times;</span>
-        </div>
-      </div>
-
-      <div class="limit-hint" *ngIf="filterVehicleIds.length >= maxVehicleFilters">
-        Maximal {{ maxVehicleFilters }} Fahrzeuge
-      </div>
-
-      <div class="advanced-filter" *ngIf="showAdvancedVehicleFilter">
-        <input type="text" placeholder="Marke" [(ngModel)]="advancedVehicleFilter.brand">
-        <input type="text" placeholder="Modell" [(ngModel)]="advancedVehicleFilter.modelName">
-        <input type="text" placeholder="Farbe" [(ngModel)]="advancedVehicleFilter.color">
-        <input type="text" placeholder="Fahrzeug-Identnr." [(ngModel)]="advancedVehicleFilter.identNr">
-
-        <select [(ngModel)]="advancedVehicleFilter.requiredLicense">
-          <option value="">Führerschein (alle)</option>
-          <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
-        </select>
-
-        <div class="year-range">
-          <input type="number" placeholder="Baujahr von" [(ngModel)]="advancedVehicleFilter.yearFrom">
-          <input type="number" placeholder="Baujahr bis" [(ngModel)]="advancedVehicleFilter.yearTo">
-        </div>
-
-        <div class="year-range">
-          <input type="number" placeholder="PS von" [(ngModel)]="advancedVehicleFilter.powerPsFrom">
-          <input type="number" placeholder="PS bis" [(ngModel)]="advancedVehicleFilter.powerPsTo">
-        </div>
-
-        <div class="field-label">Erstzulassung</div>
-        <div class="year-range">
-          <input type="date" placeholder="Erstzulassung von" [(ngModel)]="advancedVehicleFilter.firstRegistrationFrom">
-          <input type="date" placeholder="Erstzulassung bis" [(ngModel)]="advancedVehicleFilter.firstRegistrationTo">
-        </div>
-      </div>
-    </div>
-
-    <div class="autocomplete" #telemetryAutocomplete>
-      <span>Telemetrie-Einheit</span>
-
-      <div class="search-row">
-        <div class="search-wrapper">
-          <input type="text"
-                 placeholder="Einheit suchen..."
-                 [(ngModel)]="telemetrySearch"
-                 (ngModelChange)="onTelemetrySearchChange()"
-                 (focus)="showTelemetryOptions = true">
-
-          <div class="options" *ngIf="showTelemetryOptions && filteredTelemetryOptions.length">
-            <div class="option"
-                 *ngFor="let unitId of filteredTelemetryOptions"
-                 (click)="selectTelemetryUnit(unitId)">
-              {{ unitId }}
-            </div>
-          </div>
-        </div>
-
-        <button type="button"
-                class="add-btn"
-                [disabled]="!filterTelemetryUnitId || filterTelemetryUnitIds.length >= maxTelemetryUnitFilters"
-                (click)="addTelemetryUnitFilter()">
-          +
-        </button>
-      </div>
-
-      <div class="chips" *ngIf="filterTelemetryUnitIds.length">
-        <div class="chip" *ngFor="let unitId of filterTelemetryUnitIds">
-          {{ unitId }}
-          <span class="chip-remove" (click)="removeTelemetryUnitFilter(unitId)">&times;</span>
-        </div>
-      </div>
-
-      <div class="limit-hint" *ngIf="filterTelemetryUnitIds.length >= maxTelemetryUnitFilters">
-        Maximal {{ maxTelemetryUnitFilters }} Einheiten
-      </div>
-    </div>
-
-    <div class="autocomplete" #personAutocomplete>
-      <div class="label-row">
-        <span>Person</span>
-        <button type="button" class="advanced-btn" (click)="toggleAdvancedPersonFilter()">
-          {{ showAdvancedPersonFilter ? 'Erweitert ▲' : 'Erweitert ▼' }}
-        </button>
-      </div>
-
-      <div class="search-row">
-        <div class="search-wrapper">
-          <input type="text"
-                 placeholder="Person suchen..."
-                 [(ngModel)]="personSearch"
-                 (ngModelChange)="onPersonSearchChange()"
-                 (focus)="showPersonOptions = true">
-
-          <div class="options" *ngIf="showPersonOptions && filteredPersonOptions.length">
-            <div class="option"
-                 *ngFor="let person of filteredPersonOptions"
-                 (click)="selectPerson(person)">
-              {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.Id }}
-            </div>
-          </div>
-        </div>
-
-        <button type="button"
-                class="add-btn"
-                [disabled]="!filterPersonId || filterPersonIds.length >= maxPersonFilters"
-                (click)="addPersonFilter()">
-          +
-        </button>
-      </div>
-
-      <div class="chips" *ngIf="filterPersonIds.length">
-        <div class="chip" *ngFor="let personId of filterPersonIds">
-          {{ personId }}
-          <span class="chip-remove" (click)="removePersonFilter(personId)">&times;</span>
-        </div>
-      </div>
-
-      <div class="limit-hint" *ngIf="filterPersonIds.length >= maxPersonFilters">
-        Maximal {{ maxPersonFilters }} Personen
-      </div>
-
-      <div class="advanced-filter" *ngIf="showAdvancedPersonFilter">
-        <input type="text" placeholder="Vorname" [(ngModel)]="advancedPersonFilter.firstName">
-        <input type="text" placeholder="Nachname" [(ngModel)]="advancedPersonFilter.lastName">
-
-        <div class="field-label">Geburtsdatum</div>
-        <div class="year-range">
-          <input type="date" placeholder="Geburtsdatum von" [(ngModel)]="advancedPersonFilter.birthDateFrom">
-          <input type="date" placeholder="Geburtsdatum bis" [(ngModel)]="advancedPersonFilter.birthDateTo">
-        </div>
-      </div>
-    </div>
-
-    <div class="filter-actions">
-      <button class="apply-btn" (click)="applyFilters()">Anwenden</button>
-      <button class="reset-btn" (click)="resetFilters()">Zurücksetzen</button>
-    </div>
-  </div>
+  <app-filter-sidebar
+    [vehicles]="vehicles"
+    [telemetryUnitIds]="telemetryUnitIds"
+    [persons]="persons"
+    [licenseClasses]="licenseClasses"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filter-sidebar>
 
 </div>

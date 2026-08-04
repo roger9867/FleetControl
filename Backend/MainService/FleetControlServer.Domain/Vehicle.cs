@@ -1,16 +1,22 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FleetControlServer.Domain;
 
 public class Vehicle
 {
+    // Caller-supplied (equal to IdentificationNumber), not server-generated —
+    // mirrors how TelemetryUnit.Id is a client-supplied device id.
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    [MaxLength(40)]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public string Id { get; set; } = null!;
 
     [Required]
     public string ModelName { get; set; } = null!;
 
     [Required]
+    [MaxLength(40)]
     public string IdentificationNumber { get; set; } = null!;
 
     public string? LicensePlateNumber { get; set; }

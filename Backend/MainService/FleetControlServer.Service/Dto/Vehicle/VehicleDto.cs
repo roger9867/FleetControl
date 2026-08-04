@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace FleetControlServer.Service.DTO.Vehicle;
@@ -9,7 +10,10 @@ public class VehicleDto
     [JsonPropertyName("licensePlate")]
     public string? LicensePlateNumber { get; set; }
 
+    // Doubles as the Vehicle's Id — no server-generated Guid is created for vehicles.
     [JsonPropertyName("identNr")]
+    [Required]
+    [StringLength(40, MinimumLength = 1)]
     public string IdentificationNumber { get; set; } = null!;
 
     public string? Brand { get; set; }

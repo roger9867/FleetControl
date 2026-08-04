@@ -2,19 +2,25 @@ import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
 import { Person, DrivingLicense } from '../../models/person.model';
+import { Vehicle } from '../../models/vehicle.model';
 import { PersonService } from '../../services/person.service';
+import { VehicleService } from '../../services/vehicle.service';
+import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 
 @Component({
   selector: 'app-personen',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FilterSidebar],
   templateUrl: './personen.component.html',
   styleUrls: ['./personen.component.scss']
 })
 export class Personen implements OnInit
 {
   persons: Person[] = [];
+  vehicles: Vehicle[] = [];
+  telemetryUnitIds: string[] = [];
 
   pageSize = 10;
   currentPage = 1;
@@ -39,9 +45,14 @@ export class Personen implements OnInit
     'C1', 'C1E', 'C', 'CE', 'D1', 'D1E', 'D', 'DE'
   ];
 
-  dummyVehicles: string[] = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
+  appliedFilters: AppliedFilters = emptyAppliedFilters();
 
-  constructor(private personService: PersonService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private personService: PersonService,
+    private vehicleService: VehicleService,
+    private telemetryUnitService: TelemetryUnitService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -55,23 +66,98 @@ export class Personen implements OnInit
 
   ngOnInit(): void {
     this.persons = this.generateDummyPersons(24);
+    this.vehicles = this.generateDummyVehicles();
+    this.telemetryUnitIds = ['TU-1001', 'TU-1002', 'TU-1003'];
 
-    // Once the backend endpoint exists, a successful load replaces the dummy data.
+    // Once the backend endpoints exist, a successful load replaces the dummy data.
     this.personService.loadAll().subscribe({
       next: (persons) => {
         if (persons?.length) {
           this.persons = persons;
         }
+        this.syncAssignedVehicles();
         this.cdr.detectChanges();
       },
       error: () => {
         // No backend yet — keep the dummy persons.
       }
     });
+
+    this.vehicleService.loadAll().subscribe({
+      next: (vehicles) => {
+        if (vehicles?.length) {
+          this.vehicles = vehicles;
+        }
+        this.syncAssignedVehicles();
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy vehicles.
+      }
+    });
+
+    this.telemetryUnitService.getUnits().subscribe({
+      next: (units) => {
+        if (units?.length) {
+          this.telemetryUnitIds = units.map(u => u.id);
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy telemetry units.
+      }
+    });
+  }
+
+  // The Person<->Vehicle FK lives on Vehicle (assignedPersonId), not on
+  // Person, so the backend's GET /Person never returns an assigned vehicle —
+  // derive it here from the loaded vehicles instead of trusting the DTO.
+  private syncAssignedVehicles(): void {
+    for (const person of this.persons) {
+      const assignedVehicle = this.vehicles.find(v => v.assignedPersonId === person.Id);
+      person.assignedVehicleId = assignedVehicle?.Id ?? null;
+    }
+  }
+
+  private hasActivePersonAdvanced(): boolean {
+    const f = this.appliedFilters.personAdvanced;
+    return !!(f.firstName || f.lastName || f.employeeNr);
+  }
+
+  private matchesPersonTier(p: Person): boolean {
+    const f = this.appliedFilters.personAdvanced;
+    const matchesChip = this.appliedFilters.personIds.length === 0 || this.appliedFilters.personIds.includes(p.Id);
+    const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
+    const matchesLastName = !f.lastName || (p.lastName ?? '').toLowerCase().includes(f.lastName.toLowerCase());
+    const matchesEmployeeNr = !f.employeeNr || p.Id.toLowerCase().includes(f.employeeNr.toLowerCase());
+
+    return matchesChip && matchesFirstName && matchesLastName && matchesEmployeeNr;
+  }
+
+  get filteredPersons(): Person[] {
+    const personTierActive = this.appliedFilters.personIds.length > 0 || this.hasActivePersonAdvanced();
+    const vehicleTierActive = this.appliedFilters.vehicleIds.length > 0;
+    const telemetryTierActive = this.appliedFilters.telemetryUnitIds.length > 0;
+
+    return this.persons.filter(p => {
+      const results: boolean[] = [];
+
+      if (personTierActive) results.push(this.matchesPersonTier(p));
+      if (vehicleTierActive) results.push(this.appliedFilters.vehicleIds.includes(p.assignedVehicleId ?? ''));
+
+      if (telemetryTierActive) {
+        const assignedVehicle = this.vehicles.find(v => v.Id === p.assignedVehicleId);
+        results.push(this.appliedFilters.telemetryUnitIds.includes(assignedVehicle?.telemetryUnit?.id ?? ''));
+      }
+
+      if (results.length === 0) return true;
+
+      return this.appliedFilters.mode === 'union' ? results.some(Boolean) : results.every(Boolean);
+    });
   }
 
   get totalPages(): number {
-    return Math.max(1, Math.ceil(this.persons.length / this.pageSize));
+    return Math.max(1, Math.ceil(this.filteredPersons.length / this.pageSize));
   }
 
   get pageNumbers(): number[] {
@@ -80,7 +166,13 @@ export class Personen implements OnInit
 
   get pagedPersons(): Person[] {
     const start = (this.currentPage - 1) * this.pageSize;
-    return this.persons.slice(start, start + this.pageSize);
+    return this.filteredPersons.slice(start, start + this.pageSize);
+  }
+
+  onFiltersApplied(filters: AppliedFilters): void {
+    this.appliedFilters = filters;
+    this.currentPage = 1;
+    this.selectedIndex = null;
   }
 
   prevPage(): void {
@@ -282,6 +374,7 @@ export class Personen implements OnInit
   private generateDummyPersons(count: number): Person[] {
     const firstNames = ['Anna', 'Ben', 'Clara', 'David', 'Emma', 'Felix', 'Greta', 'Hannes', 'Ida', 'Jonas'];
     const lastNames = ['Schmidt', 'Müller', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffmann', 'Koch'];
+    const dummyVehicleIdentNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
 
     return Array.from({ length: count }, (_, i) => {
       const birthYear = 1970 + (i % 40);
@@ -298,8 +391,28 @@ export class Personen implements OnInit
         lastName: lastNames[i % lastNames.length],
         birthDate: `${birthYear}-05-20`,
         licenses,
-        assignedVehicleId: i % 3 === 0 ? this.dummyVehicles[i % this.dummyVehicles.length] : null
+        assignedVehicleId: i % 3 === 0 ? dummyVehicleIdentNrs[i % dummyVehicleIdentNrs.length] : null
       };
     });
+  }
+
+  // Dummy data only, used to populate the shared filter sidebar's Fahrzeug
+  // tier until the Vehicle backend endpoint is available. Id equals the
+  // identNr, matching the real backend contract.
+  private generateDummyVehicles(): Vehicle[] {
+    const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
+    const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
+    const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
+    const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
+    const telemetryIds = ['TU-1001', 'TU-1002', 'TU-1003'];
+
+    return identNrs.map((identNr, i) => ({
+      Id: identNr,
+      identNr,
+      licensePlate: plates[i],
+      brand: brands[i],
+      modelName: models[i],
+      telemetryUnit: { id: telemetryIds[i % telemetryIds.length] }
+    }));
   }
 }

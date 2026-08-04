@@ -1,16 +1,20 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { VehicleMap, VehicleMapPoint } from '../vehicle-map/vehicle-map.component';
+import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
+import { TelemetryUnit } from '../../models/telemetry-unit.model';
 import { VehicleService } from '../../services/vehicle.service';
+import { TelemetryUnitService } from '../../services/telemetry-unit.service';
+import { PersonService } from '../../services/person.service';
 
 @Component({
   selector: 'app-vehicles',
   standalone: true,
-  imports: [CommonModule, FormsModule, VehicleMap],
+  imports: [CommonModule, FormsModule, VehicleMap, FilterSidebar],
   templateUrl: './vehicles.component.html',
   styleUrls: ['./vehicles.component.scss']
 })
@@ -32,9 +36,13 @@ export class Vehicles implements OnInit
   editError: string | null = null;
   editSnapshot: Vehicle | null = null;
 
-  dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
+  telemetryUnits: TelemetryUnit[] = [
+    { id: 'TU-1001' },
+    { id: 'TU-1002' },
+    { id: 'TU-1003' }
+  ];
 
-  dummyPersons: Person[] = [
+  persons: Person[] = [
     { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
     { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
     { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
@@ -47,57 +55,17 @@ export class Vehicles implements OnInit
     'C1', 'C1E', 'C', 'CE', 'D1', 'D1E', 'D', 'DE'
   ];
 
-  readonly maxVehicleFilters = 10;
-  readonly maxTelemetryUnitFilters = 10;
-  readonly maxPersonFilters = 10;
+  appliedFilters: AppliedFilters = emptyAppliedFilters();
 
-  filterVehicleId = '';
-  filterVehicleIds: string[] = [];
-  filterTelemetryUnitId = '';
-  filterTelemetryUnitIds: string[] = [];
-  filterPersonId = '';
-  filterPersonIds: string[] = [];
+  openTelemetryDropdownIndex: number | null = null;
 
-  appliedFilterVehicleIds: string[] = [];
-  appliedFilterTelemetryUnitIds: string[] = [];
-  appliedFilterPersonIds: string[] = [];
-
-  vehicleSearch = '';
-  showVehicleOptions = false;
-
-  telemetrySearch = '';
-  showTelemetryOptions = false;
-
-  personSearch = '';
-  showPersonOptions = false;
-
-  showAdvancedVehicleFilter = false;
-  advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
-  appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
-
-  showAdvancedPersonFilter = false;
-  advancedPersonFilter = this.emptyAdvancedPersonFilter();
-  appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
-
-  @ViewChild('vehicleAutocomplete') vehicleAutocompleteRef?: ElementRef<HTMLElement>;
-  @ViewChild('telemetryAutocomplete') telemetryAutocompleteRef?: ElementRef<HTMLElement>;
-  @ViewChild('personAutocomplete') personAutocompleteRef?: ElementRef<HTMLElement>;
+  openDriverDropdownIndex: number | null = null;
+  showAdvancedDriverFilter = false;
+  advancedDriverFilter = { firstName: '', lastName: '', employeeNr: '' };
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
-
-    if (this.vehicleAutocompleteRef && !this.vehicleAutocompleteRef.nativeElement.contains(target)) {
-      this.showVehicleOptions = false;
-    }
-
-    if (this.telemetryAutocompleteRef && !this.telemetryAutocompleteRef.nativeElement.contains(target)) {
-      this.showTelemetryOptions = false;
-    }
-
-    if (this.personAutocompleteRef && !this.personAutocompleteRef.nativeElement.contains(target)) {
-      this.showPersonOptions = false;
-    }
 
     if (this.deleteConfirmIndex !== null) {
       const targetEl = target as HTMLElement;
@@ -105,9 +73,28 @@ export class Vehicles implements OnInit
         this.deleteConfirmIndex = null;
       }
     }
+
+    if (this.openTelemetryDropdownIndex !== null) {
+      const targetEl = target as HTMLElement;
+      if (!targetEl.closest || !targetEl.closest('.unit-select')) {
+        this.openTelemetryDropdownIndex = null;
+      }
+    }
+
+    if (this.openDriverDropdownIndex !== null) {
+      const targetEl = target as HTMLElement;
+      if (!targetEl.closest || !targetEl.closest('.driver-select')) {
+        this.openDriverDropdownIndex = null;
+      }
+    }
   }
 
-  constructor(private vehicleService: VehicleService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private vehicleService: VehicleService,
+    private telemetryUnitService: TelemetryUnitService,
+    private personService: PersonService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.vehicles = this.generateDummyVehicles(40);
@@ -124,30 +111,156 @@ export class Vehicles implements OnInit
         // No backend yet — keep the dummy vehicles.
       }
     });
+
+    // Shows the telemetry units actually registered/saved on the
+    // Datenerfassungseinheiten page, so the edit dropdown only offers real IDs.
+    this.telemetryUnitService.getUnits().subscribe({
+      next: (units) => {
+        if (units?.length) {
+          this.telemetryUnits = units;
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy telemetry units.
+      }
+    });
+
+    // Shows the persons actually registered/saved on the Personen page, so the
+    // driver dropdown only offers real employee numbers.
+    this.personService.loadAll().subscribe({
+      next: (persons) => {
+        if (persons?.length) {
+          this.persons = persons;
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy persons.
+      }
+    });
+  }
+
+  get telemetryUnitIds(): string[] {
+    return this.telemetryUnits.map(u => u.id);
+  }
+
+  isUnitTakenByOtherVehicle(unit: TelemetryUnit, vehicle: Vehicle): boolean {
+    return !!unit.vehicleId && unit.vehicleId !== vehicle.Id;
+  }
+
+  toggleTelemetryDropdown(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.openTelemetryDropdownIndex = this.openTelemetryDropdownIndex === index ? null : index;
+  }
+
+  selectTelemetryUnit(vehicle: Vehicle, unitId: string, disabled = false): void {
+    if (disabled) return;
+
+    this.onTelemetryChange(vehicle, unitId);
+    this.openTelemetryDropdownIndex = null;
+  }
+
+  private refreshTelemetryUnits(): void {
+    this.telemetryUnitService.getUnits().subscribe({
+      next: (units) => {
+        if (units) {
+          this.telemetryUnits = units;
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the current telemetry units.
+      }
+    });
+  }
+
+  get filteredDriverOptions(): Person[] {
+    const f = this.advancedDriverFilter;
+
+    return this.persons.filter(p => {
+      const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
+      const matchesLastName = !f.lastName || (p.lastName ?? '').toLowerCase().includes(f.lastName.toLowerCase());
+      const matchesEmployeeNr = !f.employeeNr || p.Id.toLowerCase().includes(f.employeeNr.toLowerCase());
+
+      return matchesFirstName && matchesLastName && matchesEmployeeNr;
+    });
+  }
+
+  isPersonTakenByOtherVehicle(person: Person, vehicle: Vehicle): boolean {
+    return this.vehicles.some(v => v.Id !== vehicle.Id && v.assignedPersonId === person.Id);
+  }
+
+  getDriverLabel(vehicle: Vehicle): string {
+    if (!vehicle.assignedPersonId) return 'keinen';
+
+    const person = this.persons.find(p => p.Id === vehicle.assignedPersonId);
+    if (!person) return vehicle.assignedPersonId;
+
+    return `${person.firstName ?? ''} ${person.lastName ?? ''}`.trim() || vehicle.assignedPersonId;
+  }
+
+  toggleDriverDropdown(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.openDriverDropdownIndex = this.openDriverDropdownIndex === index ? null : index;
+  }
+
+  toggleAdvancedDriverFilter(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.showAdvancedDriverFilter = !this.showAdvancedDriverFilter;
+    if (this.showAdvancedDriverFilter) {
+      this.openDriverDropdownIndex = index;
+    }
+  }
+
+  selectDriver(vehicle: Vehicle, personId: string, disabled = false): void {
+    if (disabled) return;
+
+    vehicle.assignedPersonId = personId || null;
+    this.openDriverDropdownIndex = null;
+  }
+
+  private hasActiveVehicleAdvanced(): boolean {
+    const f = this.appliedFilters.vehicleAdvanced;
+    return !!(f.brand || f.modelName || f.color || f.identNr || f.requiredLicense
+      || f.yearFrom != null || f.yearTo != null || f.powerPsFrom != null || f.powerPsTo != null
+      || f.firstRegistrationFrom || f.firstRegistrationTo);
+  }
+
+  private matchesVehicleTier(v: Vehicle): boolean {
+    const f = this.appliedFilters.vehicleAdvanced;
+    const matchesChip = this.appliedFilters.vehicleIds.length === 0 || this.appliedFilters.vehicleIds.includes(v.Id);
+    const matchesBrand = !f.brand || (v.brand ?? '').toLowerCase().includes(f.brand.toLowerCase());
+    const matchesModel = !f.modelName || (v.modelName ?? '').toLowerCase().includes(f.modelName.toLowerCase());
+    const matchesColor = !f.color || (v.color ?? '').toLowerCase().includes(f.color.toLowerCase());
+    const matchesYearFrom = f.yearFrom == null || (v.year ?? 0) >= f.yearFrom;
+    const matchesYearTo = f.yearTo == null || (v.year ?? 0) <= f.yearTo;
+    const matchesIdentNr = !f.identNr || (v.identNr ?? '').toLowerCase().includes(f.identNr.toLowerCase());
+    const matchesLicense = !f.requiredLicense || v.requiredLicense === f.requiredLicense;
+    const matchesPowerFrom = f.powerPsFrom == null || (v.powerPs ?? 0) >= f.powerPsFrom;
+    const matchesPowerTo = f.powerPsTo == null || (v.powerPs ?? 0) <= f.powerPsTo;
+    const matchesRegFrom = !f.firstRegistrationFrom || (v.firstRegistration ?? '') >= f.firstRegistrationFrom;
+    const matchesRegTo = !f.firstRegistrationTo || (v.firstRegistration ?? '') <= f.firstRegistrationTo;
+
+    return matchesChip && matchesBrand && matchesModel && matchesColor && matchesYearFrom && matchesYearTo
+      && matchesIdentNr && matchesLicense && matchesPowerFrom && matchesPowerTo && matchesRegFrom && matchesRegTo;
   }
 
   get filteredVehicles(): Vehicle[] {
-    const f = this.appliedAdvancedVehicleFilter;
+    const vehicleTierActive = this.appliedFilters.vehicleIds.length > 0 || this.hasActiveVehicleAdvanced();
+    const telemetryTierActive = this.appliedFilters.telemetryUnitIds.length > 0;
+    const personTierActive = this.appliedFilters.personIds.length > 0;
 
     return this.vehicles.filter(v => {
-      if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(v.licensePlate ?? '')) return false;
-      if (this.appliedFilterTelemetryUnitIds.length && !this.appliedFilterTelemetryUnitIds.includes(v.telemetryUnit?.id ?? '')) return false;
-      if (this.appliedFilterPersonIds.length && !this.appliedFilterPersonIds.includes(v.assignedPersonId ?? '')) return false;
+      const results: boolean[] = [];
 
-      const matchesBrand = !f.brand || (v.brand ?? '').toLowerCase().includes(f.brand.toLowerCase());
-      const matchesModel = !f.modelName || (v.modelName ?? '').toLowerCase().includes(f.modelName.toLowerCase());
-      const matchesColor = !f.color || (v.color ?? '').toLowerCase().includes(f.color.toLowerCase());
-      const matchesYearFrom = f.yearFrom == null || (v.year ?? 0) >= f.yearFrom;
-      const matchesYearTo = f.yearTo == null || (v.year ?? 0) <= f.yearTo;
-      const matchesIdentNr = !f.identNr || (v.identNr ?? '').toLowerCase().includes(f.identNr.toLowerCase());
-      const matchesLicense = !f.requiredLicense || v.requiredLicense === f.requiredLicense;
-      const matchesPowerFrom = f.powerPsFrom == null || (v.powerPs ?? 0) >= f.powerPsFrom;
-      const matchesPowerTo = f.powerPsTo == null || (v.powerPs ?? 0) <= f.powerPsTo;
-      const matchesRegFrom = !f.firstRegistrationFrom || (v.firstRegistration ?? '') >= f.firstRegistrationFrom;
-      const matchesRegTo = !f.firstRegistrationTo || (v.firstRegistration ?? '') <= f.firstRegistrationTo;
+      if (vehicleTierActive) results.push(this.matchesVehicleTier(v));
+      if (telemetryTierActive) results.push(this.appliedFilters.telemetryUnitIds.includes(v.telemetryUnit?.id ?? ''));
+      if (personTierActive) results.push(this.appliedFilters.personIds.includes(v.assignedPersonId ?? ''));
 
-      return matchesBrand && matchesModel && matchesColor && matchesYearFrom && matchesYearTo
-        && matchesIdentNr && matchesLicense && matchesPowerFrom && matchesPowerTo && matchesRegFrom && matchesRegTo;
+      if (results.length === 0) return true;
+
+      return this.appliedFilters.mode === 'union' ? results.some(Boolean) : results.every(Boolean);
     });
   }
 
@@ -175,166 +288,8 @@ export class Vehicles implements OnInit
       }));
   }
 
-  get filteredVehicleOptions(): Vehicle[] {
-    const term = this.vehicleSearch.toLowerCase();
-    const f = this.advancedVehicleFilter;
-
-    return this.vehicles.filter(v => {
-      const matchesSearch = !term || (v.licensePlate ?? '').toLowerCase().includes(term);
-      const matchesBrand = !f.brand || (v.brand ?? '').toLowerCase().includes(f.brand.toLowerCase());
-      const matchesModel = !f.modelName || (v.modelName ?? '').toLowerCase().includes(f.modelName.toLowerCase());
-      const matchesColor = !f.color || (v.color ?? '').toLowerCase().includes(f.color.toLowerCase());
-      const matchesYearFrom = f.yearFrom == null || (v.year ?? 0) >= f.yearFrom;
-      const matchesYearTo = f.yearTo == null || (v.year ?? 0) <= f.yearTo;
-      const matchesIdentNr = !f.identNr || (v.identNr ?? '').toLowerCase().includes(f.identNr.toLowerCase());
-      const matchesLicense = !f.requiredLicense || v.requiredLicense === f.requiredLicense;
-      const matchesPowerFrom = f.powerPsFrom == null || (v.powerPs ?? 0) >= f.powerPsFrom;
-      const matchesPowerTo = f.powerPsTo == null || (v.powerPs ?? 0) <= f.powerPsTo;
-      const matchesRegFrom = !f.firstRegistrationFrom || (v.firstRegistration ?? '') >= f.firstRegistrationFrom;
-      const matchesRegTo = !f.firstRegistrationTo || (v.firstRegistration ?? '') <= f.firstRegistrationTo;
-
-      return matchesSearch && matchesBrand && matchesModel && matchesColor
-        && matchesYearFrom && matchesYearTo && matchesIdentNr && matchesLicense
-        && matchesPowerFrom && matchesPowerTo && matchesRegFrom && matchesRegTo;
-    });
-  }
-
-  get filteredTelemetryOptions(): string[] {
-    const term = this.telemetrySearch.toLowerCase();
-    return this.dummyTelemetryUnits.filter(u => u.toLowerCase().includes(term));
-  }
-
-  get filteredPersonOptions(): Person[] {
-    const term = this.personSearch.toLowerCase();
-    const f = this.advancedPersonFilter;
-
-    return this.dummyPersons.filter(p => {
-      const fullName = `${p.firstName ?? ''} ${p.lastName ?? ''}`.toLowerCase();
-      const matchesSearch = !term || fullName.includes(term) || p.Id.toLowerCase().includes(term);
-      const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
-      const matchesLastName = !f.lastName || (p.lastName ?? '').toLowerCase().includes(f.lastName.toLowerCase());
-      const matchesBirthFrom = !f.birthDateFrom || (p.birthDate ?? '') >= f.birthDateFrom;
-      const matchesBirthTo = !f.birthDateTo || (p.birthDate ?? '') <= f.birthDateTo;
-
-      return matchesSearch && matchesFirstName && matchesLastName && matchesBirthFrom && matchesBirthTo;
-    });
-  }
-
-  onVehicleSearchChange(): void {
-    this.showVehicleOptions = true;
-    if (!this.vehicleSearch) this.filterVehicleId = '';
-  }
-
-  toggleAdvancedVehicleFilter(): void {
-    this.showAdvancedVehicleFilter = !this.showAdvancedVehicleFilter;
-  }
-
-  selectVehicle(vehicle: Vehicle): void {
-    this.filterVehicleId = vehicle.licensePlate ?? '';
-    this.vehicleSearch = vehicle.licensePlate ?? '';
-    this.showVehicleOptions = false;
-  }
-
-  addVehicleFilter(): void {
-    if (this.filterVehicleId
-      && !this.filterVehicleIds.includes(this.filterVehicleId)
-      && this.filterVehicleIds.length < this.maxVehicleFilters) {
-      this.filterVehicleIds.push(this.filterVehicleId);
-    }
-
-    this.filterVehicleId = '';
-    this.vehicleSearch = '';
-  }
-
-  removeVehicleFilter(vehicleId: string): void {
-    this.filterVehicleIds = this.filterVehicleIds.filter(id => id !== vehicleId);
-  }
-
-  onTelemetrySearchChange(): void {
-    this.showTelemetryOptions = true;
-    if (!this.telemetrySearch) this.filterTelemetryUnitId = '';
-  }
-
-  selectTelemetryUnit(unitId: string): void {
-    this.filterTelemetryUnitId = unitId;
-    this.telemetrySearch = unitId;
-    this.showTelemetryOptions = false;
-  }
-
-  addTelemetryUnitFilter(): void {
-    if (this.filterTelemetryUnitId
-      && !this.filterTelemetryUnitIds.includes(this.filterTelemetryUnitId)
-      && this.filterTelemetryUnitIds.length < this.maxTelemetryUnitFilters) {
-      this.filterTelemetryUnitIds.push(this.filterTelemetryUnitId);
-    }
-
-    this.filterTelemetryUnitId = '';
-    this.telemetrySearch = '';
-  }
-
-  removeTelemetryUnitFilter(unitId: string): void {
-    this.filterTelemetryUnitIds = this.filterTelemetryUnitIds.filter(id => id !== unitId);
-  }
-
-  onPersonSearchChange(): void {
-    this.showPersonOptions = true;
-    if (!this.personSearch) this.filterPersonId = '';
-  }
-
-  toggleAdvancedPersonFilter(): void {
-    this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
-  }
-
-  selectPerson(person: Person): void {
-    this.filterPersonId = person.Id;
-    this.personSearch = person.Id;
-    this.showPersonOptions = false;
-  }
-
-  addPersonFilter(): void {
-    if (this.filterPersonId
-      && !this.filterPersonIds.includes(this.filterPersonId)
-      && this.filterPersonIds.length < this.maxPersonFilters) {
-      this.filterPersonIds.push(this.filterPersonId);
-    }
-
-    this.filterPersonId = '';
-    this.personSearch = '';
-  }
-
-  removePersonFilter(personId: string): void {
-    this.filterPersonIds = this.filterPersonIds.filter(id => id !== personId);
-  }
-
-  applyFilters(): void {
-    this.appliedFilterVehicleIds = [...this.filterVehicleIds];
-    this.appliedFilterTelemetryUnitIds = [...this.filterTelemetryUnitIds];
-    this.appliedFilterPersonIds = [...this.filterPersonIds];
-    this.appliedAdvancedVehicleFilter = { ...this.advancedVehicleFilter };
-    this.appliedAdvancedPersonFilter = { ...this.advancedPersonFilter };
-    this.currentPage = 1;
-    this.selectedIndex = null;
-  }
-
-  resetFilters(): void {
-    this.filterVehicleId = '';
-    this.filterVehicleIds = [];
-    this.filterTelemetryUnitId = '';
-    this.filterTelemetryUnitIds = [];
-    this.filterPersonId = '';
-    this.filterPersonIds = [];
-    this.appliedFilterVehicleIds = [];
-    this.appliedFilterTelemetryUnitIds = [];
-    this.appliedFilterPersonIds = [];
-    this.vehicleSearch = '';
-    this.telemetrySearch = '';
-    this.personSearch = '';
-    this.showAdvancedVehicleFilter = false;
-    this.showAdvancedPersonFilter = false;
-    this.advancedVehicleFilter = this.emptyAdvancedVehicleFilter();
-    this.appliedAdvancedVehicleFilter = this.emptyAdvancedVehicleFilter();
-    this.advancedPersonFilter = this.emptyAdvancedPersonFilter();
-    this.appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
+  onFiltersApplied(filters: AppliedFilters): void {
+    this.appliedFilters = filters;
     this.currentPage = 1;
     this.selectedIndex = null;
   }
@@ -370,6 +325,9 @@ export class Vehicles implements OnInit
     this.editError = null;
     this.editSnapshot = null;
     this.deleteConfirmIndex = null;
+    this.openTelemetryDropdownIndex = null;
+    this.openDriverDropdownIndex = null;
+    this.showAdvancedDriverFilter = false;
   }
 
   onActionMouseDown(event: MouseEvent): void {
@@ -397,6 +355,8 @@ export class Vehicles implements OnInit
     this.editError = null;
     this.editSnapshot = { ...this.pagedVehicles[index] };
     this.deleteConfirmIndex = null;
+    this.showAdvancedDriverFilter = false;
+    this.openDriverDropdownIndex = null;
   }
 
   isEditDirty(vehicle: Vehicle): boolean {
@@ -404,7 +364,8 @@ export class Vehicles implements OnInit
 
     return vehicle.licensePlate !== this.editSnapshot.licensePlate
       || vehicle.firstRegistration !== this.editSnapshot.firstRegistration
-      || (vehicle.telemetryUnit?.id ?? '') !== (this.editSnapshot.telemetryUnit?.id ?? '');
+      || (vehicle.telemetryUnit?.id ?? '') !== (this.editSnapshot.telemetryUnit?.id ?? '')
+      || (vehicle.assignedPersonId ?? '') !== (this.editSnapshot.assignedPersonId ?? '');
   }
 
   private saveEdit(index: number): void {
@@ -416,6 +377,9 @@ export class Vehicles implements OnInit
         Object.assign(vehicle, updated);
         this.editingIndex = null;
         this.editSnapshot = null;
+        // A unit's exclusivity may have changed (assigned/released here), so
+        // every other vehicle box's dropdown needs the current taken state.
+        this.refreshTelemetryUnits();
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -501,31 +465,6 @@ export class Vehicles implements OnInit
     };
   }
 
-  private emptyAdvancedVehicleFilter() {
-    return {
-      brand: '',
-      modelName: '',
-      color: '',
-      yearFrom: null as number | null,
-      yearTo: null as number | null,
-      identNr: '',
-      requiredLicense: '',
-      powerPsFrom: null as number | null,
-      powerPsTo: null as number | null,
-      firstRegistrationFrom: '',
-      firstRegistrationTo: ''
-    };
-  }
-
-  private emptyAdvancedPersonFilter() {
-    return {
-      firstName: '',
-      lastName: '',
-      birthDateFrom: '',
-      birthDateTo: ''
-    };
-  }
-
   private generateDummyVehicles(count: number): Vehicle[] {
     const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford', 'Opel', 'Renault', 'Toyota'];
     const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit', 'Astra', 'Trafic', 'Hilux'];
@@ -537,19 +476,20 @@ export class Vehicles implements OnInit
     return Array.from({ length: count }, (_, i) => {
       const year = 2010 + (i % 15);
       const offset = (i % 10) - 5;
+      const identNr = `${100000 + i}`;
 
       return {
-        Id: `veh-${i + 1}`,
+        Id: identNr,
         brand: brands[i % brands.length],
         modelName: models[i % models.length],
         licensePlate: `FL-${1000 + i}`,
         year,
-        identNr: `${100000 + i}`,
+        identNr,
         requiredLicense: this.licenseClasses[i % this.licenseClasses.length],
         powerPs: 90 + ((i * 15) % 300),
         color: colors[i % colors.length],
         firstRegistration: `${year}-01-01`,
-        assignedPersonId: i % 3 === 0 ? this.dummyPersons[i % this.dummyPersons.length].Id : null,
+        assignedPersonId: i % 3 === 0 ? this.persons[i % this.persons.length].Id : null,
         lastLocation: {
           lat: baseLat + offset * 0.003 + (Math.random() - 0.5) * 0.001,
           lng: baseLng + offset * 0.003 + (Math.random() - 0.5) * 0.001,

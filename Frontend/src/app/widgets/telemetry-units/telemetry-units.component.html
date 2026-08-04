@@ -49,21 +49,21 @@
 
     <div class="list">
 
-  <div *ngIf="registered_units.length === 0">
+  <div *ngIf="filteredUnits.length === 0">
     Keine Datenerfassungseinheiten registriert.
   </div>
 
   <div class="box"
-     *ngFor="let item of registered_units; let i = index"
+     *ngFor="let item of filteredUnits; let i = index"
      (click)="selectItem(i)"
      [class.active]="selectedIndex === i">
 
   <div class="title">
     Geräte-ID: {{ item.id }}
-  
-  </div>
-  <div class="details" *ngIf="selectedIndex === i">
 
+  </div>
+
+  <div class="details" *ngIf="selectedIndex !== i">
     <div>
       Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
     </div>
@@ -71,7 +71,44 @@
     <div>
       Fahrzeug-ID: {{ item.vehicleId || 'nicht verbunden' }}
     </div>
+  </div>
 
+  <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+    <div>
+      Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
+    </div>
+
+    <div>
+      <span>Fahrzeug-ID:</span>
+      <ng-container *ngIf="editingIndex === i; else vehicleView">
+        <select class="inline-input"
+                [ngModel]="item.vehicleId || ''"
+                (ngModelChange)="onVehicleAssignmentChange(item, $event)">
+          <option value="">nicht verbunden</option>
+          <option *ngFor="let vehicle of vehicles" [value]="vehicle.Id">{{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}</option>
+        </select>
+      </ng-container>
+      <ng-template #vehicleView>{{ item.vehicleId || 'nicht verbunden' }}</ng-template>
+    </div>
+
+    <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
+  </div>
+
+  <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+    <button class="action-btn delete-btn"
+            [class.danger]="deleteConfirmIndex === i"
+            (mousedown)="onActionMouseDown($event); confirmDelete(i, item)">
+      {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+    </button>
+
+    <div class="actions-right">
+      <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+      <button class="action-btn"
+              [class.dirty]="editingIndex === i && isEditDirty(item)"
+              (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+        {{ editingIndex === i ? (isEditDirty(item) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
+      </button>
+    </div>
   </div>
 
 </div>
@@ -80,4 +117,12 @@
 </div>
 
   </div>
+
+  <app-filter-sidebar
+    [vehicles]="vehicles"
+    [telemetryUnitIds]="telemetryUnitIds"
+    [persons]="persons"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filter-sidebar>
+
 </div>

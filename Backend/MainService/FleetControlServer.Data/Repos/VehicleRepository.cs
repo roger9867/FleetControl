@@ -51,6 +51,9 @@ public class VehicleRepository : IVehicleRepository
                 {
                     return pgEx.ConstraintName switch
                     {
+                        "PK_Vehicles" =>
+                            (false, "A vehicle with this identification number already exists."),
+
                         "IX_Vehicles_IdentificationNumber" =>
                             (false, "Identification number already exists."),
 
@@ -89,7 +92,7 @@ public class VehicleRepository : IVehicleRepository
         }
     }
 
-    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(Guid id)
+    public async Task<(bool Success, Vehicle? Vehicle, string? Error)> GetByIdAsync(string id)
     {
         try
         {
@@ -115,7 +118,7 @@ public class VehicleRepository : IVehicleRepository
         return await _context.VehicleDrivers.AnyAsync(d => d.Id == id);
     }
 
-    public async Task<bool> SetDriverAsync(Guid vehicleId, Guid? driverId)
+    public async Task<bool> SetDriverAsync(string vehicleId, Guid? driverId)
     {
         var vehicle = await _context.Vehicles.FindAsync(vehicleId);
 
@@ -127,7 +130,7 @@ public class VehicleRepository : IVehicleRepository
         return true;
     }
 
-    public async Task ClearDriverFromOtherVehiclesAsync(Guid driverId, Guid? exceptVehicleId)
+    public async Task ClearDriverFromOtherVehiclesAsync(Guid driverId, string? exceptVehicleId)
     {
         var vehicles = await _context.Vehicles
             .Where(v => v.VehicleDriverId == driverId && v.Id != exceptVehicleId)
