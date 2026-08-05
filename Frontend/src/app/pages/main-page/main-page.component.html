@@ -47,12 +47,14 @@
 
     <nav class="tabs-vertical">
 
+      <!--
       <button *ngFor="let tab of sidebarTabs"
             (click)="selectTab(tab.label)"
             [class.active]="activeTab === tab.label">
         <span class="material-symbols-outlined">{{ tab.icon }}</span>
         <span class="tab-label">{{ tab.label }}</span>
       </button>
+      -->
     </nav>
 
       <div class="uuid-section" [class.closed]="sidebarClosed">

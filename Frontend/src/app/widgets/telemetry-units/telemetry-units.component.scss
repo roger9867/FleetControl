@@ -78,6 +78,69 @@
             border-color: #373669;
           }
         }
+
+        .unit-select {
+          position: relative;
+          display: inline-block;
+          min-width: 38ch;
+
+          .unit-select-trigger {
+            width: 100%;
+            background: #101014;
+            border: 1px solid #2a2b33;
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: white;
+            font-size: 14px;
+            text-align: left;
+            white-space: nowrap;
+            cursor: pointer;
+            outline: none;
+
+            &:hover {
+              border-color: #373669;
+            }
+          }
+
+          &.open .unit-select-trigger {
+            border-color: #373669;
+          }
+
+          .unit-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: #101014;
+            border: 1px solid #2a2b33;
+            border-radius: 6px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 20;
+
+            .unit-option {
+              padding: 8px 10px;
+              font-size: 14px;
+              color: white;
+              white-space: nowrap;
+              cursor: pointer;
+
+              &:hover {
+                background: #2a2b33;
+              }
+
+              &.disabled {
+                color: #55565c;
+                cursor: not-allowed;
+
+                &:hover {
+                  background: transparent;
+                }
+              }
+            }
+          }
+        }
       }
 
       .actions {

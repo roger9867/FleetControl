@@ -1,7 +1,8 @@
 import { Component, AfterViewInit, AfterViewChecked, OnChanges, SimpleChanges, Input } from '@angular/core';
 import * as L from 'leaflet';
 
-import { Trip } from '../../models/trip.model';
+import { Trip, TripPoint } from '../../models/trip.model';
+import { Vehicle } from '../../models/vehicle.model';
 
 @Component({
   selector: 'app-card-widget',
@@ -12,6 +13,7 @@ import { Trip } from '../../models/trip.model';
 export class CardWidget implements AfterViewInit, AfterViewChecked, OnChanges {
 
   @Input() trips: Trip[] = [];
+  @Input() vehicles: Vehicle[] = [];
 
   private map!: L.Map;
   private mapInitialized = false;
@@ -69,20 +71,49 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
         color,
         weight: 4,
         lineJoin: 'round',
-        fillOpacity: 0.9,
+        opacity: 0.65,
       }).addTo(this.routeLayer);
 
-      coordinates.forEach((coord, index) => {
-        const marker = L.circleMarker(coord, {
+      trip.points.forEach((point, index) => {
+        const marker = L.circleMarker(coordinates[index], {
           radius: 5,
           color,
           fillColor: color,
-          fillOpacity: 0.9,
+          fillOpacity: 1,
+          opacity: 1,
           weight: 2
         }).addTo(this.routeLayer);
 
-        marker.bindTooltip(`${trip.id} - Punkt ${index + 1}`, { permanent: false, direction: 'top' });
+        marker.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: 'top' });
       });
+
+      if (coordinates.length) {
+        const startMarker = L.circleMarker(coordinates[0], {
+          radius: 13,
+          color,
+          fillOpacity: 0,
+          opacity: 1,
+          weight: 3
+        }).addTo(this.routeLayer);
+        startMarker.bindTooltip(
+          this.pointTooltip(trip, trip.points[0], 'Start'),
+          { permanent: false, direction: 'top' }
+        );
+
+        const endCoord = coordinates[coordinates.length - 1];
+        const endMarker = L.circleMarker(endCoord, {
+          radius: 13,
+          color,
+          fillColor: color,
+          fillOpacity: 1,
+          opacity: 1,
+          weight: 2
+        }).addTo(this.routeLayer);
+        endMarker.bindTooltip(
+          this.pointTooltip(trip, trip.points[trip.points.length - 1], 'Ziel'),
+          { permanent: false, direction: 'top' }
+        );
+      }
 
       allPoints.push(...coordinates);
     });
@@ -90,6 +121,25 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     if (allPoints.length) {
       this.map.fitBounds(L.latLngBounds(allPoints), { padding: [30, 30] });
     }
+  }
+
+  private pointTooltip(trip: Trip, point: TripPoint, label?: string): string {
+    const time = new Date(point.timestamp).toLocaleString('de-DE');
+    const zeitLine = label ? `Zeit: ${time} — ${label}` : `Zeit: ${time}`;
+
+    return `Kennzeichen: ${this.licensePlate(trip.vehicleId)}<br>`
+      + `T-Einheit-ID: ${trip.telemetryUnitId}<br>`
+      + `Fahrer: ${trip.driverId ?? '–'}<br>`
+      + `${zeitLine}<br>`
+      + `Geschwindigkeit: ${point.speedKmh.toFixed(1)} km/h<br>`
+      + `Beschleunigung: ${point.accelMs2.toFixed(2)} m/s²<br>`
+      + `Koordinaten: ${point.lat.toFixed(6)}, ${point.lng.toFixed(6)}`;
+  }
+
+  private licensePlate(vehicleId?: string | null): string {
+    if (!vehicleId) return '–';
+    const vehicle = this.vehicles.find(v => v.Id === vehicleId);
+    return vehicle?.licensePlate || '–';
   }
 
   private addDummyRoute(): void {
@@ -104,7 +154,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
       color: 'red',
       weight: 4,
       lineJoin: 'round',
-      fillOpacity: 0.9,
+      opacity: 0.65,
     }).addTo(this.routeLayer);
 
     routeCoordinates.forEach((coord, index) => {
@@ -112,11 +162,29 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
         radius: 6,
         color: 'red',
         fillColor: 'red',
-        fillOpacity: 0.9,
+        fillOpacity: 1,
+        opacity: 1,
         weight: 2
       }).addTo(this.routeLayer);
 
       marker.bindTooltip(`Punkt ${index + 1}`, { permanent: false, direction: 'top' });
     });
+
+    L.circleMarker(routeCoordinates[0], {
+      radius: 13,
+      color: 'red',
+      fillOpacity: 0,
+      opacity: 1,
+      weight: 3
+    }).addTo(this.routeLayer).bindTooltip('Start', { permanent: false, direction: 'top' });
+
+    L.circleMarker(routeCoordinates[routeCoordinates.length - 1], {
+      radius: 13,
+      color: 'red',
+      fillColor: 'red',
+      fillOpacity: 1,
+      opacity: 1,
+      weight: 2
+    }).addTo(this.routeLayer).bindTooltip('Ziel', { permanent: false, direction: 'top' });
   }
 }

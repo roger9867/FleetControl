@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "FleetControlServer.Service.Grpc";
+
+import "google/protobuf/timestamp.proto";
+
+package telemetry;
+
+// Reads back the InfluxDB points that IngestionService wrote for a device,
+// scoped to a time range (a trip's Start/EndTimestamp).
+service TelemetryQuery {
+  rpc GetTelemetryPoints (GetTelemetryPointsRequest) returns (GetTelemetryPointsResponse);
+}
+
+message GetTelemetryPointsRequest {
+  string device_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+}
+
+message TelemetryPoint {
+  google.protobuf.Timestamp timestamp = 1;
+  double lat = 2;
+  double lon = 3;
+  double speed_kmh = 4;
+  double accel_ms2 = 5;
+}
+
+message GetTelemetryPointsResponse {
+  repeated TelemetryPoint points = 1;
+}

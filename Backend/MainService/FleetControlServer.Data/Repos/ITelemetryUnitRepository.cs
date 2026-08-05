@@ -10,6 +10,8 @@ public interface ITelemetryUnitRepository
     
     Task<bool> ExistsAsync(Guid id);
 
+    Task<TelemetryUnit?> GetByIdAsync(Guid id);
+
     Task<bool> DeleteAsync(Guid id);
 
     Task<bool> SetVehicleAsync(Guid telemetryUnitId, string? vehicleId);

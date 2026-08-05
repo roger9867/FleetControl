@@ -49,4 +49,21 @@ public class TripRepository : ITripRepository
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<(List<Trip> Trips, int TotalCount)> GetPageAsync(int page, int pageSize)
+    {
+        // VehicleId/DriverId are snapshotted directly on Trip at creation time,
+        // so no join through TelemetryUnit->Vehicle is needed to read them back.
+        var query = _context.Trips
+            .OrderByDescending(t => t.StartTimestamp);
+
+        var totalCount = await query.CountAsync();
+
+        var trips = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (trips, totalCount);
+    }
 }

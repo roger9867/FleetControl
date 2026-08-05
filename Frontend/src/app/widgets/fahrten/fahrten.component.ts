@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -7,6 +7,8 @@ import { TripChart } from '../trip-chart/trip-chart.component';
 import { Trip, TripPoint } from '../../models/trip.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
+import { TripService } from '../../services/trip.service';
+import { VehicleService } from '../../services/vehicle.service';
 
 @Component({
   selector: 'app-layout',
@@ -18,6 +20,8 @@ import { Person } from '../../models/person.model';
 export class LayoutComponent implements OnInit {
 
   trips: Trip[] = [];
+  totalTripCount = 0;
+  vehicles: Vehicle[] = [];
 
   viewMode: 'routen' | 'details' = 'routen';
 
@@ -99,6 +103,12 @@ export class LayoutComponent implements OnInit {
   tripPageSize = 10;
   currentTripPage = 1;
 
+  constructor(
+    private tripService: TripService,
+    private vehicleService: VehicleService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
@@ -117,16 +127,48 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.trips = this.generateDummyTrips();
+    this.trips = this.generateDummyTrips().slice(0, this.tripPageSize);
+    this.totalTripCount = this.trips.length;
+    this.vehicles = this.dummyVehicles;
+    this.loadTripPage();
+    this.loadVehicles();
+  }
+
+  private loadVehicles(): void {
+    this.vehicleService.loadAll().subscribe({
+      next: (vehicles) => {
+        this.vehicles = vehicles;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy vehicles.
+      }
+    });
+  }
+
+  // Backend always caps a page at 10 trips (enforced server-side too), so
+  // "loading more" always means requesting the next page, never a larger one.
+  private loadTripPage(): void {
+    this.tripService.loadPage(this.currentTripPage, this.tripPageSize).subscribe({
+      next: (result) => {
+        this.trips = result.trips;
+        this.totalTripCount = result.totalCount;
+        this.selectedIndex = null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy trips.
+      }
+    });
   }
 
   get filteredTrips(): Trip[] {
     return this.trips.filter(trip => {
-      if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(trip.vehicleId)) return false;
+      if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(trip.vehicleId ?? '')) return false;
       if (this.appliedFilterTelemetryUnitIds.length && !this.appliedFilterTelemetryUnitIds.includes(trip.telemetryUnitId)) return false;
-      if (this.appliedFilterPersonIds.length && !this.appliedFilterPersonIds.includes(trip.driverId)) return false;
+      if (this.appliedFilterPersonIds.length && !this.appliedFilterPersonIds.includes(trip.driverId ?? '')) return false;
       if (this.appliedFilterStart && new Date(trip.start) < new Date(this.appliedFilterStart)) return false;
-      if (this.appliedFilterStop && new Date(trip.end) > new Date(this.appliedFilterStop)) return false;
+      if (this.appliedFilterStop && trip.end && new Date(trip.end) > new Date(this.appliedFilterStop)) return false;
       return true;
     });
   }
@@ -140,8 +182,10 @@ export class LayoutComponent implements OnInit {
     }));
   }
 
+  // The current page is already exactly what the server sent (max 10 trips);
+  // filters only narrow within that loaded page, they don't re-page the server.
   get totalTripPages(): number {
-    return Math.max(1, Math.ceil(this.filteredTrips.length / this.tripPageSize));
+    return Math.max(1, Math.ceil(this.totalTripCount / this.tripPageSize));
   }
 
   get tripPageNumbers(): number[] {
@@ -149,8 +193,7 @@ export class LayoutComponent implements OnInit {
   }
 
   get pagedTrips(): Trip[] {
-    const start = (this.currentTripPage - 1) * this.tripPageSize;
-    return this.filteredTrips.slice(start, start + this.tripPageSize);
+    return this.filteredTrips;
   }
 
   get selectedTrip(): Trip | null {
@@ -229,7 +272,8 @@ export class LayoutComponent implements OnInit {
     this.appliedSampleIntervalSeconds = this.sampleIntervalSeconds;
     this.appliedAdvancedVehicleFilter = { ...this.advancedVehicleFilter };
     this.appliedAdvancedPersonFilter = { ...this.advancedPersonFilter };
-    this.currentTripPage = 1;
+    // Filters only narrow the already-loaded page (server pagination caps a
+    // page at 10 trips), so applying them doesn't need a new page load.
     this.selectedIndex = null;
   }
 
@@ -315,18 +359,22 @@ export class LayoutComponent implements OnInit {
   }
 
   prevTripPage(): void {
-    if (this.currentTripPage > 1) this.currentTripPage--;
-    this.selectedIndex = null;
+    if (this.currentTripPage > 1) {
+      this.currentTripPage--;
+      this.loadTripPage();
+    }
   }
 
   nextTripPage(): void {
-    if (this.currentTripPage < this.totalTripPages) this.currentTripPage++;
-    this.selectedIndex = null;
+    if (this.currentTripPage < this.totalTripPages) {
+      this.currentTripPage++;
+      this.loadTripPage();
+    }
   }
 
   goToTripPage(page: number): void {
     this.currentTripPage = page;
-    this.selectedIndex = null;
+    this.loadTripPage();
   }
 
   setViewMode(mode: 'routen' | 'details'): void {

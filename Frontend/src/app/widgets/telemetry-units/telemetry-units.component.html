@@ -64,29 +64,44 @@
   </div>
 
   <div class="details" *ngIf="selectedIndex !== i">
+    <!--
     <div>
       Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
     </div>
+    -->
 
     <div>
-      Fahrzeug-ID: {{ item.vehicleId || 'nicht verbunden' }}
+      Fahrzeug-Identnr.: {{ item.vehicleId || 'nicht verbunden' }}
     </div>
   </div>
 
   <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+    <!--
     <div>
       Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
     </div>
+    -->
 
     <div>
-      <span>Fahrzeug-ID:</span>
+      <span>Fahrzeug-Identnr.:</span>
       <ng-container *ngIf="editingIndex === i; else vehicleView">
-        <select class="inline-input"
-                [ngModel]="item.vehicleId || ''"
-                (ngModelChange)="onVehicleAssignmentChange(item, $event)">
-          <option value="">nicht verbunden</option>
-          <option *ngFor="let vehicle of vehicles" [value]="vehicle.Id">{{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}</option>
-        </select>
+        <div class="unit-select" [class.open]="openVehicleDropdownIndex === i">
+          <button type="button"
+                  class="unit-select-trigger"
+                  (mousedown)="onActionMouseDown($event); toggleVehicleDropdown(i, $event)">
+            {{ item.vehicleId || 'nicht verbunden' }}
+          </button>
+
+          <div class="unit-options" *ngIf="openVehicleDropdownIndex === i">
+            <div class="unit-option" (mousedown)="onActionMouseDown($event); selectVehicleForUnit(item, '')">nicht verbunden</div>
+            <div class="unit-option"
+                 *ngFor="let vehicle of vehicles"
+                 [class.disabled]="isVehicleTakenByOtherUnit(vehicle, item)"
+                 (mousedown)="onActionMouseDown($event); selectVehicleForUnit(item, vehicle.Id, isVehicleTakenByOtherUnit(vehicle, item))">
+              {{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+            </div>
+          </div>
+        </div>
       </ng-container>
       <ng-template #vehicleView>{{ item.vehicleId || 'nicht verbunden' }}</ng-template>
     </div>

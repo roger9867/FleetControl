@@ -67,6 +67,9 @@ namespace FleetControlServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("DriverId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime?>("EndTimestamp")
                         .HasColumnType("timestamp with time zone");
 
@@ -75,6 +78,10 @@ namespace FleetControlServer.Data.Migrations
 
                     b.Property<Guid>("TelemetryUnitId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("VehicleId")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
                     b.HasKey("Id");
 

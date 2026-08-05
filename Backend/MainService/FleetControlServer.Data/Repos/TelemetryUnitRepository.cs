@@ -30,6 +30,11 @@ public class TelemetryUnitRepository : ITelemetryUnitRepository
             .AnyAsync(x => x.Id == id);
     }
 
+    public async Task<TelemetryUnit?> GetByIdAsync(Guid id)
+    {
+        return await _context.TelemetryUnits.FindAsync(id);
+    }
+
     public async Task<bool> DeleteAsync(Guid id)
     {
         TelemetryUnit entity = await _context.TelemetryUnits.FindAsync(id);

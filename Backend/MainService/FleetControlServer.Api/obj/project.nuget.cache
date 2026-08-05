@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "BKPVQA0FNjo=",
+  "dgSpecHash": "pvnrUVU9dXs=",
   "success": true,
   "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Api/FleetControlServer.Api.csproj",
   "expectedPackageFiles": [
-    "/home/roger/.nuget/packages/google.protobuf/3.31.1/google.protobuf.3.31.1.nupkg.sha512",
+    "/home/roger/.nuget/packages/google.protobuf/3.35.1/google.protobuf.3.35.1.nupkg.sha512",
     "/home/roger/.nuget/packages/grpc.aspnetcore/2.80.0/grpc.aspnetcore.2.80.0.nupkg.sha512",
     "/home/roger/.nuget/packages/grpc.aspnetcore.server/2.80.0/grpc.aspnetcore.server.2.80.0.nupkg.sha512",
     "/home/roger/.nuget/packages/grpc.aspnetcore.server.clientfactory/2.80.0/grpc.aspnetcore.server.clientfactory.2.80.0.nupkg.sha512",

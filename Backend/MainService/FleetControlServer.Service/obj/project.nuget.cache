@@ -1,9 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "4hF8I84OFB4=",
+  "dgSpecHash": "fMT+EnyTuq4=",
   "success": true,
   "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/MainService/FleetControlServer.Service/FleetControlServer.Service.csproj",
   "expectedPackageFiles": [
+    "/home/roger/.nuget/packages/google.protobuf/3.35.1/google.protobuf.3.35.1.nupkg.sha512",
+    "/home/roger/.nuget/packages/grpc.core.api/2.80.0/grpc.core.api.2.80.0.nupkg.sha512",
+    "/home/roger/.nuget/packages/grpc.net.client/2.80.0/grpc.net.client.2.80.0.nupkg.sha512",
+    "/home/roger/.nuget/packages/grpc.net.common/2.80.0/grpc.net.common.2.80.0.nupkg.sha512",
+    "/home/roger/.nuget/packages/grpc.tools/2.80.0/grpc.tools.2.80.0.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.entityframeworkcore/10.0.0/microsoft.entityframeworkcore.10.0.0.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.0/microsoft.entityframeworkcore.abstractions.10.0.0.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.0/microsoft.entityframeworkcore.analyzers.10.0.0.nupkg.sha512",

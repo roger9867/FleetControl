@@ -5,7 +5,7 @@
   <div class="main">
 
     <div class="card">
-      <app-card-widget *ngIf="viewMode === 'routen'" [trips]="mapTrips"></app-card-widget>
+      <app-card-widget *ngIf="viewMode === 'routen'" [trips]="mapTrips" [vehicles]="vehicles"></app-card-widget>
 
       <app-trip-chart *ngIf="viewMode === 'details' && selectedTrip" [trips]="selectedTripChartData"></app-trip-chart>
 
@@ -40,8 +40,6 @@
           <div><span>Fahrzeug:</span> {{ trip.vehicleId }}</div>
           <div><span>Telemetrie-Einheit:</span> {{ trip.telemetryUnitId }}</div>
           <div><span>Fahrer:</span> {{ trip.driverId }}</div>
-          <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
-          <div><span>Stopp:</span> {{ trip.end | date:'dd.MM.yyyy HH:mm' }}</div>
           <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
         </div>
 

@@ -35,6 +35,8 @@ export class TelemetryUnits implements OnInit
 
   appliedFilters: AppliedFilters = emptyAppliedFilters();
 
+  openVehicleDropdownIndex: number | null = null;
+
   constructor(
     private service: TelemetryUnitService,
     private vehicleService: VehicleService,
@@ -50,6 +52,13 @@ export class TelemetryUnits implements OnInit
       const target = event.target as HTMLElement;
       if (!target.closest || !target.closest('.delete-btn')) {
         this.deleteConfirmIndex = null;
+      }
+    }
+
+    if (this.openVehicleDropdownIndex !== null) {
+      const target = event.target as HTMLElement;
+      if (!target.closest || !target.closest('.unit-select')) {
+        this.openVehicleDropdownIndex = null;
       }
     }
   }
@@ -190,6 +199,7 @@ export class TelemetryUnits implements OnInit
     this.editError = null;
     this.editSnapshot = null;
     this.deleteConfirmIndex = null;
+    this.openVehicleDropdownIndex = null;
   }
 
   onActionMouseDown(event: MouseEvent): void {
@@ -225,8 +235,20 @@ export class TelemetryUnits implements OnInit
     return (unit.vehicleId ?? '') !== (this.editSnapshot.vehicleId ?? '');
   }
 
-  onVehicleAssignmentChange(unit: TelemetryUnit, value: string): void {
-    unit.vehicleId = value || undefined;
+  isVehicleTakenByOtherUnit(vehicle: Vehicle, unit: TelemetryUnit): boolean {
+    return this.registered_units.some(u => u.id !== unit.id && u.vehicleId === vehicle.Id);
+  }
+
+  toggleVehicleDropdown(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.openVehicleDropdownIndex = this.openVehicleDropdownIndex === index ? null : index;
+  }
+
+  selectVehicleForUnit(unit: TelemetryUnit, vehicleId: string, disabled = false): void {
+    if (disabled) return;
+
+    unit.vehicleId = vehicleId || undefined;
+    this.openVehicleDropdownIndex = null;
   }
 
   private saveEdit(index: number): void {

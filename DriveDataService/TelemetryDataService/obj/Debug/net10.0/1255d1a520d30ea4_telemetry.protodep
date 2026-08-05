@@ -1,0 +1,3 @@
+obj/Debug/net10.0/Protos/Telemetry.cs \
+obj/Debug/net10.0/Protos/TelemetryGrpc.cs: /home/roger/.nuget/packages/grpc.tools/2.80.0/build/native/include/google/protobuf/timestamp.proto\
+ Protos/telemetry.proto

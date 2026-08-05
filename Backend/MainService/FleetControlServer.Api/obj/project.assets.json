@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net10.0": {
-      "Google.Protobuf/3.31.1": {
+      "Google.Protobuf/3.35.1": {
         "type": "package",
         "compile": {
           "lib/net5.0/Google.Protobuf.dll": {
@@ -2569,7 +2569,9 @@
         "dependencies": {
           "FleetControlServer.Data": "1.0.0",
           "FleetControlServer.Domain": "1.0.0",
-          "FleetControlServer.Infra": "1.0.0"
+          "FleetControlServer.Infra": "1.0.0",
+          "Google.Protobuf": "3.35.1",
+          "Grpc.Net.Client": "2.80.0"
         },
         "compile": {
           "bin/placeholder/FleetControlServer.Service.dll": {}
@@ -2581,14 +2583,14 @@
     }
   },
   "libraries": {
-    "Google.Protobuf/3.31.1": {
-      "sha512": "gSnJbUmGiOTdWddPhqzrEscHq9Ls6sqRDPB9WptckyjTUyx70JOOAaDLkFff8gManZNN3hllQ4aQInnQyq/Z/A==",
+    "Google.Protobuf/3.35.1": {
+      "sha512": "pxtkuXhR8svkvDTQrYew9GZQt6eWhblz/V/WKUFrQgkHYlQPsumJTeF6ppHRJpe6j9ffukkd5lQULiiKaek4xA==",
       "type": "package",
-      "path": "google.protobuf/3.31.1",
+      "path": "google.protobuf/3.35.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "google.protobuf.3.31.1.nupkg.sha512",
+        "google.protobuf.3.35.1.nupkg.sha512",
         "google.protobuf.nuspec",
         "lib/net45/Google.Protobuf.dll",
         "lib/net45/Google.Protobuf.pdb",

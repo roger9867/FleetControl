@@ -3,6 +3,7 @@ using FleetControlServer.Data;
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Infra;
 using FleetControlServer.Service;
+using FleetControlServer.Service.Telemetry;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,7 @@ builder.Services.AddScoped<TelemetryUnitService>();
 builder.Services.AddScoped<VehicleService>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<TripService>();
+builder.Services.AddSingleton<TelemetryQueryClient>();
 
 builder.Services.AddControllers();
 builder.Services.AddGrpc();

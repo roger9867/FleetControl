@@ -8,10 +8,10 @@ export interface TripPoint {
 
 export interface Trip {
   id: string;
-  vehicleId: string;
+  vehicleId?: string | null;
   telemetryUnitId: string;
-  driverId: string;
+  driverId?: string | null;
   start: string;
-  end: string;
+  end?: string | null;
   points: TripPoint[];
 }
