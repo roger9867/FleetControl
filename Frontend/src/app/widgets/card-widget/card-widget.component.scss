@@ -1,19 +1,19 @@
 #map {
     width: 800px;
     height: 600px;
-    border: 1px solid #2a2b33;
+    border: 1px solid var(--color-border);
     border-radius: 20px;
     flex-shrink: 0;
-    background-color: #2b2d30;
+    background-color: var(--color-bg-map);
 
   }
 
 .leaflet-tile {
     image-rendering: crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
-    background-color: #1e1e1e;
+    background-color: var(--color-bg-map-tile);
 }
 
 .leaflet-tile-container {
-    background: #1e1e1e;
+    background: var(--color-bg-map-tile);
 }

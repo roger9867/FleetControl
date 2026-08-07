@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
@@ -17,9 +18,10 @@ import { Person } from '../../models/person.model';
   templateUrl: './telemetry-units.component.html',
   styleUrls: ['./telemetry-units.component.scss']
 })
-export class TelemetryUnits implements OnInit
+export class TelemetryUnits implements OnInit, OnDestroy
 {
   usb_connected_units: TelemetryUnit[] = [];
+  private broadcastSub?: Subscription;
 
   registered_units: TelemetryUnit[] = [];
   vehicles: Vehicle[] = [];
@@ -64,11 +66,18 @@ export class TelemetryUnits implements OnInit
   }
 
   ngOnInit(): void {
-    this.vehicles = this.generateDummyVehicles();
-    this.persons = this.generateDummyPersons();
+    // this.vehicles = this.generateDummyVehicles();
+    // this.persons = this.generateDummyPersons();
 
     this.loadAllUnits();
-    this.sendBroadcast();
+
+    // Keeps re-sending the broadcast on an interval so units plugged in
+    // after the page loads still show up in the dropdown automatically.
+    this.broadcastSub = this.service.pollConnectedUnits()
+      .subscribe(uuids => {
+        this.usb_connected_units = uuids.map(id => ({ id }));
+        this.cdr.detectChanges();
+      });
 
     // Once the backend endpoints exist, a successful load replaces the dummy data.
     this.vehicleService.loadAll().subscribe({
@@ -132,27 +141,18 @@ export class TelemetryUnits implements OnInit
       });
   }
 
+  // Manual refresh button: sends one immediate broadcast on top of the
+  // automatic polling loop, using the same UUID-only filtering.
   sendBroadcast(): void {
+    this.service.broadcastCommand()
+      .subscribe(res => {
+        this.usb_connected_units = this.service.filterUuidResponses(res).map(id => ({ id }));
+        this.cdr.detectChanges();
+      });
+  }
 
-  console.log('SEND START');
-
-  this.service.broadcastCommand()
-    .subscribe(res => {
-
-      console.log('RAW RESPONSE:', res);
-
-      const values = Object.values(res ?? {}).filter(Boolean);
-
-      console.log('EXTRACTED:', values);
-
-      this.usb_connected_units = (values as string[]).map(id => ({
-        id
-      }));
-
-      console.log('FINAL LIVE UNITS:', this.usb_connected_units);
-
-      this.cdr.detectChanges();
-    });
+  ngOnDestroy(): void {
+    this.broadcastSub?.unsubscribe();
   }
 
   get telemetryUnitIds(): string[] {
@@ -298,30 +298,30 @@ export class TelemetryUnits implements OnInit
 
   // Dummy data only, used to populate the shared filter sidebar's Fahrzeug
   // and Person tiers until the respective backend endpoints are available.
-  private generateDummyVehicles(): Vehicle[] {
-    const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
-    const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
-    const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
-    const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
-    const personIds = ['p1', 'p2', 'p3', 'p4', 'p5'];
-
-    return identNrs.map((identNr, i) => ({
-      Id: identNr,
-      identNr,
-      licensePlate: plates[i],
-      brand: brands[i],
-      modelName: models[i],
-      assignedPersonId: personIds[i]
-    }));
-  }
-
-  private generateDummyPersons(): Person[] {
-    return [
-      { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt' },
-      { Id: 'p2', firstName: 'Ben', lastName: 'Müller' },
-      { Id: 'p3', firstName: 'Clara', lastName: 'Fischer' },
-      { Id: 'p4', firstName: 'David', lastName: 'Weber' },
-      { Id: 'p5', firstName: 'Emma', lastName: 'Meyer' }
-    ];
-  }
+  // private generateDummyVehicles(): Vehicle[] {
+  //   const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
+  //   const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
+  //   const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
+  //   const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
+  //   const personIds = ['p1', 'p2', 'p3', 'p4', 'p5'];
+  //
+  //   return identNrs.map((identNr, i) => ({
+  //     Id: identNr,
+  //     identNr,
+  //     licensePlate: plates[i],
+  //     brand: brands[i],
+  //     modelName: models[i],
+  //     assignedPersonId: personIds[i]
+  //   }));
+  // }
+  //
+  // private generateDummyPersons(): Person[] {
+  //   return [
+  //     { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt' },
+  //     { Id: 'p2', firstName: 'Ben', lastName: 'Müller' },
+  //     { Id: 'p3', firstName: 'Clara', lastName: 'Fischer' },
+  //     { Id: 'p4', firstName: 'David', lastName: 'Weber' },
+  //     { Id: 'p5', firstName: 'Emma', lastName: 'Meyer' }
+  //   ];
+  // }
 }

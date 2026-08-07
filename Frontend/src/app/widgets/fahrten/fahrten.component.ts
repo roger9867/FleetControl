@@ -7,8 +7,11 @@ import { TripChart } from '../trip-chart/trip-chart.component';
 import { Trip, TripPoint } from '../../models/trip.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
+import { TelemetryUnit } from '../../models/telemetry-unit.model';
 import { TripService } from '../../services/trip.service';
 import { VehicleService } from '../../services/vehicle.service';
+import { TelemetryUnitService } from '../../services/telemetry-unit.service';
+import { PersonService } from '../../services/person.service';
 
 @Component({
   selector: 'app-layout',
@@ -22,26 +25,28 @@ export class LayoutComponent implements OnInit {
   trips: Trip[] = [];
   totalTripCount = 0;
   vehicles: Vehicle[] = [];
+  telemetryUnits: TelemetryUnit[] = [];
+  persons: Person[] = [];
 
   viewMode: 'routen' | 'details' = 'routen';
 
-  dummyVehicles: Vehicle[] = [
-    { Id: 'v1', licensePlate: 'FL-1000', brand: 'VW', modelName: 'Transporter', year: 2015, color: 'Weiß', identNr: '100001', requiredLicense: 'C1', powerPs: 140, firstRegistration: '2015-03-10' },
-    { Id: 'v2', licensePlate: 'FL-1001', brand: 'Mercedes', modelName: 'Sprinter', year: 2018, color: 'Silber', identNr: '100002', requiredLicense: 'C1E', powerPs: 163, firstRegistration: '2018-06-21' },
-    { Id: 'v3', licensePlate: 'FL-1002', brand: 'BMW', modelName: 'X3', year: 2020, color: 'Schwarz', identNr: '100003', requiredLicense: 'B', powerPs: 190, firstRegistration: '2020-01-15' },
-    { Id: 'v4', licensePlate: 'FL-1003', brand: 'Audi', modelName: 'A4', year: 2019, color: 'Blau', identNr: '100004', requiredLicense: 'B', powerPs: 150, firstRegistration: '2019-09-05' },
-    { Id: 'v5', licensePlate: 'FL-1004', brand: 'Ford', modelName: 'Transit', year: 2016, color: 'Rot', identNr: '100005', requiredLicense: 'C1', powerPs: 130, firstRegistration: '2016-11-30' }
-  ];
+  // dummyVehicles: Vehicle[] = [
+  //   { Id: 'v1', licensePlate: 'FL-1000', brand: 'VW', modelName: 'Transporter', year: 2015, color: 'Weiß', identNr: '100001', requiredLicense: 'C1', powerPs: 140, firstRegistration: '2015-03-10' },
+  //   { Id: 'v2', licensePlate: 'FL-1001', brand: 'Mercedes', modelName: 'Sprinter', year: 2018, color: 'Silber', identNr: '100002', requiredLicense: 'C1E', powerPs: 163, firstRegistration: '2018-06-21' },
+  //   { Id: 'v3', licensePlate: 'FL-1002', brand: 'BMW', modelName: 'X3', year: 2020, color: 'Schwarz', identNr: '100003', requiredLicense: 'B', powerPs: 190, firstRegistration: '2020-01-15' },
+  //   { Id: 'v4', licensePlate: 'FL-1003', brand: 'Audi', modelName: 'A4', year: 2019, color: 'Blau', identNr: '100004', requiredLicense: 'B', powerPs: 150, firstRegistration: '2019-09-05' },
+  //   { Id: 'v5', licensePlate: 'FL-1004', brand: 'Ford', modelName: 'Transit', year: 2016, color: 'Rot', identNr: '100005', requiredLicense: 'C1', powerPs: 130, firstRegistration: '2016-11-30' }
+  // ];
 
-  dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
+  // dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
 
-  dummyPersons: Person[] = [
-    { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
-    { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
-    { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
-    { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
-    { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
-  ];
+  // dummyPersons: Person[] = [
+  //   { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
+  //   { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
+  //   { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
+  //   { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
+  //   { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
+  // ];
 
   licenseClasses: string[] = [
     'AM', 'A1', 'A2', 'A', 'B', 'BE',
@@ -106,6 +111,8 @@ export class LayoutComponent implements OnInit {
   constructor(
     private tripService: TripService,
     private vehicleService: VehicleService,
+    private telemetryUnitService: TelemetryUnitService,
+    private personService: PersonService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -127,11 +134,13 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.trips = this.generateDummyTrips().slice(0, this.tripPageSize);
-    this.totalTripCount = this.trips.length;
-    this.vehicles = this.dummyVehicles;
+    // this.trips = this.generateDummyTrips().slice(0, this.tripPageSize);
+    // this.totalTripCount = this.trips.length;
+    // this.vehicles = this.dummyVehicles;
     this.loadTripPage();
     this.loadVehicles();
+    this.loadTelemetryUnits();
+    this.loadPersons();
   }
 
   private loadVehicles(): void {
@@ -142,6 +151,30 @@ export class LayoutComponent implements OnInit {
       },
       error: () => {
         // No backend yet — keep the dummy vehicles.
+      }
+    });
+  }
+
+  private loadTelemetryUnits(): void {
+    this.telemetryUnitService.getUnits().subscribe({
+      next: (units) => {
+        this.telemetryUnits = units;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy telemetry units.
+      }
+    });
+  }
+
+  private loadPersons(): void {
+    this.personService.loadAll().subscribe({
+      next: (persons) => {
+        this.persons = persons;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // No backend yet — keep the dummy persons.
       }
     });
   }
@@ -213,7 +246,7 @@ export class LayoutComponent implements OnInit {
     const term = this.vehicleSearch.toLowerCase();
     const f = this.appliedAdvancedVehicleFilter;
 
-    return this.dummyVehicles.filter(v => {
+    return this.vehicles.filter(v => {
       const matchesSearch = !term || (v.licensePlate ?? '').toLowerCase().includes(term);
       const matchesBrand = !f.brand || (v.brand ?? '').toLowerCase().includes(f.brand.toLowerCase());
       const matchesModel = !f.modelName || (v.modelName ?? '').toLowerCase().includes(f.modelName.toLowerCase());
@@ -235,14 +268,14 @@ export class LayoutComponent implements OnInit {
 
   get filteredTelemetryOptions(): string[] {
     const term = this.telemetrySearch.toLowerCase();
-    return this.dummyTelemetryUnits.filter(u => u.toLowerCase().includes(term));
+    return this.telemetryUnits.map(u => u.id).filter(id => id.toLowerCase().includes(term));
   }
 
   get filteredPersonOptions(): Person[] {
     const term = this.personSearch.toLowerCase();
     const f = this.appliedAdvancedPersonFilter;
 
-    return this.dummyPersons.filter(p => {
+    return this.persons.filter(p => {
       const fullName = `${p.firstName ?? ''} ${p.lastName ?? ''}`.toLowerCase();
       const matchesSearch = !term || fullName.includes(term) || p.Id.toLowerCase().includes(term);
       const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
@@ -451,45 +484,45 @@ export class LayoutComponent implements OnInit {
     return sampled;
   }
 
-  private generateDummyTrips(): Trip[] {
-    const baseLat = 50.9271;
-    const baseLng = 11.5892;
-    const pointCount = 30;
-
-    return Array.from({ length: 40 }, (_, tripIndex) => {
-      const startTime = new Date(2026, 6, 1 + (tripIndex % 28), 6 + (tripIndex % 12), 0, 0);
-      const points: TripPoint[] = [];
-
-      let lat = baseLat + (tripIndex % 8) * 0.0025;
-      let lng = baseLng + (tripIndex % 8) * 0.0025;
-      let previousSpeedKmh = 0;
-
-      for (let p = 0; p < pointCount; p++) {
-        lat += (Math.random() - 0.35) * 0.0012;
-        lng += (Math.random() - 0.35) * 0.0012;
-
-        const speedKmh = Math.max(0, 30 + Math.sin(p / 5 + tripIndex) * 20 + (Math.random() - 0.5) * 6);
-        const accelMs2 = (speedKmh - previousSpeedKmh) / 3.6 / 30;
-        previousSpeedKmh = speedKmh;
-
-        points.push({
-          lat,
-          lng,
-          timestamp: new Date(startTime.getTime() + p * 30000).toISOString(),
-          speedKmh,
-          accelMs2
-        });
-      }
-
-      return {
-        id: `Fahrt ${tripIndex + 1}`,
-        vehicleId: this.dummyVehicles[tripIndex % this.dummyVehicles.length].licensePlate ?? '',
-        telemetryUnitId: this.dummyTelemetryUnits[tripIndex % this.dummyTelemetryUnits.length],
-        driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].Id,
-        start: points[0].timestamp,
-        end: points[points.length - 1].timestamp,
-        points
-      };
-    });
-  }
+  // private generateDummyTrips(): Trip[] {
+  //   const baseLat = 50.9271;
+  //   const baseLng = 11.5892;
+  //   const pointCount = 30;
+  //
+  //   return Array.from({ length: 40 }, (_, tripIndex) => {
+  //     const startTime = new Date(2026, 6, 1 + (tripIndex % 28), 6 + (tripIndex % 12), 0, 0);
+  //     const points: TripPoint[] = [];
+  //
+  //     let lat = baseLat + (tripIndex % 8) * 0.0025;
+  //     let lng = baseLng + (tripIndex % 8) * 0.0025;
+  //     let previousSpeedKmh = 0;
+  //
+  //     for (let p = 0; p < pointCount; p++) {
+  //       lat += (Math.random() - 0.35) * 0.0012;
+  //       lng += (Math.random() - 0.35) * 0.0012;
+  //
+  //       const speedKmh = Math.max(0, 30 + Math.sin(p / 5 + tripIndex) * 20 + (Math.random() - 0.5) * 6);
+  //       const accelMs2 = (speedKmh - previousSpeedKmh) / 3.6 / 30;
+  //       previousSpeedKmh = speedKmh;
+  //
+  //       points.push({
+  //         lat,
+  //         lng,
+  //         timestamp: new Date(startTime.getTime() + p * 30000).toISOString(),
+  //         speedKmh,
+  //         accelMs2
+  //       });
+  //     }
+  //
+  //     return {
+  //       id: `Fahrt ${tripIndex + 1}`,
+  //       vehicleId: this.dummyVehicles[tripIndex % this.dummyVehicles.length].licensePlate ?? '',
+  //       telemetryUnitId: this.dummyTelemetryUnits[tripIndex % this.dummyTelemetryUnits.length],
+  //       driverId: this.dummyPersons[tripIndex % this.dummyPersons.length].Id,
+  //       start: points[0].timestamp,
+  //       end: points[points.length - 1].timestamp,
+  //       points
+  //     };
+  //   });
+  // }
 }

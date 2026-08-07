@@ -62,6 +62,13 @@ public class AppDbContext : DbContext
             .WithOne(l => l.VehicleDriver)
             .HasForeignKey(l => l.VehicleDriverId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Stored as the enum member's name (e.g. "B", "BE") instead of its
+        // numeric index, so the column stays readable and isn't tied to the
+        // enum's declaration order.
+        modelBuilder.Entity<DriversLicense>()
+            .Property(l => l.LicenseType)
+            .HasConversion<string>();
     }
     
 }

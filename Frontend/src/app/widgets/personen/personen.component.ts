@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
-import { Person, DrivingLicense } from '../../models/person.model';
+import { Person } from '../../models/person.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { PersonService } from '../../services/person.service';
 import { VehicleService } from '../../services/vehicle.service';
@@ -29,6 +29,7 @@ export class Personen implements OnInit
   newPerson: Person = this.emptyPerson();
   newLicenseClass = '';
   newLicenseDate = '';
+  showNewVehicleDropdown = false;
 
   selectedIndex: number | null = null;
   editingIndex: number | null = null;
@@ -47,6 +48,16 @@ export class Personen implements OnInit
 
   appliedFilters: AppliedFilters = emptyAppliedFilters();
 
+  get availableNewLicenseClasses(): string[] {
+    const taken = new Set((this.newPerson.licenses ?? []).map(l => l.licenseClass));
+    return this.licenseClasses.filter(c => !taken.has(c));
+  }
+
+  availableEditLicenseClasses(person: Person): string[] {
+    const taken = new Set((person.licenses ?? []).map(l => l.licenseClass));
+    return this.licenseClasses.filter(c => !taken.has(c));
+  }
+
   constructor(
     private personService: PersonService,
     private vehicleService: VehicleService,
@@ -62,12 +73,19 @@ export class Personen implements OnInit
         this.deleteConfirmIndex = null;
       }
     }
+
+    if (this.showNewVehicleDropdown) {
+      const target = event.target as HTMLElement;
+      if (!target.closest || !target.closest('.vehicle-select')) {
+        this.showNewVehicleDropdown = false;
+      }
+    }
   }
 
   ngOnInit(): void {
-    this.persons = this.generateDummyPersons(24);
-    this.vehicles = this.generateDummyVehicles();
-    this.telemetryUnitIds = ['TU-1001', 'TU-1002', 'TU-1003'];
+    // this.persons = this.generateDummyPersons(24);
+    // this.vehicles = this.generateDummyVehicles();
+    // this.telemetryUnitIds = ['TU-1001', 'TU-1002', 'TU-1003'];
 
     // Once the backend endpoints exist, a successful load replaces the dummy data.
     this.personService.loadAll().subscribe({
@@ -203,6 +221,15 @@ export class Personen implements OnInit
     this.deleteConfirmIndex = null;
   }
 
+  onBoxClick(index: number): void {
+    // While a box is being edited, clicking anywhere on it (e.g. the title,
+    // or gaps not covered by the .details-full stopPropagation) must not
+    // abort editing — only the Abbrechen/Fertig buttons may do that.
+    if (this.editingIndex === index) return;
+
+    this.selectItem(index);
+  }
+
   collapseItem(): void {
     this.selectedIndex = null;
     this.editingIndex = null;
@@ -300,6 +327,28 @@ export class Personen implements OnInit
     person.assignedVehicleId = value || null;
   }
 
+  isVehicleTakenByOtherPerson(vehicle: Vehicle, person: Person): boolean {
+    return !!vehicle.assignedPersonId && vehicle.assignedPersonId !== person.Id;
+  }
+
+  vehicleLabel(vehicleId: string | null | undefined): string {
+    if (!vehicleId) return 'Kein Fahrzeug';
+
+    const vehicle = this.vehicles.find(v => v.Id === vehicleId);
+    return vehicle ? `${vehicle.Id} — ${vehicle.brand ?? ''} ${vehicle.modelName ?? ''}`.trim() : vehicleId;
+  }
+
+  toggleNewVehicleDropdown(): void {
+    this.showNewVehicleDropdown = !this.showNewVehicleDropdown;
+  }
+
+  selectNewPersonVehicle(vehicleId: string | null, disabled = false): void {
+    if (disabled) return;
+
+    this.newPerson.assignedVehicleId = vehicleId;
+    this.showNewVehicleDropdown = false;
+  }
+
   addLicenseToNewPerson(): void {
     if (!this.newLicenseClass || !this.newLicenseDate) return;
 
@@ -337,6 +386,7 @@ export class Personen implements OnInit
       this.newLicenseClass = '';
       this.newLicenseDate = '';
       this.createError = null;
+      this.showNewVehicleDropdown = false;
     }
   }
 
@@ -349,6 +399,7 @@ export class Personen implements OnInit
       next: (created) => {
         this.persons.unshift(created);
         this.newPerson = this.emptyPerson();
+        this.showNewVehicleDropdown = false;
         this.showCreateForm = false;
         this.currentPage = 1;
         this.cdr.detectChanges();
@@ -371,48 +422,48 @@ export class Personen implements OnInit
     };
   }
 
-  private generateDummyPersons(count: number): Person[] {
-    const firstNames = ['Anna', 'Ben', 'Clara', 'David', 'Emma', 'Felix', 'Greta', 'Hannes', 'Ida', 'Jonas'];
-    const lastNames = ['Schmidt', 'Müller', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffmann', 'Koch'];
-    const dummyVehicleIdentNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
-
-    return Array.from({ length: count }, (_, i) => {
-      const birthYear = 1970 + (i % 40);
-      const licenseCount = 1 + (i % 3);
-
-      const licenses: DrivingLicense[] = Array.from({ length: licenseCount }, (_, l) => ({
-        licenseClass: this.licenseClasses[(i + l) % this.licenseClasses.length],
-        obtainedDate: `${birthYear + 18 + l}-0${1 + (l % 9)}-15`
-      }));
-
-      return {
-        Id: `person-${i + 1}`,
-        firstName: firstNames[i % firstNames.length],
-        lastName: lastNames[i % lastNames.length],
-        birthDate: `${birthYear}-05-20`,
-        licenses,
-        assignedVehicleId: i % 3 === 0 ? dummyVehicleIdentNrs[i % dummyVehicleIdentNrs.length] : null
-      };
-    });
-  }
+  // private generateDummyPersons(count: number): Person[] {
+  //   const firstNames = ['Anna', 'Ben', 'Clara', 'David', 'Emma', 'Felix', 'Greta', 'Hannes', 'Ida', 'Jonas'];
+  //   const lastNames = ['Schmidt', 'Müller', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffmann', 'Koch'];
+  //   const dummyVehicleIdentNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
+  //
+  //   return Array.from({ length: count }, (_, i) => {
+  //     const birthYear = 1970 + (i % 40);
+  //     const licenseCount = 1 + (i % 3);
+  //
+  //     const licenses: DrivingLicense[] = Array.from({ length: licenseCount }, (_, l) => ({
+  //       licenseClass: this.licenseClasses[(i + l) % this.licenseClasses.length],
+  //       obtainedDate: `${birthYear + 18 + l}-0${1 + (l % 9)}-15`
+  //     }));
+  //
+  //     return {
+  //       Id: `person-${i + 1}`,
+  //       firstName: firstNames[i % firstNames.length],
+  //       lastName: lastNames[i % lastNames.length],
+  //       birthDate: `${birthYear}-05-20`,
+  //       licenses,
+  //       assignedVehicleId: i % 3 === 0 ? dummyVehicleIdentNrs[i % dummyVehicleIdentNrs.length] : null
+  //     };
+  //   });
+  // }
 
   // Dummy data only, used to populate the shared filter sidebar's Fahrzeug
   // tier until the Vehicle backend endpoint is available. Id equals the
   // identNr, matching the real backend contract.
-  private generateDummyVehicles(): Vehicle[] {
-    const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
-    const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
-    const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
-    const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
-    const telemetryIds = ['TU-1001', 'TU-1002', 'TU-1003'];
-
-    return identNrs.map((identNr, i) => ({
-      Id: identNr,
-      identNr,
-      licensePlate: plates[i],
-      brand: brands[i],
-      modelName: models[i],
-      telemetryUnit: { id: telemetryIds[i % telemetryIds.length] }
-    }));
-  }
+  // private generateDummyVehicles(): Vehicle[] {
+  //   const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
+  //   const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
+  //   const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
+  //   const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
+  //   const telemetryIds = ['TU-1001', 'TU-1002', 'TU-1003'];
+  //
+  //   return identNrs.map((identNr, i) => ({
+  //     Id: identNr,
+  //     identNr,
+  //     licensePlate: plates[i],
+  //     brand: brands[i],
+  //     modelName: models[i],
+  //     telemetryUnit: { id: telemetryIds[i % telemetryIds.length] }
+  //   }));
+  // }
 }

@@ -37,9 +37,16 @@ public class VehicleDriverRepository : IVehicleDriverRepository
                 _context.Entry(existing).CurrentValues.SetValues(driver);
 
                 // Licenses are a child collection — CurrentValues.SetValues only
-                // touches scalar properties, so replace them explicitly.
+                // touches scalar properties, so replace them explicitly. Each
+                // DriversLicense already has a client-generated Id (see
+                // DriversLicense.Id's default), so simply reassigning the
+                // navigation property makes EF's graph-tracking assume these
+                // rows already exist (Unchanged) instead of Added, which then
+                // throws a DbUpdateConcurrencyException ("0 rows affected") on
+                // save. Adding them explicitly forces the correct Added state.
                 _context.DriversLicenses.RemoveRange(existing.Licenses);
-                existing.Licenses = driver.Licenses;
+                existing.Licenses.Clear();
+                _context.DriversLicenses.AddRange(driver.Licenses);
             }
 
             await _context.SaveChangesAsync();

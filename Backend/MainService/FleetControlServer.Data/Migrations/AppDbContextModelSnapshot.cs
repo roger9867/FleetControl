@@ -28,8 +28,9 @@ namespace FleetControlServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("LicenseType")
-                        .HasColumnType("integer");
+                    b.Property<string>("LicenseType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateOnly>("ObtainedDate")
                         .HasColumnType("date");

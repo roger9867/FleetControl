@@ -15,8 +15,8 @@ html, body {
   align-items: center;
   height: 80px;
   padding: 0 10px;
-  background-color: #222222;
-  border-bottom: 1px solid #424242;
+  background-color: var(--color-bg-header);
+  border-bottom: 1px solid var(--color-border-header);
   position: sticky;
 }
 
@@ -45,7 +45,7 @@ html, body {
   display: flex;
   min-height: 100vh;
   flex-direction: row;
-  background-color:  #101014;
+  background-color:  var(--color-bg-page);
 }
 
 .content {
@@ -54,7 +54,7 @@ html, body {
   justify-content: center;
   align-items: center;
   padding: 20px;
-  color: rgba(255, 255, 255, 0.847);
+  color: var(--color-text-primary);
 }
 
 .leaflet-popup-content {
@@ -73,7 +73,7 @@ html, body {
   font-variation-settings: "wght" 400;
   font-size: 40px;
   font-weight: 400;
-  color: white;
+  color: var(--color-text-primary);
   cursor: pointer;
   margin-right: 30px;
 
@@ -85,7 +85,7 @@ html, body {
   border-radius: 20%;
 }
 .app-menu:hover {
-  background: rgba(255,255,255,0.1);
+  background: var(--color-hover-overlay);
 }
 
 .tab-container {
@@ -101,29 +101,29 @@ html, body {
   margin-right: 20px;
   background: transparent;
   border: none;
-  color: #999;
+  color: var(--color-text-soft);
   cursor: pointer;
   font-size: 16px;
   transition: color 0.2s;
 }
 
 .tabs button.active {
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .tabs button:hover {
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .line {
   width: 80%;
   margin: 20px auto;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid var(--color-track);
 }
 
 .stripe {
   width: 220px;
-  background-color:  #222222;
+  background-color:  var(--color-bg-header);
   transition: width 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -145,12 +145,12 @@ html, body {
     top: 10px;
     right: 10px;
     font-size: 24px;
-    color: white;
+    color: var(--color-text-primary);
     cursor: pointer;
     transition: transform 0.3s, color 0.2s;
 
     &:hover {
-      color: white;
+      color: var(--color-text-primary);
     }
   }
 
@@ -166,12 +166,12 @@ html, body {
       gap: 10px;
       background: transparent;
       border: none;
-      color: #aaa;
+      color: var(--color-text-label);
       cursor: pointer;
       transition: color 0.2s;
 
       &:hover {
-        color: white;
+        color: var(--color-text-primary);
       }
 
       .material-icons-outlined {
@@ -190,9 +190,9 @@ html, body {
   max-width: 500px;
   margin-left: 20px 0 20px 0;
   padding: 20px;
-  background: #2c2c2c;
+  background: var(--color-bg-panel-legacy);
   border-radius: 8px;
-  color: white;
+  color: var(--color-text-primary);
 
   h2 {
     text-align: left;
@@ -230,19 +230,19 @@ html, body {
     button {
       margin-top: 10px;
       padding: 10px;
-      background-color: #444;
+      background-color: var(--color-grey-444);
       border: none;
       border-radius: 4px;
-      color: white;
+      color: var(--color-text-primary);
       cursor: pointer;
       font-size: 16px;
 
       &:hover {
-        background-color: #666;
+        background-color: var(--color-grey-666);
       }
 
       &:disabled {
-        background-color: #333;
+        background-color: var(--color-grey-333);
         cursor: not-allowed;
       }
     }
@@ -257,14 +257,14 @@ html, body {
   padding: 0 20px;
   justify-content: flex-end;
   margin-left: auto;
-  color: #999;
+  color: var(--color-text-soft);
 }
 
 .header-icon {
   font-size: 24px;
   font-variation-settings: 'FILL' 1;
   cursor: pointer;
-  color: white;
+  color: var(--color-text-primary);
 
   width: 32px;
   height: 32px;
@@ -274,12 +274,12 @@ html, body {
   border-radius: 50%;
 }
 .header-icon:hover {
-  background: rgba(255,255,255,0.1);
+  background: var(--color-hover-overlay);
 }
 
 .profile-icon {
   font-size: 36px;
-  color: white;
+  color: var(--color-text-primary);
   width: 38px;
   height: 38px;
   display: flex;
@@ -288,12 +288,12 @@ html, body {
   border-radius: 50%;
 }
 .profile-icon:hover {
-  background: rgba(255,255,255,0.1);
+  background: var(--color-hover-overlay);
 }
 
 .login-btn {
-  background-color: #373669;
-  color: white;
+  background-color: var(--color-accent);
+  color: var(--color-text-primary);
   border: none;
   border-radius: 8px;
   padding: 8px 20px;
@@ -302,7 +302,7 @@ html, body {
   cursor: pointer;
 
   &:hover {
-    background-color: #4a4890;
+    background-color: var(--color-accent-hover);
   }
 }
 
@@ -317,9 +317,9 @@ html, body {
   bottom: 0;
   left: 0;        // oder an Sidebar angepasst
   width: 220px;   // muss zur Sidebar passen
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--color-grey-ccc);
   padding: 10px;
-  color: white;
+  color: var(--color-text-primary);
   font-size: 8px;
   z-index: 1000;
 }

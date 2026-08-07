@@ -36,18 +36,20 @@ export class Vehicles implements OnInit
   editError: string | null = null;
   editSnapshot: Vehicle | null = null;
 
+  identNrError: string | null = null;
+
   telemetryUnits: TelemetryUnit[] = [
-    { id: 'TU-1001' },
-    { id: 'TU-1002' },
-    { id: 'TU-1003' }
+    // { id: 'TU-1001' },
+    // { id: 'TU-1002' },
+    // { id: 'TU-1003' }
   ];
 
   persons: Person[] = [
-    { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
-    { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
-    { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
-    { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
-    { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
+    // { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
+    // { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
+    // { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
+    // { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
+    // { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
   ];
 
   licenseClasses: string[] = [
@@ -97,7 +99,7 @@ export class Vehicles implements OnInit
   ) {}
 
   ngOnInit(): void {
-    this.vehicles = this.generateDummyVehicles(40);
+    // this.vehicles = this.generateDummyVehicles(40);
 
     // Once the backend endpoint exists, a successful load replaces the dummy data.
     this.vehicleService.loadAll().subscribe({
@@ -425,7 +427,21 @@ export class Vehicles implements OnInit
     if (!this.showCreateForm) {
       this.newVehicle = this.emptyVehicle();
       this.createError = null;
+      this.identNrError = null;
     }
+  }
+
+  onIdentNrChange(value: string): void {
+    const sanitized = (value ?? '').toUpperCase().replace(/[\s-]/g, '').slice(0, 17);
+    this.newVehicle.identNr = sanitized;
+    this.identNrError = this.validateIdentNr(sanitized);
+  }
+
+  private validateIdentNr(value: string): string | null {
+    if (!value) return null;
+
+    const isValid = value.length === 17 && !/[IOQ]/.test(value);
+    return isValid ? null : 'Ident.-Nr. ungültig';
   }
 
   createVehicle(): void {
@@ -433,12 +449,19 @@ export class Vehicles implements OnInit
       || !this.newVehicle.year || !this.newVehicle.requiredLicense
       || !this.newVehicle.powerPs || !this.newVehicle.color) return;
 
+    this.identNrError = this.validateIdentNr(this.newVehicle.identNr);
+    if (this.identNrError) {
+      this.createError = this.identNrError;
+      return;
+    }
+
     this.createError = null;
 
     this.vehicleService.save(this.newVehicle).subscribe({
       next: (created) => {
         this.vehicles.unshift(created);
         this.newVehicle = this.emptyVehicle();
+        this.identNrError = null;
         this.showCreateForm = false;
         this.currentPage = 1;
         this.cdr.detectChanges();
@@ -465,37 +488,37 @@ export class Vehicles implements OnInit
     };
   }
 
-  private generateDummyVehicles(count: number): Vehicle[] {
-    const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford', 'Opel', 'Renault', 'Toyota'];
-    const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit', 'Astra', 'Trafic', 'Hilux'];
-    const colors = ['Schwarz', 'Weiß', 'Silber', 'Blau', 'Rot', 'Grau'];
-
-    const baseLat = 50.9271;
-    const baseLng = 11.5892;
-
-    return Array.from({ length: count }, (_, i) => {
-      const year = 2010 + (i % 15);
-      const offset = (i % 10) - 5;
-      const identNr = `${100000 + i}`;
-
-      return {
-        Id: identNr,
-        brand: brands[i % brands.length],
-        modelName: models[i % models.length],
-        licensePlate: `FL-${1000 + i}`,
-        year,
-        identNr,
-        requiredLicense: this.licenseClasses[i % this.licenseClasses.length],
-        powerPs: 90 + ((i * 15) % 300),
-        color: colors[i % colors.length],
-        firstRegistration: `${year}-01-01`,
-        assignedPersonId: i % 3 === 0 ? this.persons[i % this.persons.length].Id : null,
-        lastLocation: {
-          lat: baseLat + offset * 0.003 + (Math.random() - 0.5) * 0.001,
-          lng: baseLng + offset * 0.003 + (Math.random() - 0.5) * 0.001,
-          timestamp: new Date(2026, 6, 20, 8, i % 60, 0).toISOString()
-        }
-      };
-    });
-  }
+  // private generateDummyVehicles(count: number): Vehicle[] {
+  //   const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford', 'Opel', 'Renault', 'Toyota'];
+  //   const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit', 'Astra', 'Trafic', 'Hilux'];
+  //   const colors = ['Schwarz', 'Weiß', 'Silber', 'Blau', 'Rot', 'Grau'];
+  //
+  //   const baseLat = 50.9271;
+  //   const baseLng = 11.5892;
+  //
+  //   return Array.from({ length: count }, (_, i) => {
+  //     const year = 2010 + (i % 15);
+  //     const offset = (i % 10) - 5;
+  //     const identNr = `${100000 + i}`;
+  //
+  //     return {
+  //       Id: identNr,
+  //       brand: brands[i % brands.length],
+  //       modelName: models[i % models.length],
+  //       licensePlate: `FL-${1000 + i}`,
+  //       year,
+  //       identNr,
+  //       requiredLicense: this.licenseClasses[i % this.licenseClasses.length],
+  //       powerPs: 90 + ((i * 15) % 300),
+  //       color: colors[i % colors.length],
+  //       firstRegistration: `${year}-01-01`,
+  //       assignedPersonId: i % 3 === 0 ? this.persons[i % this.persons.length].Id : null,
+  //       lastLocation: {
+  //         lat: baseLat + offset * 0.003 + (Math.random() - 0.5) * 0.001,
+  //         lng: baseLng + offset * 0.003 + (Math.random() - 0.5) * 0.001,
+  //         timestamp: new Date(2026, 6, 20, 8, i % 60, 0).toISOString()
+  //       }
+  //     };
+  //   });
+  // }
 }

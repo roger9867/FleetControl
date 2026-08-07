@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 // import { CardWidget } from '../../widgets/card-widget/card-widget.component';
 import { LayoutComponent } from '../../widgets/fahrten/fahrten.component';
@@ -27,7 +28,7 @@ import { TelemetryUnitService } from '../../services/telemetry-unit.service';
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit, OnDestroy {
 
 person = {
     firstName: '',
@@ -69,10 +70,16 @@ person = {
     this.sidebarClosed = !this.sidebarClosed;
   }
 
-  isDarkMode = true;
+  isDarkMode = localStorage.getItem('theme') !== 'light';
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  private applyTheme() {
+    document.documentElement.classList.toggle('theme-light', !this.isDarkMode);
   }
 
   sidebarTabs = [
@@ -88,30 +95,30 @@ person = {
 
   result: any;
 
-  constructor(private telemetryUnitService: TelemetryUnitService) {}
+  uuids: string[] = [];
+  private broadcastSub?: Subscription;
 
-  ngOnInit() {
-    this.sendBroadcast();
+  constructor(
+    private telemetryUnitService: TelemetryUnitService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.applyTheme();
   }
 
-  uuids: string[] = [];
+  ngOnInit() {
+    // Keeps re-sending the broadcast on an interval so units plugged in
+    // (or unplugged) after page load are reflected without a manual click —
+    // this app runs without zone.js, so a plain field mutation from inside
+    // an RxJS subscription is invisible to the renderer without this call.
+    this.broadcastSub = this.telemetryUnitService.pollConnectedUnits()
+      .subscribe(uuids => {
+        this.uuids = uuids;
+        this.cdr.detectChanges();
+      });
+  }
 
-  sendBroadcast() {
-  console.log('SEND START');
-
-  this.telemetryUnitService.broadcastCommand()
-    .subscribe(res => {
-
-      console.log('RAW RESPONSE:', res);
-
-      const values = Object.values(res ?? {}).filter(Boolean);
-
-      console.log('EXTRACTED:', values);
-
-      this.uuids = values as string[];
-
-      console.log('FINAL UUIDS:', this.uuids);
-    });
-}
+  ngOnDestroy() {
+    this.broadcastSub?.unsubscribe();
+  }
 
 }

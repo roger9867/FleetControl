@@ -28,10 +28,23 @@
 
         <label>
           Zugewiesenes Fahrzeug
-          <select [(ngModel)]="newPerson.assignedVehicleId">
-            <option [ngValue]="null">Kein Fahrzeug</option>
-            <option *ngFor="let vehicle of vehicles" [value]="vehicle.Id">{{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}</option>
-          </select>
+          <div class="vehicle-select" [class.open]="showNewVehicleDropdown">
+            <button type="button"
+                    class="unit-select-trigger"
+                    (mousedown)="onActionMouseDown($event); toggleNewVehicleDropdown()">
+              {{ vehicleLabel(newPerson.assignedVehicleId) }}
+            </button>
+
+            <div class="unit-options" *ngIf="showNewVehicleDropdown">
+              <div class="unit-option" (mousedown)="onActionMouseDown($event); selectNewPersonVehicle(null)">Kein Fahrzeug</div>
+              <div class="unit-option"
+                   *ngFor="let vehicle of vehicles"
+                   [class.disabled]="isVehicleTakenByOtherPerson(vehicle, newPerson)"
+                   (mousedown)="onActionMouseDown($event); selectNewPersonVehicle(vehicle.Id, isVehicleTakenByOtherPerson(vehicle, newPerson))">
+                {{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+              </div>
+            </div>
+          </div>
         </label>
       </div>
 
@@ -41,7 +54,7 @@
         <div class="license-row">
           <select [(ngModel)]="newLicenseClass">
             <option value="" disabled>Klasse wählen</option>
-            <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+            <option *ngFor="let license of availableNewLicenseClasses" [value]="license">{{ license }}</option>
           </select>
 
           <input type="date" [(ngModel)]="newLicenseDate">
@@ -78,7 +91,7 @@
 
       <div class="box"
            *ngFor="let person of pagedPersons; let i = index"
-           (click)="selectItem(i)"
+           (click)="onBoxClick(i)"
            [class.active]="selectedIndex === i">
 
         <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.Id }}</div>
@@ -121,7 +134,11 @@
                       [ngModel]="person.assignedVehicleId || ''"
                       (ngModelChange)="onVehicleAssignmentChange(person, $event)">
                 <option value="">kein Fahrzeug</option>
-                <option *ngFor="let vehicle of vehicles" [value]="vehicle.Id">{{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}</option>
+                <option *ngFor="let vehicle of vehicles"
+                        [value]="vehicle.Id"
+                        [disabled]="isVehicleTakenByOtherPerson(vehicle, person)">
+                  {{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+                </option>
               </select>
             </ng-container>
             <ng-template #vehicleView>{{ person.assignedVehicleId || 'kein Fahrzeug' }}</ng-template>
@@ -144,7 +161,7 @@
             <div class="license-row" *ngIf="editingIndex === i">
               <select [(ngModel)]="editLicenseClass">
                 <option value="" disabled>Klasse wählen</option>
-                <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+                <option *ngFor="let license of availableEditLicenseClasses(person)" [value]="license">{{ license }}</option>
               </select>
 
               <input type="date" [(ngModel)]="editLicenseDate">

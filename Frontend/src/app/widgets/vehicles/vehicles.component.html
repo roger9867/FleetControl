@@ -37,7 +37,10 @@
 
         <label>
           Fahrzeug-Identnr. *
-          <input type="text" [(ngModel)]="newVehicle.identNr">
+          <input type="text"
+                 [ngModel]="newVehicle.identNr"
+                 (ngModelChange)="onIdentNrChange($event)">
+          <span class="field-error" *ngIf="identNrError">{{ identNrError }}</span>
         </label>
 
         <label>
@@ -68,7 +71,7 @@
               (click)="createVehicle()"
               [disabled]="!newVehicle.modelName || !newVehicle.identNr || !newVehicle.brand
                           || !newVehicle.year || !newVehicle.requiredLicense
-                          || !newVehicle.powerPs || !newVehicle.color">
+                          || !newVehicle.powerPs || !newVehicle.color || !!identNrError">
         Speichern
       </button>
 
