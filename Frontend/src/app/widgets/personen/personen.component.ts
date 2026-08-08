@@ -87,7 +87,6 @@ export class Personen implements OnInit
     // this.vehicles = this.generateDummyVehicles();
     // this.telemetryUnitIds = ['TU-1001', 'TU-1002', 'TU-1003'];
 
-    // Once the backend endpoints exist, a successful load replaces the dummy data.
     this.personService.loadAll().subscribe({
       next: (persons) => {
         if (persons?.length) {
@@ -96,9 +95,7 @@ export class Personen implements OnInit
         this.syncAssignedVehicles();
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy persons.
-      }
+      error: () => {}
     });
 
     this.vehicleService.loadAll().subscribe({
@@ -109,9 +106,7 @@ export class Personen implements OnInit
         this.syncAssignedVehicles();
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy vehicles.
-      }
+      error: () => {}
     });
 
     this.telemetryUnitService.getUnits().subscribe({
@@ -121,15 +116,10 @@ export class Personen implements OnInit
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy telemetry units.
-      }
+      error: () => {}
     });
   }
 
-  // The Person<->Vehicle FK lives on Vehicle (assignedPersonId), not on
-  // Person, so the backend's GET /Person never returns an assigned vehicle —
-  // derive it here from the loaded vehicles instead of trusting the DTO.
   private syncAssignedVehicles(): void {
     for (const person of this.persons) {
       const assignedVehicle = this.vehicles.find(v => v.assignedPersonId === person.Id);
@@ -222,9 +212,6 @@ export class Personen implements OnInit
   }
 
   onBoxClick(index: number): void {
-    // While a box is being edited, clicking anywhere on it (e.g. the title,
-    // or gaps not covered by the .details-full stopPropagation) must not
-    // abort editing — only the Abbrechen/Fertig buttons may do that.
     if (this.editingIndex === index) return;
 
     this.selectItem(index);
@@ -239,8 +226,6 @@ export class Personen implements OnInit
   }
 
   onActionMouseDown(event: MouseEvent): void {
-    // Fires before the currently focused input's blur, so the action
-    // triggers on the first click instead of just defocusing the input.
     event.preventDefault();
   }
 
@@ -447,9 +432,6 @@ export class Personen implements OnInit
   //   });
   // }
 
-  // Dummy data only, used to populate the shared filter sidebar's Fahrzeug
-  // tier until the Vehicle backend endpoint is available. Id equals the
-  // identNr, matching the real backend contract.
   // private generateDummyVehicles(): Vehicle[] {
   //   const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
   //   const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];

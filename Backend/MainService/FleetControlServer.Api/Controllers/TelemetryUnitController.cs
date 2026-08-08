@@ -44,6 +44,20 @@ public class TelemetryUnitController : ControllerBase
     }
 
     
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] TelemetryUnitDto dto)
+    {
+        bool success = await _service.UpdateAsync(id, dto);
+
+        if (!success)
+        {
+            return NotFound($"TelemetryUnit with id '{id}' could not be updated.");
+        }
+
+        return Ok(new TelemetryUnitDto { Id = id, VehicleId = dto.VehicleId });
+    }
+
+
     [HttpGet("TelemetryUnits")]
     public async Task<IActionResult> GetAllVehicleTelemetryUnits()
     {

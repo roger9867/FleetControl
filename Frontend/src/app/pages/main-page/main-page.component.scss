@@ -94,7 +94,9 @@ html, body {
 }
 
 .tabs {
-  margin-left: 130px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .tabs button {
@@ -123,8 +125,9 @@ html, body {
 
 .stripe {
   width: 220px;
+  flex-shrink: 0;
   background-color:  var(--color-bg-header);
-  transition: width 0.3s ease;
+  transition: width 0.15s ease;
   position: relative;
   overflow: hidden;
 
@@ -147,7 +150,7 @@ html, body {
     font-size: 24px;
     color: var(--color-text-primary);
     cursor: pointer;
-    transition: transform 0.3s, color 0.2s;
+    transition: transform 0.15s, color 0.1s;
 
     &:hover {
       color: var(--color-text-primary);
@@ -315,8 +318,8 @@ html, body {
 .uuid-section {
   position: fixed;
   bottom: 0;
-  left: 0;        // oder an Sidebar angepasst
-  width: 220px;   // muss zur Sidebar passen
+  left: 0;
+  width: 220px;
   border-top: 1px solid var(--color-grey-ccc);
   padding: 10px;
   color: var(--color-text-primary);
@@ -352,11 +355,12 @@ html, body {
 .uuid-section {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.125s ease 0.15s, transform 0.125s ease 0.15s;
 }
 
 .uuid-section.closed {
   opacity: 0;
   transform: translateY(10px);
+  transition: none;
   pointer-events: none;
 }

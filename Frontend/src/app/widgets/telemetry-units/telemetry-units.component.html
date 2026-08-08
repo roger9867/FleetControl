@@ -1,20 +1,17 @@
 
-<h1 class="header">Datenerfassungseinheiten</h1>
-
 <div class="container">
   <div class="main">
 
-    <!-- Toolbar -->
+    <h1 class="header">Datenerfassungseinheiten</h1>
+
     <div class="toolbar">
 
-  <!-- Neuer Button -->
   <button class="create-btn"
           (click)="createUnit()"
           [disabled]="!selectedUnitId">
     Neu anlegen
   </button>
 
-  <!-- Dropdown + Refresh -->
   <div class="dropdown-wrapper">
 
     <select class="dropdown"
@@ -33,7 +30,6 @@
 
     </select>
 
-    <!-- Refresh Icon -->
     <button class="refresh-btn"
             (click)="sendBroadcast()">
 

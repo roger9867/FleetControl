@@ -1,8 +1,8 @@
-<h1 class="header">Dokumentierte Fahrten</h1>
-
 <div class="container">
 
   <div class="main">
+
+    <h1 class="header">Dokumentierte Fahrten</h1>
 
     <div class="card">
       <app-card-widget *ngIf="viewMode === 'routen'" [trips]="mapTrips" [vehicles]="vehicles"></app-card-widget>
@@ -37,9 +37,11 @@
         </div>
 
         <div class="details-full" *ngIf="selectedIndex === i">
-          <div><span>Fahrzeug:</span> {{ trip.vehicleId }}</div>
+          <div><span>Fahrzeug:</span> {{ vehicleLabel(trip.vehicleId) }}</div>
           <div><span>Telemetrie-Einheit:</span> {{ trip.telemetryUnitId }}</div>
-          <div><span>Fahrer:</span> {{ trip.driverId }}</div>
+          <div><span>Fahrer:</span> {{ driverLabel(trip.driverId) }}</div>
+          <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div><span>Ende:</span> {{ trip.end ? (trip.end | date:'dd.MM.yyyy HH:mm') : '-' }}</div>
           <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
         </div>
 

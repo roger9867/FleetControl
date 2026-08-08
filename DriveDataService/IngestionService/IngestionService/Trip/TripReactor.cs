@@ -12,7 +12,7 @@ public class TripReactor : BackgroundService
     private static readonly TimeSpan GiveUpTimeout = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan TimeoutCheckInterval = TimeSpan.FromSeconds(1);
 
-    private const int StoppedCountThreshold = 20;
+    private const int StoppedCountThreshold = 60 * 5;
 
     private readonly ConcurrentDictionary<string, DeviceTripState> _devices = new();
     private readonly object _gate = new();

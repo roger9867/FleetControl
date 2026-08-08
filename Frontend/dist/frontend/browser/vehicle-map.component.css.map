@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/widgets/vehicle-map/vehicle-map.component.scss"],
+  "sourcesContent": ["#vehicle-map {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n\n.leaflet-tile {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n\n.leaflet-tile-container {\n  background: var(--color-bg-map-tile);\n}\n"],
+  "mappings": ";AAAA,CAAA;AACE,SAAA;AACA,UAAA;AACA,UAAA,IAAA,MAAA,IAAA;AACA,iBAAA;AACA,eAAA;AACA,oBAAA,IAAA;;AAGF,CAAA;AACE,mBAAA;AACA,0BAAA;AACA,oBAAA,IAAA;;AAGF,CAAA;AACE,cAAA,IAAA;;",
+  "names": []
+}

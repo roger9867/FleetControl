@@ -71,15 +71,12 @@ export class TelemetryUnits implements OnInit, OnDestroy
 
     this.loadAllUnits();
 
-    // Keeps re-sending the broadcast on an interval so units plugged in
-    // after the page loads still show up in the dropdown automatically.
     this.broadcastSub = this.service.pollConnectedUnits()
       .subscribe(uuids => {
         this.usb_connected_units = uuids.map(id => ({ id }));
         this.cdr.detectChanges();
       });
 
-    // Once the backend endpoints exist, a successful load replaces the dummy data.
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
         if (vehicles?.length) {
@@ -87,9 +84,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy vehicles.
-      }
+      error: () => {}
     });
 
     this.personService.loadAll().subscribe({
@@ -99,9 +94,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy persons.
-      }
+      error: () => {}
     });
   }
 
@@ -118,7 +111,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
       .subscribe({
         next: () => {
           console.log('CREATED');
-          this.loadAllUnits(); // refresh DB list
+          this.loadAllUnits();
           this.selectedUnitId = null;
         },
         error: (err) => {
@@ -141,8 +134,6 @@ export class TelemetryUnits implements OnInit, OnDestroy
       });
   }
 
-  // Manual refresh button: sends one immediate broadcast on top of the
-  // automatic polling loop, using the same UUID-only filtering.
   sendBroadcast(): void {
     this.service.broadcastCommand()
       .subscribe(res => {
@@ -203,8 +194,6 @@ export class TelemetryUnits implements OnInit, OnDestroy
   }
 
   onActionMouseDown(event: MouseEvent): void {
-    // Fires before the currently focused input's blur, so the action
-    // triggers on the first click instead of just defocusing the input.
     event.preventDefault();
   }
 
@@ -296,8 +285,6 @@ export class TelemetryUnits implements OnInit, OnDestroy
     });
   }
 
-  // Dummy data only, used to populate the shared filter sidebar's Fahrzeug
-  // and Person tiers until the respective backend endpoints are available.
   // private generateDummyVehicles(): Vehicle[] {
   //   const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
   //   const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];

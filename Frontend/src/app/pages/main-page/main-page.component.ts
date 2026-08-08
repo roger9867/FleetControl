@@ -106,10 +106,6 @@ person = {
   }
 
   ngOnInit() {
-    // Keeps re-sending the broadcast on an interval so units plugged in
-    // (or unplugged) after page load are reflected without a manual click —
-    // this app runs without zone.js, so a plain field mutation from inside
-    // an RxJS subscription is invisible to the renderer without this call.
     this.broadcastSub = this.telemetryUnitService.pollConnectedUnits()
       .subscribe(uuids => {
         this.uuids = uuids;

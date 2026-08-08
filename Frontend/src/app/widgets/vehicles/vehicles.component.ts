@@ -101,7 +101,6 @@ export class Vehicles implements OnInit
   ngOnInit(): void {
     // this.vehicles = this.generateDummyVehicles(40);
 
-    // Once the backend endpoint exists, a successful load replaces the dummy data.
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
         if (vehicles?.length) {
@@ -109,13 +108,9 @@ export class Vehicles implements OnInit
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy vehicles.
-      }
+      error: () => {}
     });
 
-    // Shows the telemetry units actually registered/saved on the
-    // Datenerfassungseinheiten page, so the edit dropdown only offers real IDs.
     this.telemetryUnitService.getUnits().subscribe({
       next: (units) => {
         if (units?.length) {
@@ -123,13 +118,9 @@ export class Vehicles implements OnInit
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy telemetry units.
-      }
+      error: () => {}
     });
 
-    // Shows the persons actually registered/saved on the Personen page, so the
-    // driver dropdown only offers real employee numbers.
     this.personService.loadAll().subscribe({
       next: (persons) => {
         if (persons?.length) {
@@ -137,9 +128,7 @@ export class Vehicles implements OnInit
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy persons.
-      }
+      error: () => {}
     });
   }
 
@@ -171,9 +160,7 @@ export class Vehicles implements OnInit
         }
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the current telemetry units.
-      }
+      error: () => {}
     });
   }
 
@@ -333,8 +320,6 @@ export class Vehicles implements OnInit
   }
 
   onActionMouseDown(event: MouseEvent): void {
-    // Fires before the currently focused input's blur, so the action
-    // triggers on the first click instead of just defocusing the input.
     event.preventDefault();
   }
 
@@ -379,8 +364,6 @@ export class Vehicles implements OnInit
         Object.assign(vehicle, updated);
         this.editingIndex = null;
         this.editSnapshot = null;
-        // A unit's exclusivity may have changed (assigned/released here), so
-        // every other vehicle box's dropdown needs the current taken state.
         this.refreshTelemetryUnits();
         this.cdr.detectChanges();
       },
@@ -406,6 +389,11 @@ export class Vehicles implements OnInit
     this.vehicleService.delete(vehicle.Id).subscribe({
       next: () => {
         this.vehicles = this.vehicles.filter(v => v !== vehicle);
+
+        this.telemetryUnits = this.telemetryUnits.map(u =>
+          u.vehicleId === vehicle.Id ? { ...u, vehicleId: undefined } : u
+        );
+
         this.deleteConfirmIndex = null;
         this.collapseItem();
         this.cdr.detectChanges();

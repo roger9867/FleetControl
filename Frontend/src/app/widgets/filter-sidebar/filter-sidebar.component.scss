@@ -1,12 +1,13 @@
 .sidebar {
-  width: 260px;
+  width: 18vw;
+  min-width: 272px;
   min-height: 600px;
   background: var(--color-bg-surface);
   color: var(--color-text-primary);
   padding: 20px;
   border-radius: 16px;
   border: 1px solid var(--color-border);
-  margin-top: 18px;
+  margin-top: 103px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -230,6 +231,7 @@
     gap: 8px;
     margin-top: auto;
     padding-top: 16px;
+    min-width: max-content;
 
     button {
       flex: 1;
@@ -238,6 +240,7 @@
       padding: 10px 14px;
       font-weight: 600;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .apply-btn {

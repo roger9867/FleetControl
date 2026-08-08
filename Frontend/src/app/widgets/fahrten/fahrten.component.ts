@@ -149,9 +149,7 @@ export class LayoutComponent implements OnInit {
         this.vehicles = vehicles;
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy vehicles.
-      }
+      error: () => {}
     });
   }
 
@@ -161,9 +159,7 @@ export class LayoutComponent implements OnInit {
         this.telemetryUnits = units;
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy telemetry units.
-      }
+      error: () => {}
     });
   }
 
@@ -173,14 +169,10 @@ export class LayoutComponent implements OnInit {
         this.persons = persons;
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy persons.
-      }
+      error: () => {}
     });
   }
 
-  // Backend always caps a page at 10 trips (enforced server-side too), so
-  // "loading more" always means requesting the next page, never a larger one.
   private loadTripPage(): void {
     this.tripService.loadPage(this.currentTripPage, this.tripPageSize).subscribe({
       next: (result) => {
@@ -189,9 +181,7 @@ export class LayoutComponent implements OnInit {
         this.selectedIndex = null;
         this.cdr.detectChanges();
       },
-      error: () => {
-        // No backend yet — keep the dummy trips.
-      }
+      error: () => {}
     });
   }
 
@@ -215,8 +205,6 @@ export class LayoutComponent implements OnInit {
     }));
   }
 
-  // The current page is already exactly what the server sent (max 10 trips);
-  // filters only narrow within that loaded page, they don't re-page the server.
   get totalTripPages(): number {
     return Math.max(1, Math.ceil(this.totalTripCount / this.tripPageSize));
   }
@@ -305,8 +293,6 @@ export class LayoutComponent implements OnInit {
     this.appliedSampleIntervalSeconds = this.sampleIntervalSeconds;
     this.appliedAdvancedVehicleFilter = { ...this.advancedVehicleFilter };
     this.appliedAdvancedPersonFilter = { ...this.advancedPersonFilter };
-    // Filters only narrow the already-loaded page (server pagination caps a
-    // page at 10 trips), so applying them doesn't need a new page load.
     this.selectedIndex = null;
   }
 
@@ -389,6 +375,18 @@ export class LayoutComponent implements OnInit {
 
   selectItem(index: number): void {
     this.selectedIndex = this.selectedIndex === index ? null : index;
+  }
+
+  vehicleLabel(vehicleId?: string | null): string {
+    if (!vehicleId) return '';
+    const vehicle = this.vehicles.find(v => v.Id === vehicleId);
+    return vehicle ? `${vehicleId} - ${vehicle.licensePlate}` : vehicleId;
+  }
+
+  driverLabel(driverId?: string | null): string {
+    if (!driverId) return '';
+    const person = this.persons.find(p => p.Id === driverId);
+    return person ? `${driverId} - ${person.firstName} ${person.lastName}` : driverId;
   }
 
   prevTripPage(): void {

@@ -18,13 +18,14 @@ export class CardWidget implements AfterViewInit, AfterViewChecked, OnChanges {
   private map!: L.Map;
   private mapInitialized = false;
   private routeLayer = L.layerGroup();
+  private lastTripsSignature = '';
 
   private readonly routeColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6'];
 
   ngAfterViewInit(): void {
     this.map = L.map('map', {
       attributionControl: false
-    }).setView([50.9271, 11.5892], 14);
+    }).setView([48.8375, 10.0936], 14);
 
 
 L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
@@ -38,6 +39,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     this.routeLayer.addTo(this.map);
     this.mapInitialized = true;
 
+    this.lastTripsSignature = this.trips.map(t => `${t.id}:${t.points.length}`).join('|');
     this.renderTrips();
   }
 
@@ -48,9 +50,13 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['trips'] && this.mapInitialized) {
-      this.renderTrips();
-    }
+    if (!changes['trips'] || !this.mapInitialized) return;
+
+    const signature = this.trips.map(t => `${t.id}:${t.points.length}`).join('|');
+    if (signature === this.lastTripsSignature) return;
+
+    this.lastTripsSignature = signature;
+    this.renderTrips();
   }
 
   private renderTrips(): void {

@@ -55,6 +55,25 @@ public class TelemetryUnitService
         return true;
     }
 
+    public async Task<bool> UpdateAsync(Guid id, TelemetryUnitDto dto)
+    {
+        var exists = await _repository.ExistsAsync(id);
+
+        if (!exists)
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrEmpty(dto.VehicleId))
+        {
+            // A vehicle may only have one telemetry unit — unlink whichever
+            // unit currently holds it before assigning it to this one.
+            await _repository.ClearVehicleAsync(dto.VehicleId);
+        }
+
+        return await _repository.SetVehicleAsync(id, dto.VehicleId);
+    }
+
     public async Task<List<TelemetryUnitDto>> GetAllAsync()
     {
         List<TelemetryUnit> allTelemetryUnits = _repository.GetAllAsync().Result;

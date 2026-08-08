@@ -71,9 +71,6 @@ export function emptyAppliedFilters(): AppliedFilters {
   };
 }
 
-// Shared across the Fahrzeuge, Personen and Datenerfassungseinheiten pages —
-// each page feeds in its own vehicles/telemetry/persons lists and reacts to
-// filtersApplied by filtering whichever list it displays.
 @Component({
   selector: 'app-filter-sidebar',
   standalone: true,
