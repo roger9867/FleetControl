@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { VehicleMap, VehicleMapPoint } from '../vehicle-map/vehicle-map.component';
 import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
@@ -10,6 +11,10 @@ import { TelemetryUnit } from '../../models/telemetry-unit.model';
 import { VehicleService } from '../../services/vehicle.service';
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 import { PersonService } from '../../services/person.service';
+import { VehicleLiveService, VehiclePositionUpdate } from '../../services/vehicle-live.service';
+
+// Kein Live-Update fuer diese Zeit -> Fahrzeug gilt wieder als static.
+const MOVING_TIMEOUT_MS = 5000;
 
 @Component({
   selector: 'app-vehicles',
@@ -18,8 +23,10 @@ import { PersonService } from '../../services/person.service';
   templateUrl: './vehicles.component.html',
   styleUrls: ['./vehicles.component.scss']
 })
-export class Vehicles implements OnInit
+export class Vehicles implements OnInit, OnDestroy
 {
+  @ViewChild(VehicleMap) vehicleMap?: VehicleMap;
+
   vehicles: Vehicle[] = [];
 
   pageSize = 10;
@@ -37,6 +44,7 @@ export class Vehicles implements OnInit
   editSnapshot: Vehicle | null = null;
 
   identNrError: string | null = null;
+  yearError: string | null = null;
 
   telemetryUnits: TelemetryUnit[] = [
     // { id: 'TU-1001' },
@@ -64,6 +72,10 @@ export class Vehicles implements OnInit
   openDriverDropdownIndex: number | null = null;
   showAdvancedDriverFilter = false;
   advancedDriverFilter = { firstName: '', lastName: '', employeeNr: '' };
+
+  private movingVehicleIds = new Set<string>();
+  private movingTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  private liveSubscription?: Subscription;
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -95,6 +107,7 @@ export class Vehicles implements OnInit
     private vehicleService: VehicleService,
     private telemetryUnitService: TelemetryUnitService,
     private personService: PersonService,
+    private vehicleLiveService: VehicleLiveService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -107,6 +120,7 @@ export class Vehicles implements OnInit
           this.vehicles = vehicles;
         }
         this.cdr.detectChanges();
+        this.loadPositions();
       },
       error: () => {}
     });
@@ -126,6 +140,59 @@ export class Vehicles implements OnInit
         if (persons?.length) {
           this.persons = persons;
         }
+        this.cdr.detectChanges();
+      },
+      error: () => {}
+    });
+
+    this.liveSubscription = this.vehicleLiveService.vehicleUpdate$.subscribe(update => {
+      this.onVehicleUpdate(update);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.liveSubscription?.unsubscribe();
+    this.movingTimers.forEach(timer => clearTimeout(timer));
+  }
+
+  private onVehicleUpdate(update: VehiclePositionUpdate): void {
+    const vehicle = this.vehicles.find(v => v.Id === update.vehicleId);
+    if (vehicle) {
+      vehicle.lastLocation = {
+        lat: update.lat,
+        lng: update.lng,
+        timestamp: update.timestamp,
+        telemetryUnitId: update.telemetryUnitId,
+        speedKmh: update.speedKmh,
+        accelMs2: update.accelMs2
+      };
+    }
+
+    this.movingVehicleIds.add(update.vehicleId);
+
+    const existingTimer = this.movingTimers.get(update.vehicleId);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+
+    this.movingTimers.set(update.vehicleId, setTimeout(() => {
+      this.movingVehicleIds.delete(update.vehicleId);
+      this.movingTimers.delete(update.vehicleId);
+      this.cdr.detectChanges();
+    }, MOVING_TIMEOUT_MS));
+
+    this.cdr.detectChanges();
+  }
+
+  private loadPositions(): void {
+    this.vehicleService.loadPositions().subscribe({
+      next: (positions) => {
+        this.vehicles.forEach(v => {
+          const position = positions.get(v.Id);
+          if (position) {
+            v.lastLocation = position;
+          }
+        });
         this.cdr.detectChanges();
       },
       error: () => {}
@@ -174,6 +241,17 @@ export class Vehicles implements OnInit
 
       return matchesFirstName && matchesLastName && matchesEmployeeNr;
     });
+  }
+
+  private getDriverTooltipLabel(vehicle: Vehicle): string | undefined {
+    if (!vehicle.assignedPersonId) return undefined;
+
+    const person = this.persons.find(p => p.Id === vehicle.assignedPersonId);
+    const name = person ? `${person.firstName ?? ''} ${person.lastName ?? ''}`.trim() : '';
+
+    return name
+      ? `${name} - ${vehicle.assignedPersonId}`
+      : vehicle.assignedPersonId;
   }
 
   isPersonTakenByOtherVehicle(person: Person, vehicle: Vehicle): boolean {
@@ -267,14 +345,28 @@ export class Vehicles implements OnInit
   }
 
   get mapPoints(): VehicleMapPoint[] {
-    return this.pagedVehicles
-      .filter(v => v.lastLocation)
+    const source = this.selectedIndex !== null
+      ? [this.pagedVehicles[this.selectedIndex]]
+      : this.pagedVehicles;
+
+    return source
+      .filter(v => v?.lastLocation)
       .map(v => ({
         id: v.Id,
         label: `${v.licensePlate ?? ''} — ${v.brand ?? ''} ${v.modelName ?? ''}`,
         lat: v.lastLocation!.lat,
-        lng: v.lastLocation!.lng
+        lng: v.lastLocation!.lng,
+        timestamp: v.lastLocation!.timestamp,
+        telemetryUnitId: v.lastLocation!.telemetryUnitId,
+        speedKmh: v.lastLocation!.speedKmh,
+        accelMs2: v.lastLocation!.accelMs2,
+        driverLabel: this.getDriverTooltipLabel(v),
+        isMoving: this.movingVehicleIds.has(v.Id)
       }));
+  }
+
+  recenterMap(): void {
+    this.vehicleMap?.recenter();
   }
 
   onFiltersApplied(filters: AppliedFilters): void {
@@ -419,8 +511,45 @@ export class Vehicles implements OnInit
     }
   }
 
+  onNewLicensePlateChange(value: string): void {
+    this.newVehicle.licensePlate = (value ?? '').toUpperCase().slice(0, 10);
+  }
+
+  onVehicleLicensePlateChange(vehicle: Vehicle, value: string): void {
+    vehicle.licensePlate = (value ?? '').toUpperCase().slice(0, 10);
+  }
+
+  onDigitFieldKeydown(event: KeyboardEvent, currentValue: number | null | undefined, maxDigits = 4): void {
+    if (!/^[0-9]$/.test(event.key)) return;
+
+    const currentLength = currentValue != null ? currentValue.toString().length : 0;
+    if (currentLength >= maxDigits) {
+      event.preventDefault();
+    }
+  }
+
+  onPowerPsKeydown(event: KeyboardEvent): void {
+    if (event.key === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    this.onDigitFieldKeydown(event, this.newVehicle.powerPs);
+  }
+
+  onYearChange(value: number | null): void {
+    this.newVehicle.year = value ?? undefined;
+    this.yearError = this.validateYear(value);
+  }
+
+  private validateYear(value: number | null | undefined): string | null {
+    if (value == null) return null;
+
+    return value >= 1981 ? null : 'Baujahr muss 1981 oder später sein.';
+  }
+
   onIdentNrChange(value: string): void {
-    const sanitized = (value ?? '').toUpperCase().replace(/[\s-]/g, '').slice(0, 17);
+    const sanitized = (value ?? '').toUpperCase().replace(/[\s-]/g, '');
     this.newVehicle.identNr = sanitized;
     this.identNrError = this.validateIdentNr(sanitized);
   }
@@ -428,8 +557,15 @@ export class Vehicles implements OnInit
   private validateIdentNr(value: string): string | null {
     if (!value) return null;
 
-    const isValid = value.length === 17 && !/[IOQ]/.test(value);
-    return isValid ? null : 'Ident.-Nr. ungültig';
+    if (value.length !== 17) {
+      return 'Ident.-Nr. muss genau 17 Zeichen haben.';
+    }
+
+    if (/[IOQ]/.test(value)) {
+      return 'Ident.-Nr. ungültig (I, O, Q nicht erlaubt).';
+    }
+
+    return null;
   }
 
   createVehicle(): void {
@@ -440,6 +576,12 @@ export class Vehicles implements OnInit
     this.identNrError = this.validateIdentNr(this.newVehicle.identNr);
     if (this.identNrError) {
       this.createError = this.identNrError;
+      return;
+    }
+
+    this.yearError = this.validateYear(this.newVehicle.year);
+    if (this.yearError) {
+      this.createError = this.yearError;
       return;
     }
 

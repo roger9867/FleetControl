@@ -247,6 +247,41 @@
       gap: 12px;
       width: 50vw;
 
+      .card-actions {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .recenter-btn {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        background: var(--color-bg-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        color: var(--color-text-label);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        .material-symbols-outlined {
+          font-size: 20px;
+        }
+
+        &:hover {
+          background: var(--color-bg-surface-hover);
+          color: var(--color-text-primary);
+        }
+      }
+
       .view-toggle {
         display: flex;
         gap: 8px;
@@ -303,6 +338,7 @@
       }
 
       .box {
+        position: relative;
         background: var(--color-bg-surface);
         padding: 12px 16px;
         border-radius: 12px;
@@ -332,10 +368,61 @@
             margin-right: 6px;
           }
         }
+
+        .form-error {
+          margin-top: 12px;
+          color: var(--color-danger-text);
+          font-size: 13px;
+        }
+
+        .actions {
+          position: absolute;
+          bottom: 12px;
+          left: 16px;
+          right: 16px;
+          display: flex;
+          justify-content: flex-start;
+          cursor: default;
+
+          .action-btn {
+            background: var(--color-bg-surface-alt);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+
+            &:hover {
+              background: var(--color-bg-surface-hover);
+            }
+
+            &.danger {
+              background: var(--color-danger);
+              border-color: var(--color-danger);
+              color: var(--color-text-primary);
+
+              &:hover {
+                background: var(--color-danger-hover);
+              }
+            }
+
+            &:disabled {
+              opacity: 0.4;
+              cursor: not-allowed;
+
+              &:hover {
+                background: var(--color-bg-surface-alt);
+              }
+            }
+          }
+        }
       }
 
       .box.active {
-        min-height: 150px;
+        min-height: 200px;
+        padding-bottom: 60px;
         border-color: var(--color-border-strong);
       }
     }

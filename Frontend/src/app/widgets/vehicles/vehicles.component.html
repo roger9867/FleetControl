@@ -11,28 +11,36 @@
       <button class="create-btn" (click)="toggleCreateForm()">
         {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
       </button>
+
+      <button type="button" class="recenter-btn" title="Karte zentrieren" (click)="recenterMap()">
+        <span class="material-symbols-outlined">my_location</span>
+      </button>
     </div>
 
     <div class="create-form" *ngIf="showCreateForm">
       <div class="form-grid">
         <label>
           Kennzeichen
-          <input type="text" [(ngModel)]="newVehicle.licensePlate">
+          <input type="text" maxlength="10" [ngModel]="newVehicle.licensePlate" (ngModelChange)="onNewLicensePlateChange($event)">
         </label>
 
         <label>
           Marke *
-          <input type="text" [(ngModel)]="newVehicle.brand">
+          <input type="text" maxlength="20" [(ngModel)]="newVehicle.brand">
         </label>
 
         <label>
           Modell *
-          <input type="text" [(ngModel)]="newVehicle.modelName">
+          <input type="text" maxlength="20" [(ngModel)]="newVehicle.modelName">
         </label>
 
         <label>
           Baujahr *
-          <input type="number" [(ngModel)]="newVehicle.year">
+          <input type="number"
+                 [ngModel]="newVehicle.year"
+                 (ngModelChange)="onYearChange($event)"
+                 (keydown)="onDigitFieldKeydown($event, newVehicle.year)">
+          <span class="field-error" *ngIf="yearError">{{ yearError }}</span>
         </label>
 
         <label>
@@ -53,12 +61,12 @@
 
         <label>
           Leistung (PS) *
-          <input type="number" [(ngModel)]="newVehicle.powerPs">
+          <input type="number" min="0" [(ngModel)]="newVehicle.powerPs" (keydown)="onPowerPsKeydown($event)">
         </label>
 
         <label>
           Farbe *
-          <input type="text" [(ngModel)]="newVehicle.color">
+          <input type="text" maxlength="20" [(ngModel)]="newVehicle.color">
         </label>
 
         <label>
@@ -71,7 +79,7 @@
               (click)="createVehicle()"
               [disabled]="!newVehicle.modelName || !newVehicle.identNr || !newVehicle.brand
                           || !newVehicle.year || !newVehicle.requiredLicense
-                          || !newVehicle.powerPs || !newVehicle.color || !!identNrError">
+                          || !newVehicle.powerPs || !newVehicle.color || !!identNrError || !!yearError">
         Speichern
       </button>
 
@@ -98,7 +106,7 @@
           <div>
             <span>Kennzeichen:</span>
             <ng-container *ngIf="editingIndex === i; else plateView">
-              <input type="text" class="inline-input" [(ngModel)]="vehicle.licensePlate">
+              <input type="text" class="inline-input" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
             </ng-container>
             <ng-template #plateView>{{ vehicle.licensePlate }}</ng-template>
           </div>

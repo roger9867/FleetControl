@@ -17,3 +17,46 @@
 .leaflet-tile-container {
     background: var(--color-bg-map-tile);
 }
+
+// Pulsierender letzter Punkt einer laufenden Fahrt - dieselben Klassen/
+// Werte wie vehicle-map.component.scss (Fahrzeuge-Seite), hier dupliziert
+// statt sich auf gebuendelte Ladereihenfolge zu verlassen, da beide
+// ::ng-deep-Regeln ohne vorausgehenden Selektor global unscoped sind.
+::ng-deep .vehicle-marker-icon {
+  background: transparent;
+  border: none;
+}
+
+::ng-deep .vehicle-marker {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+::ng-deep .vehicle-marker-dot {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background-color: var(--color-map-marker);
+  border: 3px solid var(--color-map-marker-border);
+  box-sizing: border-box;
+}
+
+::ng-deep .vehicle-marker-pulse {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background-color: var(--color-map-marker);
+  animation: vehicle-marker-pulse 1.6s ease-out infinite;
+}
+
+@keyframes vehicle-marker-pulse {
+  0% {
+    transform: scale(1);
+    opacity: var(--color-map-marker-pulse-opacity, 0.7);
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}

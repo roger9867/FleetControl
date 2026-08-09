@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { TelemetryUnit } from '../models/telemetry-unit.model';
-import { Observable, throwError, interval, of } from 'rxjs';
-import { catchError, map, startWith, exhaustMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
@@ -28,18 +28,6 @@ export class TelemetryUnitService {
     return Object.values(res ?? {})
       .filter((v): v is string => typeof v === 'string' && UUID_PATTERN.test(v.trim()))
       .map(v => v.trim());
-  }
-
-  pollConnectedUnits(intervalMs = 500): Observable<string[]> {
-    return interval(intervalMs).pipe(
-      startWith(0),
-      exhaustMap(() =>
-        this.broadcastCommand().pipe(
-          map(res => this.filterUuidResponses(res)),
-          catchError(() => of([] as string[]))
-        )
-      )
-    );
   }
 
   createUnit(dto: TelemetryUnit): Observable<{ id: string }> {

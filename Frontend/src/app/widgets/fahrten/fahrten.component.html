@@ -13,9 +13,19 @@
         Wähle eine Fahrt aus der Liste aus, um die Details zu sehen.
       </div>
 
-      <div class="view-toggle">
-        <button [class.active]="viewMode === 'routen'" (click)="setViewMode('routen')">Routen</button>
-        <button [class.active]="viewMode === 'details'" (click)="setViewMode('details')">Details</button>
+      <div class="card-actions">
+        <button type="button"
+                class="recenter-btn"
+                *ngIf="viewMode === 'routen'"
+                title="Karte zentrieren"
+                (click)="recenterMap()">
+          <span class="material-symbols-outlined">my_location</span>
+        </button>
+
+        <div class="view-toggle">
+          <button [class.active]="viewMode === 'routen'" (click)="setViewMode('routen')">Routen</button>
+          <button [class.active]="viewMode === 'details'" (click)="setViewMode('details')">Details</button>
+        </div>
       </div>
     </div>
 
@@ -43,6 +53,18 @@
           <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
           <div><span>Ende:</span> {{ trip.end ? (trip.end | date:'dd.MM.yyyy HH:mm') : '-' }}</div>
           <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
+
+          <div class="form-error" *ngIf="deleteError">{{ deleteError }}</div>
+        </div>
+
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  [disabled]="!trip.end"
+                  [title]="!trip.end ? 'Laufende Fahrten können nicht gelöscht werden.' : ''"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, trip)">
+            {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+          </button>
         </div>
 
       </div>

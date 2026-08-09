@@ -25,6 +25,15 @@ public class VehicleController : ControllerBase
     }
 
 
+    [HttpGet("positions")]
+    public async Task<IActionResult> GetPositions()
+    {
+        var positions = await _service.GetLastPositionsAsync();
+
+        return Ok(positions);
+    }
+
+
     [HttpPost]
     public async Task<IActionResult> Save([FromBody] VehicleDto dto)
     {
@@ -70,7 +79,12 @@ public class VehicleController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-        await _service.DeleteAsync(id);
+        var (success, error) = await _service.DeleteAsync(id);
+
+        if (!success)
+        {
+            return BadRequest(error);
+        }
 
         return NoContent();
     }

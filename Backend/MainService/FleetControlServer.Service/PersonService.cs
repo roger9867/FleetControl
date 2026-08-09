@@ -1,5 +1,6 @@
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Domain;
+using FleetControlServer.Service.Assignments;
 using FleetControlServer.Service.DTO.Person;
 
 namespace FleetControlServer.Service;
@@ -8,11 +9,16 @@ public class PersonService
 {
     private readonly IVehicleDriverRepository _repo;
     private readonly IVehicleRepository _vehicleRepo;
+    private readonly AssignmentPushService _assignmentPushService;
 
-    public PersonService(IVehicleDriverRepository repo, IVehicleRepository vehicleRepo)
+    public PersonService(
+        IVehicleDriverRepository repo,
+        IVehicleRepository vehicleRepo,
+        AssignmentPushService assignmentPushService)
     {
         _repo = repo;
         _vehicleRepo = vehicleRepo;
+        _assignmentPushService = assignmentPushService;
     }
 
     public async Task<(bool Success, VehicleDriver? Person, string? Error)> UpsertAsync(Guid id, PersonDto dto)
@@ -60,6 +66,13 @@ public class PersonService
             return (false, null, error);
         }
 
+        // Vor der Aenderung merken, welche Fahrzeuge diesem Fahrer bisher
+        // zugeordnet waren - deren T-Einheiten (falls vorhanden) muessen bei
+        // IngestionService ebenfalls den jetzt entfernten Fahrer los werden.
+        var previouslyAssignedVehicles = (await _vehicleRepo.GetAllAsync())
+            .Where(v => v.VehicleDriverId == entity.Id && v.Id != dto.AssignedVehicleId)
+            .ToList();
+
         // Keep the Vehicle <-> Driver assignment in sync from this side too:
         // unlink any vehicle that used to point at this driver but shouldn't anymore,
         // then link the newly assigned one (if any).
@@ -69,6 +82,24 @@ public class PersonService
         {
             await _vehicleRepo.SetDriverAsync(dto.AssignedVehicleId, entity.Id);
         }
+
+        // Best-effort: IngestionService bekommt die geaenderte Fahrer-
+        // Zuordnung sofort mit, statt erst beim naechsten eigenen Reload.
+        var unitsToNotify = previouslyAssignedVehicles
+            .Where(v => v.TelemetryUnit != null)
+            .Select(v => v.TelemetryUnit!.Id)
+            .ToHashSet();
+
+        if (!string.IsNullOrEmpty(dto.AssignedVehicleId))
+        {
+            var assignedVehicleResult = await _vehicleRepo.GetByIdAsync(dto.AssignedVehicleId);
+            if (assignedVehicleResult.Vehicle?.TelemetryUnit != null)
+            {
+                unitsToNotify.Add(assignedVehicleResult.Vehicle.TelemetryUnit.Id);
+            }
+        }
+
+        await _assignmentPushService.PushAsync(unitsToNotify);
 
         return (true, entity, null);
     }
@@ -85,7 +116,14 @@ public class PersonService
 
     public async Task DeleteAsync(Guid id)
     {
+        var affectedUnits = (await _vehicleRepo.GetAllAsync())
+            .Where(v => v.VehicleDriverId == id && v.TelemetryUnit != null)
+            .Select(v => v.TelemetryUnit!.Id)
+            .ToHashSet();
+
         await _vehicleRepo.ClearDriverFromOtherVehiclesAsync(id, null);
         await _repo.DeleteAsync(id);
+
+        await _assignmentPushService.PushAsync(affectedUnits);
     }
 }

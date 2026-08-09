@@ -54,6 +54,53 @@ public class TelemetryQueryClient
             .ToList();
     }
 
+    public async Task<Dictionary<string, TelemetryPointResult>> GetLatestPointsAsync(
+        IEnumerable<string> deviceIds)
+    {
+        var request = new GetLatestPointsRequest();
+        request.DeviceIds.AddRange(deviceIds);
+
+        if (request.DeviceIds.Count == 0)
+        {
+            return new Dictionary<string, TelemetryPointResult>();
+        }
+
+        var response = await _client.GetLatestPointsAsync(request);
+
+        return response.Points.ToDictionary(
+            p => p.DeviceId,
+            p => new TelemetryPointResult(
+                p.Point.Timestamp.ToDateTime(),
+                p.Point.Lat,
+                p.Point.Lon,
+                p.Point.SpeedKmh,
+                p.Point.AccelMs2),
+            StringComparer.OrdinalIgnoreCase);
+    }
+
+    public async Task<Dictionary<string, TelemetryPointResult>> GetLatestPointsByVehicleAsync(
+        IEnumerable<string> vehicleIds)
+    {
+        var request = new GetLatestPointsByVehicleRequest();
+        request.VehicleIds.AddRange(vehicleIds);
+
+        if (request.VehicleIds.Count == 0)
+        {
+            return new Dictionary<string, TelemetryPointResult>();
+        }
+
+        var response = await _client.GetLatestPointsByVehicleAsync(request);
+
+        return response.Points.ToDictionary(
+            p => p.VehicleId,
+            p => new TelemetryPointResult(
+                p.Point.Timestamp.ToDateTime(),
+                p.Point.Lat,
+                p.Point.Lon,
+                p.Point.SpeedKmh,
+                p.Point.AccelMs2));
+    }
+
     private static Timestamp ToProtoTimestamp(DateTime timestamp)
     {
         return Timestamp.FromDateTime(

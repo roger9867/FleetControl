@@ -1,10 +1,11 @@
 using System.Threading.Channels;
+using IngestionService.Assignments;
 using IngestionService.Models;
 using IngestionService.Trip;
 
 namespace IngestionService.Influx;
 
-public record InfluxPoint(string Topic, TelemetryEvent Data, TripState State);
+public record InfluxPoint(string Topic, TelemetryEvent Data, TripState State, Assignment Assignment);
 
 // Nimmt Punkte entgegen, ohne je zu blockieren - das eigentliche Schreiben nach
 // InfluxDB passiert in InfluxWriteWorker, entkoppelt vom MQTT-Verarbeitungspfad.
@@ -19,10 +20,11 @@ public class InfluxWriter
     public Task WriteAsync(
         string topic,
         TelemetryEvent data,
-        TripState state)
+        TripState state,
+        Assignment assignment)
     {
         _channel.Writer.TryWrite(
-            new InfluxPoint(topic, data, state));
+            new InfluxPoint(topic, data, state, assignment));
 
         return Task.CompletedTask;
     }

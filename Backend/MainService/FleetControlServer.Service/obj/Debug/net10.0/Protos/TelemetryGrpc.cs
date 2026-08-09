@@ -53,6 +53,14 @@ namespace FleetControlServer.Service.Grpc {
     static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest> __Marshaller_telemetry_GetTelemetryPointsRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse> __Marshaller_telemetry_GetTelemetryPointsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetLatestPointsRequest> __Marshaller_telemetry_GetLatestPointsRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetLatestPointsRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetLatestPointsResponse> __Marshaller_telemetry_GetLatestPointsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetLatestPointsResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest> __Marshaller_telemetry_GetLatestPointsByVehicleRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse> __Marshaller_telemetry_GetLatestPointsByVehicleResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest, global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse> __Method_GetTelemetryPoints = new grpc::Method<global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest, global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse>(
@@ -61,6 +69,22 @@ namespace FleetControlServer.Service.Grpc {
         "GetTelemetryPoints",
         __Marshaller_telemetry_GetTelemetryPointsRequest,
         __Marshaller_telemetry_GetTelemetryPointsResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::FleetControlServer.Service.Grpc.GetLatestPointsRequest, global::FleetControlServer.Service.Grpc.GetLatestPointsResponse> __Method_GetLatestPoints = new grpc::Method<global::FleetControlServer.Service.Grpc.GetLatestPointsRequest, global::FleetControlServer.Service.Grpc.GetLatestPointsResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetLatestPoints",
+        __Marshaller_telemetry_GetLatestPointsRequest,
+        __Marshaller_telemetry_GetLatestPointsResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest, global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse> __Method_GetLatestPointsByVehicle = new grpc::Method<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest, global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetLatestPointsByVehicle",
+        __Marshaller_telemetry_GetLatestPointsByVehicleRequest,
+        __Marshaller_telemetry_GetLatestPointsByVehicleResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -114,6 +138,118 @@ namespace FleetControlServer.Service.Grpc {
       public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse> GetTelemetryPointsAsync(global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetTelemetryPoints, null, options, request);
+      }
+      /// <summary>
+      /// Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
+      /// Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+      /// Antwort, statt einen Fehler auszulösen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::FleetControlServer.Service.Grpc.GetLatestPointsResponse GetLatestPoints(global::FleetControlServer.Service.Grpc.GetLatestPointsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetLatestPoints(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      /// Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
+      /// Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+      /// Antwort, statt einen Fehler auszulösen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::FleetControlServer.Service.Grpc.GetLatestPointsResponse GetLatestPoints(global::FleetControlServer.Service.Grpc.GetLatestPointsRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetLatestPoints, null, options, request);
+      }
+      /// <summary>
+      /// Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
+      /// Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+      /// Antwort, statt einen Fehler auszulösen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.GetLatestPointsResponse> GetLatestPointsAsync(global::FleetControlServer.Service.Grpc.GetLatestPointsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetLatestPointsAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      /// Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
+      /// Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+      /// Antwort, statt einen Fehler auszulösen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.GetLatestPointsResponse> GetLatestPointsAsync(global::FleetControlServer.Service.Grpc.GetLatestPointsRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetLatestPoints, null, options, request);
+      }
+      /// <summary>
+      /// Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+      /// fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
+      /// geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse GetLatestPointsByVehicle(global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetLatestPointsByVehicle(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      /// Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+      /// fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
+      /// geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse GetLatestPointsByVehicle(global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetLatestPointsByVehicle, null, options, request);
+      }
+      /// <summary>
+      /// Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+      /// fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
+      /// geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse> GetLatestPointsByVehicleAsync(global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetLatestPointsByVehicleAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      /// Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+      /// fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
+      /// geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse> GetLatestPointsByVehicleAsync(global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetLatestPointsByVehicle, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]

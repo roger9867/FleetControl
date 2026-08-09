@@ -7,6 +7,7 @@ import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-si
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { PersonService } from '../../services/person.service';
+import { VehicleLiveService } from '../../services/vehicle-live.service';
 import { TelemetryUnit } from '../../models/telemetry-unit.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
@@ -43,6 +44,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
     private service: TelemetryUnitService,
     private vehicleService: VehicleService,
     private personService: PersonService,
+    private vehicleLiveService: VehicleLiveService,
     private cdr: ChangeDetectorRef
   ) {
 
@@ -71,7 +73,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
 
     this.loadAllUnits();
 
-    this.broadcastSub = this.service.pollConnectedUnits()
+    this.broadcastSub = this.vehicleLiveService.usbUnitsChanged$
       .subscribe(uuids => {
         this.usb_connected_units = uuids.map(id => ({ id }));
         this.cdr.detectChanges();

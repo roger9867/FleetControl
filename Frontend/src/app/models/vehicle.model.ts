@@ -20,5 +20,8 @@ export interface Vehicle {
     lat: number;
     lng: number;
     timestamp: string;
+    telemetryUnitId?: string;
+    speedKmh?: number;
+    accelMs2?: number;
   };
 }

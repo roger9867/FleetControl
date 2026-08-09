@@ -25,6 +25,25 @@ interface VehicleRequestDto {
   telemetryUnitId?: string | null;
 }
 
+interface VehiclePositionDto {
+  vehicleId: string;
+  telemetryUnitId: string;
+  lat: number;
+  lng: number;
+  speedKmh: number;
+  accelMs2: number;
+  timestamp: string;
+}
+
+export type VehiclePosition = {
+  lat: number;
+  lng: number;
+  timestamp: string;
+  telemetryUnitId?: string;
+  speedKmh?: number;
+  accelMs2?: number;
+};
+
 interface VehicleResponseDto {
   id: string;
   modelName: string;
@@ -50,6 +69,20 @@ export class VehicleService {
   loadAll(): Observable<Vehicle[]> {
     return this.http.get<VehicleResponseDto[]>(`${this.baseUrl}/Vehicle`).pipe(
       map(list => list.map(dto => this.toVehicle(dto))),
+      catchError(err => this.rethrow(err))
+    );
+  }
+
+  loadPositions(): Observable<Map<string, VehiclePosition>> {
+    return this.http.get<VehiclePositionDto[]>(`${this.baseUrl}/Vehicle/positions`).pipe(
+      map(list => new Map(list.map(p => [p.vehicleId, {
+        lat: p.lat,
+        lng: p.lng,
+        timestamp: p.timestamp,
+        telemetryUnitId: p.telemetryUnitId,
+        speedKmh: p.speedKmh,
+        accelMs2: p.accelMs2
+      }]))),
       catchError(err => this.rethrow(err))
     );
   }

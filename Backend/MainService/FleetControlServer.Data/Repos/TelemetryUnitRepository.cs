@@ -75,4 +75,27 @@ public class TelemetryUnitRepository : ITelemetryUnitRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<TelemetryAssignment>> GetCurrentAssignmentsAsync()
+    {
+        return await _context.TelemetryUnits
+            .Select(t => new TelemetryAssignment(
+                t.Id,
+                t.Vehicle != null ? t.Vehicle.Id : null,
+                t.Vehicle != null ? t.Vehicle.LicensePlateNumber : null,
+                t.Vehicle != null ? t.Vehicle.VehicleDriverId : null))
+            .ToListAsync();
+    }
+
+    public async Task<TelemetryAssignment?> GetAssignmentAsync(Guid telemetryUnitId)
+    {
+        return await _context.TelemetryUnits
+            .Where(t => t.Id == telemetryUnitId)
+            .Select(t => new TelemetryAssignment(
+                t.Id,
+                t.Vehicle != null ? t.Vehicle.Id : null,
+                t.Vehicle != null ? t.Vehicle.LicensePlateNumber : null,
+                t.Vehicle != null ? t.Vehicle.VehicleDriverId : null))
+            .FirstOrDefaultAsync();
+    }
 }

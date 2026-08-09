@@ -1,8 +1,10 @@
+using FleetControlServer.Api.Realtime;
 using FleetControlServer.Api.Services;
 using FleetControlServer.Data;
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Infra;
 using FleetControlServer.Service;
+using FleetControlServer.Service.Assignments;
 using FleetControlServer.Service.Telemetry;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -51,9 +53,14 @@ builder.Services.AddScoped<VehicleService>();
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<TripService>();
 builder.Services.AddSingleton<TelemetryQueryClient>();
+builder.Services.AddSingleton<IngestionServiceClient>();
+builder.Services.AddScoped<AssignmentPushService>();
 
 builder.Services.AddControllers();
 builder.Services.AddGrpc();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<RabbitMqTelemetryConsumer>();
+builder.Services.AddHostedService<UsbHotplugWatcher>();
 
 
 builder.Services.AddCors(options =>
@@ -63,7 +70,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:4200") // Angular dev server
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials(); // SignalR-Handshake (negotiate) benoetigt Credentials
     });
 });
 
@@ -132,6 +140,10 @@ app.MapControllers();
 
 // gRPC Services
 app.MapGrpcService<TripGrpcService>();
+app.MapGrpcService<AssignmentGrpcService>();
+
+// SignalR Hub fuer Live-Updates (Fahrzeug-Bewegungszustand)
+app.MapHub<VehicleHub>("/hubs/vehicles");
 
 
 

@@ -171,4 +171,23 @@ public class TripService
 
         return trip;
     }
+
+    public async Task<(bool Success, string? Error)> DeleteAsync(Guid id)
+    {
+        var trip = await _tripRepository.GetByIdAsync(id);
+
+        if (trip == null)
+        {
+            return (false, "Trip not found.");
+        }
+
+        if (trip.EndTimestamp == null)
+        {
+            return (false, "Trip is still ongoing and cannot be deleted.");
+        }
+
+        await _tripRepository.DeleteAsync(id);
+
+        return (true, null);
+    }
 }

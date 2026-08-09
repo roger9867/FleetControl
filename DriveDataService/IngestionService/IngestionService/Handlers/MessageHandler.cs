@@ -1,4 +1,5 @@
 using System.Text.Json;
+using IngestionService.Assignments;
 using IngestionService.Influx;
 using IngestionService.Models;
 using IngestionService.Trip;
@@ -7,16 +8,19 @@ public class MessageHandler
 {
     private readonly InfluxWriter _writer;
     private readonly TripReactor _tripReactor;
+    private readonly AssignmentCache _assignmentCache;
     private readonly ILogger<MessageHandler> _logger;
 
 
     public MessageHandler(
         InfluxWriter writer,
         TripReactor tripReactor,
+        AssignmentCache assignmentCache,
         ILogger<MessageHandler> logger)
     {
         _writer = writer;
         _tripReactor = tripReactor;
+        _assignmentCache = assignmentCache;
         _logger = logger;
     }
 
@@ -64,6 +68,16 @@ public class MessageHandler
             }
 
 
+            if (!_assignmentCache.TryGet(data.DeviceId, out var assignment))
+            {
+                _logger.LogWarning(
+                    "Unbekannte DeviceId {deviceId} - Nachricht wird verworfen",
+                    data.DeviceId);
+
+                return;
+            }
+
+
             _logger.LogInformation(
                 "Event von {device}: lat={lat}, lon={lon}, speed={speed}km/h, accel={accel}m/s2",
                 data.DeviceId,
@@ -80,7 +94,8 @@ public class MessageHandler
             await _writer.WriteAsync(
                 topic,
                 data,
-                state);
+                state,
+                assignment!);
         }
         catch(Exception ex)
         {

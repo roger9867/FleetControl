@@ -6,6 +6,12 @@ export interface VehicleMapPoint {
   label: string;
   lat: number;
   lng: number;
+  telemetryUnitId?: string;
+  speedKmh?: number;
+  accelMs2?: number;
+  timestamp?: string;
+  driverLabel?: string;
+  isMoving?: boolean;
 }
 
 @Component({
@@ -21,6 +27,7 @@ export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
   private map!: L.Map;
   private mapInitialized = false;
   private markerLayer = L.layerGroup();
+  private lastPointsSignature = '';
 
   ngAfterViewInit(): void {
     this.map = L.map('vehicle-map', {
@@ -38,6 +45,7 @@ export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
     this.markerLayer.addTo(this.map);
     this.mapInitialized = true;
 
+    this.lastPointsSignature = this.pointsSignature();
     this.renderPoints();
   }
 
@@ -48,30 +56,66 @@ export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['points'] && this.mapInitialized) {
-      this.renderPoints();
-    }
+    if (!changes['points'] || !this.mapInitialized) return;
+
+    const signature = this.pointsSignature();
+    if (signature === this.lastPointsSignature) return;
+
+    this.lastPointsSignature = signature;
+    this.renderPoints();
+  }
+
+  private pointsSignature(): string {
+    return this.points.map(p => `${p.id}:${p.isMoving ? '1' : '0'}:${p.lat}:${p.lng}`).join('|');
   }
 
   private renderPoints(): void {
     this.markerLayer.clearLayers();
 
-    const coordinates: L.LatLngExpression[] = [];
-
     this.points.forEach(point => {
       const coord: L.LatLngExpression = [point.lat, point.lng];
-      coordinates.push(coord);
 
-      const marker = L.circleMarker(coord, {
-        radius: 7,
-        color: '#373669',
-        fillColor: '#7376e0',
-        fillOpacity: 0.9,
-        weight: 2
-      }).addTo(this.markerLayer);
+      const pulse = point.isMoving ? '<span class="vehicle-marker-pulse"></span>' : '';
 
-      marker.bindTooltip(point.label, { permanent: false, direction: 'top' });
+      const icon = L.divIcon({
+        className: 'vehicle-marker-icon',
+        html: `<div class="vehicle-marker">${pulse}<span class="vehicle-marker-dot"></span></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+
+      const marker = L.marker(coord, { icon }).addTo(this.markerLayer);
+
+      marker.bindTooltip(this.tooltipContent(point), { permanent: false, direction: 'top' });
     });
+
+    this.recenter();
+  }
+
+  private tooltipContent(point: VehicleMapPoint): string {
+    const lines = [`Fahrzeug: ${point.label}`];
+
+    if (point.timestamp) {
+      lines.push(`Zeitstempel: ${new Date(point.timestamp).toLocaleString('de-DE')}`);
+    }
+    if (point.telemetryUnitId) {
+      lines.push(`T-Einheit: ${point.telemetryUnitId}`);
+    }
+    if (point.driverLabel) {
+      lines.push(`Fahrer: ${point.driverLabel}`);
+    }
+    if (point.speedKmh != null) {
+      lines.push(`Geschw.: ${point.speedKmh.toFixed(1)} km/h`);
+    }
+    if (point.accelMs2 != null) {
+      lines.push(`Beschleunigung: ${point.accelMs2.toFixed(2)} m/s²`);
+    }
+
+    return lines.join('<br>');
+  }
+
+  recenter(): void {
+    const coordinates: L.LatLngExpression[] = this.points.map(p => [p.lat, p.lng]);
 
     if (coordinates.length) {
       this.map.fitBounds(L.latLngBounds(coordinates), { padding: [40, 40] });

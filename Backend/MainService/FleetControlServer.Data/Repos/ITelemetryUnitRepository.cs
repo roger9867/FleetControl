@@ -17,4 +17,8 @@ public interface ITelemetryUnitRepository
     Task<bool> SetVehicleAsync(Guid telemetryUnitId, string? vehicleId);
 
     Task ClearVehicleAsync(string vehicleId);
+
+    Task<List<TelemetryAssignment>> GetCurrentAssignmentsAsync();
+
+    Task<TelemetryAssignment?> GetAssignmentAsync(Guid telemetryUnitId);
 }

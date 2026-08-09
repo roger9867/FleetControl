@@ -50,6 +50,11 @@ public class TripRepository : ITripRepository
         return true;
     }
 
+    public async Task<Trip?> GetByIdAsync(Guid id)
+    {
+        return await _context.Trips.FindAsync(id);
+    }
+
     public async Task<(List<Trip> Trips, int TotalCount)> GetPageAsync(int page, int pageSize)
     {
         // VehicleId/DriverId are snapshotted directly on Trip at creation time,
@@ -65,5 +70,22 @@ public class TripRepository : ITripRepository
             .ToListAsync();
 
         return (trips, totalCount);
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        Trip? entity = await _context.Trips.FindAsync(id);
+
+        if (entity == null)
+            return false;
+
+        _context.Trips.Remove(entity);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> ExistsForVehicleAsync(string vehicleId)
+    {
+        return await _context.Trips.AnyAsync(t => t.VehicleId == vehicleId);
     }
 }

@@ -53,6 +53,14 @@ namespace TelemetryDataService {
     static readonly grpc::Marshaller<global::TelemetryDataService.GetTelemetryPointsRequest> __Marshaller_telemetry_GetTelemetryPointsRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetTelemetryPointsRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::TelemetryDataService.GetTelemetryPointsResponse> __Marshaller_telemetry_GetTelemetryPointsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetTelemetryPointsResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::TelemetryDataService.GetLatestPointsRequest> __Marshaller_telemetry_GetLatestPointsRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetLatestPointsRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::TelemetryDataService.GetLatestPointsResponse> __Marshaller_telemetry_GetLatestPointsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetLatestPointsResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::TelemetryDataService.GetLatestPointsByVehicleRequest> __Marshaller_telemetry_GetLatestPointsByVehicleRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetLatestPointsByVehicleRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::TelemetryDataService.GetLatestPointsByVehicleResponse> __Marshaller_telemetry_GetLatestPointsByVehicleResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetLatestPointsByVehicleResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::TelemetryDataService.GetTelemetryPointsRequest, global::TelemetryDataService.GetTelemetryPointsResponse> __Method_GetTelemetryPoints = new grpc::Method<global::TelemetryDataService.GetTelemetryPointsRequest, global::TelemetryDataService.GetTelemetryPointsResponse>(
@@ -61,6 +69,22 @@ namespace TelemetryDataService {
         "GetTelemetryPoints",
         __Marshaller_telemetry_GetTelemetryPointsRequest,
         __Marshaller_telemetry_GetTelemetryPointsResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::TelemetryDataService.GetLatestPointsRequest, global::TelemetryDataService.GetLatestPointsResponse> __Method_GetLatestPoints = new grpc::Method<global::TelemetryDataService.GetLatestPointsRequest, global::TelemetryDataService.GetLatestPointsResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetLatestPoints",
+        __Marshaller_telemetry_GetLatestPointsRequest,
+        __Marshaller_telemetry_GetLatestPointsResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::TelemetryDataService.GetLatestPointsByVehicleRequest, global::TelemetryDataService.GetLatestPointsByVehicleResponse> __Method_GetLatestPointsByVehicle = new grpc::Method<global::TelemetryDataService.GetLatestPointsByVehicleRequest, global::TelemetryDataService.GetLatestPointsByVehicleResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetLatestPointsByVehicle",
+        __Marshaller_telemetry_GetLatestPointsByVehicleRequest,
+        __Marshaller_telemetry_GetLatestPointsByVehicleResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -78,6 +102,34 @@ namespace TelemetryDataService {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      /// Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
+      /// Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+      /// Antwort, statt einen Fehler auszulösen.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::TelemetryDataService.GetLatestPointsResponse> GetLatestPoints(global::TelemetryDataService.GetLatestPointsRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
+      /// Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+      /// fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
+      /// geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::TelemetryDataService.GetLatestPointsByVehicleResponse> GetLatestPointsByVehicle(global::TelemetryDataService.GetLatestPointsByVehicleRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
@@ -86,7 +138,9 @@ namespace TelemetryDataService {
     public static grpc::ServerServiceDefinition BindService(TelemetryQueryBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_GetTelemetryPoints, serviceImpl.GetTelemetryPoints).Build();
+          .AddMethod(__Method_GetTelemetryPoints, serviceImpl.GetTelemetryPoints)
+          .AddMethod(__Method_GetLatestPoints, serviceImpl.GetLatestPoints)
+          .AddMethod(__Method_GetLatestPointsByVehicle, serviceImpl.GetLatestPointsByVehicle).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the service binding logic.
@@ -97,6 +151,8 @@ namespace TelemetryDataService {
     public static void BindService(grpc::ServiceBinderBase serviceBinder, TelemetryQueryBase serviceImpl)
     {
       serviceBinder.AddMethod(__Method_GetTelemetryPoints, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.GetTelemetryPointsRequest, global::TelemetryDataService.GetTelemetryPointsResponse>(serviceImpl.GetTelemetryPoints));
+      serviceBinder.AddMethod(__Method_GetLatestPoints, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.GetLatestPointsRequest, global::TelemetryDataService.GetLatestPointsResponse>(serviceImpl.GetLatestPoints));
+      serviceBinder.AddMethod(__Method_GetLatestPointsByVehicle, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.GetLatestPointsByVehicleRequest, global::TelemetryDataService.GetLatestPointsByVehicleResponse>(serviceImpl.GetLatestPointsByVehicle));
     }
 
   }

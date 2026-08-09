@@ -10,7 +10,7 @@ import { Vehicles } from '../../widgets/vehicles/vehicles.component';
 import { Personen } from '../../widgets/personen/personen.component';
 
 
-import { TelemetryUnitService } from '../../services/telemetry-unit.service';
+import { VehicleLiveService } from '../../services/vehicle-live.service';
 
 
 @Component({
@@ -96,17 +96,17 @@ person = {
   result: any;
 
   uuids: string[] = [];
-  private broadcastSub?: Subscription;
+  private usbSub?: Subscription;
 
   constructor(
-    private telemetryUnitService: TelemetryUnitService,
+    private vehicleLiveService: VehicleLiveService,
     private cdr: ChangeDetectorRef
   ) {
     this.applyTheme();
   }
 
   ngOnInit() {
-    this.broadcastSub = this.telemetryUnitService.pollConnectedUnits()
+    this.usbSub = this.vehicleLiveService.usbUnitsChanged$
       .subscribe(uuids => {
         this.uuids = uuids;
         this.cdr.detectChanges();
@@ -114,7 +114,7 @@ person = {
   }
 
   ngOnDestroy() {
-    this.broadcastSub?.unsubscribe();
+    this.usbSub?.unsubscribe();
   }
 
 }

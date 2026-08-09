@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { CardWidget } from '../card-widget/card-widget.component';
 import { TripChart } from '../trip-chart/trip-chart.component';
@@ -12,6 +13,7 @@ import { TripService } from '../../services/trip.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 import { PersonService } from '../../services/person.service';
+import { VehicleLiveService, VehiclePositionUpdate, TripEndedUpdate } from '../../services/vehicle-live.service';
 
 @Component({
   selector: 'app-layout',
@@ -20,7 +22,7 @@ import { PersonService } from '../../services/person.service';
   templateUrl: './fahrten.component.html',
   styleUrls: ['./fahrten.component.scss']
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
 
   trips: Trip[] = [];
   totalTripCount = 0;
@@ -102,23 +104,37 @@ export class LayoutComponent implements OnInit {
   @ViewChild('vehicleAutocomplete') vehicleAutocompleteRef?: ElementRef<HTMLElement>;
   @ViewChild('telemetryAutocomplete') telemetryAutocompleteRef?: ElementRef<HTMLElement>;
   @ViewChild('personAutocomplete') personAutocompleteRef?: ElementRef<HTMLElement>;
+  @ViewChild(CardWidget) cardWidget?: CardWidget;
 
   selectedIndex: number | null = null;
+  deleteConfirmIndex: number | null = null;
+  deleteError: string | null = null;
 
   tripPageSize = 10;
   currentTripPage = 1;
+
+  private liveSubscription?: Subscription;
+  private tripEndedSubscription?: Subscription;
 
   constructor(
     private tripService: TripService,
     private vehicleService: VehicleService,
     private telemetryUnitService: TelemetryUnitService,
     private personService: PersonService,
+    private vehicleLiveService: VehicleLiveService,
     private cdr: ChangeDetectorRef
   ) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
+
+    if (this.deleteConfirmIndex !== null) {
+      const targetEl = target as HTMLElement;
+      if (!targetEl.closest || !targetEl.closest('.delete-btn')) {
+        this.deleteConfirmIndex = null;
+      }
+    }
 
     if (this.vehicleAutocompleteRef && !this.vehicleAutocompleteRef.nativeElement.contains(target)) {
       this.showVehicleOptions = false;
@@ -141,6 +157,66 @@ export class LayoutComponent implements OnInit {
     this.loadVehicles();
     this.loadTelemetryUnits();
     this.loadPersons();
+
+    this.liveSubscription = this.vehicleLiveService.vehicleUpdate$.subscribe(update => {
+      this.onVehicleUpdate(update);
+    });
+
+    this.tripEndedSubscription = this.vehicleLiveService.tripEnded$.subscribe(update => {
+      this.onTripEnded(update);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.liveSubscription?.unsubscribe();
+    this.tripEndedSubscription?.unsubscribe();
+  }
+
+  // Beendet eine lokal bereits geladene, noch laufende Fahrt sofort, statt
+  // erst beim naechsten manuellen Neuladen davon zu erfahren - relevant
+  // dafuer, dass der pulsierende letzte Punkt auf der Karte aufhoert zu
+  // pulsieren, sobald die Fahrt tatsaechlich (serverseitig) beendet wurde.
+  private onTripEnded(update: TripEndedUpdate): void {
+    const trip = this.trips.find(t => t.id === update.tripId);
+    if (!trip || trip.end) return;
+
+    trip.end = update.endTimestamp;
+    this.cdr.detectChanges();
+  }
+
+  // Haengt einen Live-Punkt nur an, wenn er zeitlich in eine bereits
+  // geladene, laufende Fahrt des betroffenen Fahrzeugs faellt - ohne
+  // Fahrtende gilt "laufend bis jetzt", mit Fahrtende wird strikt auf
+  // [start, end] geprueft, damit keine verspaeteten Events abgeschlossene
+  // Fahrten nachtraeglich verfaelschen.
+  private onVehicleUpdate(update: VehiclePositionUpdate): void {
+    const pointTime = new Date(update.timestamp).getTime();
+
+    const affectedTrip = this.trips.find(trip => {
+      if (trip.vehicleId !== update.vehicleId) return false;
+
+      const start = new Date(trip.start).getTime();
+      if (pointTime < start) return false;
+
+      if (trip.end) {
+        const end = new Date(trip.end).getTime();
+        if (pointTime > end) return false;
+      }
+
+      return true;
+    });
+
+    if (!affectedTrip) return;
+
+    affectedTrip.points.push({
+      lat: update.lat,
+      lng: update.lng,
+      timestamp: update.timestamp,
+      speedKmh: update.speedKmh,
+      accelMs2: update.accelMs2
+    });
+
+    this.cdr.detectChanges();
   }
 
   private loadVehicles(): void {
@@ -377,6 +453,49 @@ export class LayoutComponent implements OnInit {
     this.selectedIndex = this.selectedIndex === index ? null : index;
   }
 
+  onActionsClick(event: MouseEvent): void {
+    event.stopPropagation();
+
+    const target = event.target as HTMLElement;
+    if (this.deleteConfirmIndex !== null && (!target.closest || !target.closest('.delete-btn'))) {
+      this.deleteConfirmIndex = null;
+    }
+  }
+
+  onActionMouseDown(event: MouseEvent): void {
+    event.preventDefault();
+  }
+
+  confirmDelete(index: number, trip: Trip): void {
+    if (!trip.end) return;
+
+    if (this.deleteConfirmIndex !== index) {
+      this.deleteConfirmIndex = index;
+      return;
+    }
+
+    this.deleteTrip(trip);
+  }
+
+  private deleteTrip(trip: Trip): void {
+    this.deleteError = null;
+
+    this.tripService.delete(trip.id).subscribe({
+      next: () => {
+        this.trips = this.trips.filter(t => t !== trip);
+        this.totalTripCount = Math.max(0, this.totalTripCount - 1);
+        this.deleteConfirmIndex = null;
+        this.selectedIndex = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.deleteError = err?.message ?? 'Löschen fehlgeschlagen.';
+        this.deleteConfirmIndex = null;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   vehicleLabel(vehicleId?: string | null): string {
     if (!vehicleId) return '';
     const vehicle = this.vehicles.find(v => v.Id === vehicleId);
@@ -410,6 +529,10 @@ export class LayoutComponent implements OnInit {
 
   setViewMode(mode: 'routen' | 'details'): void {
     this.viewMode = mode;
+  }
+
+  recenterMap(): void {
+    this.cardWidget?.recenter();
   }
 
   resetFilters(): void {

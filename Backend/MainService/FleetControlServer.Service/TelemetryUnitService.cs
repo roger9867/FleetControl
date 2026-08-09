@@ -1,6 +1,7 @@
 using FleetControlServer.Domain;
 using FleetControlServer.Infra;
 using FleetControlServer.Data.Repos;
+using FleetControlServer.Service.Assignments;
 using FleetControlServer.Service.Dto.TelemetryUnit;
 
 
@@ -10,13 +11,16 @@ public class TelemetryUnitService
 {
     private readonly IUsbVehicleTelemetryUnit _usbTelemetryUnit;
     private readonly ITelemetryUnitRepository _repository;
+    private readonly AssignmentPushService _assignmentPushService;
 
     public TelemetryUnitService(
-        IUsbVehicleTelemetryUnit usbTelemetryUnit, 
-        ITelemetryUnitRepository repository
+        IUsbVehicleTelemetryUnit usbTelemetryUnit,
+        ITelemetryUnitRepository repository,
+        AssignmentPushService assignmentPushService
         ) {
         _usbTelemetryUnit = usbTelemetryUnit;
         _repository =  repository;
+        _assignmentPushService = assignmentPushService;
     }
     
     // Nachricht an alle angeschlossenen Geräte
@@ -64,14 +68,34 @@ public class TelemetryUnitService
             return false;
         }
 
+        Guid? displacedUnitId = null;
+
         if (!string.IsNullOrEmpty(dto.VehicleId))
         {
             // A vehicle may only have one telemetry unit — unlink whichever
             // unit currently holds it before assigning it to this one.
+            var allUnits = await _repository.GetAllAsync();
+            displacedUnitId = allUnits
+                .FirstOrDefault(u => u.VehicleId == dto.VehicleId && u.Id != id)?.Id;
+
             await _repository.ClearVehicleAsync(dto.VehicleId);
         }
 
-        return await _repository.SetVehicleAsync(id, dto.VehicleId);
+        var success = await _repository.SetVehicleAsync(id, dto.VehicleId);
+
+        if (success)
+        {
+            await _assignmentPushService.PushAsync(id);
+
+            // Die verdraengte Einheit zeigt in IngestionServices Cache sonst
+            // weiter faelschlich auf dieses Fahrzeug.
+            if (displacedUnitId.HasValue)
+            {
+                await _assignmentPushService.PushAsync(displacedUnitId.Value);
+            }
+        }
+
+        return success;
     }
 
     public async Task<List<TelemetryUnitDto>> GetAllAsync()
@@ -94,7 +118,12 @@ public class TelemetryUnitService
         {
             return false;
         }
-        
+
         return await _repository.DeleteAsync(guid);
+    }
+
+    public async Task<List<TelemetryAssignment>> GetCurrentAssignmentsAsync()
+    {
+        return await _repository.GetCurrentAssignmentsAsync();
     }
 }

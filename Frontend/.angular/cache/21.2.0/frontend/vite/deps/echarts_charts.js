@@ -1,12 +1,4 @@
 import {
-  createSeriesData_default,
-  getLabelLineStatesModels,
-  limitSurfaceAngle,
-  limitTurnAngle,
-  prepareSeriesDataSchema,
-  setLabelLineStyle
-} from "./chunk-AVRYNA4R.js";
-import {
   LineDraw_default,
   LinePath_default,
   Line_default as Line_default2,
@@ -37,7 +29,15 @@ import {
   updateViewOnPan,
   updateViewOnZoom,
   warnDeprecated
-} from "./chunk-RJ57TIFO.js";
+} from "./chunk-OYS5VI3E.js";
+import {
+  createSeriesData_default,
+  getLabelLineStatesModels,
+  limitSurfaceAngle,
+  limitTurnAngle,
+  prepareSeriesDataSchema,
+  setLabelLineStyle
+} from "./chunk-V753GBGC.js";
 import {
   BezierCurve_default,
   Chart_default,
@@ -147,7 +147,7 @@ import {
   use,
   warn,
   windowOpen
-} from "./chunk-VWF55U7M.js";
+} from "./chunk-JW62REUN.js";
 import {
   BoundingRect_default,
   CompoundPath_default,
@@ -168,7 +168,7 @@ import {
   concatArray,
   containStroke,
   containStroke2,
-  copy2 as copy,
+  copy,
   create,
   create2,
   createHashMap,
@@ -220,10 +220,10 @@ import {
   set,
   sub,
   translate
-} from "./chunk-R6Z5RNJY.js";
-import "./chunk-D7MF2QZF.js";
+} from "./chunk-RHY3YV6W.js";
+import "./chunk-EGZ6UWY3.js";
 
-// node_modules/echarts/lib/chart/line/LineSeries.js
+// ../../node_modules/echarts/lib/chart/line/LineSeries.js
 var LineSeriesModel = (
   /** @class */
   (function(_super) {
@@ -331,7 +331,7 @@ var LineSeriesModel = (
 );
 var LineSeries_default = LineSeriesModel;
 
-// node_modules/echarts/lib/chart/line/helper.js
+// ../../node_modules/echarts/lib/chart/line/helper.js
 function prepareDataCoordInfo(coordSys, data, valueOrigin) {
   var baseAxis = coordSys.getBaseAxis();
   var valueAxis = coordSys.getOtherAxis(baseAxis);
@@ -407,7 +407,7 @@ function getStackedOnPoint(dataCoordInfo, coordSys, data, idx) {
   return coordSys.dataToPoint(stackedData);
 }
 
-// node_modules/echarts/lib/chart/line/lineAnimationDiff.js
+// ../../node_modules/echarts/lib/chart/line/lineAnimationDiff.js
 function diffData(oldData, newData) {
   var diffResult = [];
   newData.diff(oldData).add(function(idx) {
@@ -516,7 +516,7 @@ function lineAnimationDiff(oldData, newData, oldStackedOnPoints, newStackedOnPoi
   };
 }
 
-// node_modules/echarts/lib/chart/line/poly.js
+// ../../node_modules/echarts/lib/chart/line/poly.js
 var mathMin = Math.min;
 var mathMax = Math.max;
 function isPointNull(x, y) {
@@ -813,7 +813,7 @@ var ECPolygon = (
   })(Path_default)
 );
 
-// node_modules/echarts/lib/chart/helper/createClipPathFromCoordSys.js
+// ../../node_modules/echarts/lib/chart/helper/createClipPathFromCoordSys.js
 function createGridClipPath(cartesian, hasAnimation, seriesModel, done, during) {
   var rect = cartesian.getArea();
   var x = rect.x;
@@ -909,7 +909,7 @@ function createClipPath(coordSys, hasAnimation, seriesModel, done, during) {
   return null;
 }
 
-// node_modules/echarts/lib/chart/line/LineView.js
+// ../../node_modules/echarts/lib/chart/line/LineView.js
 function isPointsSame(points1, points2) {
   if (points1.length !== points2.length) {
     return;
@@ -1864,7 +1864,7 @@ var LineView = (
 );
 var LineView_default = LineView;
 
-// node_modules/echarts/lib/layout/points.js
+// ../../node_modules/echarts/lib/layout/points.js
 function pointsLayout(seriesType, forceStoreInTypedArray) {
   return {
     seriesType,
@@ -1921,7 +1921,7 @@ function pointsLayout(seriesType, forceStoreInTypedArray) {
   };
 }
 
-// node_modules/echarts/lib/processor/dataSample.js
+// ../../node_modules/echarts/lib/processor/dataSample.js
 var samplers = {
   average: function(frame) {
     var sum2 = 0;
@@ -2002,7 +2002,7 @@ function dataSample(seriesType) {
   };
 }
 
-// node_modules/echarts/lib/chart/line/install.js
+// ../../node_modules/echarts/lib/chart/line/install.js
 function install5(registers) {
   registers.registerChartView(LineView_default);
   registers.registerSeriesModel(LineSeries_default);
@@ -2021,7 +2021,7 @@ function install5(registers) {
   registers.registerProcessor(registers.PRIORITY.PROCESSOR.STATISTIC, dataSample("line"));
 }
 
-// node_modules/echarts/lib/chart/bar/BaseBarSeries.js
+// ../../node_modules/echarts/lib/chart/bar/BaseBarSeries.js
 var BaseBarSeriesModel = (
   /** @class */
   (function(_super) {
@@ -2122,7 +2122,7 @@ var BaseBarSeriesModel = (
 Series_default.registerClass(BaseBarSeriesModel);
 var BaseBarSeries_default = BaseBarSeriesModel;
 
-// node_modules/echarts/lib/chart/bar/BarSeries.js
+// ../../node_modules/echarts/lib/chart/bar/BarSeries.js
 var BarSeriesModel = (
   /** @class */
   (function(_super) {
@@ -2185,7 +2185,7 @@ var BarSeriesModel = (
 );
 var BarSeries_default = BarSeriesModel;
 
-// node_modules/echarts/lib/util/shape/sausage.js
+// ../../node_modules/echarts/lib/util/shape/sausage.js
 var SausageShape = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -2249,7 +2249,7 @@ var SausagePath = (
 );
 var sausage_default = SausagePath;
 
-// node_modules/echarts/lib/label/sectorLabel.js
+// ../../node_modules/echarts/lib/label/sectorLabel.js
 function createSectorCalculateTextPosition(positionMapping, opts) {
   opts = opts || {};
   var isRoundCap = opts.isRoundCap;
@@ -2397,7 +2397,7 @@ function adjustAngleDistanceY(angle, distance, isEnd) {
   return distance * Math.cos(angle) * (isEnd ? 1 : -1);
 }
 
-// node_modules/echarts/lib/chart/helper/sectorHelper.js
+// ../../node_modules/echarts/lib/chart/helper/sectorHelper.js
 function getSectorCornerRadius(model, shape, zeroIfNull) {
   var cornerRadius = model.get("borderRadius");
   if (cornerRadius == null) {
@@ -2416,7 +2416,7 @@ function getSectorCornerRadius(model, shape, zeroIfNull) {
   };
 }
 
-// node_modules/echarts/lib/chart/bar/BarView.js
+// ../../node_modules/echarts/lib/chart/bar/BarView.js
 var mathMax2 = Math.max;
 var mathMin2 = Math.min;
 function getClipArea(coord, data) {
@@ -3209,7 +3209,7 @@ function createBackgroundEl(coord, isHorizontalOrRadial, layout2) {
 }
 var BarView_default = BarView;
 
-// node_modules/echarts/lib/chart/bar/install.js
+// ../../node_modules/echarts/lib/chart/bar/install.js
 function install6(registers) {
   registers.registerChartView(BarView_default);
   registers.registerSeriesModel(BarSeries_default);
@@ -3233,7 +3233,7 @@ function install6(registers) {
   });
 }
 
-// node_modules/echarts/lib/chart/pie/pieLayout.js
+// ../../node_modules/echarts/lib/chart/pie/pieLayout.js
 var PI2 = Math.PI * 2;
 var RADIAN = Math.PI / 180;
 function pieLayout(seriesType, ecModel, api) {
@@ -3374,7 +3374,7 @@ function pieLayout(seriesType, ecModel, api) {
 }
 var getSeriesLayoutData = makeInner();
 
-// node_modules/echarts/lib/processor/dataFilter.js
+// ../../node_modules/echarts/lib/processor/dataFilter.js
 function dataFilter(seriesType) {
   return {
     seriesType,
@@ -3399,7 +3399,7 @@ function dataFilter(seriesType) {
   };
 }
 
-// node_modules/echarts/lib/chart/pie/labelLayout.js
+// ../../node_modules/echarts/lib/chart/pie/labelLayout.js
 var RADIAN2 = Math.PI / 180;
 function adjustSingleSide(list, cx, cy, r, dir, viewWidth, viewHeight, viewLeft, viewTop, farthestX) {
   if (list.length < 2) {
@@ -3784,7 +3784,7 @@ function pieLabelLayout(seriesModel) {
   }
 }
 
-// node_modules/echarts/lib/chart/pie/PieView.js
+// ../../node_modules/echarts/lib/chart/pie/PieView.js
 var PiePiece = (
   /** @class */
   (function(_super) {
@@ -4000,7 +4000,7 @@ var PieView = (
 );
 var PieView_default = PieView;
 
-// node_modules/echarts/lib/chart/helper/createSeriesDataSimply.js
+// ../../node_modules/echarts/lib/chart/helper/createSeriesDataSimply.js
 function createSeriesDataSimply(seriesModel, opt, nameList) {
   opt = isArray(opt) && {
     coordDimensions: opt
@@ -4014,7 +4014,7 @@ function createSeriesDataSimply(seriesModel, opt, nameList) {
   return list;
 }
 
-// node_modules/echarts/lib/visual/LegendVisualProvider.js
+// ../../node_modules/echarts/lib/visual/LegendVisualProvider.js
 var LegendVisualProvider = (
   /** @class */
   (function() {
@@ -4043,7 +4043,7 @@ var LegendVisualProvider = (
 );
 var LegendVisualProvider_default = LegendVisualProvider;
 
-// node_modules/echarts/lib/chart/pie/PieSeries.js
+// ../../node_modules/echarts/lib/chart/pie/PieSeries.js
 var innerData = makeInner();
 var PieSeriesModel = (
   /** @class */
@@ -4202,7 +4202,7 @@ registerLayOutOnCoordSysUsage({
 });
 var PieSeries_default = PieSeriesModel;
 
-// node_modules/echarts/lib/processor/negativeDataFilter.js
+// ../../node_modules/echarts/lib/processor/negativeDataFilter.js
 function negativeDataFilter(seriesType) {
   return {
     seriesType,
@@ -4220,7 +4220,7 @@ function negativeDataFilter(seriesType) {
   };
 }
 
-// node_modules/echarts/lib/chart/pie/install.js
+// ../../node_modules/echarts/lib/chart/pie/install.js
 function install7(registers) {
   registers.registerChartView(PieView_default);
   registers.registerSeriesModel(PieSeries_default);
@@ -4230,7 +4230,7 @@ function install7(registers) {
   registers.registerProcessor(negativeDataFilter("pie"));
 }
 
-// node_modules/echarts/lib/chart/scatter/ScatterSeries.js
+// ../../node_modules/echarts/lib/chart/scatter/ScatterSeries.js
 var ScatterSeriesModel = (
   /** @class */
   (function(_super) {
@@ -4304,7 +4304,7 @@ var ScatterSeriesModel = (
 );
 var ScatterSeries_default = ScatterSeriesModel;
 
-// node_modules/echarts/lib/chart/helper/LargeSymbolDraw.js
+// ../../node_modules/echarts/lib/chart/helper/LargeSymbolDraw.js
 var BOOST_SIZE_THRESHOLD = 4;
 var LargeSymbolPathShape = (
   /** @class */
@@ -4552,7 +4552,7 @@ var LargeSymbolDraw = (
 );
 var LargeSymbolDraw_default = LargeSymbolDraw;
 
-// node_modules/echarts/lib/chart/scatter/ScatterView.js
+// ../../node_modules/echarts/lib/chart/scatter/ScatterView.js
 var ScatterView = (
   /** @class */
   (function(_super) {
@@ -4640,10 +4640,10 @@ var ScatterView = (
 );
 var ScatterView_default = ScatterView;
 
-// node_modules/echarts/lib/util/jitter.js
+// ../../node_modules/echarts/lib/util/jitter.js
 var inner = makeInner();
 
-// node_modules/echarts/lib/chart/scatter/install.js
+// ../../node_modules/echarts/lib/chart/scatter/install.js
 function install8(registers) {
   use(install);
   registers.registerSeriesModel(ScatterSeries_default);
@@ -4651,7 +4651,7 @@ function install8(registers) {
   registers.registerLayout(pointsLayout("scatter"));
 }
 
-// node_modules/echarts/lib/chart/radar/radarLayout.js
+// ../../node_modules/echarts/lib/chart/radar/radarLayout.js
 function radarLayout(ecModel) {
   ecModel.eachSeriesByType("radar", function(seriesModel) {
     var data = seriesModel.getData();
@@ -4684,7 +4684,7 @@ function getValueMissingPoint(coordSys) {
   return [coordSys.cx, coordSys.cy];
 }
 
-// node_modules/echarts/lib/chart/radar/backwardCompat.js
+// ../../node_modules/echarts/lib/chart/radar/backwardCompat.js
 function radarBackwardCompat(option) {
   var polarOptArr = option.polar;
   if (polarOptArr) {
@@ -4715,7 +4715,7 @@ function radarBackwardCompat(option) {
   });
 }
 
-// node_modules/echarts/lib/chart/radar/RadarView.js
+// ../../node_modules/echarts/lib/chart/radar/RadarView.js
 var RadarView = (
   /** @class */
   (function(_super) {
@@ -4895,7 +4895,7 @@ var RadarView = (
 );
 var RadarView_default = RadarView;
 
-// node_modules/echarts/lib/chart/radar/RadarSeries.js
+// ../../node_modules/echarts/lib/chart/radar/RadarSeries.js
 var RadarSeriesModel = (
   /** @class */
   (function(_super) {
@@ -4981,7 +4981,7 @@ var RadarSeriesModel = (
 );
 var RadarSeries_default = RadarSeriesModel;
 
-// node_modules/echarts/lib/chart/radar/install.js
+// ../../node_modules/echarts/lib/chart/radar/install.js
 function install9(registers) {
   use(install2);
   registers.registerChartView(RadarView_default);
@@ -4991,7 +4991,7 @@ function install9(registers) {
   registers.registerPreprocessor(radarBackwardCompat);
 }
 
-// node_modules/echarts/lib/chart/map/MapView.js
+// ../../node_modules/echarts/lib/chart/map/MapView.js
 var MapView = (
   /** @class */
   (function(_super) {
@@ -5104,7 +5104,7 @@ var MapView = (
 );
 var MapView_default = MapView;
 
-// node_modules/echarts/lib/chart/map/MapSeries.js
+// ../../node_modules/echarts/lib/chart/map/MapSeries.js
 var MapSeries = (
   /** @class */
   (function(_super) {
@@ -5294,7 +5294,7 @@ var MapSeries = (
 );
 var MapSeries_default = MapSeries;
 
-// node_modules/echarts/lib/chart/map/mapDataStatistic.js
+// ../../node_modules/echarts/lib/chart/map/mapDataStatistic.js
 function dataStatistics(datas, statisticType) {
   var dataNameMap = {};
   each(datas, function(data) {
@@ -5353,7 +5353,7 @@ function mapDataStatistic(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/map/mapSymbolLayout.js
+// ../../node_modules/echarts/lib/chart/map/mapSymbolLayout.js
 function mapSymbolLayout(ecModel) {
   var processedMapType = {};
   ecModel.eachSeriesByType("map", function(mapSeries) {
@@ -5393,7 +5393,7 @@ function mapSymbolLayout(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/map/install.js
+// ../../node_modules/echarts/lib/chart/map/install.js
 function install10(registers) {
   use(install3);
   registers.registerChartView(MapView_default);
@@ -5403,7 +5403,7 @@ function install10(registers) {
   createLegacyDataSelectAction("map", registers.registerAction);
 }
 
-// node_modules/echarts/lib/chart/tree/layoutHelper.js
+// ../../node_modules/echarts/lib/chart/tree/layoutHelper.js
 function init(inRoot) {
   var root = inRoot;
   root.hierNode = {
@@ -5548,7 +5548,7 @@ function defaultSeparation(node1, node2) {
   return node1.parentNode === node2.parentNode ? 1 : 2;
 }
 
-// node_modules/echarts/lib/chart/tree/TreeView.js
+// ../../node_modules/echarts/lib/chart/tree/TreeView.js
 var TreeEdgeShape = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -6069,7 +6069,7 @@ function getEdgeShape(layoutOpt, orient, curvature, sourceLayout, targetLayout) 
 }
 var TreeView_default = TreeView;
 
-// node_modules/echarts/lib/data/helper/linkSeriesData.js
+// ../../node_modules/echarts/lib/data/helper/linkSeriesData.js
 var inner2 = makeInner();
 function linkSeriesData(opt) {
   var mainData = opt.mainData;
@@ -6152,7 +6152,7 @@ function linkSingle(data, dataType, mainData, opt) {
 }
 var linkSeriesData_default = linkSeriesData;
 
-// node_modules/echarts/lib/data/Tree.js
+// ../../node_modules/echarts/lib/data/Tree.js
 var TreeNode = (
   /** @class */
   (function() {
@@ -6391,7 +6391,7 @@ function addChild(child, node) {
 }
 var Tree_default = Tree;
 
-// node_modules/echarts/lib/chart/helper/treeHelper.js
+// ../../node_modules/echarts/lib/chart/helper/treeHelper.js
 function retrieveTargetInfo(payload, validPayloadTypes, seriesModel) {
   if (payload && indexOf(validPayloadTypes, payload.type) >= 0) {
     var root = seriesModel.getData().tree.root;
@@ -6439,7 +6439,7 @@ function wrapTreePathInfo(node, seriesModel) {
   return treePathInfo;
 }
 
-// node_modules/echarts/lib/chart/tree/TreeSeries.js
+// ../../node_modules/echarts/lib/chart/tree/TreeSeries.js
 var TreeSeriesModel = (
   /** @class */
   (function(_super) {
@@ -6572,7 +6572,7 @@ var TreeSeriesModel = (
 );
 var TreeSeries_default = TreeSeriesModel;
 
-// node_modules/echarts/lib/chart/tree/traversalHelper.js
+// ../../node_modules/echarts/lib/chart/tree/traversalHelper.js
 function eachAfter(root, callback, separation2) {
   var nodes = [root];
   var next = [];
@@ -6608,7 +6608,7 @@ function eachBefore(root, callback) {
   }
 }
 
-// node_modules/echarts/lib/chart/tree/treeLayout.js
+// ../../node_modules/echarts/lib/chart/tree/treeLayout.js
 function treeLayout(ecModel, api) {
   ecModel.eachSeriesByType("tree", function(seriesModel) {
     commonLayout(seriesModel, api);
@@ -6704,7 +6704,7 @@ function commonLayout(seriesModel, api) {
   }
 }
 
-// node_modules/echarts/lib/chart/tree/treeVisual.js
+// ../../node_modules/echarts/lib/chart/tree/treeVisual.js
 function treeVisual(ecModel) {
   ecModel.eachSeriesByType("tree", function(seriesModel) {
     var data = seriesModel.getData();
@@ -6718,7 +6718,7 @@ function treeVisual(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/tree/treeAction.js
+// ../../node_modules/echarts/lib/chart/tree/treeAction.js
 function installTreeAction(registers) {
   registers.registerAction({
     type: "treeExpandAndCollapse",
@@ -6758,7 +6758,7 @@ function installTreeAction(registers) {
   });
 }
 
-// node_modules/echarts/lib/chart/tree/install.js
+// ../../node_modules/echarts/lib/chart/tree/install.js
 function install11(registers) {
   registers.registerChartView(TreeView_default);
   registers.registerSeriesModel(TreeSeries_default);
@@ -6767,7 +6767,7 @@ function install11(registers) {
   installTreeAction(registers);
 }
 
-// node_modules/echarts/lib/chart/treemap/treemapAction.js
+// ../../node_modules/echarts/lib/chart/treemap/treemapAction.js
 var actionTypes = ["treemapZoomToNode", "treemapRender", "treemapMove"];
 function installTreemapAction(registers) {
   for (var i = 0; i < actionTypes.length; i++) {
@@ -6799,7 +6799,7 @@ function installTreemapAction(registers) {
   });
 }
 
-// node_modules/echarts/lib/chart/helper/enableAriaDecalForTree.js
+// ../../node_modules/echarts/lib/chart/helper/enableAriaDecalForTree.js
 function enableAriaDecalForTree(seriesModel) {
   var data = seriesModel.getData();
   var tree = data.tree;
@@ -6814,7 +6814,7 @@ function enableAriaDecalForTree(seriesModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/treemap/TreemapSeries.js
+// ../../node_modules/echarts/lib/chart/treemap/TreemapSeries.js
 var TreemapSeriesModel = (
   /** @class */
   (function(_super) {
@@ -7073,7 +7073,7 @@ function setDefault(levels, ecModel) {
 }
 var TreemapSeries_default = TreemapSeriesModel;
 
-// node_modules/echarts/lib/chart/treemap/Breadcrumb.js
+// ../../node_modules/echarts/lib/chart/treemap/Breadcrumb.js
 var TEXT_PADDING = 8;
 var ITEM_GAP = 8;
 var ARRAY_LENGTH = 5;
@@ -7201,7 +7201,7 @@ function packEventData(el, seriesModel, itemNode) {
 }
 var Breadcrumb_default = Breadcrumb;
 
-// node_modules/echarts/lib/util/animation.js
+// ../../node_modules/echarts/lib/util/animation.js
 var AnimationWrap = (
   /** @class */
   (function() {
@@ -7258,7 +7258,7 @@ function createWrap() {
   return new AnimationWrap();
 }
 
-// node_modules/echarts/lib/chart/treemap/TreemapView.js
+// ../../node_modules/echarts/lib/chart/treemap/TreemapView.js
 var Group = Group_default;
 var Rect = Rect_default;
 var DRAG_THRESHOLD = 3;
@@ -7593,9 +7593,9 @@ var TreemapView = (
         var layoutInfo = this.seriesModel.layoutInfo;
         mouseX -= layoutInfo.x;
         mouseY -= layoutInfo.y;
-        var m = create();
+        var m = create2();
         translate(m, m, [-mouseX, -mouseY]);
-        scale(m, m, [zoomScale, zoomScale]);
+        scale2(m, m, [zoomScale, zoomScale]);
         translate(m, m, [mouseX, mouseY]);
         rect.applyTransform(m);
         this.api.dispatchAction({
@@ -7981,7 +7981,7 @@ function calculateZ2(depth, z2InLevel) {
 }
 var TreemapView_default = TreemapView;
 
-// node_modules/echarts/lib/chart/treemap/treemapVisual.js
+// ../../node_modules/echarts/lib/chart/treemap/treemapVisual.js
 var ITEM_STYLE_NORMAL = "itemStyle";
 var inner4 = makeInner();
 var treemapVisual_default = {
@@ -8114,7 +8114,7 @@ function mapVisual(nodeModel, visuals, child, index, mapping, seriesModel) {
   return childVisuals;
 }
 
-// node_modules/echarts/lib/chart/treemap/treemapLayout.js
+// ../../node_modules/echarts/lib/chart/treemap/treemapLayout.js
 var mathMax3 = Math.max;
 var mathMin3 = Math.min;
 var retrieveValue = retrieve;
@@ -8465,7 +8465,7 @@ function getUpperLabelHeight(model) {
   return model.get(PATH_UPPER_LABEL_SHOW) ? model.get(PATH_UPPER_LABEL_HEIGHT) : 0;
 }
 
-// node_modules/echarts/lib/chart/treemap/install.js
+// ../../node_modules/echarts/lib/chart/treemap/install.js
 function install12(registers) {
   registers.registerSeriesModel(TreemapSeries_default);
   registers.registerChartView(TreemapView_default);
@@ -8474,7 +8474,7 @@ function install12(registers) {
   installTreemapAction(registers);
 }
 
-// node_modules/echarts/lib/chart/graph/categoryFilter.js
+// ../../node_modules/echarts/lib/chart/graph/categoryFilter.js
 function categoryFilter(ecModel) {
   var legendModels = ecModel.findComponents({
     mainType: "legend"
@@ -8505,7 +8505,7 @@ function categoryFilter(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/categoryVisual.js
+// ../../node_modules/echarts/lib/chart/graph/categoryVisual.js
 function categoryVisual(ecModel) {
   var paletteScope = {};
   ecModel.eachSeriesByType("graph", function(seriesModel) {
@@ -8550,7 +8550,7 @@ function categoryVisual(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/edgeVisual.js
+// ../../node_modules/echarts/lib/chart/graph/edgeVisual.js
 function normalize2(a) {
   if (!(a instanceof Array)) {
     a = [a, a];
@@ -8596,7 +8596,7 @@ function graphEdgeVisual(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/helper/multipleGraphEdgeHelper.js
+// ../../node_modules/echarts/lib/chart/helper/multipleGraphEdgeHelper.js
 var KEY_DELIMITER = "-->";
 var getAutoCurvenessParams = function(seriesModel) {
   return seriesModel.get("autoCurveness") || null;
@@ -8712,7 +8712,7 @@ function getCurvenessForEdge(edge, seriesModel, index, needReverse) {
   }
 }
 
-// node_modules/echarts/lib/chart/graph/simpleLayoutHelper.js
+// ../../node_modules/echarts/lib/chart/graph/simpleLayoutHelper.js
 function simpleLayout(seriesModel) {
   var coordSys = seriesModel.coordinateSystem;
   if (coordSys && coordSys.type !== "view") {
@@ -8728,8 +8728,8 @@ function simpleLayout(seriesModel) {
 function simpleLayoutEdge(graph, seriesModel) {
   graph.eachEdge(function(edge, index) {
     var curveness = retrieve3(edge.getModel().get(["lineStyle", "curveness"]), -getCurvenessForEdge(edge, seriesModel, index, true), 0);
-    var p1 = clone3(edge.node1.getLayout());
-    var p2 = clone3(edge.node2.getLayout());
+    var p1 = clone2(edge.node1.getLayout());
+    var p2 = clone2(edge.node2.getLayout());
     var points = [p1, p2];
     if (+curveness) {
       points.push([(p1[0] + p2[0]) / 2 - (p1[1] - p2[1]) * curveness, (p1[1] + p2[1]) / 2 - (p2[0] - p1[0]) * curveness]);
@@ -8738,7 +8738,7 @@ function simpleLayoutEdge(graph, seriesModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/simpleLayout.js
+// ../../node_modules/echarts/lib/chart/graph/simpleLayout.js
 function graphSimpleLayout(ecModel, api) {
   ecModel.eachSeriesByType("graph", function(seriesModel) {
     var layout2 = seriesModel.get("layout");
@@ -8772,7 +8772,7 @@ function graphSimpleLayout(ecModel, api) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/graphHelper.js
+// ../../node_modules/echarts/lib/chart/graph/graphHelper.js
 function getNodeGlobalScale(seriesModel) {
   var coordSys = seriesModel.coordinateSystem;
   if (coordSys.type !== "view") {
@@ -8792,7 +8792,7 @@ function getSymbolSize(node) {
   return +symbolSize;
 }
 
-// node_modules/echarts/lib/chart/graph/circularLayoutHelper.js
+// ../../node_modules/echarts/lib/chart/graph/circularLayoutHelper.js
 var PI = Math.PI;
 var _symbolRadiansHalf = [];
 function circularLayout(seriesModel, basedOn, draggingNode, pointer) {
@@ -8818,7 +8818,7 @@ function circularLayout(seriesModel, basedOn, draggingNode, pointer) {
     var _a = coordSys.pointToData(pointer), tempX = _a[0], tempY = _a[1];
     var v = [tempX - cx, tempY - cy];
     normalize(v, v);
-    scale2(v, v, r);
+    scale(v, v, r);
     draggingNode.setLayout([cx + v[0], cy + v[1]], true);
     var circularRotateLabel = seriesModel.get(["circular", "rotateLabel"]);
     rotateNodeLabel(draggingNode, circularRotateLabel, cx, cy);
@@ -8826,8 +8826,8 @@ function circularLayout(seriesModel, basedOn, draggingNode, pointer) {
   _layoutNodesBasedOn[basedOn](seriesModel, graph, nodeData, r, cx, cy, count);
   graph.eachEdge(function(edge, index) {
     var curveness = retrieve3(edge.getModel().get(["lineStyle", "curveness"]), getCurvenessForEdge(edge, seriesModel, index), 0);
-    var p1 = clone3(edge.node1.getLayout());
-    var p2 = clone3(edge.node2.getLayout());
+    var p1 = clone2(edge.node1.getLayout());
+    var p2 = clone2(edge.node2.getLayout());
     var cp1;
     var x12 = (p1[0] + p2[0]) / 2;
     var y12 = (p1[1] + p2[1]) / 2;
@@ -8910,7 +8910,7 @@ function rotateNodeLabel(node, circularRotateLabel, cx, cy) {
   }
 }
 
-// node_modules/echarts/lib/chart/graph/circularLayout.js
+// ../../node_modules/echarts/lib/chart/graph/circularLayout.js
 function graphCircularLayout(ecModel) {
   ecModel.eachSeriesByType("graph", function(seriesModel) {
     if (seriesModel.get("layout") === "circular") {
@@ -8919,7 +8919,7 @@ function graphCircularLayout(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/forceHelper.js
+// ../../node_modules/echarts/lib/chart/graph/forceHelper.js
 var scaleAndAdd2 = scaleAndAdd;
 function forceLayout(inNodes, inEdges, opts) {
   var nodes = inNodes;
@@ -8932,9 +8932,9 @@ function forceLayout(inNodes, inEdges, opts) {
   for (var i = 0; i < nodes.length; i++) {
     var n = nodes[i];
     if (!n.p) {
-      n.p = create2(width * (Math.random() - 0.5) + center2[0], height * (Math.random() - 0.5) + center2[1]);
+      n.p = create(width * (Math.random() - 0.5) + center2[0], height * (Math.random() - 0.5) + center2[1]);
     }
-    n.pp = clone3(n.p);
+    n.pp = clone2(n.p);
     n.edges = null;
   }
   var initialFriction = opts.friction == null ? 0.6 : opts.friction;
@@ -9029,7 +9029,7 @@ function forceLayout(inNodes, inEdges, opts) {
   };
 }
 
-// node_modules/echarts/lib/chart/graph/forceLayout.js
+// ../../node_modules/echarts/lib/chart/graph/forceLayout.js
 function graphForceLayout(ecModel) {
   ecModel.eachSeriesByType("graph", function(graphSeries) {
     var coordSys = graphSeries.coordinateSystem;
@@ -9135,7 +9135,7 @@ function graphForceLayout(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/createView.js
+// ../../node_modules/echarts/lib/chart/graph/createView.js
 function getViewRect(seriesModel, api, aspect) {
   var layoutRef = createBoxLayoutReference(seriesModel, api);
   var option = extend(seriesModel.getBoxLayoutParams(), {
@@ -9194,7 +9194,7 @@ function createViewCoordSys(ecModel, api) {
   return viewList;
 }
 
-// node_modules/echarts/lib/chart/graph/adjustEdge.js
+// ../../node_modules/echarts/lib/chart/graph/adjustEdge.js
 var v1 = [];
 var v2 = [];
 var v3 = [];
@@ -9258,9 +9258,9 @@ function adjustEdge(graph, scale3) {
     var fromSymbol = edge.getVisual("fromSymbol");
     var toSymbol = edge.getVisual("toSymbol");
     if (!linePoints.__original) {
-      linePoints.__original = [clone3(linePoints[0]), clone3(linePoints[1])];
+      linePoints.__original = [clone2(linePoints[0]), clone2(linePoints[1])];
       if (linePoints[2]) {
-        linePoints.__original.push(clone3(linePoints[2]));
+        linePoints.__original.push(clone2(linePoints[2]));
       }
     }
     var originalPoints = linePoints.__original;
@@ -9310,7 +9310,7 @@ function adjustEdge(graph, scale3) {
   });
 }
 
-// node_modules/echarts/lib/chart/graph/GraphView.js
+// ../../node_modules/echarts/lib/chart/graph/GraphView.js
 function isViewCoordSys(coordSys) {
   return coordSys.type === "view";
 }
@@ -9633,7 +9633,7 @@ var GraphView = (
 );
 var GraphView_default = GraphView;
 
-// node_modules/echarts/lib/data/Graph.js
+// ../../node_modules/echarts/lib/data/Graph.js
 function generateNodeKey(id) {
   return "_EC_" + id;
 }
@@ -10017,7 +10017,7 @@ mixin(GraphNode, createGraphDataProxyMixin("hostGraph", "data"));
 mixin(GraphEdge, createGraphDataProxyMixin("hostGraph", "edgeData"));
 var Graph_default = Graph;
 
-// node_modules/echarts/lib/chart/helper/createGraphFromNodeEdge.js
+// ../../node_modules/echarts/lib/chart/helper/createGraphFromNodeEdge.js
 function createGraphFromNodeEdge(nodes, edges, seriesModel, directed, beforeLink) {
   var graph = new Graph_default(directed);
   for (var i = 0; i < nodes.length; i++) {
@@ -10078,7 +10078,7 @@ function createGraphFromNodeEdge(nodes, edges, seriesModel, directed, beforeLink
   return graph;
 }
 
-// node_modules/echarts/lib/chart/graph/GraphSeries.js
+// ../../node_modules/echarts/lib/chart/graph/GraphSeries.js
 var GraphSeriesModel = (
   /** @class */
   (function(_super) {
@@ -10297,7 +10297,7 @@ var GraphSeriesModel = (
 );
 var GraphSeries_default = GraphSeriesModel;
 
-// node_modules/echarts/lib/chart/graph/install.js
+// ../../node_modules/echarts/lib/chart/graph/install.js
 function install13(registers) {
   registers.registerChartView(GraphView_default);
   registers.registerSeriesModel(GraphSeries_default);
@@ -10347,7 +10347,7 @@ function install13(registers) {
   });
 }
 
-// node_modules/echarts/lib/chart/chord/ChordPiece.js
+// ../../node_modules/echarts/lib/chart/chord/ChordPiece.js
 var ChordPiece = (
   /** @class */
   (function(_super) {
@@ -10450,7 +10450,7 @@ var ChordPiece = (
 );
 var ChordPiece_default = ChordPiece;
 
-// node_modules/echarts/lib/chart/chord/ChordEdge.js
+// ../../node_modules/echarts/lib/chart/chord/ChordEdge.js
 var ChordEdge = (
   /** @class */
   (function(_super) {
@@ -10539,7 +10539,7 @@ function applyEdgeFill(edgeShape, edge, nodeData, lineStyleModel) {
   }
 }
 
-// node_modules/echarts/lib/chart/chord/ChordView.js
+// ../../node_modules/echarts/lib/chart/chord/ChordView.js
 var RADIAN3 = Math.PI / 180;
 var ChordView = (
   /** @class */
@@ -10622,7 +10622,7 @@ var ChordView = (
 );
 var ChordView_default = ChordView;
 
-// node_modules/echarts/lib/chart/chord/ChordSeries.js
+// ../../node_modules/echarts/lib/chart/chord/ChordSeries.js
 var ChordSeriesModel = (
   /** @class */
   (function(_super) {
@@ -10762,7 +10762,7 @@ var ChordSeriesModel = (
 );
 var ChordSeries_default = ChordSeriesModel;
 
-// node_modules/echarts/lib/chart/chord/chordLayout.js
+// ../../node_modules/echarts/lib/chart/chord/chordLayout.js
 var RADIAN4 = Math.PI / 180;
 function chordCircularLayout(ecModel, api) {
   ecModel.eachSeriesByType("chord", function(seriesModel) {
@@ -10944,7 +10944,7 @@ function chordLayout(seriesModel, api) {
   });
 }
 
-// node_modules/echarts/lib/chart/chord/install.js
+// ../../node_modules/echarts/lib/chart/chord/install.js
 function install14(registers) {
   registers.registerChartView(ChordView_default);
   registers.registerSeriesModel(ChordSeries_default);
@@ -10952,7 +10952,7 @@ function install14(registers) {
   registers.registerProcessor(dataFilter("chord"));
 }
 
-// node_modules/echarts/lib/chart/gauge/PointerPath.js
+// ../../node_modules/echarts/lib/chart/gauge/PointerPath.js
 var PointerShape = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -10998,7 +10998,7 @@ var PointerPath = (
 );
 var PointerPath_default = PointerPath;
 
-// node_modules/echarts/lib/chart/gauge/GaugeView.js
+// ../../node_modules/echarts/lib/chart/gauge/GaugeView.js
 function parsePosition(seriesModel, api) {
   var center2 = seriesModel.get("center");
   var width = api.getWidth();
@@ -11497,7 +11497,7 @@ var GaugeView = (
 );
 var GaugeView_default = GaugeView;
 
-// node_modules/echarts/lib/chart/gauge/GaugeSeries.js
+// ../../node_modules/echarts/lib/chart/gauge/GaugeSeries.js
 var GaugeSeriesModel = (
   /** @class */
   (function(_super) {
@@ -11641,13 +11641,13 @@ var GaugeSeriesModel = (
 );
 var GaugeSeries_default = GaugeSeriesModel;
 
-// node_modules/echarts/lib/chart/gauge/install.js
+// ../../node_modules/echarts/lib/chart/gauge/install.js
 function install15(registers) {
   registers.registerChartView(GaugeView_default);
   registers.registerSeriesModel(GaugeSeries_default);
 }
 
-// node_modules/echarts/lib/chart/funnel/FunnelView.js
+// ../../node_modules/echarts/lib/chart/funnel/FunnelView.js
 var opacityAccessPath = ["itemStyle", "opacity"];
 var FunnelPiece = (
   /** @class */
@@ -11804,7 +11804,7 @@ var FunnelView = (
 );
 var FunnelView_default = FunnelView;
 
-// node_modules/echarts/lib/chart/funnel/FunnelSeries.js
+// ../../node_modules/echarts/lib/chart/funnel/FunnelSeries.js
 var FunnelSeriesModel = (
   /** @class */
   (function(_super) {
@@ -11897,7 +11897,7 @@ var FunnelSeriesModel = (
 );
 var FunnelSeries_default = FunnelSeriesModel;
 
-// node_modules/echarts/lib/chart/funnel/funnelLayout.js
+// ../../node_modules/echarts/lib/chart/funnel/funnelLayout.js
 function getSortedIndices(data, sort3) {
   var valueDim = data.mapDimension("value");
   var valueArr = data.mapArray(valueDim, function(val) {
@@ -12180,7 +12180,7 @@ function funnelLayout(ecModel, api) {
   });
 }
 
-// node_modules/echarts/lib/chart/funnel/install.js
+// ../../node_modules/echarts/lib/chart/funnel/install.js
 function install16(registers) {
   registers.registerChartView(FunnelView_default);
   registers.registerSeriesModel(FunnelSeries_default);
@@ -12188,7 +12188,7 @@ function install16(registers) {
   registers.registerProcessor(dataFilter("funnel"));
 }
 
-// node_modules/echarts/lib/chart/parallel/ParallelView.js
+// ../../node_modules/echarts/lib/chart/parallel/ParallelView.js
 var DEFAULT_SMOOTH = 0.3;
 var ParallelView = (
   /** @class */
@@ -12338,7 +12338,7 @@ function isEmptyValue(val, axisType) {
 }
 var ParallelView_default = ParallelView;
 
-// node_modules/echarts/lib/chart/parallel/ParallelSeries.js
+// ../../node_modules/echarts/lib/chart/parallel/ParallelSeries.js
 var ParallelSeriesModel = (
   /** @class */
   (function(_super) {
@@ -12412,7 +12412,7 @@ function convertDimNameToNumber(dimName) {
 }
 var ParallelSeries_default = ParallelSeriesModel;
 
-// node_modules/echarts/lib/chart/parallel/parallelVisual.js
+// ../../node_modules/echarts/lib/chart/parallel/parallelVisual.js
 var opacityAccessPath2 = ["lineStyle", "opacity"];
 var parallelVisual = {
   seriesType: "parallel",
@@ -12440,7 +12440,7 @@ var parallelVisual = {
 };
 var parallelVisual_default = parallelVisual;
 
-// node_modules/echarts/lib/chart/parallel/install.js
+// ../../node_modules/echarts/lib/chart/parallel/install.js
 function install17(registers) {
   use(install4);
   registers.registerChartView(ParallelView_default);
@@ -12448,7 +12448,7 @@ function install17(registers) {
   registers.registerVisual(registers.PRIORITY.VISUAL.BRUSH, parallelVisual_default);
 }
 
-// node_modules/echarts/lib/chart/sankey/SankeyView.js
+// ../../node_modules/echarts/lib/chart/sankey/SankeyView.js
 var SankeyPathShape = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -12761,7 +12761,7 @@ function createGridClipShape2(rect, seriesModel, cb) {
 }
 var SankeyView_default = SankeyView;
 
-// node_modules/echarts/lib/chart/sankey/SankeySeries.js
+// ../../node_modules/echarts/lib/chart/sankey/SankeySeries.js
 var SankeySeriesModel = (
   /** @class */
   (function(_super) {
@@ -12929,7 +12929,7 @@ var SankeySeriesModel = (
 );
 var SankeySeries_default = SankeySeriesModel;
 
-// node_modules/echarts/lib/chart/sankey/sankeyLayout.js
+// ../../node_modules/echarts/lib/chart/sankey/sankeyLayout.js
 function sankeyLayout(ecModel, api) {
   ecModel.eachSeriesByType("sankey", function(seriesModel) {
     var nodeWidth = seriesModel.get("nodeWidth");
@@ -13306,7 +13306,7 @@ function computeEdgeDepths(nodes, orient) {
   });
 }
 
-// node_modules/echarts/lib/chart/sankey/sankeyVisual.js
+// ../../node_modules/echarts/lib/chart/sankey/sankeyVisual.js
 function sankeyVisual(ecModel) {
   ecModel.eachSeriesByType("sankey", function(seriesModel) {
     var graph = seriesModel.getGraph();
@@ -13355,7 +13355,7 @@ function sankeyVisual(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/sankey/install.js
+// ../../node_modules/echarts/lib/chart/sankey/install.js
 function install18(registers) {
   registers.registerChartView(SankeyView_default);
   registers.registerSeriesModel(SankeySeries_default);
@@ -13393,7 +13393,7 @@ function install18(registers) {
   });
 }
 
-// node_modules/echarts/lib/chart/helper/whiskerBoxCommon.js
+// ../../node_modules/echarts/lib/chart/helper/whiskerBoxCommon.js
 var WhiskerBoxCommonMixin = (
   /** @class */
   (function() {
@@ -13476,7 +13476,7 @@ var WhiskerBoxCommonMixin = (
   })()
 );
 
-// node_modules/echarts/lib/chart/boxplot/BoxplotSeries.js
+// ../../node_modules/echarts/lib/chart/boxplot/BoxplotSeries.js
 var BoxplotSeriesModel = (
   /** @class */
   (function(_super) {
@@ -13534,7 +13534,7 @@ var BoxplotSeriesModel = (
 mixin(BoxplotSeriesModel, WhiskerBoxCommonMixin, true);
 var BoxplotSeries_default = BoxplotSeriesModel;
 
-// node_modules/echarts/lib/chart/boxplot/BoxplotView.js
+// ../../node_modules/echarts/lib/chart/boxplot/BoxplotView.js
 var BoxplotView = (
   /** @class */
   (function(_super) {
@@ -13665,7 +13665,7 @@ function transInit(points, dim, itemLayout) {
 }
 var BoxplotView_default = BoxplotView;
 
-// node_modules/echarts/lib/chart/boxplot/boxplotLayout.js
+// ../../node_modules/echarts/lib/chart/boxplot/boxplotLayout.js
 var each3 = each;
 function boxplotLayout(ecModel) {
   var groupResult = groupSeriesByAxis(ecModel);
@@ -13794,7 +13794,7 @@ function layoutSingleSeries(seriesModel, offset, boxWidth) {
   }
 }
 
-// node_modules/echarts/lib/chart/boxplot/prepareBoxplotData.js
+// ../../node_modules/echarts/lib/chart/boxplot/prepareBoxplotData.js
 function prepareBoxplotData(rawData, opt) {
   opt = opt || {};
   var boxData = [];
@@ -13830,7 +13830,7 @@ function prepareBoxplotData(rawData, opt) {
   };
 }
 
-// node_modules/echarts/lib/chart/boxplot/boxplotTransform.js
+// ../../node_modules/echarts/lib/chart/boxplot/boxplotTransform.js
 var boxplotTransform = {
   type: "echarts:boxplot",
   transform: function transform(params) {
@@ -13852,7 +13852,7 @@ var boxplotTransform = {
   }
 };
 
-// node_modules/echarts/lib/chart/boxplot/install.js
+// ../../node_modules/echarts/lib/chart/boxplot/install.js
 function install19(registers) {
   registers.registerSeriesModel(BoxplotSeries_default);
   registers.registerChartView(BoxplotView_default);
@@ -13860,7 +13860,7 @@ function install19(registers) {
   registers.registerTransform(boxplotTransform);
 }
 
-// node_modules/echarts/lib/chart/candlestick/candlestickVisual.js
+// ../../node_modules/echarts/lib/chart/candlestick/candlestickVisual.js
 var positiveBorderColorQuery = ["itemStyle", "borderColor"];
 var negativeBorderColorQuery = ["itemStyle", "borderColor0"];
 var dojiBorderColorQuery = ["itemStyle", "borderColorDoji"];
@@ -13900,7 +13900,7 @@ var candlestickVisual = {
 };
 var candlestickVisual_default = candlestickVisual;
 
-// node_modules/echarts/lib/chart/candlestick/CandlestickView.js
+// ../../node_modules/echarts/lib/chart/candlestick/CandlestickView.js
 var SKIP_PROPS = ["color", "borderColor"];
 var CandlestickView = (
   /** @class */
@@ -14195,7 +14195,7 @@ function setLargeStyle(sign, el, seriesModel, data) {
 }
 var CandlestickView_default = CandlestickView;
 
-// node_modules/echarts/lib/chart/candlestick/CandlestickSeries.js
+// ../../node_modules/echarts/lib/chart/candlestick/CandlestickSeries.js
 var CandlestickSeriesModel = (
   /** @class */
   (function(_super) {
@@ -14268,7 +14268,7 @@ var CandlestickSeriesModel = (
 mixin(CandlestickSeriesModel, WhiskerBoxCommonMixin, true);
 var CandlestickSeries_default = CandlestickSeriesModel;
 
-// node_modules/echarts/lib/chart/candlestick/preprocessor.js
+// ../../node_modules/echarts/lib/chart/candlestick/preprocessor.js
 function candlestickPreprocessor(option) {
   if (!option || !isArray(option.series)) {
     return;
@@ -14280,7 +14280,7 @@ function candlestickPreprocessor(option) {
   });
 }
 
-// node_modules/echarts/lib/chart/candlestick/candlestickLayout.js
+// ../../node_modules/echarts/lib/chart/candlestick/candlestickLayout.js
 var candlestickLayout = {
   seriesType: "candlestick",
   plan: createRenderPlanner(),
@@ -14422,7 +14422,7 @@ function calculateCandleWidth(seriesModel, data) {
 }
 var candlestickLayout_default = candlestickLayout;
 
-// node_modules/echarts/lib/chart/candlestick/install.js
+// ../../node_modules/echarts/lib/chart/candlestick/install.js
 function install20(registers) {
   registers.registerChartView(CandlestickView_default);
   registers.registerSeriesModel(CandlestickSeries_default);
@@ -14431,7 +14431,7 @@ function install20(registers) {
   registers.registerLayout(candlestickLayout_default);
 }
 
-// node_modules/echarts/lib/chart/helper/EffectSymbol.js
+// ../../node_modules/echarts/lib/chart/helper/EffectSymbol.js
 function updateRipplePath(rippleGroup, effectCfg) {
   var color = effectCfg.rippleEffectColor || effectCfg.color;
   rippleGroup.eachChild(function(ripplePath) {
@@ -14578,7 +14578,7 @@ var EffectSymbol = (
 );
 var EffectSymbol_default = EffectSymbol;
 
-// node_modules/echarts/lib/chart/effectScatter/EffectScatterView.js
+// ../../node_modules/echarts/lib/chart/effectScatter/EffectScatterView.js
 var EffectScatterView = (
   /** @class */
   (function(_super) {
@@ -14620,7 +14620,7 @@ var EffectScatterView = (
     EffectScatterView2.prototype._updateGroupTransform = function(seriesModel) {
       var coordSys = seriesModel.coordinateSystem;
       if (coordSys && coordSys.getRoamTransform) {
-        this.group.transform = clone2(coordSys.getRoamTransform());
+        this.group.transform = clone3(coordSys.getRoamTransform());
         this.group.decomposeTransform();
       }
     };
@@ -14633,7 +14633,7 @@ var EffectScatterView = (
 );
 var EffectScatterView_default = EffectScatterView;
 
-// node_modules/echarts/lib/chart/effectScatter/EffectScatterSeries.js
+// ../../node_modules/echarts/lib/chart/effectScatter/EffectScatterSeries.js
 var EffectScatterSeriesModel = (
   /** @class */
   (function(_super) {
@@ -14697,14 +14697,14 @@ var EffectScatterSeriesModel = (
 );
 var EffectScatterSeries_default = EffectScatterSeriesModel;
 
-// node_modules/echarts/lib/chart/effectScatter/install.js
+// ../../node_modules/echarts/lib/chart/effectScatter/install.js
 function install21(registers) {
   registers.registerChartView(EffectScatterView_default);
   registers.registerSeriesModel(EffectScatterSeries_default);
   registers.registerLayout(pointsLayout("effectScatter"));
 }
 
-// node_modules/echarts/lib/chart/helper/EffectLine.js
+// ../../node_modules/echarts/lib/chart/helper/EffectLine.js
 var EffectLine = (
   /** @class */
   (function(_super) {
@@ -14854,7 +14854,7 @@ var EffectLine = (
 );
 var EffectLine_default = EffectLine;
 
-// node_modules/echarts/lib/chart/helper/Polyline.js
+// ../../node_modules/echarts/lib/chart/helper/Polyline.js
 var Polyline = (
   /** @class */
   (function(_super) {
@@ -14919,7 +14919,7 @@ var Polyline = (
 );
 var Polyline_default2 = Polyline;
 
-// node_modules/echarts/lib/chart/helper/EffectPolyline.js
+// ../../node_modules/echarts/lib/chart/helper/EffectPolyline.js
 var EffectPolyline = (
   /** @class */
   (function(_super) {
@@ -15003,7 +15003,7 @@ var EffectPolyline = (
 );
 var EffectPolyline_default = EffectPolyline;
 
-// node_modules/echarts/lib/chart/helper/LargeLineDraw.js
+// ../../node_modules/echarts/lib/chart/helper/LargeLineDraw.js
 var LargeLinesPathShape = (
   /** @class */
   /* @__PURE__ */ (function() {
@@ -15246,7 +15246,7 @@ var LargeLineDraw = (
 );
 var LargeLineDraw_default = LargeLineDraw;
 
-// node_modules/echarts/lib/chart/lines/linesLayout.js
+// ../../node_modules/echarts/lib/chart/lines/linesLayout.js
 var linesLayout = {
   seriesType: "lines",
   plan: createRenderPlanner(),
@@ -15315,7 +15315,7 @@ var linesLayout = {
 };
 var linesLayout_default = linesLayout;
 
-// node_modules/echarts/lib/chart/lines/LinesView.js
+// ../../node_modules/echarts/lib/chart/lines/LinesView.js
 var LinesView = (
   /** @class */
   (function(_super) {
@@ -15441,7 +15441,7 @@ var LinesView = (
 );
 var LinesView_default = LinesView;
 
-// node_modules/echarts/lib/chart/lines/LinesSeries.js
+// ../../node_modules/echarts/lib/chart/lines/LinesSeries.js
 var Uint32Arr = typeof Uint32Array === "undefined" ? Array : Uint32Array;
 var Float64Arr = typeof Float64Array === "undefined" ? Array : Float64Array;
 function compatEc2(seriesOpt) {
@@ -15694,7 +15694,7 @@ var LinesSeriesModel = (
 );
 var LinesSeries_default = LinesSeriesModel;
 
-// node_modules/echarts/lib/chart/lines/linesVisual.js
+// ../../node_modules/echarts/lib/chart/lines/linesVisual.js
 function normalize3(a) {
   if (!(a instanceof Array)) {
     a = [a, a];
@@ -15727,7 +15727,7 @@ var linesVisual = {
 };
 var linesVisual_default = linesVisual;
 
-// node_modules/echarts/lib/chart/lines/install.js
+// ../../node_modules/echarts/lib/chart/lines/install.js
 function install22(registers) {
   registers.registerChartView(LinesView_default);
   registers.registerSeriesModel(LinesSeries_default);
@@ -15735,7 +15735,7 @@ function install22(registers) {
   registers.registerVisual(linesVisual_default);
 }
 
-// node_modules/echarts/lib/chart/heatmap/HeatmapLayer.js
+// ../../node_modules/echarts/lib/chart/heatmap/HeatmapLayer.js
 var GRADIENT_LEVELS = 256;
 var HeatmapLayer = (
   /** @class */
@@ -15834,7 +15834,7 @@ var HeatmapLayer = (
 );
 var HeatmapLayer_default = HeatmapLayer;
 
-// node_modules/echarts/lib/chart/heatmap/HeatmapView.js
+// ../../node_modules/echarts/lib/chart/heatmap/HeatmapView.js
 function getIsInPiecewiseRange(dataExtent, pieceList, selected) {
   var dataSpan = dataExtent[1] - dataExtent[0];
   pieceList = map(pieceList, function(piece) {
@@ -16094,7 +16094,7 @@ var HeatmapView = (
 );
 var HeatmapView_default = HeatmapView;
 
-// node_modules/echarts/lib/chart/heatmap/HeatmapSeries.js
+// ../../node_modules/echarts/lib/chart/heatmap/HeatmapSeries.js
 var HeatmapSeriesModel = (
   /** @class */
   (function(_super) {
@@ -16141,13 +16141,13 @@ var HeatmapSeriesModel = (
 );
 var HeatmapSeries_default = HeatmapSeriesModel;
 
-// node_modules/echarts/lib/chart/heatmap/install.js
+// ../../node_modules/echarts/lib/chart/heatmap/install.js
 function install23(registers) {
   registers.registerChartView(HeatmapView_default);
   registers.registerSeriesModel(HeatmapSeries_default);
 }
 
-// node_modules/echarts/lib/chart/bar/PictorialBarView.js
+// ../../node_modules/echarts/lib/chart/bar/PictorialBarView.js
 var BAR_BORDER_WIDTH_QUERY = ["itemStyle", "borderWidth"];
 var LAYOUT_ATTRS = [{
   xy: "x",
@@ -16688,7 +16688,7 @@ function toIntTimes(times) {
 }
 var PictorialBarView_default = PictorialBarView;
 
-// node_modules/echarts/lib/chart/bar/PictorialBarSeries.js
+// ../../node_modules/echarts/lib/chart/bar/PictorialBarSeries.js
 var PictorialBarSeriesModel = (
   /** @class */
   (function(_super) {
@@ -16741,7 +16741,7 @@ var PictorialBarSeriesModel = (
 );
 var PictorialBarSeries_default = PictorialBarSeriesModel;
 
-// node_modules/echarts/lib/chart/bar/installPictorialBar.js
+// ../../node_modules/echarts/lib/chart/bar/installPictorialBar.js
 function install24(registers) {
   registers.registerChartView(PictorialBarView_default);
   registers.registerSeriesModel(PictorialBarSeries_default);
@@ -16749,7 +16749,7 @@ function install24(registers) {
   registers.registerLayout(registers.PRIORITY.VISUAL.PROGRESSIVE_LAYOUT, createProgressiveLayout("pictorialBar"));
 }
 
-// node_modules/echarts/lib/chart/themeRiver/ThemeRiverView.js
+// ../../node_modules/echarts/lib/chart/themeRiver/ThemeRiverView.js
 var ThemeRiverView = (
   /** @class */
   (function(_super) {
@@ -16884,7 +16884,7 @@ function createGridClipShape3(rect, seriesModel, cb) {
 }
 var ThemeRiverView_default = ThemeRiverView;
 
-// node_modules/echarts/lib/chart/themeRiver/ThemeRiverSeries.js
+// ../../node_modules/echarts/lib/chart/themeRiver/ThemeRiverSeries.js
 var DATA_NAME_INDEX = 2;
 var ThemeRiverSeriesModel = (
   /** @class */
@@ -17061,7 +17061,7 @@ var ThemeRiverSeriesModel = (
 );
 var ThemeRiverSeries_default = ThemeRiverSeriesModel;
 
-// node_modules/echarts/lib/chart/themeRiver/themeRiverLayout.js
+// ../../node_modules/echarts/lib/chart/themeRiver/themeRiverLayout.js
 function themeRiverLayout(ecModel, api) {
   ecModel.eachSeriesByType("themeRiver", function(seriesModel) {
     var data = seriesModel.getData();
@@ -17158,7 +17158,7 @@ function computeBaseline(data) {
   };
 }
 
-// node_modules/echarts/lib/chart/themeRiver/install.js
+// ../../node_modules/echarts/lib/chart/themeRiver/install.js
 function install25(registers) {
   registers.registerChartView(ThemeRiverView_default);
   registers.registerSeriesModel(ThemeRiverSeries_default);
@@ -17166,7 +17166,7 @@ function install25(registers) {
   registers.registerProcessor(dataFilter("themeRiver"));
 }
 
-// node_modules/echarts/lib/chart/sunburst/SunburstPiece.js
+// ../../node_modules/echarts/lib/chart/sunburst/SunburstPiece.js
 var DEFAULT_SECTOR_Z = 2;
 var DEFAULT_TEXT_Z = 4;
 var SunburstPiece = (
@@ -17334,7 +17334,7 @@ var SunburstPiece = (
 );
 var SunburstPiece_default = SunburstPiece;
 
-// node_modules/echarts/lib/chart/sunburst/sunburstAction.js
+// ../../node_modules/echarts/lib/chart/sunburst/sunburstAction.js
 var ROOT_TO_NODE_ACTION = "sunburstRootToNode";
 var HIGHLIGHT_ACTION = "sunburstHighlight";
 var UNHIGHLIGHT_ACTION = "sunburstUnhighlight";
@@ -17396,7 +17396,7 @@ function installSunburstAction(registers) {
   });
 }
 
-// node_modules/echarts/lib/chart/sunburst/SunburstView.js
+// ../../node_modules/echarts/lib/chart/sunburst/SunburstView.js
 var SunburstView = (
   /** @class */
   (function(_super) {
@@ -17535,7 +17535,7 @@ var SunburstView = (
 );
 var SunburstView_default = SunburstView;
 
-// node_modules/echarts/lib/chart/sunburst/SunburstSeries.js
+// ../../node_modules/echarts/lib/chart/sunburst/SunburstSeries.js
 var SunburstSeriesModel = (
   /** @class */
   (function(_super) {
@@ -17684,7 +17684,7 @@ function completeTreeValue2(dataNode) {
 }
 var SunburstSeries_default = SunburstSeriesModel;
 
-// node_modules/echarts/lib/chart/sunburst/sunburstLayout.js
+// ../../node_modules/echarts/lib/chart/sunburst/sunburstLayout.js
 var RADIAN5 = Math.PI / 180;
 function sunburstLayout(seriesType, ecModel, api) {
   ecModel.eachSeriesByType(seriesType, function(seriesModel) {
@@ -17828,7 +17828,7 @@ function sort2(children, sortOrder) {
   }
 }
 
-// node_modules/echarts/lib/chart/sunburst/sunburstVisual.js
+// ../../node_modules/echarts/lib/chart/sunburst/sunburstVisual.js
 function sunburstVisual(ecModel) {
   var paletteScope = {};
   function pickColor(node, seriesModel, treeHeight) {
@@ -17860,7 +17860,7 @@ function sunburstVisual(ecModel) {
   });
 }
 
-// node_modules/echarts/lib/chart/sunburst/install.js
+// ../../node_modules/echarts/lib/chart/sunburst/install.js
 function install26(registers) {
   registers.registerChartView(SunburstView_default);
   registers.registerSeriesModel(SunburstSeries_default);
@@ -17870,7 +17870,7 @@ function install26(registers) {
   installSunburstAction(registers);
 }
 
-// node_modules/echarts/lib/chart/custom/CustomSeries.js
+// ../../node_modules/echarts/lib/chart/custom/CustomSeries.js
 var STYLE_VISUAL_TYPE = {
   color: "fill",
   borderColor: "stroke"
@@ -17930,7 +17930,7 @@ var CustomSeriesModel = (
 );
 var CustomSeries_default = CustomSeriesModel;
 
-// node_modules/echarts/lib/coord/cartesian/prepareCustom.js
+// ../../node_modules/echarts/lib/coord/cartesian/prepareCustom.js
 function dataToCoordSize(dataSize, dataItem) {
   dataItem = dataItem || [0, 0];
   return map(["x", "y"], function(dim, dimIdx) {
@@ -17960,7 +17960,7 @@ function cartesianPrepareCustom(coordSys) {
   };
 }
 
-// node_modules/echarts/lib/coord/geo/prepareCustom.js
+// ../../node_modules/echarts/lib/coord/geo/prepareCustom.js
 function dataToCoordSize2(dataSize, dataItem) {
   dataItem = dataItem || [0, 0];
   return map([0, 1], function(dimIdx) {
@@ -17994,7 +17994,7 @@ function geoPrepareCustom(coordSys) {
   };
 }
 
-// node_modules/echarts/lib/coord/single/prepareCustom.js
+// ../../node_modules/echarts/lib/coord/single/prepareCustom.js
 function dataToCoordSize3(dataSize, dataItem) {
   var axis = this.getAxis();
   var val = dataItem instanceof Array ? dataItem[0] : dataItem;
@@ -18020,7 +18020,7 @@ function singlePrepareCustom(coordSys) {
   };
 }
 
-// node_modules/echarts/lib/coord/polar/prepareCustom.js
+// ../../node_modules/echarts/lib/coord/polar/prepareCustom.js
 function dataToCoordSize4(dataSize, dataItem) {
   dataItem = dataItem || [0, 0];
   return map(["Radius", "Angle"], function(dim, dimIdx) {
@@ -18061,7 +18061,7 @@ function polarPrepareCustom(coordSys) {
   };
 }
 
-// node_modules/echarts/lib/coord/calendar/prepareCustom.js
+// ../../node_modules/echarts/lib/coord/calendar/prepareCustom.js
 function calendarPrepareCustom(coordSys) {
   var rect = coordSys.getRect();
   var rangeInfo = coordSys.getRangeInfo();
@@ -18092,7 +18092,7 @@ function calendarPrepareCustom(coordSys) {
   };
 }
 
-// node_modules/echarts/lib/coord/matrix/prepareCustom.js
+// ../../node_modules/echarts/lib/coord/matrix/prepareCustom.js
 function matrixPrepareCustom(coordSys) {
   var rect = coordSys.getRect();
   return {
@@ -18114,7 +18114,7 @@ function matrixPrepareCustom(coordSys) {
   };
 }
 
-// node_modules/echarts/lib/chart/custom/CustomView.js
+// ../../node_modules/echarts/lib/chart/custom/CustomView.js
 var EMPHASIS = "emphasis";
 var NORMAL = "normal";
 var BLUR = "blur";
@@ -18820,7 +18820,7 @@ function hasOwnPathData(shape) {
   return shape && (hasOwn(shape, "pathData") || hasOwn(shape, "d"));
 }
 
-// node_modules/echarts/lib/chart/custom/install.js
+// ../../node_modules/echarts/lib/chart/custom/install.js
 function install27(registers) {
   registers.registerChartView(CustomView_default);
   registers.registerSeriesModel(CustomSeries_default);

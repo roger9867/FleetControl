@@ -10,6 +10,16 @@ package telemetry;
 // scoped to a time range (a trip's Start/EndTimestamp).
 service TelemetryQuery {
   rpc GetTelemetryPoints (GetTelemetryPointsRequest) returns (GetTelemetryPointsResponse);
+
+  // Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
+  // Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+  // Antwort, statt einen Fehler auszulösen.
+  rpc GetLatestPoints (GetLatestPointsRequest) returns (GetLatestPointsResponse);
+
+  // Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+  // fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
+  // geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+  rpc GetLatestPointsByVehicle (GetLatestPointsByVehicleRequest) returns (GetLatestPointsByVehicleResponse);
 }
 
 message GetTelemetryPointsRequest {
@@ -28,4 +38,30 @@ message TelemetryPoint {
 
 message GetTelemetryPointsResponse {
   repeated TelemetryPoint points = 1;
+}
+
+message GetLatestPointsRequest {
+  repeated string device_ids = 1;
+}
+
+message DeviceLatestPoint {
+  string device_id = 1;
+  TelemetryPoint point = 2;
+}
+
+message GetLatestPointsResponse {
+  repeated DeviceLatestPoint points = 1;
+}
+
+message GetLatestPointsByVehicleRequest {
+  repeated string vehicle_ids = 1;
+}
+
+message VehicleLatestPoint {
+  string vehicle_id = 1;
+  TelemetryPoint point = 2;
+}
+
+message GetLatestPointsByVehicleResponse {
+  repeated VehicleLatestPoint points = 1;
 }

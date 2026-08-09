@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "IngestionService.Assignments";
+
+package assignment_updates;
+
+// Umgekehrte Richtung zu assignments.proto: hier ist IngestionService der
+// Server - MainService pusht eine geänderte T-Einheit-Zuordnung, sobald sie
+// sich ändert, statt dass IngestionService sie erst beim nächsten eigenen
+// Reload mitbekommt.
+service AssignmentUpdateService {
+  rpc PushAssignmentUpdate (AssignmentUpdate) returns (PushAssignmentUpdateResponse);
+}
+
+message AssignmentUpdate {
+  string telemetry_unit_id = 1;
+  optional string vehicle_id = 2;
+  optional string license_plate = 3;
+  optional string driver_id = 4;
+}
+
+message PushAssignmentUpdateResponse {}

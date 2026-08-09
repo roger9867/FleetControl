@@ -53,6 +53,12 @@ export class TripService {
     );
   }
 
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Trip/${id}`).pipe(
+      catchError(err => this.rethrow(err))
+    );
+  }
+
   private rethrow(err: HttpErrorResponse) {
     const message = typeof err.error === 'string' && err.error
       ? err.error

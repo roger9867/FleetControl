@@ -9,10 +9,13 @@ public class TripReactor : BackgroundService
 {
     private static readonly TimeSpan ConnectedTimeout = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan ConnectionLostTimeout = TimeSpan.FromSeconds(2);
-    private static readonly TimeSpan GiveUpTimeout = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan GiveUpTimeout = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan TimeoutCheckInterval = TimeSpan.FromSeconds(1);
 
     private const int StoppedCountThreshold = 60 * 5;
+
+    private const double DrivingSpeedThreshold = 5;
+    private const int DrivingCandidateThreshold = 3;
 
     private readonly ConcurrentDictionary<string, DeviceTripState> _devices = new();
     private readonly object _gate = new();
@@ -48,42 +51,36 @@ public class TripReactor : BackgroundService
         {
             if (!_devices.TryGetValue(data.DeviceId, out var state))
             {
-                if (data.SpeedKmh == 0)
+                resultState = TripState.Connected;
+
+                _devices[data.DeviceId] = new DeviceTripState
                 {
-                    resultState = TripState.Connected;
-
-                    _devices[data.DeviceId] = new DeviceTripState
-                    {
-                        State = TripState.Connected,
-                        LastTimestamp = data.Timestamp
-                    };
-                }
-                else
-                {
-                    resultState = TripState.Driving;
-
-                    _devices[data.DeviceId] = new DeviceTripState
-                    {
-                        State = TripState.Driving,
-                        LastTimestamp = data.Timestamp,
-                        TripStartTimestamp = data.Timestamp
-                    };
-
-                    beginTrip = true;
-                    tripStartTimestamp = data.Timestamp;
-                }
+                    State = TripState.Connected,
+                    LastTimestamp = data.Timestamp,
+                    DrivingCandidateCount = data.SpeedKmh > DrivingSpeedThreshold ? 1 : 0
+                };
             }
             else
             {
                 switch (state.State)
                 {
                     case TripState.Connected:
-                        if (data.SpeedKmh != 0)
+                        if (data.SpeedKmh > DrivingSpeedThreshold)
                         {
-                            state.State = TripState.Driving;
-                            state.TripStartTimestamp = data.Timestamp;
-                            beginTrip = true;
-                            tripStartTimestamp = data.Timestamp;
+                            state.DrivingCandidateCount++;
+
+                            if (state.DrivingCandidateCount >= DrivingCandidateThreshold)
+                            {
+                                state.State = TripState.Driving;
+                                state.TripStartTimestamp = data.Timestamp;
+                                state.DrivingCandidateCount = 0;
+                                beginTrip = true;
+                                tripStartTimestamp = data.Timestamp;
+                            }
+                        }
+                        else
+                        {
+                            state.DrivingCandidateCount = 0;
                         }
 
                         resultState = state.State;

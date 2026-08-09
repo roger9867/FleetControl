@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "FleetControlServer.Api.Grpc";
+
+package assignments;
+
+service AssignmentService {
+  rpc GetCurrentAssignments (GetCurrentAssignmentsRequest) returns (GetCurrentAssignmentsResponse);
+}
+
+message Assignment {
+  // Jede registrierte T-Einheit liefert genau eine Zeile, auch ohne
+  // Verknüpfung - daher immer gesetzt, im Gegensatz zu den drei Feldern
+  // unten, die bei fehlender Verknüpfung fehlen (nicht leerer String).
+  string telemetry_unit_id = 1;
+  optional string vehicle_id = 2;
+  optional string license_plate = 3;
+  optional string driver_id = 4;
+}
+
+message GetCurrentAssignmentsRequest {}
+
+message GetCurrentAssignmentsResponse {
+  repeated Assignment assignments = 1;
+}

@@ -42,5 +42,25 @@ services:
       InfluxDB__Bucket: ${INFLUXDB_BUCKET}
       TripService__Address: ${TRIP_SERVICE_ADDRESS}
 
+  # gRPC-Gegenstueck zu IngestionService: liest die von IngestionService in
+  # InfluxDB geschriebenen Punkte fuer MainService zurueck (TelemetryQuery).
+  # Port 5002 fest gesetzt, da MainServices appsettings darauf verweist.
+  telemetrydataservice:
+    build:
+      context: ./TelemetryDataService
+      dockerfile: Dockerfile
+      network: host
+
+    container_name: telemetrydataservice
+    network_mode: host
+    depends_on:
+      - influxdb
+    environment:
+      ASPNETCORE_URLS: http://+:5002
+      InfluxDB__Url: http://localhost:8086
+      InfluxDB__Token: ${INFLUXDB_TOKEN}
+      InfluxDB__Org: ${INFLUXDB_ORG}
+      InfluxDB__Bucket: ${INFLUXDB_BUCKET}
+
 volumes:
   influxdb-data:

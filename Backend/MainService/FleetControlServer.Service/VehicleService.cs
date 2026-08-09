@@ -1,17 +1,30 @@
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Domain;
+using FleetControlServer.Service.Assignments;
 using FleetControlServer.Service.DTO.Vehicle;
+using FleetControlServer.Service.Telemetry;
 
 namespace FleetControlServer.Service;
 public class VehicleService
 {
     private readonly IVehicleRepository _repo;
     private readonly ITelemetryUnitRepository _telemetryUnitRepo;
+    private readonly ITripRepository _tripRepo;
+    private readonly TelemetryQueryClient _telemetryQueryClient;
+    private readonly AssignmentPushService _assignmentPushService;
 
-    public VehicleService(IVehicleRepository repo, ITelemetryUnitRepository telemetryUnitRepo)
+    public VehicleService(
+        IVehicleRepository repo,
+        ITelemetryUnitRepository telemetryUnitRepo,
+        ITripRepository tripRepo,
+        TelemetryQueryClient telemetryQueryClient,
+        AssignmentPushService assignmentPushService)
     {
         _repo = repo;
         _telemetryUnitRepo = telemetryUnitRepo;
+        _tripRepo = tripRepo;
+        _telemetryQueryClient = telemetryQueryClient;
+        _assignmentPushService = assignmentPushService;
     }
 
     public async Task<(bool Success, Vehicle? Vehicle, string? Error)> CreateAsync(VehicleDto dto)
@@ -67,6 +80,12 @@ public class VehicleService
             return (false, null, "Telemetry unit not found.");
         }
 
+        // Vor jeder Aenderung merken, welche T-Einheit dieses Fahrzeug bisher
+        // hatte - wird sie durch eine andere ersetzt oder entfernt, muss
+        // IngestionService auch fuer sie ein aktualisiertes Tupel bekommen.
+        var (hadPrevious, previousVehicle, _) = await _repo.GetByIdAsync(id);
+        var previousTelemetryUnitId = hadPrevious ? previousVehicle?.TelemetryUnit?.Id : null;
+
         var entity = new Vehicle
         {
             Id = id,
@@ -100,6 +119,14 @@ public class VehicleService
             await _telemetryUnitRepo.ClearVehicleAsync(entity.Id);
         }
 
+        // Best-effort: IngestionService bekommt jede geaenderte Zuordnung
+        // (Fahrzeug<->T-Einheit oder nur der Fahrer) sofort mit, statt erst
+        // beim naechsten eigenen Reload.
+        var unitsToNotify = new HashSet<Guid>();
+        if (dto.TelemetryUnitId.HasValue) unitsToNotify.Add(dto.TelemetryUnitId.Value);
+        if (previousTelemetryUnitId.HasValue) unitsToNotify.Add(previousTelemetryUnitId.Value);
+        await _assignmentPushService.PushAsync(unitsToNotify);
+
         // entity's TelemetryUnit navigation property was never populated above —
         // the FK update happened on the TelemetryUnit row, not on this instance.
         // Re-fetch so the response reflects the assignment that was just persisted.
@@ -123,12 +150,52 @@ public class VehicleService
         return await _repo.GetByIdAsync(id);
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task<List<VehiclePositionDto>> GetLastPositionsAsync()
     {
+        var vehicles = await _repo.GetAllAsync();
+        var vehicleList = vehicles.ToList();
+
+        var vehicleIds = vehicleList.Select(v => v.Id).ToList();
+
+        var latestByVehicleId = await _telemetryQueryClient.GetLatestPointsByVehicleAsync(vehicleIds);
+
+        var result = new List<VehiclePositionDto>();
+
+        foreach (var vehicle in vehicleList)
+        {
+            if (!latestByVehicleId.TryGetValue(vehicle.Id, out var point))
+            {
+                continue;
+            }
+
+            result.Add(new VehiclePositionDto
+            {
+                VehicleId = vehicle.Id,
+                TelemetryUnitId = vehicle.TelemetryUnit?.Id.ToString() ?? string.Empty,
+                Lat = point.Lat,
+                Lng = point.Lon,
+                SpeedKmh = point.SpeedKmh,
+                AccelMs2 = point.AccelMs2,
+                Timestamp = point.Timestamp
+            });
+        }
+
+        return result;
+    }
+
+    public async Task<(bool Success, string? Error)> DeleteAsync(string id)
+    {
+        if (await _tripRepo.ExistsForVehicleAsync(id))
+        {
+            return (false, "Nicht löschbar solange es Fahrten zu diesem Fahrzeug gibt.");
+        }
+
         Vehicle vehicle = new Vehicle()
         {
             Id = id,
         };
         await _repo.DeleteAsync(vehicle);
+
+        return (true, null);
     }
 }
