@@ -20,6 +20,10 @@ service TelemetryQuery {
   // fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
   // geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
   rpc GetLatestPointsByVehicle (GetLatestPointsByVehicleRequest) returns (GetLatestPointsByVehicleResponse);
+
+  // Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+  // Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+  rpc DeleteTelemetryPoints (DeleteTelemetryPointsRequest) returns (DeleteTelemetryPointsResponse);
 }
 
 message GetTelemetryPointsRequest {
@@ -64,4 +68,14 @@ message VehicleLatestPoint {
 
 message GetLatestPointsByVehicleResponse {
   repeated VehicleLatestPoint points = 1;
+}
+
+message DeleteTelemetryPointsRequest {
+  string device_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+}
+
+message DeleteTelemetryPointsResponse {
+  bool success = 1;
 }

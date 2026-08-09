@@ -106,7 +106,7 @@
           <div>
             <span>Kennzeichen:</span>
             <ng-container *ngIf="editingIndex === i; else plateView">
-              <input type="text" class="inline-input" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
+              <input type="text" class="inline-input" maxlength="10" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
             </ng-container>
             <ng-template #plateView>{{ vehicle.licensePlate }}</ng-template>
           </div>
@@ -206,7 +206,7 @@
                     (mousedown)="onActionMouseDown($event); toggleEdit(i)">
               {{ editingIndex === i ? (isEditDirty(vehicle) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
-            <button class="action-btn">Fahrten</button>
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(vehicle)">Fahrten</button>
           </div>
         </div>
       </div>

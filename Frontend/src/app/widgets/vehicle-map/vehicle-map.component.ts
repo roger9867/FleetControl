@@ -118,7 +118,7 @@ export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
     const coordinates: L.LatLngExpression[] = this.points.map(p => [p.lat, p.lng]);
 
     if (coordinates.length) {
-      this.map.fitBounds(L.latLngBounds(coordinates), { padding: [40, 40] });
+      this.map.fitBounds(L.latLngBounds(coordinates), { padding: [40, 40], maxZoom: 16 });
     }
   }
 }

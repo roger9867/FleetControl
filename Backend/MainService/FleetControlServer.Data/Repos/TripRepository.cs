@@ -88,4 +88,14 @@ public class TripRepository : ITripRepository
     {
         return await _context.Trips.AnyAsync(t => t.VehicleId == vehicleId);
     }
+
+    public async Task<bool> ExistsForTelemetryUnitAsync(Guid telemetryUnitId)
+    {
+        return await _context.Trips.AnyAsync(t => t.TelemetryUnitId == telemetryUnitId);
+    }
+
+    public async Task<bool> ExistsForDriverAsync(Guid driverId)
+    {
+        return await _context.Trips.AnyAsync(t => t.DriverId == driverId);
+    }
 }

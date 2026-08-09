@@ -9,15 +9,18 @@ public class PersonService
 {
     private readonly IVehicleDriverRepository _repo;
     private readonly IVehicleRepository _vehicleRepo;
+    private readonly ITripRepository _tripRepo;
     private readonly AssignmentPushService _assignmentPushService;
 
     public PersonService(
         IVehicleDriverRepository repo,
         IVehicleRepository vehicleRepo,
+        ITripRepository tripRepo,
         AssignmentPushService assignmentPushService)
     {
         _repo = repo;
         _vehicleRepo = vehicleRepo;
+        _tripRepo = tripRepo;
         _assignmentPushService = assignmentPushService;
     }
 
@@ -114,8 +117,13 @@ public class PersonService
         return await _repo.GetByIdAsync(id);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task<(bool Success, string? Error)> DeleteAsync(Guid id)
     {
+        if (await _tripRepo.ExistsForDriverAsync(id))
+        {
+            return (false, "Nicht löschbar solange es Fahrten zu dieser Person gibt.");
+        }
+
         var affectedUnits = (await _vehicleRepo.GetAllAsync())
             .Where(v => v.VehicleDriverId == id && v.TelemetryUnit != null)
             .Select(v => v.TelemetryUnit!.Id)
@@ -125,5 +133,7 @@ public class PersonService
         await _repo.DeleteAsync(id);
 
         await _assignmentPushService.PushAsync(affectedUnits);
+
+        return (true, null);
     }
 }

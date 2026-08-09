@@ -70,12 +70,13 @@ public class TelemetryUnitController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
+        var (success, error) = await _service.DeleteAsync(id);
 
-        bool couldBeDeleted  = await _service.DeleteAsync(id);
-        
-        if (!couldBeDeleted)
-            return NotFound($"VehicleTelemetryUnit with id '{id}' could not be deleted.");
-        
+        if (!success)
+        {
+            return BadRequest(error);
+        }
+
         return NoContent();
     }
 }

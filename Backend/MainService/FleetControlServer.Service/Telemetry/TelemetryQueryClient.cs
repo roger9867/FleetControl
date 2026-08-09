@@ -101,6 +101,22 @@ public class TelemetryQueryClient
                 p.Point.AccelMs2));
     }
 
+    public async Task<bool> DeleteTelemetryPointsAsync(
+        string deviceId,
+        DateTime start,
+        DateTime end)
+    {
+        var response = await _client.DeleteTelemetryPointsAsync(
+            new DeleteTelemetryPointsRequest
+            {
+                DeviceId = deviceId,
+                Start = ToProtoTimestamp(start),
+                End = ToProtoTimestamp(end)
+            });
+
+        return response.Success;
+    }
+
     private static Timestamp ToProtoTimestamp(DateTime timestamp)
     {
         return Timestamp.FromDateTime(

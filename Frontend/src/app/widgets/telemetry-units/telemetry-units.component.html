@@ -1,10 +1,8 @@
 
-<div class="container">
-  <div class="main">
+<div class="page">
+  <h1 class="header">Datenerfassungseinheiten</h1>
 
-    <h1 class="header">Datenerfassungseinheiten</h1>
-
-    <div class="toolbar">
+  <div class="toolbar">
 
   <button class="create-btn"
           (click)="createUnit()"
@@ -43,6 +41,9 @@
 
 </div>
 
+<div class="container">
+  <div class="main">
+
     <div class="list">
 
   <div *ngIf="filteredUnits.length === 0">
@@ -50,7 +51,7 @@
   </div>
 
   <div class="box"
-     *ngFor="let item of filteredUnits; let i = index"
+     *ngFor="let item of pagedUnits; let i = index"
      (click)="selectItem(i)"
      [class.active]="selectedIndex === i">
 
@@ -60,24 +61,12 @@
   </div>
 
   <div class="details" *ngIf="selectedIndex !== i">
-    <!--
-    <div>
-      Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
-    </div>
-    -->
-
     <div>
       Fahrzeug-Identnr.: {{ item.vehicleId || 'nicht verbunden' }}
     </div>
   </div>
 
   <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
-    <!--
-    <div>
-      Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
-    </div>
-    -->
-
     <div>
       <span>Fahrzeug-Identnr.:</span>
       <ng-container *ngIf="editingIndex === i; else vehicleView">
@@ -119,6 +108,7 @@
               (mousedown)="onActionMouseDown($event); toggleEdit(i)">
         {{ editingIndex === i ? (isEditDirty(item) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
       </button>
+      <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(item)">Fahrten</button>
     </div>
   </div>
 
@@ -126,6 +116,27 @@
 
 
 </div>
+
+    <div class="pagination" *ngIf="filteredUnits.length">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
 
   </div>
 
@@ -136,4 +147,5 @@
     (filtersApplied)="onFiltersApplied($event)">
   </app-filter-sidebar>
 
+</div>
 </div>

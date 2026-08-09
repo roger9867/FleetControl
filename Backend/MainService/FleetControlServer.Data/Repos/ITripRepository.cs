@@ -19,4 +19,8 @@ public interface ITripRepository
     Task<bool> DeleteAsync(Guid id);
 
     Task<bool> ExistsForVehicleAsync(string vehicleId);
+
+    Task<bool> ExistsForTelemetryUnitAsync(Guid telemetryUnitId);
+
+    Task<bool> ExistsForDriverAsync(Guid driverId);
 }

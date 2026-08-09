@@ -100,6 +100,7 @@
         padding: 8px 10px;
         color: var(--color-text-primary);
         outline: none;
+        color-scheme: var(--color-scheme-form);
 
         &:focus {
           border-color: var(--color-accent);
@@ -357,7 +358,7 @@
         &.danger {
           background: var(--color-danger);
           border-color: var(--color-danger);
-          color: var(--color-text-primary);
+          color: #ffffff;
 
           &:hover {
             background: var(--color-danger-hover);

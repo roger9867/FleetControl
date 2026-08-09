@@ -7101,6 +7101,9 @@
   --color-accent: #373669;
   --color-accent-hover: #4a4890;
   --color-accent-text: #8b8fd9;
+  --color-map-marker: #7376e0;
+  --color-map-marker-border: #373669;
+  --color-scheme-form: dark;
   --color-danger: #b03434;
   --color-danger-hover: #cc3d3d;
   --color-danger-text: #e05252;
@@ -7142,8 +7145,12 @@
   --color-accent: #d07548;
   --color-accent-hover: #b76945;
   --color-accent-text: #a15735;
-  --color-danger: #a03030;
-  --color-danger-hover: #852727;
+  --color-map-marker: var(--color-accent);
+  --color-map-marker-border: #684b36;
+  --color-scheme-form: normal;
+  --color-map-marker-pulse-opacity: 0.35;
+  --color-danger: #c54949;
+  --color-danger-hover: #b93939;
   --color-danger-text: #a03030;
   --color-danger-hint: #8f3838;
   --color-danger-strong: #a03030;

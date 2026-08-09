@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-// import { CardWidget } from '../../widgets/card-widget/card-widget.component';
 import { LayoutComponent } from '../../widgets/fahrten/fahrten.component';
 import { TelemetryUnits } from '../../widgets/telemetry-units/telemetry-units.component';
 import { Vehicles } from '../../widgets/vehicles/vehicles.component';
@@ -19,7 +18,6 @@ import { VehicleLiveService } from '../../services/vehicle-live.service';
   imports: [
     CommonModule,
     FormsModule,
-    // CardWidget,
     LayoutComponent,
     TelemetryUnits,
     Vehicles,
@@ -55,13 +53,31 @@ person = {
   }
 
   tabs = [
-    // 'Statistik',
     'Fahrzeuge', 'Fahrten', 'Personen', 'Datenerfassungseinheiten'
   ];
   activeTab = 'Fahrzeuge';
 
+  pendingTripVehicleId?: string;
+  pendingTripPersonId?: string;
+  pendingTripTelemetryUnitId?: string;
+
   selectTab(tab: string) {
     this.activeTab = tab;
+  }
+
+  onShowTripsForVehicle(identNr: string) {
+    this.pendingTripVehicleId = identNr;
+    this.activeTab = 'Fahrten';
+  }
+
+  onShowTripsForPerson(personId: string) {
+    this.pendingTripPersonId = personId;
+    this.activeTab = 'Fahrten';
+  }
+
+  onShowTripsForTelemetryUnit(unitId: string) {
+    this.pendingTripTelemetryUnitId = unitId;
+    this.activeTab = 'Fahrten';
   }
 
   sidebarClosed = false;

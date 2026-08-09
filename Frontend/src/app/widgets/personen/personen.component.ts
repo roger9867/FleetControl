@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -18,6 +18,8 @@ import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 })
 export class Personen implements OnInit
 {
+  @Output() showTrips = new EventEmitter<string>();
+
   persons: Person[] = [];
   vehicles: Vehicle[] = [];
   telemetryUnitIds: string[] = [];
@@ -83,10 +85,6 @@ export class Personen implements OnInit
   }
 
   ngOnInit(): void {
-    // this.persons = this.generateDummyPersons(24);
-    // this.vehicles = this.generateDummyVehicles();
-    // this.telemetryUnitIds = ['TU-1001', 'TU-1002', 'TU-1003'];
-
     this.personService.loadAll().subscribe({
       next: (persons) => {
         if (persons?.length) {
@@ -227,6 +225,10 @@ export class Personen implements OnInit
 
   onActionMouseDown(event: MouseEvent): void {
     event.preventDefault();
+  }
+
+  onShowTrips(person: Person): void {
+    this.showTrips.emit(person.Id);
   }
 
   onActionsClick(event: MouseEvent): void {
@@ -406,46 +408,4 @@ export class Personen implements OnInit
       assignedVehicleId: null
     };
   }
-
-  // private generateDummyPersons(count: number): Person[] {
-  //   const firstNames = ['Anna', 'Ben', 'Clara', 'David', 'Emma', 'Felix', 'Greta', 'Hannes', 'Ida', 'Jonas'];
-  //   const lastNames = ['Schmidt', 'Müller', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Schulz', 'Hoffmann', 'Koch'];
-  //   const dummyVehicleIdentNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
-  //
-  //   return Array.from({ length: count }, (_, i) => {
-  //     const birthYear = 1970 + (i % 40);
-  //     const licenseCount = 1 + (i % 3);
-  //
-  //     const licenses: DrivingLicense[] = Array.from({ length: licenseCount }, (_, l) => ({
-  //       licenseClass: this.licenseClasses[(i + l) % this.licenseClasses.length],
-  //       obtainedDate: `${birthYear + 18 + l}-0${1 + (l % 9)}-15`
-  //     }));
-  //
-  //     return {
-  //       Id: `person-${i + 1}`,
-  //       firstName: firstNames[i % firstNames.length],
-  //       lastName: lastNames[i % lastNames.length],
-  //       birthDate: `${birthYear}-05-20`,
-  //       licenses,
-  //       assignedVehicleId: i % 3 === 0 ? dummyVehicleIdentNrs[i % dummyVehicleIdentNrs.length] : null
-  //     };
-  //   });
-  // }
-
-  // private generateDummyVehicles(): Vehicle[] {
-  //   const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
-  //   const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
-  //   const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
-  //   const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
-  //   const telemetryIds = ['TU-1001', 'TU-1002', 'TU-1003'];
-  //
-  //   return identNrs.map((identNr, i) => ({
-  //     Id: identNr,
-  //     identNr,
-  //     licensePlate: plates[i],
-  //     brand: brands[i],
-  //     modelName: models[i],
-  //     telemetryUnit: { id: telemetryIds[i % telemetryIds.length] }
-  //   }));
-  // }
 }

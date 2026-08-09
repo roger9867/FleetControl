@@ -67,7 +67,6 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     this.routeLayer.clearLayers();
 
     if (!this.trips.length) {
-      // this.addDummyRoute();
       return;
     }
 
@@ -89,10 +88,6 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
         const isLastPoint = index === trip.points.length - 1;
 
         if (isOngoing && isLastPoint) {
-          // Laufende Fahrt: der aktuellste Punkt pulsiert wie auf der
-          // Fahrzeuge-Seite, statt als normaler kleiner Punkt zu erscheinen -
-          // hier aber in der Farbe der jeweiligen Strecke statt der festen
-          // Akzentfarbe, per Inline-Style ueber die geteilte CSS-Klasse gelegt.
           const icon = L.divIcon({
             className: 'vehicle-marker-icon',
             html: `<div class="vehicle-marker">`
@@ -184,50 +179,4 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     const vehicle = this.vehicles.find(v => v.Id === vehicleId);
     return vehicle?.licensePlate || '–';
   }
-
-  // private addDummyRoute(): void {
-  //   const routeCoordinates: L.LatLngExpression[] = [
-  //     [50.9271, 11.5892],
-  //     [50.9275, 11.5896],
-  //     [50.9280, 11.5900],
-  //     [50.9290, 11.5910]
-  //   ];
-  //
-  //   L.polyline(routeCoordinates, {
-  //     color: 'red',
-  //     weight: 4,
-  //     lineJoin: 'round',
-  //     opacity: 0.65,
-  //   }).addTo(this.routeLayer);
-  //
-  //   routeCoordinates.forEach((coord, index) => {
-  //     const marker = L.circleMarker(coord, {
-  //       radius: 6,
-  //       color: 'red',
-  //       fillColor: 'red',
-  //       fillOpacity: 1,
-  //       opacity: 1,
-  //       weight: 2
-  //     }).addTo(this.routeLayer);
-  //
-  //     marker.bindTooltip(`Punkt ${index + 1}`, { permanent: false, direction: 'top' });
-  //   });
-  //
-  //   L.circleMarker(routeCoordinates[0], {
-  //     radius: 13,
-  //     color: 'red',
-  //     fillOpacity: 0,
-  //     opacity: 1,
-  //     weight: 3
-  //   }).addTo(this.routeLayer).bindTooltip('Start', { permanent: false, direction: 'top' });
-  //
-  //   L.circleMarker(routeCoordinates[routeCoordinates.length - 1], {
-  //     radius: 13,
-  //     color: 'red',
-  //     fillColor: 'red',
-  //     fillOpacity: 1,
-  //     opacity: 1,
-  //     weight: 2
-  //   }).addTo(this.routeLayer).bindTooltip('Ziel', { permanent: false, direction: 'top' });
-  // }
 }

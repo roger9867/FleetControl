@@ -228,6 +228,58 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
+    public override async Task<DeleteTelemetryPointsResponse> DeleteTelemetryPoints(
+        DeleteTelemetryPointsRequest request,
+        ServerCallContext context)
+    {
+        var start = request.Start.ToDateTime();
+        var end = request.End.ToDateTime();
+
+        try
+        {
+            // The Delete API's predicate language only supports tag
+            // equality/inequality (no strings.toLower()), unlike Flux
+            // queries. So the actual stored casing of deviceId has to be
+            // discovered first via a case-insensitive query, then deleted
+            // by exact match.
+            var flux =
+                "import \"strings\" " +
+                $"from(bucket: \"{_bucket}\") " +
+                $"|> range(start: {start:yyyy-MM-ddTHH:mm:ssZ}, stop: {end:yyyy-MM-ddTHH:mm:ssZ}) " +
+                "|> filter(fn: (r) => r._measurement == \"sensor\") " +
+                $"|> filter(fn: (r) => strings.toLower(v: r.deviceId) == \"{request.DeviceId.ToLowerInvariant()}\") " +
+                "|> keep(columns: [\"deviceId\"]) " +
+                "|> distinct(column: \"deviceId\")";
+
+            var tables = await _client.GetQueryApi().QueryAsync(flux, _org);
+
+            var deviceIds = tables
+                .SelectMany(t => t.Records)
+                .Select(r => r.GetValueByKey("deviceId") as string)
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Distinct()
+                .ToList();
+
+            foreach (var deviceId in deviceIds)
+            {
+                var predicate = $"_measurement=\"sensor\" AND deviceId=\"{deviceId}\"";
+                await _client.GetDeleteApi().Delete(start, end, predicate, _bucket, _org);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "InfluxDB delete failed for device {deviceId} [{start}, {end}]",
+                request.DeviceId,
+                start,
+                end);
+            return new DeleteTelemetryPointsResponse { Success = false };
+        }
+
+        return new DeleteTelemetryPointsResponse { Success = true };
+    }
+
     private static double ToDouble(object? value)
     {
         return value switch

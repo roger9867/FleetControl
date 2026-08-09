@@ -2,6 +2,7 @@ using FleetControlServer.Domain;
 using FleetControlServer.Data.Repos;
 using FleetControlServer.Service.DTO.Trip;
 using FleetControlServer.Service.Telemetry;
+using Microsoft.Extensions.Logging;
 
 namespace FleetControlServer.Service;
 
@@ -13,18 +14,21 @@ public class TripService
     private readonly ITelemetryUnitRepository _telemetryUnitRepository;
     private readonly IVehicleRepository _vehicleRepository;
     private readonly TelemetryQueryClient _telemetryQueryClient;
+    private readonly ILogger<TripService> _logger;
 
     public TripService(
         ITripRepository tripRepository,
         ITelemetryUnitRepository telemetryUnitRepository,
         IVehicleRepository vehicleRepository,
-        TelemetryQueryClient telemetryQueryClient
+        TelemetryQueryClient telemetryQueryClient,
+        ILogger<TripService> logger
         )
     {
         _tripRepository = tripRepository;
         _telemetryUnitRepository = telemetryUnitRepository;
         _vehicleRepository = vehicleRepository;
         _telemetryQueryClient = telemetryQueryClient;
+        _logger = logger;
     }
 
     // Always loads at most one page of MaxPageSize trips, then fetches that
@@ -184,6 +188,22 @@ public class TripService
         if (trip.EndTimestamp == null)
         {
             return (false, "Trip is still ongoing and cannot be deleted.");
+        }
+
+        try
+        {
+            await _telemetryQueryClient.DeleteTelemetryPointsAsync(
+                trip.TelemetryUnitId.ToString(),
+                trip.StartTimestamp,
+                trip.EndTimestamp.Value);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Failed to delete InfluxDB points for trip {tripId} (telemetry unit {telemetryUnitId})",
+                id,
+                trip.TelemetryUnitId);
         }
 
         await _tripRepository.DeleteAsync(id);

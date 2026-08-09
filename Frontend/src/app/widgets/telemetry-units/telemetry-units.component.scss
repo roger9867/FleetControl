@@ -1,15 +1,22 @@
+.page {
+  margin-top: 120px;
+}
+
 .container {
   display: flex;
   align-items: flex-start;
   min-height: 100vh;
-  margin-top: 120px;
   gap: 2vw;
+
+  ::ng-deep app-filter-sidebar .sidebar {
+    margin-top: 18px;
+  }
 
   .main {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding-top: 20px;
     gap: 20px;
     min-height: 0;
 
@@ -23,9 +30,7 @@
     }
 
     .list {
-      height: 680px;
       width: 50vw;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -185,7 +190,7 @@
           &.danger {
             background: var(--color-danger);
             border-color: var(--color-danger);
-            color: var(--color-text-primary);
+            color: #ffffff;
 
             &:hover {
               background: var(--color-danger-hover);
@@ -226,6 +231,7 @@
 
 
 .header {
+  width: 50vw;
   text-align: center;
   color: var(--color-text-muted);
   margin: 0 0 20px;
@@ -251,6 +257,7 @@
 
 
 .toolbar {
+  width: 50vw;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -258,53 +265,69 @@
 }
 
 .preview-input {
-  padding: 6px 10px;
-  min-width: 200px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  width: 240px;
+}
+
+.preview-input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .dropdown {
-  padding: 6px 10px;
-}
-
-
-.main {
-
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .preview-input {
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-primary);
-    padding: 10px 12px;
-    border-radius: 8px;
-    outline: none;
-    width: 240px;
-  }
-
-  .preview-input::placeholder {
-    color: var(--color-text-muted);
-  }
-
-  .dropdown {
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-primary);
-    padding: 10px 12px;
-    border-radius: 8px;
-    outline: none;
-    cursor: pointer;
-  }
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
 }
 
 .form-error {
   margin-top: 12px;
   color: var(--color-danger-text);
   font-size: 13px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  width: 50vw;
+
+  .page-arrow, .page-number {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-border);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  .page-number.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
 }
 
 .dropdown-wrapper {

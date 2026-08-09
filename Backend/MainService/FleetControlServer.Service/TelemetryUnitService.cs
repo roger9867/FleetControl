@@ -11,15 +11,18 @@ public class TelemetryUnitService
 {
     private readonly IUsbVehicleTelemetryUnit _usbTelemetryUnit;
     private readonly ITelemetryUnitRepository _repository;
+    private readonly ITripRepository _tripRepository;
     private readonly AssignmentPushService _assignmentPushService;
 
     public TelemetryUnitService(
         IUsbVehicleTelemetryUnit usbTelemetryUnit,
         ITelemetryUnitRepository repository,
+        ITripRepository tripRepository,
         AssignmentPushService assignmentPushService
         ) {
         _usbTelemetryUnit = usbTelemetryUnit;
         _repository =  repository;
+        _tripRepository = tripRepository;
         _assignmentPushService = assignmentPushService;
     }
     
@@ -112,14 +115,21 @@ public class TelemetryUnitService
         return allTelemetryUnitDtos;
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<(bool Success, string? Error)> DeleteAsync(string id)
     {
         if (!Guid.TryParse(id, out Guid guid))
         {
-            return false;
+            return (false, "Invalid telemetry unit id.");
         }
 
-        return await _repository.DeleteAsync(guid);
+        if (await _tripRepository.ExistsForTelemetryUnitAsync(guid))
+        {
+            return (false, "Nicht löschbar solange es Fahrten zu dieser T-Einheit gibt.");
+        }
+
+        var deleted = await _repository.DeleteAsync(guid);
+
+        return (deleted, deleted ? null : "Telemetry unit not found.");
     }
 
     public async Task<List<TelemetryAssignment>> GetCurrentAssignmentsAsync()

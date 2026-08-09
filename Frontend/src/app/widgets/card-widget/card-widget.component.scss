@@ -18,10 +18,6 @@
     background: var(--color-bg-map-tile);
 }
 
-// Pulsierender letzter Punkt einer laufenden Fahrt - dieselben Klassen/
-// Werte wie vehicle-map.component.scss (Fahrzeuge-Seite), hier dupliziert
-// statt sich auf gebuendelte Ladereihenfolge zu verlassen, da beide
-// ::ng-deep-Regeln ohne vorausgehenden Selektor global unscoped sind.
 ::ng-deep .vehicle-marker-icon {
   background: transparent;
   border: none;

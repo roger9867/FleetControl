@@ -42,15 +42,21 @@ namespace TelemetryDataService {
             "c3RQb2ludBISCgp2ZWhpY2xlX2lkGAEgASgJEigKBXBvaW50GAIgASgLMhku",
             "dGVsZW1ldHJ5LlRlbGVtZXRyeVBvaW50IlEKIEdldExhdGVzdFBvaW50c0J5",
             "VmVoaWNsZVJlc3BvbnNlEi0KBnBvaW50cxgBIAMoCzIdLnRlbGVtZXRyeS5W",
-            "ZWhpY2xlTGF0ZXN0UG9pbnQywgIKDlRlbGVtZXRyeVF1ZXJ5EmEKEkdldFRl",
-            "bGVtZXRyeVBvaW50cxIkLnRlbGVtZXRyeS5HZXRUZWxlbWV0cnlQb2ludHNS",
-            "ZXF1ZXN0GiUudGVsZW1ldHJ5LkdldFRlbGVtZXRyeVBvaW50c1Jlc3BvbnNl",
-            "ElgKD0dldExhdGVzdFBvaW50cxIhLnRlbGVtZXRyeS5HZXRMYXRlc3RQb2lu",
-            "dHNSZXF1ZXN0GiIudGVsZW1ldHJ5LkdldExhdGVzdFBvaW50c1Jlc3BvbnNl",
-            "EnMKGEdldExhdGVzdFBvaW50c0J5VmVoaWNsZRIqLnRlbGVtZXRyeS5HZXRM",
-            "YXRlc3RQb2ludHNCeVZlaGljbGVSZXF1ZXN0GisudGVsZW1ldHJ5LkdldExh",
-            "dGVzdFBvaW50c0J5VmVoaWNsZVJlc3BvbnNlQheqAhRUZWxlbWV0cnlEYXRh",
-            "U2VydmljZWIGcHJvdG8z"));
+            "ZWhpY2xlTGF0ZXN0UG9pbnQihQEKHERlbGV0ZVRlbGVtZXRyeVBvaW50c1Jl",
+            "cXVlc3QSEQoJZGV2aWNlX2lkGAEgASgJEikKBXN0YXJ0GAIgASgLMhouZ29v",
+            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAyABKAsyGi5nb29nbGUu",
+            "cHJvdG9idWYuVGltZXN0YW1wIjAKHURlbGV0ZVRlbGVtZXRyeVBvaW50c1Jl",
+            "c3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgyrgMKDlRlbGVtZXRyeVF1ZXJ5EmEK",
+            "EkdldFRlbGVtZXRyeVBvaW50cxIkLnRlbGVtZXRyeS5HZXRUZWxlbWV0cnlQ",
+            "b2ludHNSZXF1ZXN0GiUudGVsZW1ldHJ5LkdldFRlbGVtZXRyeVBvaW50c1Jl",
+            "c3BvbnNlElgKD0dldExhdGVzdFBvaW50cxIhLnRlbGVtZXRyeS5HZXRMYXRl",
+            "c3RQb2ludHNSZXF1ZXN0GiIudGVsZW1ldHJ5LkdldExhdGVzdFBvaW50c1Jl",
+            "c3BvbnNlEnMKGEdldExhdGVzdFBvaW50c0J5VmVoaWNsZRIqLnRlbGVtZXRy",
+            "eS5HZXRMYXRlc3RQb2ludHNCeVZlaGljbGVSZXF1ZXN0GisudGVsZW1ldHJ5",
+            "LkdldExhdGVzdFBvaW50c0J5VmVoaWNsZVJlc3BvbnNlEmoKFURlbGV0ZVRl",
+            "bGVtZXRyeVBvaW50cxInLnRlbGVtZXRyeS5EZWxldGVUZWxlbWV0cnlQb2lu",
+            "dHNSZXF1ZXN0GigudGVsZW1ldHJ5LkRlbGV0ZVRlbGVtZXRyeVBvaW50c1Jl",
+            "c3BvbnNlQheqAhRUZWxlbWV0cnlEYXRhU2VydmljZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -62,7 +68,9 @@ namespace TelemetryDataService {
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetLatestPointsResponse), global::TelemetryDataService.GetLatestPointsResponse.Parser, new[]{ "Points" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetLatestPointsByVehicleRequest), global::TelemetryDataService.GetLatestPointsByVehicleRequest.Parser, new[]{ "VehicleIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.VehicleLatestPoint), global::TelemetryDataService.VehicleLatestPoint.Parser, new[]{ "VehicleId", "Point" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetLatestPointsByVehicleResponse), global::TelemetryDataService.GetLatestPointsByVehicleResponse.Parser, new[]{ "Points" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetLatestPointsByVehicleResponse), global::TelemetryDataService.GetLatestPointsByVehicleResponse.Parser, new[]{ "Points" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.DeleteTelemetryPointsRequest), global::TelemetryDataService.DeleteTelemetryPointsRequest.Parser, new[]{ "DeviceId", "Start", "End" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.DeleteTelemetryPointsResponse), global::TelemetryDataService.DeleteTelemetryPointsResponse.Parser, new[]{ "Success" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2128,6 +2136,494 @@ namespace TelemetryDataService {
             break;
           case 10: {
             points_.AddEntriesFrom(ref input, _repeated_points_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class DeleteTelemetryPointsRequest : pb::IMessage<DeleteTelemetryPointsRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DeleteTelemetryPointsRequest> _parser = new pb::MessageParser<DeleteTelemetryPointsRequest>(() => new DeleteTelemetryPointsRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<DeleteTelemetryPointsRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::TelemetryDataService.TelemetryReflection.Descriptor.MessageTypes[9]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DeleteTelemetryPointsRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DeleteTelemetryPointsRequest(DeleteTelemetryPointsRequest other) : this() {
+      deviceId_ = other.deviceId_;
+      start_ = other.start_ != null ? other.start_.Clone() : null;
+      end_ = other.end_ != null ? other.end_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DeleteTelemetryPointsRequest Clone() {
+      return new DeleteTelemetryPointsRequest(this);
+    }
+
+    /// <summary>Field number for the "device_id" field.</summary>
+    public const int DeviceIdFieldNumber = 1;
+    private string deviceId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DeviceId {
+      get { return deviceId_; }
+      set {
+        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "start" field.</summary>
+    public const int StartFieldNumber = 2;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp start_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Google.Protobuf.WellKnownTypes.Timestamp Start {
+      get { return start_; }
+      set {
+        start_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "end" field.</summary>
+    public const int EndFieldNumber = 3;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp end_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Google.Protobuf.WellKnownTypes.Timestamp End {
+      get { return end_; }
+      set {
+        end_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as DeleteTelemetryPointsRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(DeleteTelemetryPointsRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DeviceId != other.DeviceId) return false;
+      if (!object.Equals(Start, other.Start)) return false;
+      if (!object.Equals(End, other.End)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
+      if (start_ != null) hash ^= Start.GetHashCode();
+      if (end_ != null) hash ^= End.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (DeviceId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DeviceId);
+      }
+      if (start_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Start);
+      }
+      if (end_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(End);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (DeviceId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DeviceId);
+      }
+      if (start_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Start);
+      }
+      if (end_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(End);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (DeviceId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
+      }
+      if (start_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Start);
+      }
+      if (end_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(End);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(DeleteTelemetryPointsRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DeviceId.Length != 0) {
+        DeviceId = other.DeviceId;
+      }
+      if (other.start_ != null) {
+        if (start_ == null) {
+          Start = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        Start.MergeFrom(other.Start);
+      }
+      if (other.end_ != null) {
+        if (end_ == null) {
+          End = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        End.MergeFrom(other.End);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            DeviceId = input.ReadString();
+            break;
+          }
+          case 18: {
+            if (start_ == null) {
+              Start = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(Start);
+            break;
+          }
+          case 26: {
+            if (end_ == null) {
+              End = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(End);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            DeviceId = input.ReadString();
+            break;
+          }
+          case 18: {
+            if (start_ == null) {
+              Start = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(Start);
+            break;
+          }
+          case 26: {
+            if (end_ == null) {
+              End = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(End);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class DeleteTelemetryPointsResponse : pb::IMessage<DeleteTelemetryPointsResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DeleteTelemetryPointsResponse> _parser = new pb::MessageParser<DeleteTelemetryPointsResponse>(() => new DeleteTelemetryPointsResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<DeleteTelemetryPointsResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::TelemetryDataService.TelemetryReflection.Descriptor.MessageTypes[10]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DeleteTelemetryPointsResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DeleteTelemetryPointsResponse(DeleteTelemetryPointsResponse other) : this() {
+      success_ = other.success_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DeleteTelemetryPointsResponse Clone() {
+      return new DeleteTelemetryPointsResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as DeleteTelemetryPointsResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(DeleteTelemetryPointsResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(DeleteTelemetryPointsResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
             break;
           }
         }

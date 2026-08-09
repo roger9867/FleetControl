@@ -21,7 +21,13 @@ var __spreadValues = (a, b) => {
   return a;
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-var __commonJS = (cb, mod) => function __require() {
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+var __commonJS = (cb, mod) => function __require2() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
@@ -4899,8 +4905,8 @@ var require_leaflet_src = __commonJS({
         }
       });
       var MarkerDrag = Handler2.extend({
-        initialize: function(marker2) {
-          this._marker = marker2;
+        initialize: function(marker4) {
+          this._marker = marker4;
         },
         addHooks: function() {
           var icon2 = this._marker._icon;
@@ -4930,7 +4936,7 @@ var require_leaflet_src = __commonJS({
           return this._draggable && this._draggable._moved;
         },
         _adjustPan: function(e2) {
-          var marker2 = this._marker, map6 = marker2._map, speed = this._marker.options.autoPanSpeed, padding = this._marker.options.autoPanPadding, iconPos = getPosition(marker2._icon), bounds = map6.getPixelBounds(), origin = map6.getPixelOrigin();
+          var marker4 = this._marker, map6 = marker4._map, speed = this._marker.options.autoPanSpeed, padding = this._marker.options.autoPanPadding, iconPos = getPosition(marker4._icon), bounds = map6.getPixelBounds(), origin = map6.getPixelOrigin();
           var panBounds = toBounds(
             bounds.min._subtract(origin).add(padding),
             bounds.max._subtract(origin).subtract(padding)
@@ -4943,7 +4949,7 @@ var require_leaflet_src = __commonJS({
             map6.panBy(movement, { animate: false });
             this._draggable._newPos._add(movement);
             this._draggable._startPos._add(movement);
-            setPosition(marker2._icon, this._draggable._newPos);
+            setPosition(marker4._icon, this._draggable._newPos);
             this._onDrag(e2);
             this._panRequest = requestAnimFrame(this._adjustPan.bind(this, e2));
           }
@@ -4960,14 +4966,14 @@ var require_leaflet_src = __commonJS({
           }
         },
         _onDrag: function(e2) {
-          var marker2 = this._marker, shadow = marker2._shadow, iconPos = getPosition(marker2._icon), latlng = marker2._map.layerPointToLatLng(iconPos);
+          var marker4 = this._marker, shadow = marker4._shadow, iconPos = getPosition(marker4._icon), latlng = marker4._map.layerPointToLatLng(iconPos);
           if (shadow) {
             setPosition(shadow, iconPos);
           }
-          marker2._latlng = latlng;
+          marker4._latlng = latlng;
           e2.latlng = latlng;
           e2.oldLatLng = this._oldLatLng;
-          marker2.fire("move", e2).fire("drag", e2);
+          marker4.fire("move", e2).fire("drag", e2);
         },
         _onDragEnd: function(e2) {
           cancelAnimFrame(this._panRequest);
@@ -5272,7 +5278,7 @@ var require_leaflet_src = __commonJS({
           return this.options.icon.options.tooltipAnchor;
         }
       });
-      function marker(latlng, options) {
+      function marker3(latlng, options) {
         return new Marker(latlng, options);
       }
       var Path2 = Layer2.extend({
@@ -5449,7 +5455,7 @@ var require_leaflet_src = __commonJS({
           return p.distanceTo(this._point) <= this._radius + this._clickTolerance();
         }
       });
-      function circleMarker3(latlng, options) {
+      function circleMarker2(latlng, options) {
         return new CircleMarker(latlng, options);
       }
       var Circle2 = CircleMarker.extend({
@@ -7264,7 +7270,7 @@ var require_leaflet_src = __commonJS({
           return null;
         }
       });
-      function divIcon(options) {
+      function divIcon3(options) {
         return new DivIcon(options);
       }
       Icon.Default = IconDefault;
@@ -9557,9 +9563,9 @@ var require_leaflet_src = __commonJS({
       exports2.bounds = toBounds;
       exports2.canvas = canvas;
       exports2.circle = circle;
-      exports2.circleMarker = circleMarker3;
+      exports2.circleMarker = circleMarker2;
       exports2.control = control;
-      exports2.divIcon = divIcon;
+      exports2.divIcon = divIcon3;
       exports2.extend = extend2;
       exports2.featureGroup = featureGroup;
       exports2.geoJSON = geoJSON;
@@ -9571,7 +9577,7 @@ var require_leaflet_src = __commonJS({
       exports2.latLngBounds = toLatLngBounds;
       exports2.layerGroup = layerGroup3;
       exports2.map = createMap;
-      exports2.marker = marker;
+      exports2.marker = marker3;
       exports2.point = toPoint;
       exports2.polygon = polygon;
       exports2.polyline = polyline2;
@@ -11599,14 +11605,6 @@ function timer(dueTime = 0, intervalOrScheduler, scheduler = async) {
   });
 }
 
-// node_modules/rxjs/dist/esm/internal/observable/interval.js
-function interval(period = 0, scheduler = asyncScheduler) {
-  if (period < 0) {
-    period = 0;
-  }
-  return timer(period, period, scheduler);
-}
-
 // node_modules/rxjs/dist/esm/internal/operators/filter.js
 function filter(predicate, thisArg) {
   return operate((source, subscriber) => {
@@ -11687,30 +11685,6 @@ function throwIfEmpty(errorFactory = defaultErrorFactory) {
 }
 function defaultErrorFactory() {
   return new EmptyError();
-}
-
-// node_modules/rxjs/dist/esm/internal/operators/exhaustMap.js
-function exhaustMap(project, resultSelector) {
-  if (resultSelector) {
-    return (source) => source.pipe(exhaustMap((a, i) => innerFrom(project(a, i)).pipe(map((b, ii) => resultSelector(a, b, i, ii)))));
-  }
-  return operate((source, subscriber) => {
-    let index = 0;
-    let innerSub = null;
-    let isComplete = false;
-    source.subscribe(createOperatorSubscriber(subscriber, (outerValue) => {
-      if (!innerSub) {
-        innerSub = createOperatorSubscriber(subscriber, void 0, () => {
-          innerSub = null;
-          isComplete && subscriber.complete();
-        });
-        innerFrom(project(outerValue, index++)).subscribe(innerSub);
-      }
-    }, () => {
-      isComplete = true;
-      !innerSub && subscriber.complete();
-    }));
-  });
 }
 
 // node_modules/rxjs/dist/esm/internal/operators/finalize.js
@@ -15569,8 +15543,8 @@ function setUpAttributes(renderer, native, attrs) {
   }
   return i;
 }
-function isNameOnlyAttributeMarker(marker) {
-  return marker === 3 || marker === 4 || marker === 6;
+function isNameOnlyAttributeMarker(marker3) {
+  return marker3 === 3 || marker3 === 4 || marker3 === 6;
 }
 function isAnimationProp(name) {
   return name.charCodeAt(0) === 64;
@@ -15597,19 +15571,19 @@ function mergeHostAttrs(dst, src) {
   }
   return dst;
 }
-function mergeHostAttribute(dst, marker, key1, key2, value) {
+function mergeHostAttribute(dst, marker3, key1, key2, value) {
   let i = 0;
   let markerInsertPosition = dst.length;
-  if (marker === -1) {
+  if (marker3 === -1) {
     markerInsertPosition = -1;
   } else {
     while (i < dst.length) {
       const dstValue = dst[i++];
       if (typeof dstValue === "number") {
-        if (dstValue === marker) {
+        if (dstValue === marker3) {
           markerInsertPosition = -1;
           break;
-        } else if (dstValue > marker) {
+        } else if (dstValue > marker3) {
           markerInsertPosition = i - 1;
           break;
         }
@@ -15632,7 +15606,7 @@ function mergeHostAttribute(dst, marker, key1, key2, value) {
     if (value !== null) i++;
   }
   if (markerInsertPosition !== -1) {
-    dst.splice(markerInsertPosition, 0, marker);
+    dst.splice(markerInsertPosition, 0, marker3);
     i = markerInsertPosition + 1;
   }
   dst.splice(i++, 0, key1);
@@ -28355,9 +28329,9 @@ function addUpdateIcuSwitch(update, icuExpression, index) {
 function addUpdateIcuUpdate(update, bindingMask, index) {
   update.push(bindingMask, 1, index << 2 | 3);
 }
-function addCreateNodeAndAppend(create3, marker, text, appendToParentIdx, createAtIdx) {
-  if (marker !== null) {
-    create3.push(marker);
+function addCreateNodeAndAppend(create3, marker3, text, appendToParentIdx, createAtIdx) {
+  if (marker3 !== null) {
+    create3.push(marker3);
   }
   create3.push(text, createAtIdx, icuCreateOpCode(0, appendToParentIdx, createAtIdx));
 }
@@ -32247,17 +32221,17 @@ function createPlatform(injector) {
 }
 function createPlatformFactory(parentPlatformFactory, name, providers = []) {
   const desc = `Platform: ${name}`;
-  const marker = new InjectionToken(desc);
+  const marker3 = new InjectionToken(desc);
   return (extraProviders = []) => {
     let platform2 = getPlatform();
     if (!platform2) {
       const platformProviders = [...providers, ...extraProviders, {
-        provide: marker,
+        provide: marker3,
         useValue: true
       }];
       platform2 = parentPlatformFactory?.(platformProviders) ?? createPlatform(createPlatformInjector(platformProviders, desc));
     }
-    return false ? platform2 : assertPlatform(marker);
+    return false ? platform2 : assertPlatform(marker3);
   };
 }
 function createPlatformInjector(providers = [], name) {
@@ -48965,8 +48939,8 @@ function prepareCoordMarkers(el, saved) {
   var propLR = ["left", "right"];
   var propTB = ["top", "bottom"];
   for (var i = 0; i < 4; i++) {
-    var marker = document.createElement("div");
-    var stl = marker.style;
+    var marker3 = document.createElement("div");
+    var stl = marker3.style;
     var idxLR = i % 2;
     var idxTB = (i >> 1) % 2;
     stl.cssText = [
@@ -48984,12 +48958,12 @@ function prepareCoordMarkers(el, saved) {
       propTB[1 - idxTB] + ":auto",
       ""
     ].join("!important;");
-    el.appendChild(marker);
-    markers.push(marker);
+    el.appendChild(marker3);
+    markers.push(marker3);
   }
   saved.clearMarkers = function() {
-    each(markers, function(marker2) {
-      marker2.parentNode && marker2.parentNode.removeChild(marker2);
+    each(markers, function(marker4) {
+      marker4.parentNode && marker4.parentNode.removeChild(marker4);
     });
   };
   return markers;
@@ -51043,7 +51017,7 @@ function cubicSubdivide(p0, p1, p2, p3, t, out2) {
 }
 function cubicProjectPoint(x0, y0, x1, y1, x2, y2, x3, y3, x, y, out2) {
   var t;
-  var interval2 = 5e-3;
+  var interval = 5e-3;
   var d = Infinity;
   var prev;
   var next;
@@ -51062,11 +51036,11 @@ function cubicProjectPoint(x0, y0, x1, y1, x2, y2, x3, y3, x, y, out2) {
   }
   d = Infinity;
   for (var i = 0; i < 32; i++) {
-    if (interval2 < EPSILON_NUMERIC) {
+    if (interval < EPSILON_NUMERIC) {
       break;
     }
-    prev = t - interval2;
-    next = t + interval2;
+    prev = t - interval;
+    next = t + interval;
     _v1[0] = cubicAt(x0, x1, x2, x3, prev);
     _v1[1] = cubicAt(y0, y1, y2, y3, prev);
     d1 = distSquare(_v1, _v0);
@@ -51081,7 +51055,7 @@ function cubicProjectPoint(x0, y0, x1, y1, x2, y2, x3, y3, x, y, out2) {
         t = next;
         d = d2;
       } else {
-        interval2 *= 0.5;
+        interval *= 0.5;
       }
     }
   }
@@ -51169,7 +51143,7 @@ function quadraticSubdivide(p0, p1, p2, t, out2) {
 }
 function quadraticProjectPoint(x0, y0, x1, y1, x2, y2, x, y, out2) {
   var t;
-  var interval2 = 5e-3;
+  var interval = 5e-3;
   var d = Infinity;
   _v0[0] = x;
   _v0[1] = y;
@@ -51184,11 +51158,11 @@ function quadraticProjectPoint(x0, y0, x1, y1, x2, y2, x, y, out2) {
   }
   d = Infinity;
   for (var i = 0; i < 32; i++) {
-    if (interval2 < EPSILON_NUMERIC) {
+    if (interval < EPSILON_NUMERIC) {
       break;
     }
-    var prev = t - interval2;
-    var next = t + interval2;
+    var prev = t - interval;
+    var next = t + interval;
     _v1[0] = quadraticAt(x0, x1, x2, prev);
     _v1[1] = quadraticAt(y0, y1, y2, prev);
     var d1 = distSquare(_v1, _v0);
@@ -51203,7 +51177,7 @@ function quadraticProjectPoint(x0, y0, x1, y1, x2, y2, x, y, out2) {
         t = next;
         d = d2;
       } else {
-        interval2 *= 0.5;
+        interval *= 0.5;
       }
     }
   }
@@ -52252,8 +52226,8 @@ var Track = (function() {
     }
     this._lastFr = frameIdx;
     this._lastFrP = percent;
-    var interval2 = nextFrame.percent - frame.percent;
-    var w = interval2 === 0 ? 1 : mathMin8((percent - frame.percent) / interval2, 1);
+    var interval = nextFrame.percent - frame.percent;
+    var w = interval === 0 ? 1 : mathMin8((percent - frame.percent) / interval, 1);
     if (nextFrame.easingFunc) {
       w = nextFrame.easingFunc(w);
     }
@@ -55268,17 +55242,17 @@ function reformIntervals(list) {
   var curr = -Infinity;
   var currClose = 1;
   for (var i = 0; i < list.length; ) {
-    var interval2 = list[i].interval;
+    var interval = list[i].interval;
     var close_1 = list[i].close;
     for (var lg = 0; lg < 2; lg++) {
-      if (interval2[lg] <= curr) {
-        interval2[lg] = curr;
+      if (interval[lg] <= curr) {
+        interval[lg] = curr;
         close_1[lg] = !lg ? 1 - currClose : 1;
       }
-      curr = interval2[lg];
+      curr = interval[lg];
       currClose = close_1[lg];
     }
-    if (interval2[0] === interval2[1] && close_1[0] * close_1[1] !== 1) {
+    if (interval[0] === interval[1] && close_1[0] * close_1[1] !== 1) {
       list.splice(i, 1);
     } else {
       i++;
@@ -67881,20 +67855,20 @@ var TooltipMarkupStyleCreator = (
     };
     TooltipMarkupStyleCreator2.prototype.makeTooltipMarker = function(markerType, colorStr, renderMode) {
       var markerId = renderMode === "richText" ? this._generateStyleName() : null;
-      var marker = getTooltipMarker({
+      var marker3 = getTooltipMarker({
         color: colorStr,
         type: markerType,
         renderMode,
         markerId
       });
-      if (isString(marker)) {
-        return marker;
+      if (isString(marker3)) {
+        return marker3;
       } else {
         if (true) {
           assert(markerId);
         }
-        this.richTextStyles[markerId] = marker.style;
-        return marker.content;
+        this.richTextStyles[markerId] = marker3.style;
+        return marker3.content;
       }
     };
     TooltipMarkupStyleCreator2.prototype.wrapRichTextStyle = function(text, styles) {
@@ -74570,21 +74544,21 @@ function isIntervalOrLogScale(scale4) {
 }
 function intervalScaleNiceTicks(extent, spanWithBreaks, splitNumber, minInterval, maxInterval) {
   var result = {};
-  var interval2 = result.interval = nice(spanWithBreaks / splitNumber, true);
-  if (minInterval != null && interval2 < minInterval) {
-    interval2 = result.interval = minInterval;
+  var interval = result.interval = nice(spanWithBreaks / splitNumber, true);
+  if (minInterval != null && interval < minInterval) {
+    interval = result.interval = minInterval;
   }
-  if (maxInterval != null && interval2 > maxInterval) {
-    interval2 = result.interval = maxInterval;
+  if (maxInterval != null && interval > maxInterval) {
+    interval = result.interval = maxInterval;
   }
-  var precision = result.intervalPrecision = getIntervalPrecision(interval2);
-  var niceTickExtent = result.niceTickExtent = [round2(Math.ceil(extent[0] / interval2) * interval2, precision), round2(Math.floor(extent[1] / interval2) * interval2, precision)];
+  var precision = result.intervalPrecision = getIntervalPrecision(interval);
+  var niceTickExtent = result.niceTickExtent = [round2(Math.ceil(extent[0] / interval) * interval, precision), round2(Math.floor(extent[1] / interval) * interval, precision)];
   fixExtent(niceTickExtent, extent);
   return result;
 }
-function increaseInterval(interval2) {
-  var exp10 = Math.pow(10, quantityExponent(interval2));
-  var f = interval2 / exp10;
+function increaseInterval(interval) {
+  var exp10 = Math.pow(10, quantityExponent(interval));
+  var f = interval / exp10;
   if (!f) {
     f = 1;
   } else if (f === 2) {
@@ -74596,8 +74570,8 @@ function increaseInterval(interval2) {
   }
   return round2(f * exp10);
 }
-function getIntervalPrecision(interval2) {
-  return getPrecision(interval2) + 2;
+function getIntervalPrecision(interval) {
+  return getPrecision(interval) + 2;
 }
 function clamp(niceTickExtent, idx, extent) {
   niceTickExtent[idx] = Math.max(Math.min(niceTickExtent[idx], extent[1]), extent[0]);
@@ -74942,20 +74916,20 @@ var IntervalScale = (
     IntervalScale2.prototype.getInterval = function() {
       return this._interval;
     };
-    IntervalScale2.prototype.setInterval = function(interval2) {
-      this._interval = interval2;
+    IntervalScale2.prototype.setInterval = function(interval) {
+      this._interval = interval;
       this._niceExtent = this._extent.slice();
-      this._intervalPrecision = getIntervalPrecision(interval2);
+      this._intervalPrecision = getIntervalPrecision(interval);
     };
     IntervalScale2.prototype.getTicks = function(opt) {
       opt = opt || {};
-      var interval2 = this._interval;
+      var interval = this._interval;
       var extent = this._extent;
       var niceTickExtent = this._niceExtent;
       var intervalPrecision = this._intervalPrecision;
       var scaleBreakHelper = getScaleBreakHelper();
       var ticks = [];
-      if (!interval2) {
+      if (!interval) {
         return ticks;
       }
       if (opt.breakTicks === "only_break" && scaleBreakHelper) {
@@ -74966,7 +74940,7 @@ var IntervalScale = (
       if (extent[0] < niceTickExtent[0]) {
         if (opt.expandToNicedExtent) {
           ticks.push({
-            value: roundNumber2(niceTickExtent[0] - interval2, intervalPrecision)
+            value: roundNumber2(niceTickExtent[0] - interval, intervalPrecision)
           });
         } else {
           ticks.push({
@@ -74975,18 +74949,18 @@ var IntervalScale = (
         }
       }
       var estimateNiceMultiple = function(tickVal, targetTick) {
-        return Math.round((targetTick - tickVal) / interval2);
+        return Math.round((targetTick - tickVal) / interval);
       };
       var tick = niceTickExtent[0];
       while (tick <= niceTickExtent[1]) {
         ticks.push({
           value: tick
         });
-        tick = roundNumber2(tick + interval2, intervalPrecision);
+        tick = roundNumber2(tick + interval, intervalPrecision);
         if (this._brkCtx) {
           var moreMultiple = this._brkCtx.calcNiceTickMultiple(tick, estimateNiceMultiple);
           if (moreMultiple >= 0) {
-            tick = roundNumber2(tick + moreMultiple * interval2, intervalPrecision);
+            tick = roundNumber2(tick + moreMultiple * interval, intervalPrecision);
           }
         }
         if (ticks.length > 0 && tick === ticks[ticks.length - 1].value) {
@@ -75000,7 +74974,7 @@ var IntervalScale = (
       if (extent[1] > lastNiceTick) {
         if (opt.expandToNicedExtent) {
           ticks.push({
-            value: roundNumber2(lastNiceTick + interval2, intervalPrecision)
+            value: roundNumber2(lastNiceTick + interval, intervalPrecision)
           });
         } else {
           ticks.push({
@@ -75032,8 +75006,8 @@ var IntervalScale = (
         }
         var count = 0;
         var minorTicksGroup = [];
-        var interval2 = nextTick.value - prevTick.value;
-        var minorInterval = interval2 / splitNumber;
+        var interval = nextTick.value - prevTick.value;
+        var minorInterval = interval / splitNumber;
         var minorIntervalPrecision = getIntervalPrecision(minorInterval);
         while (count < splitNumber - 1) {
           var minorTick = roundNumber2(prevTick.value + (count + 1) * minorInterval, minorIntervalPrecision);
@@ -75107,13 +75081,13 @@ var IntervalScale = (
       this._innerSetExtent(extent[0], extent[1]);
       extent = this._extent.slice();
       this.calcNiceTicks(opt.splitNumber, opt.minInterval, opt.maxInterval);
-      var interval2 = this._interval;
+      var interval = this._interval;
       var intervalPrecition = this._intervalPrecision;
       if (!opt.fixMin) {
-        extent[0] = roundNumber2(Math.floor(extent[0] / interval2) * interval2, intervalPrecition);
+        extent[0] = roundNumber2(Math.floor(extent[0] / interval) * interval, intervalPrecition);
       }
       if (!opt.fixMax) {
-        extent[1] = roundNumber2(Math.ceil(extent[1] / interval2) * interval2, intervalPrecition);
+        extent[1] = roundNumber2(Math.ceil(extent[1] / interval) * interval, intervalPrecition);
       }
       this._innerSetExtent(extent[0], extent[1]);
     };
@@ -75399,11 +75373,11 @@ var TimeScale = (
     };
     TimeScale2.prototype.getTicks = function(opt) {
       opt = opt || {};
-      var interval2 = this._interval;
+      var interval = this._interval;
       var extent = this._extent;
       var scaleBreakHelper = getScaleBreakHelper();
       var ticks = [];
-      if (!interval2) {
+      if (!interval) {
         return ticks;
       }
       var useUTC = this.getSetting("useUTC");
@@ -75567,8 +75541,8 @@ function getIntervalTicks(bottomUnitName, approxInterval, isUTC, extent, extentS
   var safeLimit = 1e4;
   var unitNames = timeUnits;
   var iter = 0;
-  function addTicksInSpan(interval2, minTimestamp, maxTimestamp, getMethodName, setMethodName, isDate2, out2) {
-    var estimateNiceMultiple = createEstimateNiceMultiple(setMethodName, interval2);
+  function addTicksInSpan(interval, minTimestamp, maxTimestamp, getMethodName, setMethodName, isDate2, out2) {
+    var estimateNiceMultiple = createEstimateNiceMultiple(setMethodName, interval);
     var dateTime = minTimestamp;
     var date = new Date(dateTime);
     while (dateTime < maxTimestamp && dateTime <= extent[1]) {
@@ -75581,12 +75555,12 @@ function getIntervalTicks(bottomUnitName, approxInterval, isUTC, extent, extentS
         }
         break;
       }
-      date[setMethodName](date[getMethodName]() + interval2);
+      date[setMethodName](date[getMethodName]() + interval);
       dateTime = date.getTime();
       if (brkCtx) {
         var moreMultiple = brkCtx.calcNiceTickMultiple(dateTime, estimateNiceMultiple);
         if (moreMultiple > 0) {
-          date[setMethodName](date[getMethodName]() + moreMultiple * interval2);
+          date[setMethodName](date[getMethodName]() + moreMultiple * interval);
           dateTime = date.getTime();
         }
       }
@@ -75615,20 +75589,20 @@ function getIntervalTicks(bottomUnitName, approxInterval, isUTC, extent, extentS
       if (startTick === endTick) {
         continue;
       }
-      var interval2 = void 0;
+      var interval = void 0;
       var getterName = void 0;
       var setterName = void 0;
       var isDate2 = false;
       switch (unitName) {
         case "year":
-          interval2 = Math.max(1, Math.round(approxInterval / ONE_DAY / 365));
+          interval = Math.max(1, Math.round(approxInterval / ONE_DAY / 365));
           getterName = fullYearGetterName(isUTC);
           setterName = fullYearSetterName(isUTC);
           break;
         case "half-year":
         case "quarter":
         case "month":
-          interval2 = getMonthInterval(approxInterval);
+          interval = getMonthInterval(approxInterval);
           getterName = monthGetterName(isUTC);
           setterName = monthSetterName(isUTC);
           break;
@@ -75636,7 +75610,7 @@ function getIntervalTicks(bottomUnitName, approxInterval, isUTC, extent, extentS
         // PENDING If week is added. Ignore day.
         case "half-week":
         case "day":
-          interval2 = getDateInterval(approxInterval, 31);
+          interval = getDateInterval(approxInterval, 31);
           getterName = dateGetterName(isUTC);
           setterName = dateSetterName(isUTC);
           isDate2 = true;
@@ -75644,32 +75618,32 @@ function getIntervalTicks(bottomUnitName, approxInterval, isUTC, extent, extentS
         case "half-day":
         case "quarter-day":
         case "hour":
-          interval2 = getHourInterval(approxInterval);
+          interval = getHourInterval(approxInterval);
           getterName = hoursGetterName(isUTC);
           setterName = hoursSetterName(isUTC);
           break;
         case "minute":
-          interval2 = getMinutesAndSecondsInterval(approxInterval, true);
+          interval = getMinutesAndSecondsInterval(approxInterval, true);
           getterName = minutesGetterName(isUTC);
           setterName = minutesSetterName(isUTC);
           break;
         case "second":
-          interval2 = getMinutesAndSecondsInterval(approxInterval, false);
+          interval = getMinutesAndSecondsInterval(approxInterval, false);
           getterName = secondsGetterName(isUTC);
           setterName = secondsSetterName(isUTC);
           break;
         case "millisecond":
-          interval2 = getMillisecondsInterval(approxInterval);
+          interval = getMillisecondsInterval(approxInterval);
           getterName = millisecondsGetterName(isUTC);
           setterName = millisecondsSetterName(isUTC);
           break;
       }
       if (endTick >= extent[0] && startTick <= extent[1]) {
-        addTicksInSpan(interval2, startTick, endTick, getterName, setterName, isDate2, newAddedTicks);
+        addTicksInSpan(interval, startTick, endTick, getterName, setterName, isDate2, newAddedTicks);
       }
       if (unitName === "year" && levelTicks2.length > 1 && i2 === 0) {
         levelTicks2.unshift({
-          value: levelTicks2[0].value - interval2
+          value: levelTicks2[0].value - interval
         });
       }
     }
@@ -75834,17 +75808,17 @@ var LogScale = (
       if (!isFinite(span) || span <= 0) {
         return;
       }
-      var interval2 = quantity(span);
-      var err = approxTickNum / span * interval2;
+      var interval = quantity(span);
+      var err = approxTickNum / span * interval;
       if (err <= 0.5) {
-        interval2 *= 10;
+        interval *= 10;
       }
-      while (!isNaN(interval2) && Math.abs(interval2) < 1 && Math.abs(interval2) > 0) {
-        interval2 *= 10;
+      while (!isNaN(interval) && Math.abs(interval) < 1 && Math.abs(interval) > 0) {
+        interval *= 10;
       }
-      var niceExtent = [fixRound(mathCeil(extent[0] / interval2) * interval2), fixRound(mathFloor(extent[1] / interval2) * interval2)];
-      this._interval = interval2;
-      this._intervalPrecision = getIntervalPrecision(interval2);
+      var niceExtent = [fixRound(mathCeil(extent[0] / interval) * interval), fixRound(mathFloor(extent[1] / interval) * interval)];
+      this._interval = interval;
+      this._intervalPrecision = getIntervalPrecision(interval);
       this._niceExtent = niceExtent;
     };
     LogScale2.prototype.calcNiceExtent = function(opt) {
@@ -76090,7 +76064,7 @@ function niceScaleExtent(scale4, inModel) {
     scale4.base = model2.get("logBase");
   }
   var scaleType = scale4.type;
-  var interval2 = model2.get("interval");
+  var interval = model2.get("interval");
   var isIntervalOrTime = scaleType === "interval" || scaleType === "time";
   scale4.setBreaksFromOption(retrieveAxisBreaksOption(model2));
   scale4.setExtent(extent[0], extent[1]);
@@ -76101,8 +76075,8 @@ function niceScaleExtent(scale4, inModel) {
     minInterval: isIntervalOrTime ? model2.get("minInterval") : null,
     maxInterval: isIntervalOrTime ? model2.get("maxInterval") : null
   });
-  if (interval2 != null) {
-    scale4.setInterval && scale4.setInterval(interval2);
+  if (interval != null) {
+    scale4.setInterval && scale4.setInterval(interval);
   }
 }
 function createScaleByModel(model2, axisType) {
@@ -76173,8 +76147,8 @@ function getAxisRawValue(axis, tick) {
   return axis.type === "category" ? axis.scale.getLabel(tick) : tick.value;
 }
 function getOptionCategoryInterval(model2) {
-  var interval2 = model2.get("interval");
-  return interval2 == null ? "auto" : interval2;
+  var interval = model2.get("interval");
+  return interval == null ? "auto" : interval;
 }
 function shouldShowAllLabels(axis) {
   return axis.type === "category" && getOptionCategoryInterval(axis.getLabelModel()) === 0;
@@ -76997,27 +76971,27 @@ function calculateCategoryInterval(axis, ctx) {
   var dh = maxH / unitH;
   isNaN(dw) && (dw = Infinity);
   isNaN(dh) && (dh = Infinity);
-  var interval2 = Math.max(0, Math.floor(Math.min(dw, dh)));
+  var interval = Math.max(0, Math.floor(Math.min(dw, dh)));
   if (kind === AxisTickLabelComputingKind.estimate) {
-    ctx.out.noPxChangeTryDetermine.push(bind2(calculateCategoryIntervalTryDetermine, null, axis, interval2, tickCount));
-    return interval2;
+    ctx.out.noPxChangeTryDetermine.push(bind2(calculateCategoryIntervalTryDetermine, null, axis, interval, tickCount));
+    return interval;
   }
-  var lastInterval = calculateCategoryIntervalDealCache(axis, interval2, tickCount);
-  return lastInterval != null ? lastInterval : interval2;
+  var lastInterval = calculateCategoryIntervalDealCache(axis, interval, tickCount);
+  return lastInterval != null ? lastInterval : interval;
 }
-function calculateCategoryIntervalTryDetermine(axis, interval2, tickCount) {
-  return calculateCategoryIntervalDealCache(axis, interval2, tickCount) == null;
+function calculateCategoryIntervalTryDetermine(axis, interval, tickCount) {
+  return calculateCategoryIntervalDealCache(axis, interval, tickCount) == null;
 }
-function calculateCategoryIntervalDealCache(axis, interval2, tickCount) {
+function calculateCategoryIntervalDealCache(axis, interval, tickCount) {
   var cache = modelInner(axis.model);
   var axisExtent = axis.getExtent();
   var lastAutoInterval = cache.lastAutoInterval;
   var lastTickCount = cache.lastTickCount;
-  if (lastAutoInterval != null && lastTickCount != null && Math.abs(lastAutoInterval - interval2) <= 1 && Math.abs(lastTickCount - tickCount) <= 1 && lastAutoInterval > interval2 && cache.axisExtent0 === axisExtent[0] && cache.axisExtent1 === axisExtent[1]) {
+  if (lastAutoInterval != null && lastTickCount != null && Math.abs(lastAutoInterval - interval) <= 1 && Math.abs(lastTickCount - tickCount) <= 1 && lastAutoInterval > interval && cache.axisExtent0 === axisExtent[0] && cache.axisExtent1 === axisExtent[1]) {
     return lastAutoInterval;
   } else {
     cache.lastTickCount = tickCount;
-    cache.lastAutoInterval = interval2;
+    cache.lastAutoInterval = interval;
     cache.axisExtent0 = axisExtent[0];
     cache.axisExtent1 = axisExtent[1];
   }
@@ -81186,30 +81160,30 @@ function alignScaleTicks(scale4, axisModel, alignToScale) {
   if (isMaxFixed) {
     rawExtent[1] = extent[1];
   }
-  var interval2 = intervalScaleProto.getInterval.call(scale4);
+  var interval = intervalScaleProto.getInterval.call(scale4);
   var min3 = rawExtent[0];
   var max3 = rawExtent[1];
   if (isMinFixed && isMaxFixed) {
-    interval2 = (max3 - min3) / alignToSplitNumber;
+    interval = (max3 - min3) / alignToSplitNumber;
   } else if (isMinFixed) {
-    max3 = rawExtent[0] + interval2 * alignToSplitNumber;
+    max3 = rawExtent[0] + interval * alignToSplitNumber;
     while (max3 < rawExtent[1] && isFinite(max3) && isFinite(rawExtent[1])) {
-      interval2 = increaseInterval(interval2);
-      max3 = rawExtent[0] + interval2 * alignToSplitNumber;
+      interval = increaseInterval(interval);
+      max3 = rawExtent[0] + interval * alignToSplitNumber;
     }
   } else if (isMaxFixed) {
-    min3 = rawExtent[1] - interval2 * alignToSplitNumber;
+    min3 = rawExtent[1] - interval * alignToSplitNumber;
     while (min3 > rawExtent[0] && isFinite(min3) && isFinite(rawExtent[0])) {
-      interval2 = increaseInterval(interval2);
-      min3 = rawExtent[1] - interval2 * alignToSplitNumber;
+      interval = increaseInterval(interval);
+      min3 = rawExtent[1] - interval * alignToSplitNumber;
     }
   } else {
     var nicedSplitNumber = scale4.getTicks().length - 1;
     if (nicedSplitNumber > alignToSplitNumber) {
-      interval2 = increaseInterval(interval2);
+      interval = increaseInterval(interval);
     }
-    var range = interval2 * alignToSplitNumber;
-    max3 = Math.ceil(rawExtent[1] / interval2) * interval2;
+    var range = interval * alignToSplitNumber;
+    max3 = Math.ceil(rawExtent[1] / interval) * interval;
     min3 = round2(max3 - range);
     if (min3 < 0 && rawExtent[0] >= 0) {
       min3 = 0;
@@ -81221,14 +81195,14 @@ function alignScaleTicks(scale4, axisModel, alignToScale) {
   }
   var t0 = (alignToTicks[0].value - alignToNicedTicks[0].value) / alignToInterval;
   var t1 = (alignToTicks[alignToSplitNumber].value - alignToNicedTicks[alignToSplitNumber].value) / alignToInterval;
-  intervalScaleProto.setExtent.call(scale4, min3 + interval2 * t0, max3 + interval2 * t1);
-  intervalScaleProto.setInterval.call(scale4, interval2);
+  intervalScaleProto.setExtent.call(scale4, min3 + interval * t0, max3 + interval * t1);
+  intervalScaleProto.setInterval.call(scale4, interval);
   if (t0 || t1) {
-    intervalScaleProto.setNiceExtent.call(scale4, min3 + interval2, max3 - interval2);
+    intervalScaleProto.setNiceExtent.call(scale4, min3 + interval, max3 - interval);
   }
   if (true) {
     var ticks = intervalScaleProto.getTicks.call(scale4);
-    if (ticks[1] && (!isValueNice(interval2) || getPrecisionSafe(ticks[1].value) > getPrecisionSafe(interval2))) {
+    if (ticks[1] && (!isValueNice(interval) || getPrecisionSafe(ticks[1].value) > getPrecisionSafe(interval))) {
       warn("The ticks may be not readable when set min: " + axisModel.get("min") + ", max: " + axisModel.get("max") + (" and alignTicks: true. (" + ((_a2 = axisModel.axis) === null || _a2 === void 0 ? void 0 : _a2.dim) + "AxisIndex: " + axisModel.componentIndex + ")"), true);
     }
   }
@@ -93698,11 +93672,12 @@ var CardWidget = class _CardWidget {
   map;
   mapInitialized = false;
   routeLayer = L2.layerGroup();
+  lastTripsSignature = "";
   routeColors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f", "#9b59b6"];
   ngAfterViewInit() {
     this.map = L2.map("map", {
       attributionControl: false
-    }).setView([50.9271, 11.5892], 14);
+    }).setView([48.8375, 10.0936], 14);
     L2.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
       attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; OpenStreetMap contributors',
       maxZoom: 20,
@@ -93712,6 +93687,7 @@ var CardWidget = class _CardWidget {
     }).addTo(this.map);
     this.routeLayer.addTo(this.map);
     this.mapInitialized = true;
+    this.lastTripsSignature = this.tripsSignature();
     this.renderTrips();
   }
   ngAfterViewChecked() {
@@ -93720,9 +93696,16 @@ var CardWidget = class _CardWidget {
     }
   }
   ngOnChanges(changes) {
-    if (changes["trips"] && this.mapInitialized) {
-      this.renderTrips();
-    }
+    if (!changes["trips"] || !this.mapInitialized)
+      return;
+    const signature = this.tripsSignature();
+    if (signature === this.lastTripsSignature)
+      return;
+    this.lastTripsSignature = signature;
+    this.renderTrips();
+  }
+  tripsSignature() {
+    return this.trips.map((t) => `${t.id}:${t.points.length}:${t.end ? "1" : "0"}`).join("|");
   }
   renderTrips() {
     this.routeLayer.clearLayers();
@@ -93733,6 +93716,7 @@ var CardWidget = class _CardWidget {
     this.trips.forEach((trip, tripIndex) => {
       const color3 = this.routeColors[tripIndex % this.routeColors.length];
       const coordinates = trip.points.map((p) => [p.lat, p.lng]);
+      const isOngoing = !trip.end;
       L2.polyline(coordinates, {
         color: color3,
         weight: 4,
@@ -93740,7 +93724,19 @@ var CardWidget = class _CardWidget {
         opacity: 0.65
       }).addTo(this.routeLayer);
       trip.points.forEach((point, index) => {
-        const marker = L2.circleMarker(coordinates[index], {
+        const isLastPoint = index === trip.points.length - 1;
+        if (isOngoing && isLastPoint) {
+          const icon = L2.divIcon({
+            className: "vehicle-marker-icon",
+            html: `<div class="vehicle-marker"><span class="vehicle-marker-pulse" style="background-color:${color3}"></span><span class="vehicle-marker-dot" style="background-color:${color3};border-color:${color3}"></span></div>`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+          });
+          const marker4 = L2.marker(coordinates[index], { icon }).addTo(this.routeLayer);
+          marker4.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: "top" });
+          return;
+        }
+        const marker3 = L2.circleMarker(coordinates[index], {
           radius: 5,
           color: color3,
           fillColor: color3,
@@ -93748,30 +93744,36 @@ var CardWidget = class _CardWidget {
           opacity: 1,
           weight: 2
         }).addTo(this.routeLayer);
-        marker.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: "top" });
+        marker3.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: "top" });
       });
       if (coordinates.length) {
         const startMarker = L2.circleMarker(coordinates[0], {
-          radius: 13,
-          color: color3,
-          fillOpacity: 0,
-          opacity: 1,
-          weight: 3
-        }).addTo(this.routeLayer);
-        startMarker.bindTooltip(this.pointTooltip(trip, trip.points[0], "Start"), { permanent: false, direction: "top" });
-        const endCoord = coordinates[coordinates.length - 1];
-        const endMarker = L2.circleMarker(endCoord, {
-          radius: 13,
+          radius: 12,
           color: color3,
           fillColor: color3,
           fillOpacity: 1,
           opacity: 1,
           weight: 2
         }).addTo(this.routeLayer);
-        endMarker.bindTooltip(this.pointTooltip(trip, trip.points[trip.points.length - 1], "Ziel"), { permanent: false, direction: "top" });
+        startMarker.bindTooltip(this.pointTooltip(trip, trip.points[0], "Start"), { permanent: false, direction: "top" });
+        if (!isOngoing) {
+          const endCoord = coordinates[coordinates.length - 1];
+          const endMarker = L2.circleMarker(endCoord, {
+            radius: 14,
+            color: color3,
+            fillOpacity: 0,
+            opacity: 1,
+            weight: 3
+          }).addTo(this.routeLayer);
+          endMarker.bindTooltip(this.pointTooltip(trip, trip.points[trip.points.length - 1], "Ziel"), { permanent: false, direction: "top" });
+        }
       }
       allPoints.push(...coordinates);
     });
+    this.recenter();
+  }
+  recenter() {
+    const allPoints = this.trips.flatMap((trip) => trip.points.map((p) => [p.lat, p.lng]));
     if (allPoints.length) {
       this.map.fitBounds(L2.latLngBounds(allPoints), { padding: [30, 30] });
     }
@@ -93794,12 +93796,12 @@ var CardWidget = class _CardWidget {
     if (rf & 1) {
       \u0275\u0275domElement(0, "div", 0);
     }
-  }, styles: ["\n\n#map[_ngcontent-%COMP%] {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile[_ngcontent-%COMP%] {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container[_ngcontent-%COMP%] {\n  background: var(--color-bg-map-tile);\n}\n/*# sourceMappingURL=card-widget.component.css.map */"] });
+  }, styles: ["\n\n#map[_ngcontent-%COMP%] {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile[_ngcontent-%COMP%] {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container[_ngcontent-%COMP%] {\n  background: var(--color-bg-map-tile);\n}\n  .vehicle-marker-icon {\n  background: transparent;\n  border: none;\n}\n  .vehicle-marker {\n  position: relative;\n  width: 24px;\n  height: 24px;\n}\n  .vehicle-marker-dot {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  border: 3px solid var(--color-map-marker-border);\n  box-sizing: border-box;\n}\n  .vehicle-marker-pulse {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  animation: _ngcontent-%COMP%_vehicle-marker-pulse 1.6s ease-out infinite;\n}\n@keyframes _ngcontent-%COMP%_vehicle-marker-pulse {\n  0% {\n    transform: scale(1);\n    opacity: var(--color-map-marker-pulse-opacity, 0.7);\n  }\n  100% {\n    transform: scale(2.6);\n    opacity: 0;\n  }\n}\n/*# sourceMappingURL=card-widget.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CardWidget, [{
     type: Component,
-    args: [{ selector: "app-card-widget", imports: [], template: '<div id="map"></div>\n\n<script src="https://unpkg.com/leaflet/dist/leaflet.js"><\/script>\n<script>\ndocument.addEventListener("DOMContentLoaded", function() {\n\n  const buttons = document.querySelectorAll(".tabs button");\n  const content = document.getElementById("content");\n  let mapInstance = null;\n\n  function loadContent(tabName) {\n    content.innerHTML = "";\n\n    if(tabName === "Karte") {\n      const mapDiv = document.createElement("div");\n      mapDiv.id = "map";\n      content.appendChild(mapDiv);\n\n      if(!mapInstance) {\n        mapInstance = L.map("map").setView([50.9271, 11.5892], 14);\n        L.tileLayer(\'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\', {\n          maxZoom: 19\n        }).addTo(mapInstance);\n      } else {\n        mapInstance.invalidateSize();\n      }\n\n    } else {\n      const div = document.createElement("div");\n      div.innerHTML = `<h2>${tabName}</h2><p>Inhalt f\xFCr ${tabName}</p>`;\n      content.appendChild(div);\n    }\n  }\n\n  buttons.forEach(btn => {\n    btn.addEventListener("click", function() {\n      buttons.forEach(b => b.classList.remove("active"));\n      this.classList.add("active");\n\n      loadContent(this.getAttribute("data-tab"));\n    });\n  });\n\n  loadContent("Statistik");\n\n});\n<\/script>\n', styles: ["/* src/app/widgets/card-widget/card-widget.component.scss */\n#map {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container {\n  background: var(--color-bg-map-tile);\n}\n/*# sourceMappingURL=card-widget.component.css.map */\n"] }]
+    args: [{ selector: "app-card-widget", imports: [], template: '<div id="map"></div>\n\n<script src="https://unpkg.com/leaflet/dist/leaflet.js"><\/script>\n<script>\ndocument.addEventListener("DOMContentLoaded", function() {\n\n  const buttons = document.querySelectorAll(".tabs button");\n  const content = document.getElementById("content");\n  let mapInstance = null;\n\n  function loadContent(tabName) {\n    content.innerHTML = "";\n\n    if(tabName === "Karte") {\n      const mapDiv = document.createElement("div");\n      mapDiv.id = "map";\n      content.appendChild(mapDiv);\n\n      if(!mapInstance) {\n        mapInstance = L.map("map").setView([48.8375, 10.0936], 14);\n        L.tileLayer(\'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\', {\n          maxZoom: 19\n        }).addTo(mapInstance);\n      } else {\n        mapInstance.invalidateSize();\n      }\n\n    } else {\n      const div = document.createElement("div");\n      div.innerHTML = `<h2>${tabName}</h2><p>Inhalt f\xFCr ${tabName}</p>`;\n      content.appendChild(div);\n    }\n  }\n\n  buttons.forEach(btn => {\n    btn.addEventListener("click", function() {\n      buttons.forEach(b => b.classList.remove("active"));\n      this.classList.add("active");\n\n      loadContent(this.getAttribute("data-tab"));\n    });\n  });\n\n  loadContent("Statistik");\n\n});\n<\/script>\n', styles: ["/* src/app/widgets/card-widget/card-widget.component.scss */\n#map {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container {\n  background: var(--color-bg-map-tile);\n}\n::ng-deep .vehicle-marker-icon {\n  background: transparent;\n  border: none;\n}\n::ng-deep .vehicle-marker {\n  position: relative;\n  width: 24px;\n  height: 24px;\n}\n::ng-deep .vehicle-marker-dot {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  border: 3px solid var(--color-map-marker-border);\n  box-sizing: border-box;\n}\n::ng-deep .vehicle-marker-pulse {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  animation: vehicle-marker-pulse 1.6s ease-out infinite;\n}\n@keyframes vehicle-marker-pulse {\n  0% {\n    transform: scale(1);\n    opacity: var(--color-map-marker-pulse-opacity, 0.7);\n  }\n  100% {\n    transform: scale(2.6);\n    opacity: 0;\n  }\n}\n/*# sourceMappingURL=card-widget.component.css.map */\n"] }]
   }], null, { trips: [{
     type: Input
   }], vehicles: [{
@@ -93904,12 +93906,12 @@ var TripChart = class _TripChart {
     if (rf & 2) {
       \u0275\u0275property("options", ctx.chartOptions);
     }
-  }, dependencies: [NgxEchartsDirective], styles: ["\n\n.chart[_ngcontent-%COMP%] {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n}\n/*# sourceMappingURL=trip-chart.component.css.map */"] });
+  }, dependencies: [NgxEchartsDirective], styles: ["\n\n.chart[_ngcontent-%COMP%] {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n}\n/*# sourceMappingURL=trip-chart.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(TripChart, [{
     type: Component,
-    args: [{ selector: "app-trip-chart", standalone: true, imports: [NgxEchartsDirective], template: '<div echarts [options]="chartOptions" class="chart"></div>\n', styles: ["/* src/app/widgets/trip-chart/trip-chart.component.scss */\n.chart {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n}\n/*# sourceMappingURL=trip-chart.component.css.map */\n"] }]
+    args: [{ selector: "app-trip-chart", standalone: true, imports: [NgxEchartsDirective], template: '<div echarts [options]="chartOptions" class="chart"></div>\n', styles: ["/* src/app/widgets/trip-chart/trip-chart.component.scss */\n.chart {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n}\n/*# sourceMappingURL=trip-chart.component.css.map */\n"] }]
   }], null, { trips: [{
     type: Input
   }] });
@@ -93938,6 +93940,9 @@ var TripService = class _TripService {
       trips: dto.trips.map((t) => this.toTrip(t)),
       totalCount: dto.totalCount
     })), catchError((err) => this.rethrow(err)));
+  }
+  delete(id) {
+    return this.http.delete(`${this.baseUrl}/Trip/${id}`).pipe(catchError((err) => this.rethrow(err)));
   }
   rethrow(err) {
     const message = typeof err.error === "string" && err.error ? err.error : `Fehler ${err.status}: ${err.statusText}`;
@@ -94000,6 +94005,16 @@ var VehicleService = class _VehicleService {
   }
   loadAll() {
     return this.http.get(`${this.baseUrl}/Vehicle`).pipe(map((list) => list.map((dto) => this.toVehicle(dto))), catchError((err) => this.rethrow(err)));
+  }
+  loadPositions() {
+    return this.http.get(`${this.baseUrl}/Vehicle/positions`).pipe(map((list) => new Map(list.map((p) => [p.vehicleId, {
+      lat: p.lat,
+      lng: p.lng,
+      timestamp: p.timestamp,
+      telemetryUnitId: p.telemetryUnitId,
+      speedKmh: p.speedKmh,
+      accelMs2: p.accelMs2
+    }]))), catchError((err) => this.rethrow(err)));
   }
   save(vehicle) {
     return this.http.post(`${this.baseUrl}/Vehicle`, this.toRequestDto(vehicle)).pipe(map((dto) => this.toVehicle(dto)), catchError((err) => this.rethrow(err)));
@@ -94072,9 +94087,6 @@ var TelemetryUnitService = class _TelemetryUnitService {
   }
   filterUuidResponses(res) {
     return Object.values(res ?? {}).filter((v) => typeof v === "string" && UUID_PATTERN.test(v.trim())).map((v) => v.trim());
-  }
-  pollConnectedUnits(intervalMs = 500) {
-    return interval(intervalMs).pipe(startWith(0), exhaustMap(() => this.broadcastCommand().pipe(map((res) => this.filterUuidResponses(res)), catchError(() => of([])))));
   }
   createUnit(dto) {
     return this.http.post(` ${this.baseUrl}/TelemetryUnit`, dto);
@@ -94184,13 +94196,2904 @@ var PersonService = class _PersonService {
   }], () => [{ type: HttpClient }], null);
 })();
 
+// node_modules/@microsoft/signalr/dist/esm/Errors.js
+var HttpError = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.HttpError}.
+   *
+   * @param {string} errorMessage A descriptive error message.
+   * @param {number} statusCode The HTTP status code represented by this error.
+   */
+  constructor(errorMessage, statusCode) {
+    const trueProto = new.target.prototype;
+    super(`${errorMessage}: Status code '${statusCode}'`);
+    this.statusCode = statusCode;
+    this.__proto__ = trueProto;
+  }
+};
+var TimeoutError = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.TimeoutError}.
+   *
+   * @param {string} errorMessage A descriptive error message.
+   */
+  constructor(errorMessage = "A timeout occurred.") {
+    const trueProto = new.target.prototype;
+    super(errorMessage);
+    this.__proto__ = trueProto;
+  }
+};
+var AbortError = class extends Error {
+  /** Constructs a new instance of {@link AbortError}.
+   *
+   * @param {string} errorMessage A descriptive error message.
+   */
+  constructor(errorMessage = "An abort occurred.") {
+    const trueProto = new.target.prototype;
+    super(errorMessage);
+    this.__proto__ = trueProto;
+  }
+};
+var UnsupportedTransportError = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.UnsupportedTransportError}.
+   *
+   * @param {string} message A descriptive error message.
+   * @param {HttpTransportType} transport The {@link @microsoft/signalr.HttpTransportType} this error occurred on.
+   */
+  constructor(message, transport) {
+    const trueProto = new.target.prototype;
+    super(message);
+    this.transport = transport;
+    this.errorType = "UnsupportedTransportError";
+    this.__proto__ = trueProto;
+  }
+};
+var DisabledTransportError = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.DisabledTransportError}.
+   *
+   * @param {string} message A descriptive error message.
+   * @param {HttpTransportType} transport The {@link @microsoft/signalr.HttpTransportType} this error occurred on.
+   */
+  constructor(message, transport) {
+    const trueProto = new.target.prototype;
+    super(message);
+    this.transport = transport;
+    this.errorType = "DisabledTransportError";
+    this.__proto__ = trueProto;
+  }
+};
+var FailedToStartTransportError = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.FailedToStartTransportError}.
+   *
+   * @param {string} message A descriptive error message.
+   * @param {HttpTransportType} transport The {@link @microsoft/signalr.HttpTransportType} this error occurred on.
+   */
+  constructor(message, transport) {
+    const trueProto = new.target.prototype;
+    super(message);
+    this.transport = transport;
+    this.errorType = "FailedToStartTransportError";
+    this.__proto__ = trueProto;
+  }
+};
+var FailedToNegotiateWithServerError = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.FailedToNegotiateWithServerError}.
+   *
+   * @param {string} message A descriptive error message.
+   */
+  constructor(message) {
+    const trueProto = new.target.prototype;
+    super(message);
+    this.errorType = "FailedToNegotiateWithServerError";
+    this.__proto__ = trueProto;
+  }
+};
+var AggregateErrors = class extends Error {
+  /** Constructs a new instance of {@link @microsoft/signalr.AggregateErrors}.
+   *
+   * @param {string} message A descriptive error message.
+   * @param {Error[]} innerErrors The collection of errors this error is aggregating.
+   */
+  constructor(message, innerErrors) {
+    const trueProto = new.target.prototype;
+    super(message);
+    this.innerErrors = innerErrors;
+    this.__proto__ = trueProto;
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/HttpClient.js
+var HttpResponse2 = class {
+  constructor(statusCode, statusText, content) {
+    this.statusCode = statusCode;
+    this.statusText = statusText;
+    this.content = content;
+  }
+};
+var HttpClient2 = class {
+  get(url, options) {
+    return this.send(__spreadProps(__spreadValues({}, options), {
+      method: "GET",
+      url
+    }));
+  }
+  post(url, options) {
+    return this.send(__spreadProps(__spreadValues({}, options), {
+      method: "POST",
+      url
+    }));
+  }
+  delete(url, options) {
+    return this.send(__spreadProps(__spreadValues({}, options), {
+      method: "DELETE",
+      url
+    }));
+  }
+  /** Gets all cookies that apply to the specified URL.
+   *
+   * @param url The URL that the cookies are valid for.
+   * @returns {string} A string containing all the key-value cookie pairs for the specified URL.
+   */
+  // @ts-ignore
+  getCookieString(url) {
+    return "";
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/ILogger.js
+var LogLevel;
+(function(LogLevel2) {
+  LogLevel2[LogLevel2["Trace"] = 0] = "Trace";
+  LogLevel2[LogLevel2["Debug"] = 1] = "Debug";
+  LogLevel2[LogLevel2["Information"] = 2] = "Information";
+  LogLevel2[LogLevel2["Warning"] = 3] = "Warning";
+  LogLevel2[LogLevel2["Error"] = 4] = "Error";
+  LogLevel2[LogLevel2["Critical"] = 5] = "Critical";
+  LogLevel2[LogLevel2["None"] = 6] = "None";
+})(LogLevel || (LogLevel = {}));
+
+// node_modules/@microsoft/signalr/dist/esm/Loggers.js
+var NullLogger = class {
+  constructor() {
+  }
+  /** @inheritDoc */
+  // eslint-disable-next-line
+  log(_logLevel, _message) {
+  }
+};
+NullLogger.instance = new NullLogger();
+
+// node_modules/@microsoft/signalr/dist/esm/pkg-version.js
+var VERSION3 = "10.0.11";
+
+// node_modules/@microsoft/signalr/dist/esm/Utils.js
+var Arg = class {
+  static isRequired(val, name) {
+    if (val === null || val === void 0) {
+      throw new Error(`The '${name}' argument is required.`);
+    }
+  }
+  static isNotEmpty(val, name) {
+    if (!val || val.match(/^\s*$/)) {
+      throw new Error(`The '${name}' argument should not be empty.`);
+    }
+  }
+  static isIn(val, values, name) {
+    if (!(val in values)) {
+      throw new Error(`Unknown ${name} value: ${val}.`);
+    }
+  }
+};
+var Platform = class _Platform {
+  // react-native has a window but no document so we should check both
+  static get isBrowser() {
+    return !_Platform.isNode && typeof window === "object" && typeof window.document === "object";
+  }
+  // WebWorkers don't have a window object so the isBrowser check would fail
+  static get isWebWorker() {
+    return !_Platform.isNode && typeof self === "object" && "importScripts" in self;
+  }
+  // react-native has a window but no document
+  static get isReactNative() {
+    return !_Platform.isNode && typeof window === "object" && typeof window.document === "undefined";
+  }
+  // Node apps shouldn't have a window object, but WebWorkers don't either
+  // so we need to check for both WebWorker and window
+  static get isNode() {
+    return typeof process !== "undefined" && process.release && process.release.name === "node";
+  }
+};
+function getDataDetail(data, includeContent) {
+  let detail = "";
+  if (isArrayBuffer2(data)) {
+    detail = `Binary data of length ${data.byteLength}`;
+    if (includeContent) {
+      detail += `. Content: '${formatArrayBuffer(data)}'`;
+    }
+  } else if (typeof data === "string") {
+    detail = `String data of length ${data.length}`;
+    if (includeContent) {
+      detail += `. Content: '${data}'`;
+    }
+  }
+  return detail;
+}
+function formatArrayBuffer(data) {
+  const view = new Uint8Array(data);
+  let str = "";
+  view.forEach((num) => {
+    const pad2 = num < 16 ? "0" : "";
+    str += `0x${pad2}${num.toString(16)} `;
+  });
+  return str.substring(0, str.length - 1);
+}
+function isArrayBuffer2(val) {
+  return val && typeof ArrayBuffer !== "undefined" && (val instanceof ArrayBuffer || // Sometimes we get an ArrayBuffer that doesn't satisfy instanceof
+  val.constructor && val.constructor.name === "ArrayBuffer");
+}
+async function sendMessage(logger, transportName, httpClient, url, content, options) {
+  const headers = {};
+  const [name, value] = getUserAgentHeader();
+  headers[name] = value;
+  logger.log(LogLevel.Trace, `(${transportName} transport) sending data. ${getDataDetail(content, options.logMessageContent)}.`);
+  const responseType = isArrayBuffer2(content) ? "arraybuffer" : "text";
+  const response = await httpClient.post(url, {
+    content,
+    headers: __spreadValues(__spreadValues({}, headers), options.headers),
+    responseType,
+    timeout: options.timeout,
+    withCredentials: options.withCredentials
+  });
+  logger.log(LogLevel.Trace, `(${transportName} transport) request complete. Response status: ${response.statusCode}.`);
+}
+function createLogger(logger) {
+  if (logger === void 0) {
+    return new ConsoleLogger(LogLevel.Information);
+  }
+  if (logger === null) {
+    return NullLogger.instance;
+  }
+  if (logger.log !== void 0) {
+    return logger;
+  }
+  return new ConsoleLogger(logger);
+}
+var SubjectSubscription = class {
+  constructor(subject, observer) {
+    this._subject = subject;
+    this._observer = observer;
+  }
+  dispose() {
+    const index = this._subject.observers.indexOf(this._observer);
+    if (index > -1) {
+      this._subject.observers.splice(index, 1);
+    }
+    if (this._subject.observers.length === 0 && this._subject.cancelCallback) {
+      this._subject.cancelCallback().catch((_) => {
+      });
+    }
+  }
+};
+var ConsoleLogger = class {
+  constructor(minimumLogLevel) {
+    this._minLevel = minimumLogLevel;
+    this.out = console;
+  }
+  log(logLevel, message) {
+    if (logLevel >= this._minLevel) {
+      const msg = `[${(/* @__PURE__ */ new Date()).toISOString()}] ${LogLevel[logLevel]}: ${message}`;
+      switch (logLevel) {
+        case LogLevel.Critical:
+        case LogLevel.Error:
+          this.out.error(msg);
+          break;
+        case LogLevel.Warning:
+          this.out.warn(msg);
+          break;
+        case LogLevel.Information:
+          this.out.info(msg);
+          break;
+        default:
+          this.out.log(msg);
+          break;
+      }
+    }
+  }
+};
+function getUserAgentHeader() {
+  let userAgentHeaderName = "X-SignalR-User-Agent";
+  if (Platform.isNode) {
+    userAgentHeaderName = "User-Agent";
+  }
+  return [userAgentHeaderName, constructUserAgent(VERSION3, getOsName(), getRuntime(), getRuntimeVersion())];
+}
+function constructUserAgent(version3, os, runtime, runtimeVersion) {
+  let userAgent = "Microsoft SignalR/";
+  const majorAndMinor = version3.split(".");
+  userAgent += `${majorAndMinor[0]}.${majorAndMinor[1]}`;
+  userAgent += ` (${version3}; `;
+  if (os && os !== "") {
+    userAgent += `${os}; `;
+  } else {
+    userAgent += "Unknown OS; ";
+  }
+  userAgent += `${runtime}`;
+  if (runtimeVersion) {
+    userAgent += `; ${runtimeVersion}`;
+  } else {
+    userAgent += "; Unknown Runtime Version";
+  }
+  userAgent += ")";
+  return userAgent;
+}
+function getOsName() {
+  if (Platform.isNode) {
+    switch (process.platform) {
+      case "win32":
+        return "Windows NT";
+      case "darwin":
+        return "macOS";
+      case "linux":
+        return "Linux";
+      default:
+        return process.platform;
+    }
+  } else {
+    return "";
+  }
+}
+function getRuntimeVersion() {
+  if (Platform.isNode) {
+    return process.versions.node;
+  }
+  return void 0;
+}
+function getRuntime() {
+  if (Platform.isNode) {
+    return "NodeJS";
+  } else {
+    return "Browser";
+  }
+}
+function getErrorString(e2) {
+  if (e2.stack) {
+    return e2.stack;
+  } else if (e2.message) {
+    return e2.message;
+  }
+  return `${e2}`;
+}
+function getGlobalThis() {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw new Error("could not find global");
+}
+
+// node_modules/@microsoft/signalr/dist/esm/FetchHttpClient.js
+var FetchHttpClient = class extends HttpClient2 {
+  constructor(logger) {
+    super();
+    this._logger = logger;
+    if (typeof fetch === "undefined" || Platform.isNode) {
+      const requireFunc = typeof __webpack_require__ === "function" ? __non_webpack_require__ : __require;
+      this._jar = new (requireFunc("tough-cookie")).CookieJar();
+      if (typeof fetch === "undefined") {
+        this._fetchType = requireFunc("node-fetch");
+      } else {
+        this._fetchType = fetch;
+      }
+      this._fetchType = requireFunc("fetch-cookie")(this._fetchType, this._jar);
+    } else {
+      this._fetchType = fetch.bind(getGlobalThis());
+    }
+    if (typeof AbortController === "undefined") {
+      const requireFunc = typeof __webpack_require__ === "function" ? __non_webpack_require__ : __require;
+      this._abortControllerType = requireFunc("abort-controller");
+    } else {
+      this._abortControllerType = AbortController;
+    }
+  }
+  /** @inheritDoc */
+  async send(request) {
+    if (request.abortSignal && request.abortSignal.aborted) {
+      throw new AbortError();
+    }
+    if (!request.method) {
+      throw new Error("No method defined.");
+    }
+    if (!request.url) {
+      throw new Error("No url defined.");
+    }
+    const abortController = new this._abortControllerType();
+    let error2;
+    if (request.abortSignal) {
+      request.abortSignal.onabort = () => {
+        abortController.abort();
+        error2 = new AbortError();
+      };
+    }
+    let timeoutId = null;
+    if (request.timeout) {
+      const msTimeout = request.timeout;
+      timeoutId = setTimeout(() => {
+        abortController.abort();
+        this._logger.log(LogLevel.Warning, `Timeout from HTTP request.`);
+        error2 = new TimeoutError();
+      }, msTimeout);
+    }
+    if (request.content === "") {
+      request.content = void 0;
+    }
+    if (request.content) {
+      request.headers = request.headers || {};
+      if (isArrayBuffer2(request.content)) {
+        request.headers["Content-Type"] = "application/octet-stream";
+      } else {
+        request.headers["Content-Type"] = "text/plain;charset=UTF-8";
+      }
+    }
+    let response;
+    try {
+      response = await this._fetchType(request.url, {
+        body: request.content,
+        cache: "no-cache",
+        credentials: request.withCredentials === true ? "include" : "same-origin",
+        headers: __spreadValues({
+          "X-Requested-With": "XMLHttpRequest"
+        }, request.headers),
+        method: request.method,
+        mode: "cors",
+        redirect: "follow",
+        signal: abortController.signal
+      });
+    } catch (e2) {
+      if (error2) {
+        throw error2;
+      }
+      this._logger.log(LogLevel.Warning, `Error from HTTP request. ${e2}.`);
+      throw e2;
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (request.abortSignal) {
+        request.abortSignal.onabort = null;
+      }
+    }
+    if (!response.ok) {
+      const errorMessage = await deserializeContent(response, "text");
+      throw new HttpError(errorMessage || response.statusText, response.status);
+    }
+    const content = deserializeContent(response, request.responseType);
+    const payload = await content;
+    return new HttpResponse2(response.status, response.statusText, payload);
+  }
+  getCookieString(url) {
+    let cookies = "";
+    if (Platform.isNode && this._jar) {
+      this._jar.getCookies(url, (e2, c) => cookies = c.join("; "));
+    }
+    return cookies;
+  }
+};
+function deserializeContent(response, responseType) {
+  let content;
+  switch (responseType) {
+    case "arraybuffer":
+      content = response.arrayBuffer();
+      break;
+    case "text":
+      content = response.text();
+      break;
+    case "blob":
+    case "document":
+    case "json":
+      throw new Error(`${responseType} is not supported.`);
+    default:
+      content = response.text();
+      break;
+  }
+  return content;
+}
+
+// node_modules/@microsoft/signalr/dist/esm/XhrHttpClient.js
+var XhrHttpClient = class extends HttpClient2 {
+  constructor(logger) {
+    super();
+    this._logger = logger;
+  }
+  /** @inheritDoc */
+  send(request) {
+    if (request.abortSignal && request.abortSignal.aborted) {
+      return Promise.reject(new AbortError());
+    }
+    if (!request.method) {
+      return Promise.reject(new Error("No method defined."));
+    }
+    if (!request.url) {
+      return Promise.reject(new Error("No url defined."));
+    }
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open(request.method, request.url, true);
+      xhr.withCredentials = request.withCredentials === void 0 ? true : request.withCredentials;
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      if (request.content === "") {
+        request.content = void 0;
+      }
+      if (request.content) {
+        if (isArrayBuffer2(request.content)) {
+          xhr.setRequestHeader("Content-Type", "application/octet-stream");
+        } else {
+          xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+        }
+      }
+      const headers = request.headers;
+      if (headers) {
+        Object.keys(headers).forEach((header) => {
+          xhr.setRequestHeader(header, headers[header]);
+        });
+      }
+      if (request.responseType) {
+        xhr.responseType = request.responseType;
+      }
+      if (request.abortSignal) {
+        request.abortSignal.onabort = () => {
+          xhr.abort();
+          reject(new AbortError());
+        };
+      }
+      if (request.timeout) {
+        xhr.timeout = request.timeout;
+      }
+      xhr.onload = () => {
+        if (request.abortSignal) {
+          request.abortSignal.onabort = null;
+        }
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(new HttpResponse2(xhr.status, xhr.statusText, xhr.response || xhr.responseText));
+        } else {
+          reject(new HttpError(xhr.response || xhr.responseText || xhr.statusText, xhr.status));
+        }
+      };
+      xhr.onerror = () => {
+        this._logger.log(LogLevel.Warning, `Error from HTTP request. ${xhr.status}: ${xhr.statusText}.`);
+        reject(new HttpError(xhr.statusText, xhr.status));
+      };
+      xhr.ontimeout = () => {
+        this._logger.log(LogLevel.Warning, `Timeout from HTTP request.`);
+        reject(new TimeoutError());
+      };
+      xhr.send(request.content);
+    });
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/DefaultHttpClient.js
+var DefaultHttpClient = class extends HttpClient2 {
+  /** Creates a new instance of the {@link @microsoft/signalr.DefaultHttpClient}, using the provided {@link @microsoft/signalr.ILogger} to log messages. */
+  constructor(logger) {
+    super();
+    if (typeof fetch !== "undefined" || Platform.isNode) {
+      this._httpClient = new FetchHttpClient(logger);
+    } else if (typeof XMLHttpRequest !== "undefined") {
+      this._httpClient = new XhrHttpClient(logger);
+    } else {
+      throw new Error("No usable HttpClient found.");
+    }
+  }
+  /** @inheritDoc */
+  send(request) {
+    if (request.abortSignal && request.abortSignal.aborted) {
+      return Promise.reject(new AbortError());
+    }
+    if (!request.method) {
+      return Promise.reject(new Error("No method defined."));
+    }
+    if (!request.url) {
+      return Promise.reject(new Error("No url defined."));
+    }
+    return this._httpClient.send(request);
+  }
+  getCookieString(url) {
+    return this._httpClient.getCookieString(url);
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/TextMessageFormat.js
+var TextMessageFormat = class _TextMessageFormat {
+  static write(output2) {
+    return `${output2}${_TextMessageFormat.RecordSeparator}`;
+  }
+  static parse(input2) {
+    if (input2[input2.length - 1] !== _TextMessageFormat.RecordSeparator) {
+      throw new Error("Message is incomplete.");
+    }
+    const messages = input2.split(_TextMessageFormat.RecordSeparator);
+    messages.pop();
+    return messages;
+  }
+};
+TextMessageFormat.RecordSeparatorCode = 30;
+TextMessageFormat.RecordSeparator = String.fromCharCode(TextMessageFormat.RecordSeparatorCode);
+
+// node_modules/@microsoft/signalr/dist/esm/HandshakeProtocol.js
+var HandshakeProtocol = class {
+  // Handshake request is always JSON
+  writeHandshakeRequest(handshakeRequest) {
+    return TextMessageFormat.write(JSON.stringify(handshakeRequest));
+  }
+  parseHandshakeResponse(data) {
+    let messageData;
+    let remainingData;
+    if (isArrayBuffer2(data)) {
+      const binaryData = new Uint8Array(data);
+      const separatorIndex = binaryData.indexOf(TextMessageFormat.RecordSeparatorCode);
+      if (separatorIndex === -1) {
+        throw new Error("Message is incomplete.");
+      }
+      const responseLength = separatorIndex + 1;
+      messageData = String.fromCharCode.apply(null, Array.prototype.slice.call(binaryData.slice(0, responseLength)));
+      remainingData = binaryData.byteLength > responseLength ? binaryData.slice(responseLength).buffer : null;
+    } else {
+      const textData = data;
+      const separatorIndex = textData.indexOf(TextMessageFormat.RecordSeparator);
+      if (separatorIndex === -1) {
+        throw new Error("Message is incomplete.");
+      }
+      const responseLength = separatorIndex + 1;
+      messageData = textData.substring(0, responseLength);
+      remainingData = textData.length > responseLength ? textData.substring(responseLength) : null;
+    }
+    const messages = TextMessageFormat.parse(messageData);
+    const response = JSON.parse(messages[0]);
+    if (response.type) {
+      throw new Error("Expected a handshake response from the server.");
+    }
+    const responseMessage = response;
+    return [remainingData, responseMessage];
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/IHubProtocol.js
+var MessageType;
+(function(MessageType2) {
+  MessageType2[MessageType2["Invocation"] = 1] = "Invocation";
+  MessageType2[MessageType2["StreamItem"] = 2] = "StreamItem";
+  MessageType2[MessageType2["Completion"] = 3] = "Completion";
+  MessageType2[MessageType2["StreamInvocation"] = 4] = "StreamInvocation";
+  MessageType2[MessageType2["CancelInvocation"] = 5] = "CancelInvocation";
+  MessageType2[MessageType2["Ping"] = 6] = "Ping";
+  MessageType2[MessageType2["Close"] = 7] = "Close";
+  MessageType2[MessageType2["Ack"] = 8] = "Ack";
+  MessageType2[MessageType2["Sequence"] = 9] = "Sequence";
+})(MessageType || (MessageType = {}));
+
+// node_modules/@microsoft/signalr/dist/esm/Subject.js
+var Subject2 = class {
+  constructor() {
+    this.observers = [];
+  }
+  next(item) {
+    for (const observer of this.observers) {
+      observer.next(item);
+    }
+  }
+  error(err) {
+    for (const observer of this.observers) {
+      if (observer.error) {
+        observer.error(err);
+      }
+    }
+  }
+  complete() {
+    for (const observer of this.observers) {
+      if (observer.complete) {
+        observer.complete();
+      }
+    }
+  }
+  subscribe(observer) {
+    this.observers.push(observer);
+    return new SubjectSubscription(this, observer);
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/MessageBuffer.js
+var MessageBuffer = class {
+  constructor(protocol, connection, bufferSize) {
+    this._bufferSize = 1e5;
+    this._messages = [];
+    this._totalMessageCount = 0;
+    this._waitForSequenceMessage = false;
+    this._nextReceivingSequenceId = 1;
+    this._latestReceivedSequenceId = 0;
+    this._bufferedByteCount = 0;
+    this._reconnectInProgress = false;
+    this._protocol = protocol;
+    this._connection = connection;
+    this._bufferSize = bufferSize;
+  }
+  async _send(message) {
+    const serializedMessage = this._protocol.writeMessage(message);
+    let backpressurePromise = Promise.resolve();
+    if (this._isInvocationMessage(message)) {
+      this._totalMessageCount++;
+      let backpressurePromiseResolver = () => {
+      };
+      let backpressurePromiseRejector = () => {
+      };
+      if (isArrayBuffer2(serializedMessage)) {
+        this._bufferedByteCount += serializedMessage.byteLength;
+      } else {
+        this._bufferedByteCount += serializedMessage.length;
+      }
+      if (this._bufferedByteCount >= this._bufferSize) {
+        backpressurePromise = new Promise((resolve, reject) => {
+          backpressurePromiseResolver = resolve;
+          backpressurePromiseRejector = reject;
+        });
+      }
+      this._messages.push(new BufferedItem(serializedMessage, this._totalMessageCount, backpressurePromiseResolver, backpressurePromiseRejector));
+    }
+    try {
+      if (!this._reconnectInProgress) {
+        await this._connection.send(serializedMessage);
+      }
+    } catch {
+      this._disconnected();
+    }
+    await backpressurePromise;
+  }
+  _ack(ackMessage) {
+    let newestAckedMessage = -1;
+    for (let index = 0; index < this._messages.length; index++) {
+      const element = this._messages[index];
+      if (element._id <= ackMessage.sequenceId) {
+        newestAckedMessage = index;
+        if (isArrayBuffer2(element._message)) {
+          this._bufferedByteCount -= element._message.byteLength;
+        } else {
+          this._bufferedByteCount -= element._message.length;
+        }
+        element._resolver();
+      } else if (this._bufferedByteCount < this._bufferSize) {
+        element._resolver();
+      } else {
+        break;
+      }
+    }
+    if (newestAckedMessage !== -1) {
+      this._messages = this._messages.slice(newestAckedMessage + 1);
+    }
+  }
+  _shouldProcessMessage(message) {
+    if (this._waitForSequenceMessage) {
+      if (message.type !== MessageType.Sequence) {
+        return false;
+      } else {
+        this._waitForSequenceMessage = false;
+        return true;
+      }
+    }
+    if (!this._isInvocationMessage(message)) {
+      return true;
+    }
+    const currentId = this._nextReceivingSequenceId;
+    this._nextReceivingSequenceId++;
+    if (currentId <= this._latestReceivedSequenceId) {
+      if (currentId === this._latestReceivedSequenceId) {
+        this._ackTimer();
+      }
+      return false;
+    }
+    this._latestReceivedSequenceId = currentId;
+    this._ackTimer();
+    return true;
+  }
+  _resetSequence(message) {
+    if (message.sequenceId > this._nextReceivingSequenceId) {
+      this._connection.stop(new Error("Sequence ID greater than amount of messages we've received."));
+      return;
+    }
+    this._nextReceivingSequenceId = message.sequenceId;
+  }
+  _disconnected() {
+    this._reconnectInProgress = true;
+    this._waitForSequenceMessage = true;
+  }
+  async _resend() {
+    const sequenceId = this._messages.length !== 0 ? this._messages[0]._id : this._totalMessageCount + 1;
+    await this._connection.send(this._protocol.writeMessage({ type: MessageType.Sequence, sequenceId }));
+    const messages = this._messages;
+    for (const element of messages) {
+      await this._connection.send(element._message);
+    }
+    this._reconnectInProgress = false;
+  }
+  _dispose(error2) {
+    error2 !== null && error2 !== void 0 ? error2 : error2 = new Error("Unable to reconnect to server.");
+    for (const element of this._messages) {
+      element._rejector(error2);
+    }
+  }
+  _isInvocationMessage(message) {
+    switch (message.type) {
+      case MessageType.Invocation:
+      case MessageType.StreamItem:
+      case MessageType.Completion:
+      case MessageType.StreamInvocation:
+      case MessageType.CancelInvocation:
+        return true;
+      case MessageType.Close:
+      case MessageType.Sequence:
+      case MessageType.Ping:
+      case MessageType.Ack:
+        return false;
+    }
+  }
+  _ackTimer() {
+    if (this._ackTimerHandle === void 0) {
+      this._ackTimerHandle = setTimeout(async () => {
+        try {
+          if (!this._reconnectInProgress) {
+            await this._connection.send(this._protocol.writeMessage({ type: MessageType.Ack, sequenceId: this._latestReceivedSequenceId }));
+          }
+        } catch {
+        }
+        clearTimeout(this._ackTimerHandle);
+        this._ackTimerHandle = void 0;
+      }, 1e3);
+    }
+  }
+};
+var BufferedItem = class {
+  constructor(message, id, resolver, rejector) {
+    this._message = message;
+    this._id = id;
+    this._resolver = resolver;
+    this._rejector = rejector;
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/HubConnection.js
+var DEFAULT_TIMEOUT_IN_MS = 30 * 1e3;
+var DEFAULT_PING_INTERVAL_IN_MS = 15 * 1e3;
+var DEFAULT_STATEFUL_RECONNECT_BUFFER_SIZE = 1e5;
+var HubConnectionState;
+(function(HubConnectionState2) {
+  HubConnectionState2["Disconnected"] = "Disconnected";
+  HubConnectionState2["Connecting"] = "Connecting";
+  HubConnectionState2["Connected"] = "Connected";
+  HubConnectionState2["Disconnecting"] = "Disconnecting";
+  HubConnectionState2["Reconnecting"] = "Reconnecting";
+})(HubConnectionState || (HubConnectionState = {}));
+var HubConnection = class _HubConnection {
+  /** @internal */
+  // Using a public static factory method means we can have a private constructor and an _internal_
+  // create method that can be used by HubConnectionBuilder. An "internal" constructor would just
+  // be stripped away and the '.d.ts' file would have no constructor, which is interpreted as a
+  // public parameter-less constructor.
+  static create(connection, logger, protocol, reconnectPolicy, serverTimeoutInMilliseconds, keepAliveIntervalInMilliseconds, statefulReconnectBufferSize) {
+    return new _HubConnection(connection, logger, protocol, reconnectPolicy, serverTimeoutInMilliseconds, keepAliveIntervalInMilliseconds, statefulReconnectBufferSize);
+  }
+  constructor(connection, logger, protocol, reconnectPolicy, serverTimeoutInMilliseconds, keepAliveIntervalInMilliseconds, statefulReconnectBufferSize) {
+    this._nextKeepAlive = 0;
+    this._freezeEventListener = () => {
+      this._logger.log(LogLevel.Warning, "The page is being frozen, this will likely lead to the connection being closed and messages being lost. For more information see the docs at https://learn.microsoft.com/aspnet/core/signalr/javascript-client#bsleep");
+    };
+    Arg.isRequired(connection, "connection");
+    Arg.isRequired(logger, "logger");
+    Arg.isRequired(protocol, "protocol");
+    this.serverTimeoutInMilliseconds = serverTimeoutInMilliseconds !== null && serverTimeoutInMilliseconds !== void 0 ? serverTimeoutInMilliseconds : DEFAULT_TIMEOUT_IN_MS;
+    this.keepAliveIntervalInMilliseconds = keepAliveIntervalInMilliseconds !== null && keepAliveIntervalInMilliseconds !== void 0 ? keepAliveIntervalInMilliseconds : DEFAULT_PING_INTERVAL_IN_MS;
+    this._statefulReconnectBufferSize = statefulReconnectBufferSize !== null && statefulReconnectBufferSize !== void 0 ? statefulReconnectBufferSize : DEFAULT_STATEFUL_RECONNECT_BUFFER_SIZE;
+    this._logger = logger;
+    this._protocol = protocol;
+    this.connection = connection;
+    this._reconnectPolicy = reconnectPolicy;
+    this._handshakeProtocol = new HandshakeProtocol();
+    this.connection.onreceive = (data) => this._processIncomingData(data);
+    this.connection.onclose = (error2) => this._connectionClosed(error2);
+    this._callbacks = {};
+    this._methods = {};
+    this._closedCallbacks = [];
+    this._reconnectingCallbacks = [];
+    this._reconnectedCallbacks = [];
+    this._invocationId = 0;
+    this._receivedHandshakeResponse = false;
+    this._connectionState = HubConnectionState.Disconnected;
+    this._connectionStarted = false;
+    this._cachedPingMessage = this._protocol.writeMessage({ type: MessageType.Ping });
+  }
+  /** Indicates the state of the {@link HubConnection} to the server. */
+  get state() {
+    return this._connectionState;
+  }
+  /** Represents the connection id of the {@link HubConnection} on the server. The connection id will be null when the connection is either
+   *  in the disconnected state or if the negotiation step was skipped.
+   */
+  get connectionId() {
+    return this.connection ? this.connection.connectionId || null : null;
+  }
+  /** Indicates the url of the {@link HubConnection} to the server. */
+  get baseUrl() {
+    return this.connection.baseUrl || "";
+  }
+  /**
+   * Sets a new url for the HubConnection. Note that the url can only be changed when the connection is in either the Disconnected or
+   * Reconnecting states.
+   * @param {string} url The url to connect to.
+   */
+  set baseUrl(url) {
+    if (this._connectionState !== HubConnectionState.Disconnected && this._connectionState !== HubConnectionState.Reconnecting) {
+      throw new Error("The HubConnection must be in the Disconnected or Reconnecting state to change the url.");
+    }
+    if (!url) {
+      throw new Error("The HubConnection url must be a valid url.");
+    }
+    this.connection.baseUrl = url;
+  }
+  /** Starts the connection.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the connection has been successfully established, or rejects with an error.
+   */
+  start() {
+    this._startPromise = this._startWithStateTransitions();
+    return this._startPromise;
+  }
+  async _startWithStateTransitions() {
+    if (this._connectionState !== HubConnectionState.Disconnected) {
+      return Promise.reject(new Error("Cannot start a HubConnection that is not in the 'Disconnected' state."));
+    }
+    this._connectionState = HubConnectionState.Connecting;
+    this._logger.log(LogLevel.Debug, "Starting HubConnection.");
+    try {
+      await this._startInternal();
+      if (Platform.isBrowser) {
+        window.document.addEventListener("freeze", this._freezeEventListener);
+      }
+      this._connectionState = HubConnectionState.Connected;
+      this._connectionStarted = true;
+      this._logger.log(LogLevel.Debug, "HubConnection connected successfully.");
+    } catch (e2) {
+      this._connectionState = HubConnectionState.Disconnected;
+      this._logger.log(LogLevel.Debug, `HubConnection failed to start successfully because of error '${e2}'.`);
+      return Promise.reject(e2);
+    }
+  }
+  async _startInternal() {
+    this._stopDuringStartError = void 0;
+    this._receivedHandshakeResponse = false;
+    const handshakePromise = new Promise((resolve, reject) => {
+      this._handshakeResolver = resolve;
+      this._handshakeRejecter = reject;
+    });
+    await this.connection.start(this._protocol.transferFormat);
+    try {
+      let version3 = this._protocol.version;
+      if (!this.connection.features.reconnect) {
+        version3 = 1;
+      }
+      const handshakeRequest = {
+        protocol: this._protocol.name,
+        version: version3
+      };
+      this._logger.log(LogLevel.Debug, "Sending handshake request.");
+      await this._sendMessage(this._handshakeProtocol.writeHandshakeRequest(handshakeRequest));
+      this._logger.log(LogLevel.Information, `Using HubProtocol '${this._protocol.name}'.`);
+      this._cleanupTimeout();
+      this._resetTimeoutPeriod();
+      this._resetKeepAliveInterval();
+      await handshakePromise;
+      if (this._stopDuringStartError) {
+        throw this._stopDuringStartError;
+      }
+      const useStatefulReconnect = this.connection.features.reconnect || false;
+      if (useStatefulReconnect) {
+        this._messageBuffer = new MessageBuffer(this._protocol, this.connection, this._statefulReconnectBufferSize);
+        this.connection.features.disconnected = this._messageBuffer._disconnected.bind(this._messageBuffer);
+        this.connection.features.resend = () => {
+          if (this._messageBuffer) {
+            return this._messageBuffer._resend();
+          }
+        };
+      }
+      if (!this.connection.features.inherentKeepAlive) {
+        await this._sendMessage(this._cachedPingMessage);
+      }
+    } catch (e2) {
+      this._logger.log(LogLevel.Debug, `Hub handshake failed with error '${e2}' during start(). Stopping HubConnection.`);
+      this._cleanupTimeout();
+      this._cleanupPingTimer();
+      await this.connection.stop(e2);
+      throw e2;
+    }
+  }
+  /** Stops the connection.
+   *
+   * @returns {Promise<void>} A Promise that resolves when the connection has been successfully terminated, or rejects with an error.
+   */
+  async stop() {
+    const startPromise = this._startPromise;
+    this.connection.features.reconnect = false;
+    this._stopPromise = this._stopInternal();
+    await this._stopPromise;
+    try {
+      await startPromise;
+    } catch (e2) {
+    }
+  }
+  _stopInternal(error2) {
+    if (this._connectionState === HubConnectionState.Disconnected) {
+      this._logger.log(LogLevel.Debug, `Call to HubConnection.stop(${error2}) ignored because it is already in the disconnected state.`);
+      return Promise.resolve();
+    }
+    if (this._connectionState === HubConnectionState.Disconnecting) {
+      this._logger.log(LogLevel.Debug, `Call to HttpConnection.stop(${error2}) ignored because the connection is already in the disconnecting state.`);
+      return this._stopPromise;
+    }
+    const state = this._connectionState;
+    this._connectionState = HubConnectionState.Disconnecting;
+    this._logger.log(LogLevel.Debug, "Stopping HubConnection.");
+    if (this._reconnectDelayHandle) {
+      this._logger.log(LogLevel.Debug, "Connection stopped during reconnect delay. Done reconnecting.");
+      clearTimeout(this._reconnectDelayHandle);
+      this._reconnectDelayHandle = void 0;
+      this._completeClose();
+      return Promise.resolve();
+    }
+    if (state === HubConnectionState.Connected) {
+      this._sendCloseMessage();
+    }
+    this._cleanupTimeout();
+    this._cleanupPingTimer();
+    this._stopDuringStartError = error2 || new AbortError("The connection was stopped before the hub handshake could complete.");
+    return this.connection.stop(error2);
+  }
+  async _sendCloseMessage() {
+    try {
+      await this._sendWithProtocol(this._createCloseMessage());
+    } catch {
+    }
+  }
+  /** Invokes a streaming hub method on the server using the specified name and arguments.
+   *
+   * @typeparam T The type of the items returned by the server.
+   * @param {string} methodName The name of the server method to invoke.
+   * @param {any[]} args The arguments used to invoke the server method.
+   * @returns {IStreamResult<T>} An object that yields results from the server as they are received.
+   */
+  stream(methodName, ...args) {
+    const [streams, streamIds] = this._replaceStreamingParams(args);
+    const invocationDescriptor = this._createStreamInvocation(methodName, args, streamIds);
+    let promiseQueue;
+    const subject = new Subject2();
+    subject.cancelCallback = () => {
+      const cancelInvocation = this._createCancelInvocation(invocationDescriptor.invocationId);
+      delete this._callbacks[invocationDescriptor.invocationId];
+      return promiseQueue.then(() => {
+        return this._sendWithProtocol(cancelInvocation);
+      });
+    };
+    this._callbacks[invocationDescriptor.invocationId] = (invocationEvent, error2) => {
+      if (error2) {
+        subject.error(error2);
+        return;
+      } else if (invocationEvent) {
+        if (invocationEvent.type === MessageType.Completion) {
+          if (invocationEvent.error) {
+            subject.error(new Error(invocationEvent.error));
+          } else {
+            subject.complete();
+          }
+        } else {
+          subject.next(invocationEvent.item);
+        }
+      }
+    };
+    promiseQueue = this._sendWithProtocol(invocationDescriptor).catch((e2) => {
+      subject.error(e2);
+      delete this._callbacks[invocationDescriptor.invocationId];
+    });
+    this._launchStreams(streams, promiseQueue);
+    return subject;
+  }
+  _sendMessage(message) {
+    this._resetKeepAliveInterval();
+    return this.connection.send(message);
+  }
+  /**
+   * Sends a js object to the server.
+   * @param message The js object to serialize and send.
+   */
+  _sendWithProtocol(message) {
+    if (this._messageBuffer) {
+      return this._messageBuffer._send(message);
+    } else {
+      return this._sendMessage(this._protocol.writeMessage(message));
+    }
+  }
+  /** Invokes a hub method on the server using the specified name and arguments. Does not wait for a response from the receiver.
+   *
+   * The Promise returned by this method resolves when the client has sent the invocation to the server. The server may still
+   * be processing the invocation.
+   *
+   * @param {string} methodName The name of the server method to invoke.
+   * @param {any[]} args The arguments used to invoke the server method.
+   * @returns {Promise<void>} A Promise that resolves when the invocation has been successfully sent, or rejects with an error.
+   */
+  send(methodName, ...args) {
+    const [streams, streamIds] = this._replaceStreamingParams(args);
+    const sendPromise = this._sendWithProtocol(this._createInvocation(methodName, args, true, streamIds));
+    this._launchStreams(streams, sendPromise);
+    return sendPromise;
+  }
+  /** Invokes a hub method on the server using the specified name and arguments.
+   *
+   * The Promise returned by this method resolves when the server indicates it has finished invoking the method. When the promise
+   * resolves, the server has finished invoking the method. If the server method returns a result, it is produced as the result of
+   * resolving the Promise.
+   *
+   * @typeparam T The expected return type.
+   * @param {string} methodName The name of the server method to invoke.
+   * @param {any[]} args The arguments used to invoke the server method.
+   * @returns {Promise<T>} A Promise that resolves with the result of the server method (if any), or rejects with an error.
+   */
+  invoke(methodName, ...args) {
+    const [streams, streamIds] = this._replaceStreamingParams(args);
+    const invocationDescriptor = this._createInvocation(methodName, args, false, streamIds);
+    const p = new Promise((resolve, reject) => {
+      this._callbacks[invocationDescriptor.invocationId] = (invocationEvent, error2) => {
+        if (error2) {
+          reject(error2);
+          return;
+        } else if (invocationEvent) {
+          if (invocationEvent.type === MessageType.Completion) {
+            if (invocationEvent.error) {
+              reject(new Error(invocationEvent.error));
+            } else {
+              resolve(invocationEvent.result);
+            }
+          } else {
+            reject(new Error(`Unexpected message type: ${invocationEvent.type}`));
+          }
+        }
+      };
+      const promiseQueue = this._sendWithProtocol(invocationDescriptor).catch((e2) => {
+        reject(e2);
+        delete this._callbacks[invocationDescriptor.invocationId];
+      });
+      this._launchStreams(streams, promiseQueue);
+    });
+    return p;
+  }
+  on(methodName, newMethod) {
+    if (!methodName || !newMethod) {
+      return;
+    }
+    methodName = methodName.toLowerCase();
+    if (!this._methods[methodName]) {
+      this._methods[methodName] = [];
+    }
+    if (this._methods[methodName].indexOf(newMethod) !== -1) {
+      return;
+    }
+    this._methods[methodName].push(newMethod);
+  }
+  off(methodName, method) {
+    if (!methodName) {
+      return;
+    }
+    methodName = methodName.toLowerCase();
+    const handlers = this._methods[methodName];
+    if (!handlers) {
+      return;
+    }
+    if (method) {
+      const removeIdx = handlers.indexOf(method);
+      if (removeIdx !== -1) {
+        handlers.splice(removeIdx, 1);
+        if (handlers.length === 0) {
+          delete this._methods[methodName];
+        }
+      }
+    } else {
+      delete this._methods[methodName];
+    }
+  }
+  /** Registers a handler that will be invoked when the connection is closed.
+   *
+   * @param {Function} callback The handler that will be invoked when the connection is closed. Optionally receives a single argument containing the error that caused the connection to close (if any).
+   */
+  onclose(callback) {
+    if (callback) {
+      this._closedCallbacks.push(callback);
+    }
+  }
+  /** Registers a handler that will be invoked when the connection starts reconnecting.
+   *
+   * @param {Function} callback The handler that will be invoked when the connection starts reconnecting. Optionally receives a single argument containing the error that caused the connection to start reconnecting (if any).
+   */
+  onreconnecting(callback) {
+    if (callback) {
+      this._reconnectingCallbacks.push(callback);
+    }
+  }
+  /** Registers a handler that will be invoked when the connection successfully reconnects.
+   *
+   * @param {Function} callback The handler that will be invoked when the connection successfully reconnects.
+   */
+  onreconnected(callback) {
+    if (callback) {
+      this._reconnectedCallbacks.push(callback);
+    }
+  }
+  _processIncomingData(data) {
+    this._cleanupTimeout();
+    if (!this._receivedHandshakeResponse) {
+      data = this._processHandshakeResponse(data);
+      this._receivedHandshakeResponse = true;
+    }
+    if (data) {
+      const messages = this._protocol.parseMessages(data, this._logger);
+      for (const message of messages) {
+        if (this._messageBuffer && !this._messageBuffer._shouldProcessMessage(message)) {
+          continue;
+        }
+        switch (message.type) {
+          case MessageType.Invocation:
+            this._invokeClientMethod(message).catch((e2) => {
+              this._logger.log(LogLevel.Error, `Invoke client method threw error: ${getErrorString(e2)}`);
+            });
+            break;
+          case MessageType.StreamItem:
+          case MessageType.Completion: {
+            const callback = this._callbacks[message.invocationId];
+            if (callback) {
+              if (message.type === MessageType.Completion) {
+                delete this._callbacks[message.invocationId];
+              }
+              try {
+                callback(message);
+              } catch (e2) {
+                this._logger.log(LogLevel.Error, `Stream callback threw error: ${getErrorString(e2)}`);
+              }
+            }
+            break;
+          }
+          case MessageType.Ping:
+            break;
+          case MessageType.Close: {
+            this._logger.log(LogLevel.Information, "Close message received from server.");
+            const error2 = message.error ? new Error("Server returned an error on close: " + message.error) : void 0;
+            if (message.allowReconnect === true) {
+              this.connection.stop(error2);
+            } else {
+              this._stopPromise = this._stopInternal(error2);
+            }
+            break;
+          }
+          case MessageType.Ack:
+            if (this._messageBuffer) {
+              this._messageBuffer._ack(message);
+            }
+            break;
+          case MessageType.Sequence:
+            if (this._messageBuffer) {
+              this._messageBuffer._resetSequence(message);
+            }
+            break;
+          default:
+            this._logger.log(LogLevel.Warning, `Invalid message type: ${message.type}.`);
+            break;
+        }
+      }
+    }
+    this._resetTimeoutPeriod();
+  }
+  _processHandshakeResponse(data) {
+    let responseMessage;
+    let remainingData;
+    try {
+      [remainingData, responseMessage] = this._handshakeProtocol.parseHandshakeResponse(data);
+    } catch (e2) {
+      const message = "Error parsing handshake response: " + e2;
+      this._logger.log(LogLevel.Error, message);
+      const error2 = new Error(message);
+      this._handshakeRejecter(error2);
+      throw error2;
+    }
+    if (responseMessage.error) {
+      const message = "Server returned handshake error: " + responseMessage.error;
+      this._logger.log(LogLevel.Error, message);
+      const error2 = new Error(message);
+      this._handshakeRejecter(error2);
+      throw error2;
+    } else {
+      this._logger.log(LogLevel.Debug, "Server handshake complete.");
+    }
+    this._handshakeResolver();
+    return remainingData;
+  }
+  _resetKeepAliveInterval() {
+    if (this.connection.features.inherentKeepAlive) {
+      return;
+    }
+    this._nextKeepAlive = (/* @__PURE__ */ new Date()).getTime() + this.keepAliveIntervalInMilliseconds;
+    this._cleanupPingTimer();
+  }
+  _resetTimeoutPeriod() {
+    if (!this.connection.features || !this.connection.features.inherentKeepAlive) {
+      this._timeoutHandle = setTimeout(() => this.serverTimeout(), this.serverTimeoutInMilliseconds);
+      let nextPing = this._nextKeepAlive - (/* @__PURE__ */ new Date()).getTime();
+      if (nextPing < 0) {
+        if (this._connectionState === HubConnectionState.Connected) {
+          this._trySendPingMessage();
+        }
+        return;
+      }
+      if (this._pingServerHandle === void 0) {
+        if (nextPing < 0) {
+          nextPing = 0;
+        }
+        this._pingServerHandle = setTimeout(async () => {
+          if (this._connectionState === HubConnectionState.Connected) {
+            await this._trySendPingMessage();
+          }
+        }, nextPing);
+      }
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  serverTimeout() {
+    this.connection.stop(new Error("Server timeout elapsed without receiving a message from the server."));
+  }
+  async _invokeClientMethod(invocationMessage) {
+    const methodName = invocationMessage.target.toLowerCase();
+    const methods = this._methods[methodName];
+    if (!methods) {
+      this._logger.log(LogLevel.Warning, `No client method with the name '${methodName}' found.`);
+      if (invocationMessage.invocationId) {
+        this._logger.log(LogLevel.Warning, `No result given for '${methodName}' method and invocation ID '${invocationMessage.invocationId}'.`);
+        await this._sendWithProtocol(this._createCompletionMessage(invocationMessage.invocationId, "Client didn't provide a result.", null));
+      }
+      return;
+    }
+    const methodsCopy = methods.slice();
+    const expectsResponse = invocationMessage.invocationId ? true : false;
+    let res;
+    let exception;
+    let completionMessage;
+    for (const m2 of methodsCopy) {
+      try {
+        const prevRes = res;
+        res = await m2.apply(this, invocationMessage.arguments);
+        if (expectsResponse && res && prevRes) {
+          this._logger.log(LogLevel.Error, `Multiple results provided for '${methodName}'. Sending error to server.`);
+          completionMessage = this._createCompletionMessage(invocationMessage.invocationId, `Client provided multiple results.`, null);
+        }
+        exception = void 0;
+      } catch (e2) {
+        exception = e2;
+        this._logger.log(LogLevel.Error, `A callback for the method '${methodName}' threw error '${e2}'.`);
+      }
+    }
+    if (completionMessage) {
+      await this._sendWithProtocol(completionMessage);
+    } else if (expectsResponse) {
+      if (exception) {
+        completionMessage = this._createCompletionMessage(invocationMessage.invocationId, `${exception}`, null);
+      } else if (res !== void 0) {
+        completionMessage = this._createCompletionMessage(invocationMessage.invocationId, null, res);
+      } else {
+        this._logger.log(LogLevel.Warning, `No result given for '${methodName}' method and invocation ID '${invocationMessage.invocationId}'.`);
+        completionMessage = this._createCompletionMessage(invocationMessage.invocationId, "Client didn't provide a result.", null);
+      }
+      await this._sendWithProtocol(completionMessage);
+    } else {
+      if (res) {
+        this._logger.log(LogLevel.Error, `Result given for '${methodName}' method but server is not expecting a result.`);
+      }
+    }
+  }
+  _connectionClosed(error2) {
+    this._logger.log(LogLevel.Debug, `HubConnection.connectionClosed(${error2}) called while in state ${this._connectionState}.`);
+    this._stopDuringStartError = this._stopDuringStartError || error2 || new AbortError("The underlying connection was closed before the hub handshake could complete.");
+    if (this._handshakeResolver) {
+      this._handshakeResolver();
+    }
+    this._cancelCallbacksWithError(error2 || new Error("Invocation canceled due to the underlying connection being closed."));
+    this._cleanupTimeout();
+    this._cleanupPingTimer();
+    if (this._connectionState === HubConnectionState.Disconnecting) {
+      this._completeClose(error2);
+    } else if (this._connectionState === HubConnectionState.Connected && this._reconnectPolicy) {
+      this._reconnect(error2);
+    } else if (this._connectionState === HubConnectionState.Connected) {
+      this._completeClose(error2);
+    }
+  }
+  _completeClose(error2) {
+    if (this._connectionStarted) {
+      this._connectionState = HubConnectionState.Disconnected;
+      this._connectionStarted = false;
+      if (this._messageBuffer) {
+        this._messageBuffer._dispose(error2 !== null && error2 !== void 0 ? error2 : new Error("Connection closed."));
+        this._messageBuffer = void 0;
+      }
+      if (Platform.isBrowser) {
+        window.document.removeEventListener("freeze", this._freezeEventListener);
+      }
+      try {
+        this._closedCallbacks.forEach((c) => c.apply(this, [error2]));
+      } catch (e2) {
+        this._logger.log(LogLevel.Error, `An onclose callback called with error '${error2}' threw error '${e2}'.`);
+      }
+    }
+  }
+  async _reconnect(error2) {
+    const reconnectStartTime = Date.now();
+    let previousReconnectAttempts = 0;
+    let retryError = error2 !== void 0 ? error2 : new Error("Attempting to reconnect due to a unknown error.");
+    let nextRetryDelay = this._getNextRetryDelay(previousReconnectAttempts, 0, retryError);
+    if (nextRetryDelay === null) {
+      this._logger.log(LogLevel.Debug, "Connection not reconnecting because the IRetryPolicy returned null on the first reconnect attempt.");
+      this._completeClose(error2);
+      return;
+    }
+    this._connectionState = HubConnectionState.Reconnecting;
+    if (error2) {
+      this._logger.log(LogLevel.Information, `Connection reconnecting because of error '${error2}'.`);
+    } else {
+      this._logger.log(LogLevel.Information, "Connection reconnecting.");
+    }
+    if (this._reconnectingCallbacks.length !== 0) {
+      try {
+        this._reconnectingCallbacks.forEach((c) => c.apply(this, [error2]));
+      } catch (e2) {
+        this._logger.log(LogLevel.Error, `An onreconnecting callback called with error '${error2}' threw error '${e2}'.`);
+      }
+      if (this._connectionState !== HubConnectionState.Reconnecting) {
+        this._logger.log(LogLevel.Debug, "Connection left the reconnecting state in onreconnecting callback. Done reconnecting.");
+        return;
+      }
+    }
+    while (nextRetryDelay !== null) {
+      this._logger.log(LogLevel.Information, `Reconnect attempt number ${previousReconnectAttempts + 1} will start in ${nextRetryDelay} ms.`);
+      await new Promise((resolve) => {
+        this._reconnectDelayHandle = setTimeout(resolve, nextRetryDelay);
+      });
+      this._reconnectDelayHandle = void 0;
+      if (this._connectionState !== HubConnectionState.Reconnecting) {
+        this._logger.log(LogLevel.Debug, "Connection left the reconnecting state during reconnect delay. Done reconnecting.");
+        return;
+      }
+      try {
+        await this._startInternal();
+        this._connectionState = HubConnectionState.Connected;
+        this._logger.log(LogLevel.Information, "HubConnection reconnected successfully.");
+        if (this._reconnectedCallbacks.length !== 0) {
+          try {
+            this._reconnectedCallbacks.forEach((c) => c.apply(this, [this.connection.connectionId]));
+          } catch (e2) {
+            this._logger.log(LogLevel.Error, `An onreconnected callback called with connectionId '${this.connection.connectionId}; threw error '${e2}'.`);
+          }
+        }
+        return;
+      } catch (e2) {
+        this._logger.log(LogLevel.Information, `Reconnect attempt failed because of error '${e2}'.`);
+        if (this._connectionState !== HubConnectionState.Reconnecting) {
+          this._logger.log(LogLevel.Debug, `Connection moved to the '${this._connectionState}' from the reconnecting state during reconnect attempt. Done reconnecting.`);
+          if (this._connectionState === HubConnectionState.Disconnecting) {
+            this._completeClose();
+          }
+          return;
+        }
+        previousReconnectAttempts++;
+        retryError = e2 instanceof Error ? e2 : new Error(e2.toString());
+        nextRetryDelay = this._getNextRetryDelay(previousReconnectAttempts, Date.now() - reconnectStartTime, retryError);
+      }
+    }
+    this._logger.log(LogLevel.Information, `Reconnect retries have been exhausted after ${Date.now() - reconnectStartTime} ms and ${previousReconnectAttempts} failed attempts. Connection disconnecting.`);
+    this._completeClose();
+  }
+  _getNextRetryDelay(previousRetryCount, elapsedMilliseconds, retryReason) {
+    try {
+      return this._reconnectPolicy.nextRetryDelayInMilliseconds({
+        elapsedMilliseconds,
+        previousRetryCount,
+        retryReason
+      });
+    } catch (e2) {
+      this._logger.log(LogLevel.Error, `IRetryPolicy.nextRetryDelayInMilliseconds(${previousRetryCount}, ${elapsedMilliseconds}) threw error '${e2}'.`);
+      return null;
+    }
+  }
+  _cancelCallbacksWithError(error2) {
+    const callbacks = this._callbacks;
+    this._callbacks = {};
+    Object.keys(callbacks).forEach((key) => {
+      const callback = callbacks[key];
+      try {
+        callback(null, error2);
+      } catch (e2) {
+        this._logger.log(LogLevel.Error, `Stream 'error' callback called with '${error2}' threw error: ${getErrorString(e2)}`);
+      }
+    });
+  }
+  _cleanupPingTimer() {
+    if (this._pingServerHandle) {
+      clearTimeout(this._pingServerHandle);
+      this._pingServerHandle = void 0;
+    }
+  }
+  _cleanupTimeout() {
+    if (this._timeoutHandle) {
+      clearTimeout(this._timeoutHandle);
+    }
+  }
+  _createInvocation(methodName, args, nonblocking, streamIds) {
+    if (nonblocking) {
+      if (streamIds.length !== 0) {
+        return {
+          target: methodName,
+          arguments: args,
+          streamIds,
+          type: MessageType.Invocation
+        };
+      } else {
+        return {
+          target: methodName,
+          arguments: args,
+          type: MessageType.Invocation
+        };
+      }
+    } else {
+      const invocationId = this._invocationId;
+      this._invocationId++;
+      if (streamIds.length !== 0) {
+        return {
+          target: methodName,
+          arguments: args,
+          invocationId: invocationId.toString(),
+          streamIds,
+          type: MessageType.Invocation
+        };
+      } else {
+        return {
+          target: methodName,
+          arguments: args,
+          invocationId: invocationId.toString(),
+          type: MessageType.Invocation
+        };
+      }
+    }
+  }
+  _launchStreams(streams, promiseQueue) {
+    if (streams.length === 0) {
+      return;
+    }
+    if (!promiseQueue) {
+      promiseQueue = Promise.resolve();
+    }
+    for (const streamId in streams) {
+      streams[streamId].subscribe({
+        complete: () => {
+          promiseQueue = promiseQueue.then(() => this._sendWithProtocol(this._createCompletionMessage(streamId)));
+        },
+        error: (err) => {
+          let message;
+          if (err instanceof Error) {
+            message = err.message;
+          } else if (err && err.toString) {
+            message = err.toString();
+          } else {
+            message = "Unknown error";
+          }
+          promiseQueue = promiseQueue.then(() => this._sendWithProtocol(this._createCompletionMessage(streamId, message)));
+        },
+        next: (item) => {
+          promiseQueue = promiseQueue.then(() => this._sendWithProtocol(this._createStreamItemMessage(streamId, item)));
+        }
+      });
+    }
+  }
+  _replaceStreamingParams(args) {
+    const streams = [];
+    const streamIds = [];
+    for (let i = 0; i < args.length; i++) {
+      const argument = args[i];
+      if (this._isObservable(argument)) {
+        const streamId = this._invocationId;
+        this._invocationId++;
+        streams[streamId] = argument;
+        streamIds.push(streamId.toString());
+        args.splice(i, 1);
+      }
+    }
+    return [streams, streamIds];
+  }
+  _isObservable(arg) {
+    return arg && arg.subscribe && typeof arg.subscribe === "function";
+  }
+  _createStreamInvocation(methodName, args, streamIds) {
+    const invocationId = this._invocationId;
+    this._invocationId++;
+    if (streamIds.length !== 0) {
+      return {
+        target: methodName,
+        arguments: args,
+        invocationId: invocationId.toString(),
+        streamIds,
+        type: MessageType.StreamInvocation
+      };
+    } else {
+      return {
+        target: methodName,
+        arguments: args,
+        invocationId: invocationId.toString(),
+        type: MessageType.StreamInvocation
+      };
+    }
+  }
+  _createCancelInvocation(id) {
+    return {
+      invocationId: id,
+      type: MessageType.CancelInvocation
+    };
+  }
+  _createStreamItemMessage(id, item) {
+    return {
+      invocationId: id,
+      item,
+      type: MessageType.StreamItem
+    };
+  }
+  _createCompletionMessage(id, error2, result) {
+    if (error2) {
+      return {
+        error: error2,
+        invocationId: id,
+        type: MessageType.Completion
+      };
+    }
+    return {
+      invocationId: id,
+      result,
+      type: MessageType.Completion
+    };
+  }
+  _createCloseMessage() {
+    return { type: MessageType.Close };
+  }
+  async _trySendPingMessage() {
+    try {
+      await this._sendMessage(this._cachedPingMessage);
+    } catch {
+      this._cleanupPingTimer();
+    }
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/DefaultReconnectPolicy.js
+var DEFAULT_RETRY_DELAYS_IN_MILLISECONDS = [0, 2e3, 1e4, 3e4, null];
+var DefaultReconnectPolicy = class {
+  constructor(retryDelays) {
+    this._retryDelays = retryDelays !== void 0 ? [...retryDelays, null] : DEFAULT_RETRY_DELAYS_IN_MILLISECONDS;
+  }
+  nextRetryDelayInMilliseconds(retryContext) {
+    return this._retryDelays[retryContext.previousRetryCount];
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/HeaderNames.js
+var HeaderNames = class {
+};
+HeaderNames.Authorization = "Authorization";
+HeaderNames.Cookie = "Cookie";
+
+// node_modules/@microsoft/signalr/dist/esm/AccessTokenHttpClient.js
+var AccessTokenHttpClient = class extends HttpClient2 {
+  constructor(innerClient, accessTokenFactory) {
+    super();
+    this._innerClient = innerClient;
+    this._accessTokenFactory = accessTokenFactory;
+  }
+  async send(request) {
+    let allowRetry = true;
+    if (this._accessTokenFactory && (!this._accessToken || request.url && request.url.indexOf("/negotiate?") > 0)) {
+      allowRetry = false;
+      this._accessToken = await this._accessTokenFactory();
+    }
+    this._setAuthorizationHeader(request);
+    const response = await this._innerClient.send(request);
+    if (allowRetry && response.statusCode === 401 && this._accessTokenFactory) {
+      this._accessToken = await this._accessTokenFactory();
+      this._setAuthorizationHeader(request);
+      return await this._innerClient.send(request);
+    }
+    return response;
+  }
+  _setAuthorizationHeader(request) {
+    if (!request.headers) {
+      request.headers = {};
+    }
+    if (this._accessToken) {
+      request.headers[HeaderNames.Authorization] = `Bearer ${this._accessToken}`;
+    } else if (this._accessTokenFactory) {
+      if (request.headers[HeaderNames.Authorization]) {
+        delete request.headers[HeaderNames.Authorization];
+      }
+    }
+  }
+  getCookieString(url) {
+    return this._innerClient.getCookieString(url);
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/ITransport.js
+var HttpTransportType;
+(function(HttpTransportType2) {
+  HttpTransportType2[HttpTransportType2["None"] = 0] = "None";
+  HttpTransportType2[HttpTransportType2["WebSockets"] = 1] = "WebSockets";
+  HttpTransportType2[HttpTransportType2["ServerSentEvents"] = 2] = "ServerSentEvents";
+  HttpTransportType2[HttpTransportType2["LongPolling"] = 4] = "LongPolling";
+})(HttpTransportType || (HttpTransportType = {}));
+var TransferFormat;
+(function(TransferFormat2) {
+  TransferFormat2[TransferFormat2["Text"] = 1] = "Text";
+  TransferFormat2[TransferFormat2["Binary"] = 2] = "Binary";
+})(TransferFormat || (TransferFormat = {}));
+
+// node_modules/@microsoft/signalr/dist/esm/AbortController.js
+var AbortController2 = class {
+  constructor() {
+    this._isAborted = false;
+    this.onabort = null;
+  }
+  abort() {
+    if (!this._isAborted) {
+      this._isAborted = true;
+      if (this.onabort) {
+        this.onabort();
+      }
+    }
+  }
+  get signal() {
+    return this;
+  }
+  get aborted() {
+    return this._isAborted;
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/LongPollingTransport.js
+var LongPollingTransport = class {
+  // This is an internal type, not exported from 'index' so this is really just internal.
+  get pollAborted() {
+    return this._pollAbort.aborted;
+  }
+  constructor(httpClient, logger, options) {
+    this._httpClient = httpClient;
+    this._logger = logger;
+    this._pollAbort = new AbortController2();
+    this._options = options;
+    this._running = false;
+    this.onreceive = null;
+    this.onclose = null;
+  }
+  async connect(url, transferFormat) {
+    Arg.isRequired(url, "url");
+    Arg.isRequired(transferFormat, "transferFormat");
+    Arg.isIn(transferFormat, TransferFormat, "transferFormat");
+    this._url = url;
+    this._logger.log(LogLevel.Trace, "(LongPolling transport) Connecting.");
+    if (transferFormat === TransferFormat.Binary && (typeof XMLHttpRequest !== "undefined" && typeof new XMLHttpRequest().responseType !== "string")) {
+      throw new Error("Binary protocols over XmlHttpRequest not implementing advanced features are not supported.");
+    }
+    const [name, value] = getUserAgentHeader();
+    const headers = __spreadValues({ [name]: value }, this._options.headers);
+    const pollOptions = {
+      abortSignal: this._pollAbort.signal,
+      headers,
+      timeout: 1e5,
+      withCredentials: this._options.withCredentials
+    };
+    if (transferFormat === TransferFormat.Binary) {
+      pollOptions.responseType = "arraybuffer";
+    }
+    const pollUrl = `${url}&_=${Date.now()}`;
+    this._logger.log(LogLevel.Trace, `(LongPolling transport) polling: ${pollUrl}.`);
+    const response = await this._httpClient.get(pollUrl, pollOptions);
+    if (response.statusCode !== 200) {
+      this._logger.log(LogLevel.Error, `(LongPolling transport) Unexpected response code: ${response.statusCode}.`);
+      this._closeError = new HttpError(response.statusText || "", response.statusCode);
+      this._running = false;
+    } else {
+      this._running = true;
+    }
+    this._receiving = this._poll(this._url, pollOptions);
+  }
+  async _poll(url, pollOptions) {
+    try {
+      while (this._running) {
+        try {
+          const pollUrl = `${url}&_=${Date.now()}`;
+          this._logger.log(LogLevel.Trace, `(LongPolling transport) polling: ${pollUrl}.`);
+          const response = await this._httpClient.get(pollUrl, pollOptions);
+          if (response.statusCode === 204) {
+            this._logger.log(LogLevel.Information, "(LongPolling transport) Poll terminated by server.");
+            this._running = false;
+          } else if (response.statusCode !== 200) {
+            this._logger.log(LogLevel.Error, `(LongPolling transport) Unexpected response code: ${response.statusCode}.`);
+            this._closeError = new HttpError(response.statusText || "", response.statusCode);
+            this._running = false;
+          } else {
+            if (response.content) {
+              this._logger.log(LogLevel.Trace, `(LongPolling transport) data received. ${getDataDetail(response.content, this._options.logMessageContent)}.`);
+              if (this.onreceive) {
+                this.onreceive(response.content);
+              }
+            } else {
+              this._logger.log(LogLevel.Trace, "(LongPolling transport) Poll timed out, reissuing.");
+            }
+          }
+        } catch (e2) {
+          if (!this._running) {
+            this._logger.log(LogLevel.Trace, `(LongPolling transport) Poll errored after shutdown: ${e2.message}`);
+          } else {
+            if (e2 instanceof TimeoutError) {
+              this._logger.log(LogLevel.Trace, "(LongPolling transport) Poll timed out, reissuing.");
+            } else {
+              this._closeError = e2;
+              this._running = false;
+            }
+          }
+        }
+      }
+    } finally {
+      this._logger.log(LogLevel.Trace, "(LongPolling transport) Polling complete.");
+      if (!this.pollAborted) {
+        this._raiseOnClose();
+      }
+    }
+  }
+  async send(data) {
+    if (!this._running) {
+      return Promise.reject(new Error("Cannot send until the transport is connected"));
+    }
+    return sendMessage(this._logger, "LongPolling", this._httpClient, this._url, data, this._options);
+  }
+  async stop() {
+    this._logger.log(LogLevel.Trace, "(LongPolling transport) Stopping polling.");
+    this._running = false;
+    this._pollAbort.abort();
+    try {
+      await this._receiving;
+      this._logger.log(LogLevel.Trace, `(LongPolling transport) sending DELETE request to ${this._url}.`);
+      const headers = {};
+      const [name, value] = getUserAgentHeader();
+      headers[name] = value;
+      const deleteOptions = {
+        headers: __spreadValues(__spreadValues({}, headers), this._options.headers),
+        timeout: this._options.timeout,
+        withCredentials: this._options.withCredentials
+      };
+      let error2;
+      try {
+        await this._httpClient.delete(this._url, deleteOptions);
+      } catch (err) {
+        error2 = err;
+      }
+      if (error2) {
+        if (error2 instanceof HttpError) {
+          if (error2.statusCode === 404) {
+            this._logger.log(LogLevel.Trace, "(LongPolling transport) A 404 response was returned from sending a DELETE request.");
+          } else {
+            this._logger.log(LogLevel.Trace, `(LongPolling transport) Error sending a DELETE request: ${error2}`);
+          }
+        }
+      } else {
+        this._logger.log(LogLevel.Trace, "(LongPolling transport) DELETE request accepted.");
+      }
+    } finally {
+      this._logger.log(LogLevel.Trace, "(LongPolling transport) Stop finished.");
+      this._raiseOnClose();
+    }
+  }
+  _raiseOnClose() {
+    if (this.onclose) {
+      let logMessage = "(LongPolling transport) Firing onclose event.";
+      if (this._closeError) {
+        logMessage += " Error: " + this._closeError;
+      }
+      this._logger.log(LogLevel.Trace, logMessage);
+      this.onclose(this._closeError);
+    }
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/ServerSentEventsTransport.js
+var ServerSentEventsTransport = class {
+  constructor(httpClient, accessToken, logger, options) {
+    this._httpClient = httpClient;
+    this._accessToken = accessToken;
+    this._logger = logger;
+    this._options = options;
+    this.onreceive = null;
+    this.onclose = null;
+  }
+  async connect(url, transferFormat) {
+    Arg.isRequired(url, "url");
+    Arg.isRequired(transferFormat, "transferFormat");
+    Arg.isIn(transferFormat, TransferFormat, "transferFormat");
+    this._logger.log(LogLevel.Trace, "(SSE transport) Connecting.");
+    this._url = url;
+    if (this._accessToken) {
+      url += (url.indexOf("?") < 0 ? "?" : "&") + `access_token=${encodeURIComponent(this._accessToken)}`;
+    }
+    return new Promise((resolve, reject) => {
+      let opened = false;
+      if (transferFormat !== TransferFormat.Text) {
+        reject(new Error("The Server-Sent Events transport only supports the 'Text' transfer format"));
+        return;
+      }
+      let eventSource;
+      if (Platform.isBrowser || Platform.isWebWorker) {
+        eventSource = new this._options.EventSource(url, { withCredentials: this._options.withCredentials });
+      } else {
+        const cookies = this._httpClient.getCookieString(url);
+        const headers = {};
+        headers.Cookie = cookies;
+        const [name, value] = getUserAgentHeader();
+        headers[name] = value;
+        eventSource = new this._options.EventSource(url, { withCredentials: this._options.withCredentials, headers: __spreadValues(__spreadValues({}, headers), this._options.headers) });
+      }
+      try {
+        eventSource.onmessage = (e2) => {
+          if (this.onreceive) {
+            try {
+              this._logger.log(LogLevel.Trace, `(SSE transport) data received. ${getDataDetail(e2.data, this._options.logMessageContent)}.`);
+              this.onreceive(e2.data);
+            } catch (error2) {
+              this._close(error2);
+              return;
+            }
+          }
+        };
+        eventSource.onerror = (e2) => {
+          if (opened) {
+            this._close();
+          } else {
+            reject(new Error("EventSource failed to connect. The connection could not be found on the server, either the connection ID is not present on the server, or a proxy is refusing/buffering the connection. If you have multiple servers check that sticky sessions are enabled."));
+          }
+        };
+        eventSource.onopen = () => {
+          this._logger.log(LogLevel.Information, `SSE connected to ${this._url}`);
+          this._eventSource = eventSource;
+          opened = true;
+          resolve();
+        };
+      } catch (e2) {
+        reject(e2);
+        return;
+      }
+    });
+  }
+  async send(data) {
+    if (!this._eventSource) {
+      return Promise.reject(new Error("Cannot send until the transport is connected"));
+    }
+    return sendMessage(this._logger, "SSE", this._httpClient, this._url, data, this._options);
+  }
+  stop() {
+    this._close();
+    return Promise.resolve();
+  }
+  _close(e2) {
+    if (this._eventSource) {
+      this._eventSource.close();
+      this._eventSource = void 0;
+      if (this.onclose) {
+        this.onclose(e2);
+      }
+    }
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/WebSocketTransport.js
+var WebSocketTransport = class {
+  constructor(httpClient, accessTokenFactory, logger, logMessageContent, webSocketConstructor, headers) {
+    this._logger = logger;
+    this._accessTokenFactory = accessTokenFactory;
+    this._logMessageContent = logMessageContent;
+    this._webSocketConstructor = webSocketConstructor;
+    this._httpClient = httpClient;
+    this.onreceive = null;
+    this.onclose = null;
+    this._headers = headers;
+  }
+  async connect(url, transferFormat) {
+    Arg.isRequired(url, "url");
+    Arg.isRequired(transferFormat, "transferFormat");
+    Arg.isIn(transferFormat, TransferFormat, "transferFormat");
+    this._logger.log(LogLevel.Trace, "(WebSockets transport) Connecting.");
+    let token;
+    if (this._accessTokenFactory) {
+      token = await this._accessTokenFactory();
+    }
+    return new Promise((resolve, reject) => {
+      url = url.replace(/^http/, "ws");
+      let webSocket;
+      const cookies = this._httpClient.getCookieString(url);
+      let opened = false;
+      if (Platform.isNode || Platform.isReactNative) {
+        const headers = {};
+        const [name, value] = getUserAgentHeader();
+        headers[name] = value;
+        if (token) {
+          headers[HeaderNames.Authorization] = `Bearer ${token}`;
+        }
+        if (cookies) {
+          headers[HeaderNames.Cookie] = cookies;
+        }
+        webSocket = new this._webSocketConstructor(url, void 0, {
+          headers: __spreadValues(__spreadValues({}, headers), this._headers)
+        });
+      } else {
+        if (token) {
+          url += (url.indexOf("?") < 0 ? "?" : "&") + `access_token=${encodeURIComponent(token)}`;
+        }
+      }
+      if (!webSocket) {
+        webSocket = new this._webSocketConstructor(url);
+      }
+      if (transferFormat === TransferFormat.Binary) {
+        webSocket.binaryType = "arraybuffer";
+      }
+      webSocket.onopen = (_event) => {
+        this._logger.log(LogLevel.Information, `WebSocket connected to ${url}.`);
+        this._webSocket = webSocket;
+        opened = true;
+        resolve();
+      };
+      webSocket.onerror = (event) => {
+        let error2 = null;
+        if (typeof ErrorEvent !== "undefined" && event instanceof ErrorEvent) {
+          error2 = event.error;
+        } else {
+          error2 = "There was an error with the transport";
+        }
+        this._logger.log(LogLevel.Information, `(WebSockets transport) ${error2}.`);
+      };
+      webSocket.onmessage = (message) => {
+        this._logger.log(LogLevel.Trace, `(WebSockets transport) data received. ${getDataDetail(message.data, this._logMessageContent)}.`);
+        if (this.onreceive) {
+          try {
+            this.onreceive(message.data);
+          } catch (error2) {
+            this._close(error2);
+            return;
+          }
+        }
+      };
+      webSocket.onclose = (event) => {
+        if (opened) {
+          this._close(event);
+        } else {
+          let error2 = null;
+          if (typeof ErrorEvent !== "undefined" && event instanceof ErrorEvent) {
+            error2 = event.error;
+          } else {
+            error2 = "WebSocket failed to connect. The connection could not be found on the server, either the endpoint may not be a SignalR endpoint, the connection ID is not present on the server, or there is a proxy blocking WebSockets. If you have multiple servers check that sticky sessions are enabled.";
+          }
+          reject(new Error(error2));
+        }
+      };
+    });
+  }
+  send(data) {
+    if (this._webSocket && this._webSocket.readyState === this._webSocketConstructor.OPEN) {
+      this._logger.log(LogLevel.Trace, `(WebSockets transport) sending data. ${getDataDetail(data, this._logMessageContent)}.`);
+      this._webSocket.send(data);
+      return Promise.resolve();
+    }
+    return Promise.reject("WebSocket is not in the OPEN state");
+  }
+  stop() {
+    if (this._webSocket) {
+      this._close(void 0);
+    }
+    return Promise.resolve();
+  }
+  _close(event) {
+    if (this._webSocket) {
+      this._webSocket.onclose = () => {
+      };
+      this._webSocket.onmessage = () => {
+      };
+      this._webSocket.onerror = () => {
+      };
+      this._webSocket.close();
+      this._webSocket = void 0;
+    }
+    this._logger.log(LogLevel.Trace, "(WebSockets transport) socket closed.");
+    if (this.onclose) {
+      if (this._isCloseEvent(event) && (event.wasClean === false || event.code !== 1e3)) {
+        this.onclose(new Error(`WebSocket closed with status code: ${event.code} (${event.reason || "no reason given"}).`));
+      } else if (event instanceof Error) {
+        this.onclose(event);
+      } else {
+        this.onclose();
+      }
+    }
+  }
+  _isCloseEvent(event) {
+    return event && typeof event.wasClean === "boolean" && typeof event.code === "number";
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/HttpConnection.js
+var MAX_REDIRECTS = 100;
+var HttpConnection = class {
+  constructor(url, options = {}) {
+    this._stopPromiseResolver = () => {
+    };
+    this.features = {};
+    this._negotiateVersion = 1;
+    Arg.isRequired(url, "url");
+    this._logger = createLogger(options.logger);
+    this.baseUrl = this._resolveUrl(url);
+    options = options || {};
+    options.logMessageContent = options.logMessageContent === void 0 ? false : options.logMessageContent;
+    if (typeof options.withCredentials === "boolean" || options.withCredentials === void 0) {
+      options.withCredentials = options.withCredentials === void 0 ? true : options.withCredentials;
+    } else {
+      throw new Error("withCredentials option was not a 'boolean' or 'undefined' value");
+    }
+    options.timeout = options.timeout === void 0 ? 100 * 1e3 : options.timeout;
+    let webSocketModule = null;
+    let eventSourceModule = null;
+    if (Platform.isNode && typeof __require !== "undefined") {
+      const requireFunc = typeof __webpack_require__ === "function" ? __non_webpack_require__ : __require;
+      webSocketModule = requireFunc("ws");
+      eventSourceModule = requireFunc("eventsource");
+    }
+    if (!Platform.isNode && typeof WebSocket !== "undefined" && !options.WebSocket) {
+      options.WebSocket = WebSocket;
+    } else if (Platform.isNode && !options.WebSocket) {
+      if (webSocketModule) {
+        options.WebSocket = webSocketModule;
+      }
+    }
+    if (!Platform.isNode && typeof EventSource !== "undefined" && !options.EventSource) {
+      options.EventSource = EventSource;
+    } else if (Platform.isNode && !options.EventSource) {
+      if (typeof eventSourceModule !== "undefined") {
+        options.EventSource = eventSourceModule;
+      }
+    }
+    this._httpClient = new AccessTokenHttpClient(options.httpClient || new DefaultHttpClient(this._logger), options.accessTokenFactory);
+    this._connectionState = "Disconnected";
+    this._connectionStarted = false;
+    this._options = options;
+    this.onreceive = null;
+    this.onclose = null;
+  }
+  async start(transferFormat) {
+    transferFormat = transferFormat || TransferFormat.Binary;
+    Arg.isIn(transferFormat, TransferFormat, "transferFormat");
+    this._logger.log(LogLevel.Debug, `Starting connection with transfer format '${TransferFormat[transferFormat]}'.`);
+    if (this._connectionState !== "Disconnected") {
+      return Promise.reject(new Error("Cannot start an HttpConnection that is not in the 'Disconnected' state."));
+    }
+    this._connectionState = "Connecting";
+    this._startInternalPromise = this._startInternal(transferFormat);
+    await this._startInternalPromise;
+    if (this._connectionState === "Disconnecting") {
+      const message = "Failed to start the HttpConnection before stop() was called.";
+      this._logger.log(LogLevel.Error, message);
+      await this._stopPromise;
+      return Promise.reject(new AbortError(message));
+    } else if (this._connectionState !== "Connected") {
+      const message = "HttpConnection.startInternal completed gracefully but didn't enter the connection into the connected state!";
+      this._logger.log(LogLevel.Error, message);
+      return Promise.reject(new AbortError(message));
+    }
+    this._connectionStarted = true;
+  }
+  send(data) {
+    if (this._connectionState !== "Connected") {
+      return Promise.reject(new Error("Cannot send data if the connection is not in the 'Connected' State."));
+    }
+    if (!this._sendQueue) {
+      this._sendQueue = new TransportSendQueue(this.transport);
+    }
+    return this._sendQueue.send(data);
+  }
+  async stop(error2) {
+    if (this._connectionState === "Disconnected") {
+      this._logger.log(LogLevel.Debug, `Call to HttpConnection.stop(${error2}) ignored because the connection is already in the disconnected state.`);
+      return Promise.resolve();
+    }
+    if (this._connectionState === "Disconnecting") {
+      this._logger.log(LogLevel.Debug, `Call to HttpConnection.stop(${error2}) ignored because the connection is already in the disconnecting state.`);
+      return this._stopPromise;
+    }
+    this._connectionState = "Disconnecting";
+    this._stopPromise = new Promise((resolve) => {
+      this._stopPromiseResolver = resolve;
+    });
+    await this._stopInternal(error2);
+    await this._stopPromise;
+  }
+  async _stopInternal(error2) {
+    this._stopError = error2;
+    try {
+      await this._startInternalPromise;
+    } catch (e2) {
+    }
+    if (this.transport) {
+      try {
+        await this.transport.stop();
+      } catch (e2) {
+        this._logger.log(LogLevel.Error, `HttpConnection.transport.stop() threw error '${e2}'.`);
+        this._stopConnection();
+      }
+      this.transport = void 0;
+    } else {
+      this._logger.log(LogLevel.Debug, "HttpConnection.transport is undefined in HttpConnection.stop() because start() failed.");
+    }
+  }
+  async _startInternal(transferFormat) {
+    let url = this.baseUrl;
+    this._accessTokenFactory = this._options.accessTokenFactory;
+    this._httpClient._accessTokenFactory = this._accessTokenFactory;
+    try {
+      if (this._options.skipNegotiation) {
+        if (this._options.transport === HttpTransportType.WebSockets) {
+          this.transport = this._constructTransport(HttpTransportType.WebSockets);
+          await this._startTransport(url, transferFormat);
+        } else {
+          throw new Error("Negotiation can only be skipped when using the WebSocket transport directly.");
+        }
+      } else {
+        let negotiateResponse = null;
+        let redirects = 0;
+        do {
+          negotiateResponse = await this._getNegotiationResponse(url);
+          if (this._connectionState === "Disconnecting" || this._connectionState === "Disconnected") {
+            throw new AbortError("The connection was stopped during negotiation.");
+          }
+          if (negotiateResponse.error) {
+            throw new Error(negotiateResponse.error);
+          }
+          if (negotiateResponse.ProtocolVersion) {
+            throw new Error("Detected a connection attempt to an ASP.NET SignalR Server. This client only supports connecting to an ASP.NET Core SignalR Server. See https://aka.ms/signalr-core-differences for details.");
+          }
+          if (negotiateResponse.url) {
+            url = negotiateResponse.url;
+          }
+          if (negotiateResponse.accessToken) {
+            const accessToken = negotiateResponse.accessToken;
+            this._accessTokenFactory = () => accessToken;
+            this._httpClient._accessToken = accessToken;
+            this._httpClient._accessTokenFactory = void 0;
+          }
+          redirects++;
+        } while (negotiateResponse.url && redirects < MAX_REDIRECTS);
+        if (redirects === MAX_REDIRECTS && negotiateResponse.url) {
+          throw new Error("Negotiate redirection limit exceeded.");
+        }
+        await this._createTransport(url, this._options.transport, negotiateResponse, transferFormat);
+      }
+      if (this.transport instanceof LongPollingTransport) {
+        this.features.inherentKeepAlive = true;
+      }
+      if (this._connectionState === "Connecting") {
+        this._logger.log(LogLevel.Debug, "The HttpConnection connected successfully.");
+        this._connectionState = "Connected";
+      }
+    } catch (e2) {
+      this._logger.log(LogLevel.Error, "Failed to start the connection: " + e2);
+      this._connectionState = "Disconnected";
+      this.transport = void 0;
+      this._stopPromiseResolver();
+      return Promise.reject(e2);
+    }
+  }
+  async _getNegotiationResponse(url) {
+    const headers = {};
+    const [name, value] = getUserAgentHeader();
+    headers[name] = value;
+    const negotiateUrl = this._resolveNegotiateUrl(url);
+    this._logger.log(LogLevel.Debug, `Sending negotiation request: ${negotiateUrl}.`);
+    try {
+      const response = await this._httpClient.post(negotiateUrl, {
+        content: "",
+        headers: __spreadValues(__spreadValues({}, headers), this._options.headers),
+        timeout: this._options.timeout,
+        withCredentials: this._options.withCredentials
+      });
+      if (response.statusCode !== 200) {
+        return Promise.reject(new Error(`Unexpected status code returned from negotiate '${response.statusCode}'`));
+      }
+      const negotiateResponse = JSON.parse(response.content);
+      if (!negotiateResponse.negotiateVersion || negotiateResponse.negotiateVersion < 1) {
+        negotiateResponse.connectionToken = negotiateResponse.connectionId;
+      }
+      if (negotiateResponse.useStatefulReconnect && this._options._useStatefulReconnect !== true) {
+        return Promise.reject(new FailedToNegotiateWithServerError("Client didn't negotiate Stateful Reconnect but the server did."));
+      }
+      return negotiateResponse;
+    } catch (e2) {
+      let errorMessage = "Failed to complete negotiation with the server: " + e2;
+      if (e2 instanceof HttpError) {
+        if (e2.statusCode === 404) {
+          errorMessage = errorMessage + " Either this is not a SignalR endpoint or there is a proxy blocking the connection.";
+        }
+      }
+      this._logger.log(LogLevel.Error, errorMessage);
+      return Promise.reject(new FailedToNegotiateWithServerError(errorMessage));
+    }
+  }
+  _createConnectUrl(url, connectionToken) {
+    if (!connectionToken) {
+      return url;
+    }
+    return url + (url.indexOf("?") === -1 ? "?" : "&") + `id=${connectionToken}`;
+  }
+  async _createTransport(url, requestedTransport, negotiateResponse, requestedTransferFormat) {
+    let connectUrl = this._createConnectUrl(url, negotiateResponse.connectionToken);
+    if (this._isITransport(requestedTransport)) {
+      this._logger.log(LogLevel.Debug, "Connection was provided an instance of ITransport, using that directly.");
+      this.transport = requestedTransport;
+      await this._startTransport(connectUrl, requestedTransferFormat);
+      this.connectionId = negotiateResponse.connectionId;
+      return;
+    }
+    const transportExceptions = [];
+    const transports = negotiateResponse.availableTransports || [];
+    let negotiate = negotiateResponse;
+    for (const endpoint of transports) {
+      const transportOrError = this._resolveTransportOrError(endpoint, requestedTransport, requestedTransferFormat, (negotiate === null || negotiate === void 0 ? void 0 : negotiate.useStatefulReconnect) === true);
+      if (transportOrError instanceof Error) {
+        transportExceptions.push(`${endpoint.transport} failed:`);
+        transportExceptions.push(transportOrError);
+      } else if (this._isITransport(transportOrError)) {
+        this.transport = transportOrError;
+        if (!negotiate) {
+          try {
+            negotiate = await this._getNegotiationResponse(url);
+          } catch (ex) {
+            return Promise.reject(ex);
+          }
+          connectUrl = this._createConnectUrl(url, negotiate.connectionToken);
+        }
+        try {
+          await this._startTransport(connectUrl, requestedTransferFormat);
+          this.connectionId = negotiate.connectionId;
+          return;
+        } catch (ex) {
+          this._logger.log(LogLevel.Error, `Failed to start the transport '${endpoint.transport}': ${ex}`);
+          negotiate = void 0;
+          transportExceptions.push(new FailedToStartTransportError(`${endpoint.transport} failed: ${ex}`, HttpTransportType[endpoint.transport]));
+          if (this._connectionState !== "Connecting") {
+            const message = "Failed to select transport before stop() was called.";
+            this._logger.log(LogLevel.Debug, message);
+            return Promise.reject(new AbortError(message));
+          }
+        }
+      }
+    }
+    if (transportExceptions.length > 0) {
+      return Promise.reject(new AggregateErrors(`Unable to connect to the server with any of the available transports. ${transportExceptions.join(" ")}`, transportExceptions));
+    }
+    return Promise.reject(new Error("None of the transports supported by the client are supported by the server."));
+  }
+  _constructTransport(transport) {
+    switch (transport) {
+      case HttpTransportType.WebSockets:
+        if (!this._options.WebSocket) {
+          throw new Error("'WebSocket' is not supported in your environment.");
+        }
+        return new WebSocketTransport(this._httpClient, this._accessTokenFactory, this._logger, this._options.logMessageContent, this._options.WebSocket, this._options.headers || {});
+      case HttpTransportType.ServerSentEvents:
+        if (!this._options.EventSource) {
+          throw new Error("'EventSource' is not supported in your environment.");
+        }
+        return new ServerSentEventsTransport(this._httpClient, this._httpClient._accessToken, this._logger, this._options);
+      case HttpTransportType.LongPolling:
+        return new LongPollingTransport(this._httpClient, this._logger, this._options);
+      default:
+        throw new Error(`Unknown transport: ${transport}.`);
+    }
+  }
+  _startTransport(url, transferFormat) {
+    this.transport.onreceive = this.onreceive;
+    if (this.features.reconnect) {
+      this.transport.onclose = async (e2) => {
+        let callStop = false;
+        if (this.features.reconnect) {
+          try {
+            this.features.disconnected();
+            await this.transport.connect(url, transferFormat);
+            await this.features.resend();
+          } catch {
+            callStop = true;
+          }
+        } else {
+          this._stopConnection(e2);
+          return;
+        }
+        if (callStop) {
+          this._stopConnection(e2);
+        }
+      };
+    } else {
+      this.transport.onclose = (e2) => this._stopConnection(e2);
+    }
+    return this.transport.connect(url, transferFormat);
+  }
+  _resolveTransportOrError(endpoint, requestedTransport, requestedTransferFormat, useStatefulReconnect) {
+    const transport = HttpTransportType[endpoint.transport];
+    if (transport === null || transport === void 0) {
+      this._logger.log(LogLevel.Debug, `Skipping transport '${endpoint.transport}' because it is not supported by this client.`);
+      return new Error(`Skipping transport '${endpoint.transport}' because it is not supported by this client.`);
+    } else {
+      if (transportMatches(requestedTransport, transport)) {
+        const transferFormats = endpoint.transferFormats.map((s) => TransferFormat[s]);
+        if (transferFormats.indexOf(requestedTransferFormat) >= 0) {
+          if (transport === HttpTransportType.WebSockets && !this._options.WebSocket || transport === HttpTransportType.ServerSentEvents && !this._options.EventSource) {
+            this._logger.log(LogLevel.Debug, `Skipping transport '${HttpTransportType[transport]}' because it is not supported in your environment.'`);
+            return new UnsupportedTransportError(`'${HttpTransportType[transport]}' is not supported in your environment.`, transport);
+          } else {
+            this._logger.log(LogLevel.Debug, `Selecting transport '${HttpTransportType[transport]}'.`);
+            try {
+              this.features.reconnect = transport === HttpTransportType.WebSockets ? useStatefulReconnect : void 0;
+              return this._constructTransport(transport);
+            } catch (ex) {
+              return ex;
+            }
+          }
+        } else {
+          this._logger.log(LogLevel.Debug, `Skipping transport '${HttpTransportType[transport]}' because it does not support the requested transfer format '${TransferFormat[requestedTransferFormat]}'.`);
+          return new Error(`'${HttpTransportType[transport]}' does not support ${TransferFormat[requestedTransferFormat]}.`);
+        }
+      } else {
+        this._logger.log(LogLevel.Debug, `Skipping transport '${HttpTransportType[transport]}' because it was disabled by the client.`);
+        return new DisabledTransportError(`'${HttpTransportType[transport]}' is disabled by the client.`, transport);
+      }
+    }
+  }
+  _isITransport(transport) {
+    return transport && typeof transport === "object" && "connect" in transport;
+  }
+  _stopConnection(error2) {
+    this._logger.log(LogLevel.Debug, `HttpConnection.stopConnection(${error2}) called while in state ${this._connectionState}.`);
+    this.transport = void 0;
+    error2 = this._stopError || error2;
+    this._stopError = void 0;
+    if (this._connectionState === "Disconnected") {
+      this._logger.log(LogLevel.Debug, `Call to HttpConnection.stopConnection(${error2}) was ignored because the connection is already in the disconnected state.`);
+      return;
+    }
+    if (this._connectionState === "Connecting") {
+      this._logger.log(LogLevel.Warning, `Call to HttpConnection.stopConnection(${error2}) was ignored because the connection is still in the connecting state.`);
+      throw new Error(`HttpConnection.stopConnection(${error2}) was called while the connection is still in the connecting state.`);
+    }
+    if (this._connectionState === "Disconnecting") {
+      this._stopPromiseResolver();
+    }
+    if (error2) {
+      this._logger.log(LogLevel.Error, `Connection disconnected with error '${error2}'.`);
+    } else {
+      this._logger.log(LogLevel.Information, "Connection disconnected.");
+    }
+    if (this._sendQueue) {
+      this._sendQueue.stop().catch((e2) => {
+        this._logger.log(LogLevel.Error, `TransportSendQueue.stop() threw error '${e2}'.`);
+      });
+      this._sendQueue = void 0;
+    }
+    this.connectionId = void 0;
+    this._connectionState = "Disconnected";
+    if (this._connectionStarted) {
+      this._connectionStarted = false;
+      try {
+        if (this.onclose) {
+          this.onclose(error2);
+        }
+      } catch (e2) {
+        this._logger.log(LogLevel.Error, `HttpConnection.onclose(${error2}) threw error '${e2}'.`);
+      }
+    }
+  }
+  _resolveUrl(url) {
+    if (url.lastIndexOf("https://", 0) === 0 || url.lastIndexOf("http://", 0) === 0) {
+      return url;
+    }
+    if (!Platform.isBrowser) {
+      throw new Error(`Cannot resolve '${url}'.`);
+    }
+    const aTag = window.document.createElement("a");
+    aTag.href = url;
+    this._logger.log(LogLevel.Information, `Normalizing '${url}' to '${aTag.href}'.`);
+    return aTag.href;
+  }
+  _resolveNegotiateUrl(url) {
+    const negotiateUrl = new URL(url);
+    if (negotiateUrl.pathname.endsWith("/")) {
+      negotiateUrl.pathname += "negotiate";
+    } else {
+      negotiateUrl.pathname += "/negotiate";
+    }
+    const searchParams = new URLSearchParams(negotiateUrl.searchParams);
+    if (!searchParams.has("negotiateVersion")) {
+      searchParams.append("negotiateVersion", this._negotiateVersion.toString());
+    }
+    if (searchParams.has("useStatefulReconnect")) {
+      if (searchParams.get("useStatefulReconnect") === "true") {
+        this._options._useStatefulReconnect = true;
+      }
+    } else if (this._options._useStatefulReconnect === true) {
+      searchParams.append("useStatefulReconnect", "true");
+    }
+    negotiateUrl.search = searchParams.toString();
+    return negotiateUrl.toString();
+  }
+};
+function transportMatches(requestedTransport, actualTransport) {
+  return !requestedTransport || (actualTransport & requestedTransport) !== 0;
+}
+var TransportSendQueue = class _TransportSendQueue {
+  constructor(_transport) {
+    this._transport = _transport;
+    this._buffer = [];
+    this._executing = true;
+    this._sendBufferedData = new PromiseSource();
+    this._transportResult = new PromiseSource();
+    this._sendLoopPromise = this._sendLoop();
+  }
+  send(data) {
+    this._bufferData(data);
+    if (!this._transportResult) {
+      this._transportResult = new PromiseSource();
+    }
+    return this._transportResult.promise;
+  }
+  stop() {
+    this._executing = false;
+    this._sendBufferedData.resolve();
+    return this._sendLoopPromise;
+  }
+  _bufferData(data) {
+    if (this._buffer.length && typeof this._buffer[0] !== typeof data) {
+      throw new Error(`Expected data to be of type ${typeof this._buffer} but was of type ${typeof data}`);
+    }
+    this._buffer.push(data);
+    this._sendBufferedData.resolve();
+  }
+  async _sendLoop() {
+    while (true) {
+      await this._sendBufferedData.promise;
+      if (!this._executing) {
+        if (this._transportResult) {
+          this._transportResult.reject("Connection stopped.");
+        }
+        break;
+      }
+      this._sendBufferedData = new PromiseSource();
+      const transportResult = this._transportResult;
+      this._transportResult = void 0;
+      const data = typeof this._buffer[0] === "string" ? this._buffer.join("") : _TransportSendQueue._concatBuffers(this._buffer);
+      this._buffer.length = 0;
+      try {
+        await this._transport.send(data);
+        transportResult.resolve();
+      } catch (error2) {
+        transportResult.reject(error2);
+      }
+    }
+  }
+  static _concatBuffers(arrayBuffers) {
+    const totalLength = arrayBuffers.map((b) => b.byteLength).reduce((a, b) => a + b);
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const item of arrayBuffers) {
+      result.set(new Uint8Array(item), offset);
+      offset += item.byteLength;
+    }
+    return result.buffer;
+  }
+};
+var PromiseSource = class {
+  constructor() {
+    this.promise = new Promise((resolve, reject) => [this._resolver, this._rejecter] = [resolve, reject]);
+  }
+  resolve() {
+    this._resolver();
+  }
+  reject(reason) {
+    this._rejecter(reason);
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/JsonHubProtocol.js
+var JSON_HUB_PROTOCOL_NAME = "json";
+var JsonHubProtocol = class {
+  constructor() {
+    this.name = JSON_HUB_PROTOCOL_NAME;
+    this.version = 2;
+    this.transferFormat = TransferFormat.Text;
+  }
+  /** Creates an array of {@link @microsoft/signalr.HubMessage} objects from the specified serialized representation.
+   *
+   * @param {string} input A string containing the serialized representation.
+   * @param {ILogger} logger A logger that will be used to log messages that occur during parsing.
+   */
+  parseMessages(input2, logger) {
+    if (typeof input2 !== "string") {
+      throw new Error("Invalid input for JSON hub protocol. Expected a string.");
+    }
+    if (!input2) {
+      return [];
+    }
+    if (logger === null) {
+      logger = NullLogger.instance;
+    }
+    const messages = TextMessageFormat.parse(input2);
+    const hubMessages = [];
+    for (const message of messages) {
+      const parsedMessage = JSON.parse(message);
+      if (typeof parsedMessage.type !== "number") {
+        throw new Error("Invalid payload.");
+      }
+      switch (parsedMessage.type) {
+        case MessageType.Invocation:
+          this._isInvocationMessage(parsedMessage);
+          break;
+        case MessageType.StreamItem:
+          this._isStreamItemMessage(parsedMessage);
+          break;
+        case MessageType.Completion:
+          this._isCompletionMessage(parsedMessage);
+          break;
+        case MessageType.Ping:
+          break;
+        case MessageType.Close:
+          break;
+        case MessageType.Ack:
+          this._isAckMessage(parsedMessage);
+          break;
+        case MessageType.Sequence:
+          this._isSequenceMessage(parsedMessage);
+          break;
+        default:
+          logger.log(LogLevel.Information, "Unknown message type '" + parsedMessage.type + "' ignored.");
+          continue;
+      }
+      hubMessages.push(parsedMessage);
+    }
+    return hubMessages;
+  }
+  /** Writes the specified {@link @microsoft/signalr.HubMessage} to a string and returns it.
+   *
+   * @param {HubMessage} message The message to write.
+   * @returns {string} A string containing the serialized representation of the message.
+   */
+  writeMessage(message) {
+    return TextMessageFormat.write(JSON.stringify(message));
+  }
+  _isInvocationMessage(message) {
+    this._assertNotEmptyString(message.target, "Invalid payload for Invocation message.");
+    if (message.invocationId !== void 0) {
+      this._assertNotEmptyString(message.invocationId, "Invalid payload for Invocation message.");
+    }
+  }
+  _isStreamItemMessage(message) {
+    this._assertNotEmptyString(message.invocationId, "Invalid payload for StreamItem message.");
+    if (message.item === void 0) {
+      throw new Error("Invalid payload for StreamItem message.");
+    }
+  }
+  _isCompletionMessage(message) {
+    if (message.result && message.error) {
+      throw new Error("Invalid payload for Completion message.");
+    }
+    if (!message.result && message.error) {
+      this._assertNotEmptyString(message.error, "Invalid payload for Completion message.");
+    }
+    this._assertNotEmptyString(message.invocationId, "Invalid payload for Completion message.");
+  }
+  _isAckMessage(message) {
+    if (typeof message.sequenceId !== "number") {
+      throw new Error("Invalid SequenceId for Ack message.");
+    }
+  }
+  _isSequenceMessage(message) {
+    if (typeof message.sequenceId !== "number") {
+      throw new Error("Invalid SequenceId for Sequence message.");
+    }
+  }
+  _assertNotEmptyString(value, errorMessage) {
+    if (typeof value !== "string" || value === "") {
+      throw new Error(errorMessage);
+    }
+  }
+};
+
+// node_modules/@microsoft/signalr/dist/esm/HubConnectionBuilder.js
+var LogLevelNameMapping = {
+  trace: LogLevel.Trace,
+  debug: LogLevel.Debug,
+  info: LogLevel.Information,
+  information: LogLevel.Information,
+  warn: LogLevel.Warning,
+  warning: LogLevel.Warning,
+  error: LogLevel.Error,
+  critical: LogLevel.Critical,
+  none: LogLevel.None
+};
+function parseLogLevel(name) {
+  const mapping = LogLevelNameMapping[name.toLowerCase()];
+  if (typeof mapping !== "undefined") {
+    return mapping;
+  } else {
+    throw new Error(`Unknown log level: ${name}`);
+  }
+}
+var HubConnectionBuilder = class {
+  configureLogging(logging) {
+    Arg.isRequired(logging, "logging");
+    if (isLogger(logging)) {
+      this.logger = logging;
+    } else if (typeof logging === "string") {
+      const logLevel = parseLogLevel(logging);
+      this.logger = new ConsoleLogger(logLevel);
+    } else {
+      this.logger = new ConsoleLogger(logging);
+    }
+    return this;
+  }
+  withUrl(url, transportTypeOrOptions) {
+    Arg.isRequired(url, "url");
+    Arg.isNotEmpty(url, "url");
+    this.url = url;
+    if (typeof transportTypeOrOptions === "object") {
+      this.httpConnectionOptions = __spreadValues(__spreadValues({}, this.httpConnectionOptions), transportTypeOrOptions);
+    } else {
+      this.httpConnectionOptions = __spreadProps(__spreadValues({}, this.httpConnectionOptions), {
+        transport: transportTypeOrOptions
+      });
+    }
+    return this;
+  }
+  /** Configures the {@link @microsoft/signalr.HubConnection} to use the specified Hub Protocol.
+   *
+   * @param {IHubProtocol} protocol The {@link @microsoft/signalr.IHubProtocol} implementation to use.
+   */
+  withHubProtocol(protocol) {
+    Arg.isRequired(protocol, "protocol");
+    this.protocol = protocol;
+    return this;
+  }
+  withAutomaticReconnect(retryDelaysOrReconnectPolicy) {
+    if (this.reconnectPolicy) {
+      throw new Error("A reconnectPolicy has already been set.");
+    }
+    if (!retryDelaysOrReconnectPolicy) {
+      this.reconnectPolicy = new DefaultReconnectPolicy();
+    } else if (Array.isArray(retryDelaysOrReconnectPolicy)) {
+      this.reconnectPolicy = new DefaultReconnectPolicy(retryDelaysOrReconnectPolicy);
+    } else {
+      this.reconnectPolicy = retryDelaysOrReconnectPolicy;
+    }
+    return this;
+  }
+  /** Configures {@link @microsoft/signalr.HubConnection.serverTimeoutInMilliseconds} for the {@link @microsoft/signalr.HubConnection}.
+   *
+   * @returns The {@link @microsoft/signalr.HubConnectionBuilder} instance, for chaining.
+   */
+  withServerTimeout(milliseconds) {
+    Arg.isRequired(milliseconds, "milliseconds");
+    this._serverTimeoutInMilliseconds = milliseconds;
+    return this;
+  }
+  /** Configures {@link @microsoft/signalr.HubConnection.keepAliveIntervalInMilliseconds} for the {@link @microsoft/signalr.HubConnection}.
+   *
+   * @returns The {@link @microsoft/signalr.HubConnectionBuilder} instance, for chaining.
+   */
+  withKeepAliveInterval(milliseconds) {
+    Arg.isRequired(milliseconds, "milliseconds");
+    this._keepAliveIntervalInMilliseconds = milliseconds;
+    return this;
+  }
+  /** Enables and configures options for the Stateful Reconnect feature.
+   *
+   * @returns The {@link @microsoft/signalr.HubConnectionBuilder} instance, for chaining.
+   */
+  withStatefulReconnect(options) {
+    if (this.httpConnectionOptions === void 0) {
+      this.httpConnectionOptions = {};
+    }
+    this.httpConnectionOptions._useStatefulReconnect = true;
+    this._statefulReconnectBufferSize = options === null || options === void 0 ? void 0 : options.bufferSize;
+    return this;
+  }
+  /** Creates a {@link @microsoft/signalr.HubConnection} from the configuration options specified in this builder.
+   *
+   * @returns {HubConnection} The configured {@link @microsoft/signalr.HubConnection}.
+   */
+  build() {
+    const httpConnectionOptions = this.httpConnectionOptions || {};
+    if (httpConnectionOptions.logger === void 0) {
+      httpConnectionOptions.logger = this.logger;
+    }
+    if (!this.url) {
+      throw new Error("The 'HubConnectionBuilder.withUrl' method must be called before building the connection.");
+    }
+    const connection = new HttpConnection(this.url, httpConnectionOptions);
+    return HubConnection.create(connection, this.logger || NullLogger.instance, this.protocol || new JsonHubProtocol(), this.reconnectPolicy, this._serverTimeoutInMilliseconds, this._keepAliveIntervalInMilliseconds, this._statefulReconnectBufferSize);
+  }
+};
+function isLogger(logger) {
+  return logger.log !== void 0;
+}
+
+// src/app/services/vehicle-live.service.ts
+var VehicleLiveService = class _VehicleLiveService {
+  connection;
+  vehicleUpdateSubject = new Subject();
+  tripEndedSubject = new Subject();
+  usbUnitsChangedSubject = new Subject();
+  vehicleUpdate$ = this.vehicleUpdateSubject.asObservable();
+  vehicleMoving$ = this.vehicleUpdate$.pipe(map((update) => update.vehicleId));
+  tripEnded$ = this.tripEndedSubject.asObservable();
+  usbUnitsChanged$ = this.usbUnitsChangedSubject.asObservable();
+  constructor() {
+    const hubUrl = `${environment.apiUrl.replace(/\/api\/?$/, "")}/hubs/vehicles`;
+    this.connection = new HubConnectionBuilder().withUrl(hubUrl).withAutomaticReconnect().build();
+    this.connection.on("VehicleUpdate", (update) => {
+      this.vehicleUpdateSubject.next(update);
+    });
+    this.connection.on("TripEnded", (update) => {
+      this.tripEndedSubject.next(update);
+    });
+    this.connection.on("UsbUnitsChanged", (uuids) => {
+      this.usbUnitsChangedSubject.next(uuids);
+    });
+    this.connection.start().catch(() => {
+    });
+  }
+  static \u0275fac = function VehicleLiveService_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _VehicleLiveService)();
+  };
+  static \u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({ token: _VehicleLiveService, factory: _VehicleLiveService.\u0275fac, providedIn: "root" });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(VehicleLiveService, [{
+    type: Injectable,
+    args: [{ providedIn: "root" }]
+  }], () => [], null);
+})();
+
 // src/app/widgets/fahrten/fahrten.component.ts
 var _c0 = ["vehicleAutocomplete"];
 var _c1 = ["telemetryAutocomplete"];
 var _c2 = ["personAutocomplete"];
 function LayoutComponent_app_card_widget_5_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "app-card-widget", 37);
+    \u0275\u0275element(0, "app-card-widget", 39);
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
@@ -94199,7 +97102,7 @@ function LayoutComponent_app_card_widget_5_Template(rf, ctx) {
 }
 function LayoutComponent_app_trip_chart_6_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "app-trip-chart", 38);
+    \u0275\u0275element(0, "app-trip-chart", 40);
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
@@ -94208,33 +97111,59 @@ function LayoutComponent_app_trip_chart_6_Template(rf, ctx) {
 }
 function LayoutComponent_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 39);
+    \u0275\u0275elementStart(0, "div", 41);
     \u0275\u0275text(1, " W\xE4hle eine Fahrt aus der Liste aus, um die Details zu sehen. ");
     \u0275\u0275elementEnd();
   }
 }
-function LayoutComponent_div_14_Template(rf, ctx) {
+function LayoutComponent_button_9_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 40);
+    const _r3 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 42);
+    \u0275\u0275listener("click", function LayoutComponent_button_9_Template_button_click_0_listener() {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.recenterMap());
+    });
+    \u0275\u0275elementStart(1, "span", 43);
+    \u0275\u0275text(2, "my_location");
+    \u0275\u0275elementEnd()();
+  }
+}
+function LayoutComponent_div_16_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 44);
     \u0275\u0275text(1, " Keine Fahrten f\xFCr die gew\xE4hlten Filter gefunden. ");
     \u0275\u0275elementEnd();
   }
 }
-function LayoutComponent_div_15_div_3_Template(rf, ctx) {
+function LayoutComponent_div_17_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 45);
+    \u0275\u0275elementStart(0, "div", 50);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const trip_r5 = \u0275\u0275nextContext().$implicit;
+    const trip_r6 = \u0275\u0275nextContext().$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", trip_r5.points.length, " Datenpunkte ");
+    \u0275\u0275textInterpolate1(" ", trip_r6.points.length, " Datenpunkte ");
   }
 }
-function LayoutComponent_div_15_div_4_Template(rf, ctx) {
+function LayoutComponent_div_17_div_4_div_27_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 46)(1, "div")(2, "span");
+    \u0275\u0275elementStart(0, "div", 53);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(3);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r1.deleteError);
+  }
+}
+function LayoutComponent_div_17_div_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 51)(1, "div")(2, "span");
     \u0275\u0275text(3, "Fahrzeug:");
     \u0275\u0275elementEnd();
     \u0275\u0275text(4);
@@ -94250,91 +97179,150 @@ function LayoutComponent_div_15_div_4_Template(rf, ctx) {
     \u0275\u0275text(12);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(13, "div")(14, "span");
-    \u0275\u0275text(15, "Datenpunkte:");
+    \u0275\u0275text(15, "Start:");
     \u0275\u0275elementEnd();
     \u0275\u0275text(16);
+    \u0275\u0275pipe(17, "date");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(18, "div")(19, "span");
+    \u0275\u0275text(20, "Ende:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(21);
+    \u0275\u0275pipe(22, "date");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(23, "div")(24, "span");
+    \u0275\u0275text(25, "Datenpunkte:");
+    \u0275\u0275elementEnd();
+    \u0275\u0275text(26);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(27, LayoutComponent_div_17_div_4_div_27_Template, 2, 1, "div", 52);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const trip_r6 = \u0275\u0275nextContext().$implicit;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", ctx_r1.vehicleLabel(trip_r6.vehicleId));
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", trip_r6.telemetryUnitId);
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", ctx_r1.driverLabel(trip_r6.driverId));
+    \u0275\u0275advance(4);
+    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind2(17, 7, trip_r6.start, "dd.MM.yyyy HH:mm"));
+    \u0275\u0275advance(5);
+    \u0275\u0275textInterpolate1(" ", trip_r6.end ? \u0275\u0275pipeBind2(22, 10, trip_r6.end, "dd.MM.yyyy HH:mm") : "-");
+    \u0275\u0275advance(5);
+    \u0275\u0275textInterpolate1(" ", trip_r6.points.length);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.deleteError);
+  }
+}
+function LayoutComponent_div_17_div_5_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r7 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 54);
+    \u0275\u0275listener("click", function LayoutComponent_div_17_div_5_Template_div_click_0_listener($event) {
+      \u0275\u0275restoreView(_r7);
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.onActionsClick($event));
+    })("mousedown", function LayoutComponent_div_17_div_5_Template_div_mousedown_0_listener($event) {
+      return $event.stopPropagation();
+    });
+    \u0275\u0275elementStart(1, "button", 55);
+    \u0275\u0275listener("mousedown", function LayoutComponent_div_17_div_5_Template_button_mousedown_1_listener($event) {
+      \u0275\u0275restoreView(_r7);
+      const ctx_r7 = \u0275\u0275nextContext();
+      const trip_r6 = ctx_r7.$implicit;
+      const i_r5 = ctx_r7.index;
+      const ctx_r1 = \u0275\u0275nextContext();
+      ctx_r1.onActionMouseDown($event);
+      return \u0275\u0275resetView(ctx_r1.confirmDelete(i_r5, trip_r6));
+    });
+    \u0275\u0275text(2);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const trip_r5 = \u0275\u0275nextContext().$implicit;
-    \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", trip_r5.vehicleId);
-    \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", trip_r5.telemetryUnitId);
-    \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", trip_r5.driverId);
-    \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", trip_r5.points.length);
+    const ctx_r7 = \u0275\u0275nextContext();
+    const trip_r6 = ctx_r7.$implicit;
+    const i_r5 = ctx_r7.index;
+    const ctx_r1 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275classProp("danger", ctx_r1.deleteConfirmIndex === i_r5);
+    \u0275\u0275property("disabled", !trip_r6.end)("title", !trip_r6.end ? "Laufende Fahrten k\xF6nnen nicht gel\xF6scht werden." : "");
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", ctx_r1.deleteConfirmIndex === i_r5 ? "Wirklich L\xF6schen?" : "L\xF6schen", " ");
   }
 }
-function LayoutComponent_div_15_Template(rf, ctx) {
+function LayoutComponent_div_17_Template(rf, ctx) {
   if (rf & 1) {
-    const _r3 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 41);
-    \u0275\u0275listener("click", function LayoutComponent_div_15_Template_div_click_0_listener() {
-      const i_r4 = \u0275\u0275restoreView(_r3).index;
+    const _r4 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 45);
+    \u0275\u0275listener("click", function LayoutComponent_div_17_Template_div_click_0_listener() {
+      const i_r5 = \u0275\u0275restoreView(_r4).index;
       const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.selectItem(i_r4));
+      return \u0275\u0275resetView(ctx_r1.selectItem(i_r5));
     });
-    \u0275\u0275elementStart(1, "div", 42);
+    \u0275\u0275elementStart(1, "div", 46);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, LayoutComponent_div_15_div_3_Template, 2, 1, "div", 43)(4, LayoutComponent_div_15_div_4_Template, 17, 4, "div", 44);
+    \u0275\u0275template(3, LayoutComponent_div_17_div_3_Template, 2, 1, "div", 47)(4, LayoutComponent_div_17_div_4_Template, 28, 13, "div", 48)(5, LayoutComponent_div_17_div_5_Template, 3, 5, "div", 49);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const trip_r5 = ctx.$implicit;
-    const i_r4 = ctx.index;
+    const trip_r6 = ctx.$implicit;
+    const i_r5 = ctx.index;
     const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("active", ctx_r1.selectedIndex === i_r4);
+    \u0275\u0275classProp("active", ctx_r1.selectedIndex === i_r5);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate2("", trip_r5.id, " \u2014 ", trip_r5.vehicleId);
+    \u0275\u0275textInterpolate2("", trip_r6.id, " \u2014 ", trip_r6.vehicleId);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r1.selectedIndex !== i_r4);
+    \u0275\u0275property("ngIf", ctx_r1.selectedIndex !== i_r5);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r4);
+    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r5);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r5);
   }
 }
-function LayoutComponent_div_16_button_4_Template(rf, ctx) {
+function LayoutComponent_div_18_button_4_Template(rf, ctx) {
   if (rf & 1) {
-    const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 51);
-    \u0275\u0275listener("click", function LayoutComponent_div_16_button_4_Template_button_click_0_listener() {
-      const page_r8 = \u0275\u0275restoreView(_r7).$implicit;
+    const _r10 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 59);
+    \u0275\u0275listener("click", function LayoutComponent_div_18_button_4_Template_button_click_0_listener() {
+      const page_r11 = \u0275\u0275restoreView(_r10).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.goToTripPage(page_r8));
+      return \u0275\u0275resetView(ctx_r1.goToTripPage(page_r11));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const page_r8 = ctx.$implicit;
+    const page_r11 = ctx.$implicit;
     const ctx_r1 = \u0275\u0275nextContext(2);
-    \u0275\u0275classProp("active", page_r8 === ctx_r1.currentTripPage);
+    \u0275\u0275classProp("active", page_r11 === ctx_r1.currentTripPage);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", page_r8, " ");
+    \u0275\u0275textInterpolate1(" ", page_r11, " ");
   }
 }
-function LayoutComponent_div_16_Template(rf, ctx) {
+function LayoutComponent_div_18_Template(rf, ctx) {
   if (rf & 1) {
-    const _r6 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 47)(1, "button", 48);
-    \u0275\u0275listener("click", function LayoutComponent_div_16_Template_button_click_1_listener() {
-      \u0275\u0275restoreView(_r6);
+    const _r9 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 56)(1, "button", 57);
+    \u0275\u0275listener("click", function LayoutComponent_div_18_Template_button_click_1_listener() {
+      \u0275\u0275restoreView(_r9);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.prevTripPage());
     });
-    \u0275\u0275elementStart(2, "span", 49);
+    \u0275\u0275elementStart(2, "span", 43);
     \u0275\u0275text(3, "chevron_left");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(4, LayoutComponent_div_16_button_4_Template, 2, 3, "button", 50);
-    \u0275\u0275elementStart(5, "button", 48);
-    \u0275\u0275listener("click", function LayoutComponent_div_16_Template_button_click_5_listener() {
-      \u0275\u0275restoreView(_r6);
+    \u0275\u0275template(4, LayoutComponent_div_18_button_4_Template, 2, 3, "button", 58);
+    \u0275\u0275elementStart(5, "button", 57);
+    \u0275\u0275listener("click", function LayoutComponent_div_18_Template_button_click_5_listener() {
+      \u0275\u0275restoreView(_r9);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.nextTripPage());
     });
-    \u0275\u0275elementStart(6, "span", 49);
+    \u0275\u0275elementStart(6, "span", 43);
     \u0275\u0275text(7, "chevron_right");
     \u0275\u0275elementEnd()()();
   }
@@ -94348,28 +97336,28 @@ function LayoutComponent_div_16_Template(rf, ctx) {
     \u0275\u0275property("disabled", ctx_r1.currentTripPage === ctx_r1.totalTripPages);
   }
 }
-function LayoutComponent_div_36_div_1_Template(rf, ctx) {
+function LayoutComponent_div_38_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r9 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 54);
-    \u0275\u0275listener("click", function LayoutComponent_div_36_div_1_Template_div_click_0_listener() {
-      const vehicle_r10 = \u0275\u0275restoreView(_r9).$implicit;
+    const _r12 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 62);
+    \u0275\u0275listener("click", function LayoutComponent_div_38_div_1_Template_div_click_0_listener() {
+      const vehicle_r13 = \u0275\u0275restoreView(_r12).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.selectVehicle(vehicle_r10));
+      return \u0275\u0275resetView(ctx_r1.selectVehicle(vehicle_r13));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const vehicle_r10 = ctx.$implicit;
+    const vehicle_r13 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate3(" ", vehicle_r10.licensePlate, " \u2014 ", vehicle_r10.brand, " ", vehicle_r10.modelName, " ");
+    \u0275\u0275textInterpolate3(" ", vehicle_r13.licensePlate, " \u2014 ", vehicle_r13.brand, " ", vehicle_r13.modelName, " ");
   }
 }
-function LayoutComponent_div_36_Template(rf, ctx) {
+function LayoutComponent_div_38_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 52);
-    \u0275\u0275template(1, LayoutComponent_div_36_div_1_Template, 2, 3, "div", 53);
+    \u0275\u0275elementStart(0, "div", 60);
+    \u0275\u0275template(1, LayoutComponent_div_38_div_1_Template, 2, 3, "div", 61);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94378,30 +97366,30 @@ function LayoutComponent_div_36_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filteredVehicleOptions);
   }
 }
-function LayoutComponent_div_39_div_1_Template(rf, ctx) {
+function LayoutComponent_div_41_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r11 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 57);
+    const _r14 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 65);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 58);
-    \u0275\u0275listener("click", function LayoutComponent_div_39_div_1_Template_span_click_2_listener() {
-      const vehicleId_r12 = \u0275\u0275restoreView(_r11).$implicit;
+    \u0275\u0275elementStart(2, "span", 66);
+    \u0275\u0275listener("click", function LayoutComponent_div_41_div_1_Template_span_click_2_listener() {
+      const vehicleId_r15 = \u0275\u0275restoreView(_r14).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.removeVehicleFilter(vehicleId_r12));
+      return \u0275\u0275resetView(ctx_r1.removeVehicleFilter(vehicleId_r15));
     });
     \u0275\u0275text(3, "\xD7");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const vehicleId_r12 = ctx.$implicit;
+    const vehicleId_r15 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", vehicleId_r12, " ");
+    \u0275\u0275textInterpolate1(" ", vehicleId_r15, " ");
   }
 }
-function LayoutComponent_div_39_Template(rf, ctx) {
+function LayoutComponent_div_41_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 55);
-    \u0275\u0275template(1, LayoutComponent_div_39_div_1_Template, 4, 1, "div", 56);
+    \u0275\u0275elementStart(0, "div", 63);
+    \u0275\u0275template(1, LayoutComponent_div_41_div_1_Template, 4, 1, "div", 64);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94410,9 +97398,9 @@ function LayoutComponent_div_39_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filterVehicleIds);
   }
 }
-function LayoutComponent_div_40_Template(rf, ctx) {
+function LayoutComponent_div_42_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 59);
+    \u0275\u0275elementStart(0, "div", 67);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94422,112 +97410,112 @@ function LayoutComponent_div_40_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Maximal ", ctx_r1.maxVehicleFilters, " Fahrzeuge ");
   }
 }
-function LayoutComponent_div_41_option_8_Template(rf, ctx) {
+function LayoutComponent_div_43_option_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 75);
+    \u0275\u0275elementStart(0, "option", 83);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const license_r14 = ctx.$implicit;
-    \u0275\u0275property("value", license_r14);
+    const license_r17 = ctx.$implicit;
+    \u0275\u0275property("value", license_r17);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(license_r14);
+    \u0275\u0275textInterpolate(license_r17);
   }
 }
-function LayoutComponent_div_41_Template(rf, ctx) {
+function LayoutComponent_div_43_Template(rf, ctx) {
   if (rf & 1) {
-    const _r13 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 60)(1, "input", 61);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    const _r16 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 68)(1, "input", 69);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.brand, $event) || (ctx_r1.advancedVehicleFilter.brand = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "input", 62);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_2_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(2, "input", 70);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_2_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.modelName, $event) || (ctx_r1.advancedVehicleFilter.modelName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 63);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_3_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(3, "input", 71);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_3_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.color, $event) || (ctx_r1.advancedVehicleFilter.color = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "input", 64);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_4_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(4, "input", 72);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_4_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.identNr, $event) || (ctx_r1.advancedVehicleFilter.identNr = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "select", 32);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_select_ngModelChange_5_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(5, "select", 34);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_select_ngModelChange_5_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.requiredLicense, $event) || (ctx_r1.advancedVehicleFilter.requiredLicense = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(6, "option", 65);
+    \u0275\u0275elementStart(6, "option", 73);
     \u0275\u0275text(7, "F\xFChrerschein (alle)");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(8, LayoutComponent_div_41_option_8_Template, 2, 2, "option", 66);
+    \u0275\u0275template(8, LayoutComponent_div_43_option_8_Template, 2, 2, "option", 74);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(9, "div", 67)(10, "input", 68);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_10_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(9, "div", 75)(10, "input", 76);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_10_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.yearFrom, $event) || (ctx_r1.advancedVehicleFilter.yearFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "input", 69);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_11_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(11, "input", 77);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_11_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.yearTo, $event) || (ctx_r1.advancedVehicleFilter.yearTo = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(12, "div", 67)(13, "input", 70);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_13_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(12, "div", 75)(13, "input", 78);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_13_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.powerPsFrom, $event) || (ctx_r1.advancedVehicleFilter.powerPsFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "input", 71);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_14_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(14, "input", 79);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_14_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.powerPsTo, $event) || (ctx_r1.advancedVehicleFilter.powerPsTo = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(15, "div", 72);
+    \u0275\u0275elementStart(15, "div", 80);
     \u0275\u0275text(16, "Erstzulassung");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(17, "div", 67)(18, "input", 73);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_18_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(17, "div", 75)(18, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_18_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.firstRegistrationFrom, $event) || (ctx_r1.advancedVehicleFilter.firstRegistrationFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(19, "input", 74);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_41_Template_input_ngModelChange_19_listener($event) {
-      \u0275\u0275restoreView(_r13);
+    \u0275\u0275elementStart(19, "input", 82);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_43_Template_input_ngModelChange_19_listener($event) {
+      \u0275\u0275restoreView(_r16);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedVehicleFilter.firstRegistrationTo, $event) || (ctx_r1.advancedVehicleFilter.firstRegistrationTo = $event);
       return \u0275\u0275resetView($event);
@@ -94562,28 +97550,28 @@ function LayoutComponent_div_41_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedVehicleFilter.firstRegistrationTo);
   }
 }
-function LayoutComponent_div_49_div_1_Template(rf, ctx) {
+function LayoutComponent_div_51_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r15 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 54);
-    \u0275\u0275listener("click", function LayoutComponent_div_49_div_1_Template_div_click_0_listener() {
-      const unitId_r16 = \u0275\u0275restoreView(_r15).$implicit;
+    const _r18 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 62);
+    \u0275\u0275listener("click", function LayoutComponent_div_51_div_1_Template_div_click_0_listener() {
+      const unitId_r19 = \u0275\u0275restoreView(_r18).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.selectTelemetryUnit(unitId_r16));
+      return \u0275\u0275resetView(ctx_r1.selectTelemetryUnit(unitId_r19));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const unitId_r16 = ctx.$implicit;
+    const unitId_r19 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", unitId_r16, " ");
+    \u0275\u0275textInterpolate1(" ", unitId_r19, " ");
   }
 }
-function LayoutComponent_div_49_Template(rf, ctx) {
+function LayoutComponent_div_51_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 52);
-    \u0275\u0275template(1, LayoutComponent_div_49_div_1_Template, 2, 1, "div", 53);
+    \u0275\u0275elementStart(0, "div", 60);
+    \u0275\u0275template(1, LayoutComponent_div_51_div_1_Template, 2, 1, "div", 61);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94592,30 +97580,30 @@ function LayoutComponent_div_49_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filteredTelemetryOptions);
   }
 }
-function LayoutComponent_div_52_div_1_Template(rf, ctx) {
+function LayoutComponent_div_54_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r17 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 57);
+    const _r20 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 65);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 58);
-    \u0275\u0275listener("click", function LayoutComponent_div_52_div_1_Template_span_click_2_listener() {
-      const unitId_r18 = \u0275\u0275restoreView(_r17).$implicit;
+    \u0275\u0275elementStart(2, "span", 66);
+    \u0275\u0275listener("click", function LayoutComponent_div_54_div_1_Template_span_click_2_listener() {
+      const unitId_r21 = \u0275\u0275restoreView(_r20).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.removeTelemetryUnitFilter(unitId_r18));
+      return \u0275\u0275resetView(ctx_r1.removeTelemetryUnitFilter(unitId_r21));
     });
     \u0275\u0275text(3, "\xD7");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const unitId_r18 = ctx.$implicit;
+    const unitId_r21 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", unitId_r18, " ");
+    \u0275\u0275textInterpolate1(" ", unitId_r21, " ");
   }
 }
-function LayoutComponent_div_52_Template(rf, ctx) {
+function LayoutComponent_div_54_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 55);
-    \u0275\u0275template(1, LayoutComponent_div_52_div_1_Template, 4, 1, "div", 56);
+    \u0275\u0275elementStart(0, "div", 63);
+    \u0275\u0275template(1, LayoutComponent_div_54_div_1_Template, 4, 1, "div", 64);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94624,9 +97612,9 @@ function LayoutComponent_div_52_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filterTelemetryUnitIds);
   }
 }
-function LayoutComponent_div_53_Template(rf, ctx) {
+function LayoutComponent_div_55_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 59);
+    \u0275\u0275elementStart(0, "div", 67);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94636,28 +97624,28 @@ function LayoutComponent_div_53_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Maximal ", ctx_r1.maxTelemetryUnitFilters, " Einheiten ");
   }
 }
-function LayoutComponent_div_64_div_1_Template(rf, ctx) {
+function LayoutComponent_div_66_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r19 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 54);
-    \u0275\u0275listener("click", function LayoutComponent_div_64_div_1_Template_div_click_0_listener() {
-      const person_r20 = \u0275\u0275restoreView(_r19).$implicit;
+    const _r22 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 62);
+    \u0275\u0275listener("click", function LayoutComponent_div_66_div_1_Template_div_click_0_listener() {
+      const person_r23 = \u0275\u0275restoreView(_r22).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.selectPerson(person_r20));
+      return \u0275\u0275resetView(ctx_r1.selectPerson(person_r23));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const person_r20 = ctx.$implicit;
+    const person_r23 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate3(" ", person_r20.firstName, " ", person_r20.lastName, " \u2014 ", person_r20.Id, " ");
+    \u0275\u0275textInterpolate3(" ", person_r23.firstName, " ", person_r23.lastName, " \u2014 ", person_r23.Id, " ");
   }
 }
-function LayoutComponent_div_64_Template(rf, ctx) {
+function LayoutComponent_div_66_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 52);
-    \u0275\u0275template(1, LayoutComponent_div_64_div_1_Template, 2, 3, "div", 53);
+    \u0275\u0275elementStart(0, "div", 60);
+    \u0275\u0275template(1, LayoutComponent_div_66_div_1_Template, 2, 3, "div", 61);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94666,30 +97654,30 @@ function LayoutComponent_div_64_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filteredPersonOptions);
   }
 }
-function LayoutComponent_div_67_div_1_Template(rf, ctx) {
+function LayoutComponent_div_69_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r21 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 57);
+    const _r24 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 65);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 58);
-    \u0275\u0275listener("click", function LayoutComponent_div_67_div_1_Template_span_click_2_listener() {
-      const personId_r22 = \u0275\u0275restoreView(_r21).$implicit;
+    \u0275\u0275elementStart(2, "span", 66);
+    \u0275\u0275listener("click", function LayoutComponent_div_69_div_1_Template_span_click_2_listener() {
+      const personId_r25 = \u0275\u0275restoreView(_r24).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r1.removePersonFilter(personId_r22));
+      return \u0275\u0275resetView(ctx_r1.removePersonFilter(personId_r25));
     });
     \u0275\u0275text(3, "\xD7");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const personId_r22 = ctx.$implicit;
+    const personId_r25 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", personId_r22, " ");
+    \u0275\u0275textInterpolate1(" ", personId_r25, " ");
   }
 }
-function LayoutComponent_div_67_Template(rf, ctx) {
+function LayoutComponent_div_69_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 55);
-    \u0275\u0275template(1, LayoutComponent_div_67_div_1_Template, 4, 1, "div", 56);
+    \u0275\u0275elementStart(0, "div", 63);
+    \u0275\u0275template(1, LayoutComponent_div_69_div_1_Template, 4, 1, "div", 64);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -94698,9 +97686,9 @@ function LayoutComponent_div_67_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filterPersonIds);
   }
 }
-function LayoutComponent_div_68_Template(rf, ctx) {
+function LayoutComponent_div_70_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 59);
+    \u0275\u0275elementStart(0, "div", 67);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -94710,39 +97698,39 @@ function LayoutComponent_div_68_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Maximal ", ctx_r1.maxPersonFilters, " Personen ");
   }
 }
-function LayoutComponent_div_69_Template(rf, ctx) {
+function LayoutComponent_div_71_Template(rf, ctx) {
   if (rf & 1) {
-    const _r23 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 60)(1, "input", 76);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_1_listener($event) {
-      \u0275\u0275restoreView(_r23);
+    const _r26 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 68)(1, "input", 84);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_71_Template_input_ngModelChange_1_listener($event) {
+      \u0275\u0275restoreView(_r26);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.firstName, $event) || (ctx_r1.advancedPersonFilter.firstName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "input", 77);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_2_listener($event) {
-      \u0275\u0275restoreView(_r23);
+    \u0275\u0275elementStart(2, "input", 85);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_71_Template_input_ngModelChange_2_listener($event) {
+      \u0275\u0275restoreView(_r26);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.lastName, $event) || (ctx_r1.advancedPersonFilter.lastName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 72);
+    \u0275\u0275elementStart(3, "div", 80);
     \u0275\u0275text(4, "Geburtsdatum");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "div", 67)(6, "input", 78);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_6_listener($event) {
-      \u0275\u0275restoreView(_r23);
+    \u0275\u0275elementStart(5, "div", 75)(6, "input", 86);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_71_Template_input_ngModelChange_6_listener($event) {
+      \u0275\u0275restoreView(_r26);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.birthDateFrom, $event) || (ctx_r1.advancedPersonFilter.birthDateFrom = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(7, "input", 79);
-    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_69_Template_input_ngModelChange_7_listener($event) {
-      \u0275\u0275restoreView(_r23);
+    \u0275\u0275elementStart(7, "input", 87);
+    \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_div_71_Template_input_ngModelChange_7_listener($event) {
+      \u0275\u0275restoreView(_r26);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedPersonFilter.birthDateTo, $event) || (ctx_r1.advancedPersonFilter.birthDateTo = $event);
       return \u0275\u0275resetView($event);
@@ -94761,17 +97749,17 @@ function LayoutComponent_div_69_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedPersonFilter.birthDateTo);
   }
 }
-function LayoutComponent_option_73_Template(rf, ctx) {
+function LayoutComponent_option_75_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 80);
+    \u0275\u0275elementStart(0, "option", 88);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const option_r24 = ctx.$implicit;
-    \u0275\u0275property("ngValue", option_r24.seconds);
+    const option_r27 = ctx.$implicit;
+    \u0275\u0275property("ngValue", option_r27.seconds);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", option_r24.label, " ");
+    \u0275\u0275textInterpolate1(" ", option_r27.label, " ");
   }
 }
 var LayoutComponent = class _LayoutComponent {
@@ -94779,28 +97767,20 @@ var LayoutComponent = class _LayoutComponent {
   vehicleService;
   telemetryUnitService;
   personService;
+  vehicleLiveService;
   cdr;
+  presetVehicleId;
+  presetVehicleIdChange = new EventEmitter();
+  presetPersonId;
+  presetPersonIdChange = new EventEmitter();
+  presetTelemetryUnitId;
+  presetTelemetryUnitIdChange = new EventEmitter();
   trips = [];
   totalTripCount = 0;
   vehicles = [];
   telemetryUnits = [];
   persons = [];
   viewMode = "routen";
-  // dummyVehicles: Vehicle[] = [
-  //   { Id: 'v1', licensePlate: 'FL-1000', brand: 'VW', modelName: 'Transporter', year: 2015, color: 'Weiß', identNr: '100001', requiredLicense: 'C1', powerPs: 140, firstRegistration: '2015-03-10' },
-  //   { Id: 'v2', licensePlate: 'FL-1001', brand: 'Mercedes', modelName: 'Sprinter', year: 2018, color: 'Silber', identNr: '100002', requiredLicense: 'C1E', powerPs: 163, firstRegistration: '2018-06-21' },
-  //   { Id: 'v3', licensePlate: 'FL-1002', brand: 'BMW', modelName: 'X3', year: 2020, color: 'Schwarz', identNr: '100003', requiredLicense: 'B', powerPs: 190, firstRegistration: '2020-01-15' },
-  //   { Id: 'v4', licensePlate: 'FL-1003', brand: 'Audi', modelName: 'A4', year: 2019, color: 'Blau', identNr: '100004', requiredLicense: 'B', powerPs: 150, firstRegistration: '2019-09-05' },
-  //   { Id: 'v5', licensePlate: 'FL-1004', brand: 'Ford', modelName: 'Transit', year: 2016, color: 'Rot', identNr: '100005', requiredLicense: 'C1', powerPs: 130, firstRegistration: '2016-11-30' }
-  // ];
-  // dummyTelemetryUnits: string[] = ['TU-1001', 'TU-1002', 'TU-1003'];
-  // dummyPersons: Person[] = [
-  //   { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
-  //   { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
-  //   { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
-  //   { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
-  //   { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
-  // ];
   licenseClasses = [
     "AM",
     "A1",
@@ -94857,18 +97837,30 @@ var LayoutComponent = class _LayoutComponent {
   vehicleAutocompleteRef;
   telemetryAutocompleteRef;
   personAutocompleteRef;
+  cardWidget;
   selectedIndex = null;
+  deleteConfirmIndex = null;
+  deleteError = null;
   tripPageSize = 10;
   currentTripPage = 1;
-  constructor(tripService, vehicleService, telemetryUnitService, personService, cdr) {
+  liveSubscription;
+  tripEndedSubscription;
+  constructor(tripService, vehicleService, telemetryUnitService, personService, vehicleLiveService, cdr) {
     this.tripService = tripService;
     this.vehicleService = vehicleService;
     this.telemetryUnitService = telemetryUnitService;
     this.personService = personService;
+    this.vehicleLiveService = vehicleLiveService;
     this.cdr = cdr;
   }
   onDocumentClick(event) {
     const target = event.target;
+    if (this.deleteConfirmIndex !== null) {
+      const targetEl = target;
+      if (!targetEl.closest || !targetEl.closest(".delete-btn")) {
+        this.deleteConfirmIndex = null;
+      }
+    }
     if (this.vehicleAutocompleteRef && !this.vehicleAutocompleteRef.nativeElement.contains(target)) {
       this.showVehicleOptions = false;
     }
@@ -94884,6 +97876,64 @@ var LayoutComponent = class _LayoutComponent {
     this.loadVehicles();
     this.loadTelemetryUnits();
     this.loadPersons();
+    if (this.presetVehicleId) {
+      this.filterVehicleIds = [this.presetVehicleId];
+      this.appliedFilterVehicleIds = [this.presetVehicleId];
+      this.presetVehicleIdChange.emit(void 0);
+    }
+    if (this.presetPersonId) {
+      this.filterPersonIds = [this.presetPersonId];
+      this.appliedFilterPersonIds = [this.presetPersonId];
+      this.presetPersonIdChange.emit(void 0);
+    }
+    if (this.presetTelemetryUnitId) {
+      this.filterTelemetryUnitIds = [this.presetTelemetryUnitId];
+      this.appliedFilterTelemetryUnitIds = [this.presetTelemetryUnitId];
+      this.presetTelemetryUnitIdChange.emit(void 0);
+    }
+    this.liveSubscription = this.vehicleLiveService.vehicleUpdate$.subscribe((update) => {
+      this.onVehicleUpdate(update);
+    });
+    this.tripEndedSubscription = this.vehicleLiveService.tripEnded$.subscribe((update) => {
+      this.onTripEnded(update);
+    });
+  }
+  ngOnDestroy() {
+    this.liveSubscription?.unsubscribe();
+    this.tripEndedSubscription?.unsubscribe();
+  }
+  onTripEnded(update) {
+    const trip = this.trips.find((t) => t.id === update.tripId);
+    if (!trip || trip.end)
+      return;
+    trip.end = update.endTimestamp;
+    this.cdr.detectChanges();
+  }
+  onVehicleUpdate(update) {
+    const pointTime = new Date(update.timestamp).getTime();
+    const affectedTrip = this.trips.find((trip) => {
+      if (trip.vehicleId !== update.vehicleId)
+        return false;
+      const start2 = new Date(trip.start).getTime();
+      if (pointTime < start2)
+        return false;
+      if (trip.end) {
+        const end2 = new Date(trip.end).getTime();
+        if (pointTime > end2)
+          return false;
+      }
+      return true;
+    });
+    if (!affectedTrip)
+      return;
+    affectedTrip.points.push({
+      lat: update.lat,
+      lng: update.lng,
+      timestamp: update.timestamp,
+      speedKmh: update.speedKmh,
+      accelMs2: update.accelMs2
+    });
+    this.cdr.detectChanges();
   }
   loadVehicles() {
     this.vehicleService.loadAll().subscribe({
@@ -95083,6 +98133,54 @@ var LayoutComponent = class _LayoutComponent {
   selectItem(index) {
     this.selectedIndex = this.selectedIndex === index ? null : index;
   }
+  onActionsClick(event) {
+    event.stopPropagation();
+    const target = event.target;
+    if (this.deleteConfirmIndex !== null && (!target.closest || !target.closest(".delete-btn"))) {
+      this.deleteConfirmIndex = null;
+    }
+  }
+  onActionMouseDown(event) {
+    event.preventDefault();
+  }
+  confirmDelete(index, trip) {
+    if (!trip.end)
+      return;
+    if (this.deleteConfirmIndex !== index) {
+      this.deleteConfirmIndex = index;
+      return;
+    }
+    this.deleteTrip(trip);
+  }
+  deleteTrip(trip) {
+    this.deleteError = null;
+    this.tripService.delete(trip.id).subscribe({
+      next: () => {
+        this.trips = this.trips.filter((t) => t !== trip);
+        this.totalTripCount = Math.max(0, this.totalTripCount - 1);
+        this.deleteConfirmIndex = null;
+        this.selectedIndex = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.deleteError = err?.message ?? "L\xF6schen fehlgeschlagen.";
+        this.deleteConfirmIndex = null;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  vehicleLabel(vehicleId) {
+    if (!vehicleId)
+      return "";
+    const vehicle = this.vehicles.find((v) => v.Id === vehicleId);
+    return vehicle ? `${vehicleId} - ${vehicle.licensePlate}` : vehicleId;
+  }
+  driverLabel(driverId) {
+    if (!driverId)
+      return "";
+    const person = this.persons.find((p) => p.Id === driverId);
+    return person ? `${driverId} - ${person.firstName} ${person.lastName}` : driverId;
+  }
   prevTripPage() {
     if (this.currentTripPage > 1) {
       this.currentTripPage--;
@@ -95101,6 +98199,9 @@ var LayoutComponent = class _LayoutComponent {
   }
   setViewMode(mode) {
     this.viewMode = mode;
+  }
+  recenterMap() {
+    this.cardWidget?.recenter();
   }
   resetFilters() {
     this.filterVehicleId = "";
@@ -95166,17 +98267,18 @@ var LayoutComponent = class _LayoutComponent {
     return sampled;
   }
   static \u0275fac = function LayoutComponent_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _LayoutComponent)(\u0275\u0275directiveInject(TripService), \u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(ChangeDetectorRef));
+    return new (__ngFactoryType__ || _LayoutComponent)(\u0275\u0275directiveInject(TripService), \u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(VehicleLiveService), \u0275\u0275directiveInject(ChangeDetectorRef));
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _LayoutComponent, selectors: [["app-layout"]], viewQuery: function LayoutComponent_Query(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275viewQuery(_c0, 5)(_c1, 5)(_c2, 5);
+      \u0275\u0275viewQuery(_c0, 5)(_c1, 5)(_c2, 5)(CardWidget, 5);
     }
     if (rf & 2) {
       let _t;
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.vehicleAutocompleteRef = _t.first);
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.telemetryAutocompleteRef = _t.first);
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.personAutocompleteRef = _t.first);
+      \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.cardWidget = _t.first);
     }
   }, hostBindings: function LayoutComponent_HostBindings(rf, ctx) {
     if (rf & 1) {
@@ -95184,7 +98286,7 @@ var LayoutComponent = class _LayoutComponent {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 79, vars: 33, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], [1, "container"], [1, "main"], [1, "header"], [1, "card"], [3, "trips", "vehicles", 4, "ngIf"], [3, "trips", 4, "ngIf"], ["class", "chart-placeholder", 4, "ngIf"], [1, "view-toggle"], [3, "click"], [1, "list"], ["class", "empty-hint", 4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [1, "sidebar"], [1, "filter-title"], ["type", "datetime-local", 3, "ngModelChange", "ngModel"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue", 4, "ngFor", "ngForOf"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [3, "trips", "vehicles"], [3, "trips"], [1, "chart-placeholder"], [1, "empty-hint"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 4, "ngIf"], [1, "details"], [1, "details-full"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], [3, "value"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"], [3, "ngValue"]], template: function LayoutComponent_Template(rf, ctx) {
+  }, inputs: { presetVehicleId: "presetVehicleId", presetPersonId: "presetPersonId", presetTelemetryUnitId: "presetTelemetryUnitId" }, outputs: { presetVehicleIdChange: "presetVehicleIdChange", presetPersonIdChange: "presetPersonIdChange", presetTelemetryUnitIdChange: "presetTelemetryUnitIdChange" }, decls: 81, vars: 34, consts: [["vehicleAutocomplete", ""], ["telemetryAutocomplete", ""], ["personAutocomplete", ""], [1, "container"], [1, "main"], [1, "header"], [1, "card"], [3, "trips", "vehicles", 4, "ngIf"], [3, "trips", 4, "ngIf"], ["class", "chart-placeholder", 4, "ngIf"], [1, "card-actions"], ["type", "button", "class", "recenter-btn", "title", "Karte zentrieren", 3, "click", 4, "ngIf"], [1, "view-toggle"], [3, "click"], [1, "list"], ["class", "empty-hint", 4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [1, "sidebar"], [1, "filter-title"], ["type", "datetime-local", 3, "ngModelChange", "ngModel"], [1, "autocomplete"], [1, "label-row"], ["type", "button", 1, "advanced-btn", 3, "click"], [1, "search-row"], [1, "search-wrapper"], ["type", "text", "placeholder", "Fahrzeug suchen...", 3, "ngModelChange", "focus", "ngModel"], ["class", "options", 4, "ngIf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], ["class", "limit-hint", 4, "ngIf"], ["class", "advanced-filter", 4, "ngIf"], ["type", "text", "placeholder", "Einheit suchen...", 3, "ngModelChange", "focus", "ngModel"], ["type", "text", "placeholder", "Person suchen...", 3, "ngModelChange", "focus", "ngModel"], [3, "ngModelChange", "ngModel"], [3, "ngValue", 4, "ngFor", "ngForOf"], [1, "filter-actions"], [1, "apply-btn", 3, "click"], [1, "reset-btn", 3, "click"], [3, "trips", "vehicles"], [3, "trips"], [1, "chart-placeholder"], ["type", "button", "title", "Karte zentrieren", 1, "recenter-btn", 3, "click"], [1, "material-symbols-outlined"], [1, "empty-hint"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full"], ["class", "form-error", 4, "ngIf"], [1, "form-error"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown", "disabled", "title"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"], [1, "options"], ["class", "option", 3, "click", 4, "ngFor", "ngForOf"], [1, "option", 3, "click"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "limit-hint"], [1, "advanced-filter"], ["type", "text", "placeholder", "Marke", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Modell", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Farbe", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Fahrzeug-Identnr.", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [1, "year-range"], ["type", "number", "placeholder", "Baujahr von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "Baujahr bis", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS von", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "PS bis", 3, "ngModelChange", "ngModel"], [1, "field-label"], ["type", "date", "placeholder", "Erstzulassung von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Erstzulassung bis", 3, "ngModelChange", "ngModel"], [3, "value"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum von", 3, "ngModelChange", "ngModel"], ["type", "date", "placeholder", "Geburtsdatum bis", 3, "ngModelChange", "ngModel"], [3, "ngValue"]], template: function LayoutComponent_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
       \u0275\u0275elementStart(0, "div", 3)(1, "div", 4)(2, "h1", 5);
@@ -95192,152 +98294,154 @@ var LayoutComponent = class _LayoutComponent {
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(4, "div", 6);
       \u0275\u0275template(5, LayoutComponent_app_card_widget_5_Template, 1, 2, "app-card-widget", 7)(6, LayoutComponent_app_trip_chart_6_Template, 1, 1, "app-trip-chart", 8)(7, LayoutComponent_div_7_Template, 2, 0, "div", 9);
-      \u0275\u0275elementStart(8, "div", 10)(9, "button", 11);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_9_listener() {
+      \u0275\u0275elementStart(8, "div", 10);
+      \u0275\u0275template(9, LayoutComponent_button_9_Template, 3, 0, "button", 11);
+      \u0275\u0275elementStart(10, "div", 12)(11, "button", 13);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_11_listener() {
         return ctx.setViewMode("routen");
       });
-      \u0275\u0275text(10, "Routen");
+      \u0275\u0275text(12, "Routen");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "button", 11);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_11_listener() {
+      \u0275\u0275elementStart(13, "button", 13);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_13_listener() {
         return ctx.setViewMode("details");
       });
-      \u0275\u0275text(12, "Details");
-      \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(13, "div", 12);
-      \u0275\u0275template(14, LayoutComponent_div_14_Template, 2, 0, "div", 13)(15, LayoutComponent_div_15_Template, 5, 6, "div", 14);
+      \u0275\u0275text(14, "Details");
+      \u0275\u0275elementEnd()()()();
+      \u0275\u0275elementStart(15, "div", 14);
+      \u0275\u0275template(16, LayoutComponent_div_16_Template, 2, 0, "div", 15)(17, LayoutComponent_div_17_Template, 6, 7, "div", 16);
       \u0275\u0275elementEnd();
-      \u0275\u0275template(16, LayoutComponent_div_16_Template, 8, 3, "div", 15);
+      \u0275\u0275template(18, LayoutComponent_div_18_Template, 8, 3, "div", 17);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(17, "div", 16)(18, "div", 17);
-      \u0275\u0275text(19, "Filter");
+      \u0275\u0275elementStart(19, "div", 18)(20, "div", 19);
+      \u0275\u0275text(21, "Filter");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(20, "label");
-      \u0275\u0275text(21, " Start (Datum & Uhrzeit) ");
-      \u0275\u0275elementStart(22, "input", 18);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_22_listener($event) {
+      \u0275\u0275elementStart(22, "label");
+      \u0275\u0275text(23, " Start (Datum & Uhrzeit) ");
+      \u0275\u0275elementStart(24, "input", 20);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_24_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.filterStart, $event) || (ctx.filterStart = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(23, "label");
-      \u0275\u0275text(24, " Stopp (Datum & Uhrzeit) ");
-      \u0275\u0275elementStart(25, "input", 18);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_25_listener($event) {
+      \u0275\u0275elementStart(25, "label");
+      \u0275\u0275text(26, " Stopp (Datum & Uhrzeit) ");
+      \u0275\u0275elementStart(27, "input", 20);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_27_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.filterStop, $event) || (ctx.filterStop = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(26, "div", 19, 0)(28, "div", 20)(29, "span");
-      \u0275\u0275text(30, "Fahrzeug");
+      \u0275\u0275elementStart(28, "div", 21, 0)(30, "div", 22)(31, "span");
+      \u0275\u0275text(32, "Fahrzeug");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(31, "button", 21);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_31_listener() {
+      \u0275\u0275elementStart(33, "button", 23);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_33_listener() {
         return ctx.toggleAdvancedVehicleFilter();
       });
-      \u0275\u0275text(32);
+      \u0275\u0275text(34);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(33, "div", 22)(34, "div", 23)(35, "input", 24);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_35_listener($event) {
+      \u0275\u0275elementStart(35, "div", 24)(36, "div", 25)(37, "input", 26);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_37_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.vehicleSearch, $event) || (ctx.vehicleSearch = $event);
         return \u0275\u0275resetView($event);
       });
-      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_35_listener() {
+      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_37_listener() {
         return ctx.onVehicleSearchChange();
-      })("focus", function LayoutComponent_Template_input_focus_35_listener() {
+      })("focus", function LayoutComponent_Template_input_focus_37_listener() {
         return ctx.showVehicleOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(36, LayoutComponent_div_36_Template, 2, 1, "div", 25);
+      \u0275\u0275template(38, LayoutComponent_div_38_Template, 2, 1, "div", 27);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(37, "button", 26);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_37_listener() {
+      \u0275\u0275elementStart(39, "button", 28);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_39_listener() {
         return ctx.addVehicleFilter();
       });
-      \u0275\u0275text(38, " + ");
+      \u0275\u0275text(40, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(39, LayoutComponent_div_39_Template, 2, 1, "div", 27)(40, LayoutComponent_div_40_Template, 2, 1, "div", 28)(41, LayoutComponent_div_41_Template, 20, 12, "div", 29);
+      \u0275\u0275template(41, LayoutComponent_div_41_Template, 2, 1, "div", 29)(42, LayoutComponent_div_42_Template, 2, 1, "div", 30)(43, LayoutComponent_div_43_Template, 20, 12, "div", 31);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(42, "div", 19, 1)(44, "span");
-      \u0275\u0275text(45, "Telemetrie-Einheit");
+      \u0275\u0275elementStart(44, "div", 21, 1)(46, "span");
+      \u0275\u0275text(47, "Telemetrie-Einheit");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(46, "div", 22)(47, "div", 23)(48, "input", 30);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_48_listener($event) {
+      \u0275\u0275elementStart(48, "div", 24)(49, "div", 25)(50, "input", 32);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_50_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.telemetrySearch, $event) || (ctx.telemetrySearch = $event);
         return \u0275\u0275resetView($event);
       });
-      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_48_listener() {
+      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_50_listener() {
         return ctx.onTelemetrySearchChange();
-      })("focus", function LayoutComponent_Template_input_focus_48_listener() {
+      })("focus", function LayoutComponent_Template_input_focus_50_listener() {
         return ctx.showTelemetryOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(49, LayoutComponent_div_49_Template, 2, 1, "div", 25);
+      \u0275\u0275template(51, LayoutComponent_div_51_Template, 2, 1, "div", 27);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(50, "button", 26);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_50_listener() {
+      \u0275\u0275elementStart(52, "button", 28);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_52_listener() {
         return ctx.addTelemetryUnitFilter();
       });
-      \u0275\u0275text(51, " + ");
+      \u0275\u0275text(53, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(52, LayoutComponent_div_52_Template, 2, 1, "div", 27)(53, LayoutComponent_div_53_Template, 2, 1, "div", 28);
+      \u0275\u0275template(54, LayoutComponent_div_54_Template, 2, 1, "div", 29)(55, LayoutComponent_div_55_Template, 2, 1, "div", 30);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(54, "div", 19, 2)(56, "div", 20)(57, "span");
-      \u0275\u0275text(58, "Person");
+      \u0275\u0275elementStart(56, "div", 21, 2)(58, "div", 22)(59, "span");
+      \u0275\u0275text(60, "Person");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(59, "button", 21);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_59_listener() {
+      \u0275\u0275elementStart(61, "button", 23);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_61_listener() {
         return ctx.toggleAdvancedPersonFilter();
       });
-      \u0275\u0275text(60);
+      \u0275\u0275text(62);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(61, "div", 22)(62, "div", 23)(63, "input", 31);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_63_listener($event) {
+      \u0275\u0275elementStart(63, "div", 24)(64, "div", 25)(65, "input", 33);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_65_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.personSearch, $event) || (ctx.personSearch = $event);
         return \u0275\u0275resetView($event);
       });
-      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_63_listener() {
+      \u0275\u0275listener("ngModelChange", function LayoutComponent_Template_input_ngModelChange_65_listener() {
         return ctx.onPersonSearchChange();
-      })("focus", function LayoutComponent_Template_input_focus_63_listener() {
+      })("focus", function LayoutComponent_Template_input_focus_65_listener() {
         return ctx.showPersonOptions = true;
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(64, LayoutComponent_div_64_Template, 2, 1, "div", 25);
+      \u0275\u0275template(66, LayoutComponent_div_66_Template, 2, 1, "div", 27);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(65, "button", 26);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_65_listener() {
+      \u0275\u0275elementStart(67, "button", 28);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_67_listener() {
         return ctx.addPersonFilter();
       });
-      \u0275\u0275text(66, " + ");
+      \u0275\u0275text(68, " + ");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(67, LayoutComponent_div_67_Template, 2, 1, "div", 27)(68, LayoutComponent_div_68_Template, 2, 1, "div", 28)(69, LayoutComponent_div_69_Template, 8, 4, "div", 29);
+      \u0275\u0275template(69, LayoutComponent_div_69_Template, 2, 1, "div", 29)(70, LayoutComponent_div_70_Template, 2, 1, "div", 30)(71, LayoutComponent_div_71_Template, 8, 4, "div", 31);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(70, "label");
-      \u0275\u0275text(71, " Datenpunkt-Rate ");
-      \u0275\u0275elementStart(72, "select", 32);
-      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_select_ngModelChange_72_listener($event) {
+      \u0275\u0275elementStart(72, "label");
+      \u0275\u0275text(73, " Datenpunkt-Rate ");
+      \u0275\u0275elementStart(74, "select", 34);
+      \u0275\u0275twoWayListener("ngModelChange", function LayoutComponent_Template_select_ngModelChange_74_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.sampleIntervalSeconds, $event) || (ctx.sampleIntervalSeconds = $event);
         return \u0275\u0275resetView($event);
       });
-      \u0275\u0275template(73, LayoutComponent_option_73_Template, 2, 2, "option", 33);
+      \u0275\u0275template(75, LayoutComponent_option_75_Template, 2, 2, "option", 35);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(74, "div", 34)(75, "button", 35);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_75_listener() {
+      \u0275\u0275elementStart(76, "div", 36)(77, "button", 37);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_77_listener() {
         return ctx.applyFilters();
       });
-      \u0275\u0275text(76, "Anwenden");
+      \u0275\u0275text(78, "Anwenden");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(77, "button", 36);
-      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_77_listener() {
+      \u0275\u0275elementStart(79, "button", 38);
+      \u0275\u0275listener("click", function LayoutComponent_Template_button_click_79_listener() {
         return ctx.resetFilters();
       });
-      \u0275\u0275text(78, "Zur\xFCcksetzen");
+      \u0275\u0275text(80, "Zur\xFCcksetzen");
       \u0275\u0275elementEnd()()()();
     }
     if (rf & 2) {
@@ -95347,6 +98451,8 @@ var LayoutComponent = class _LayoutComponent {
       \u0275\u0275property("ngIf", ctx.viewMode === "details" && ctx.selectedTrip);
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.viewMode === "details" && !ctx.selectedTrip);
+      \u0275\u0275advance(2);
+      \u0275\u0275property("ngIf", ctx.viewMode === "routen");
       \u0275\u0275advance(2);
       \u0275\u0275classProp("active", ctx.viewMode === "routen");
       \u0275\u0275advance(2);
@@ -95404,7 +98510,7 @@ var LayoutComponent = class _LayoutComponent {
       \u0275\u0275advance();
       \u0275\u0275property("ngForOf", ctx.sampleIntervals);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, CardWidget, TripChart], styles: ["\n\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  width: 260px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 12px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  padding: 4px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  padding: 8px 18px;\n  border-radius: 6px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%]   button.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .chart-placeholder[_ngcontent-%COMP%] {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: var(--color-text-muted);\n  padding: 40px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .empty-hint[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 150px;\n  border-color: var(--color-border-strong);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n/*# sourceMappingURL=fahrten.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, CardWidget, TripChart, DatePipe], styles: ["\n\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n  gap: 2vw;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  width: 18vw;\n  min-width: 272px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n  min-width: max-content;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n  white-space: nowrap;\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 12px;\n  width: 50vw;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .card-actions[_ngcontent-%COMP%] {\n  position: relative;\n  width: 100%;\n  display: flex;\n  justify-content: center;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .recenter-btn[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 0;\n  top: 50%;\n  transform: translateY(-50%);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 36px;\n  height: 36px;\n  padding: 0;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .recenter-btn[_ngcontent-%COMP%]   .material-symbols-outlined[_ngcontent-%COMP%] {\n  font-size: 20px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .recenter-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  padding: 4px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  padding: 8px 18px;\n  border-radius: 6px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .view-toggle[_ngcontent-%COMP%]   button.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]   .chart-placeholder[_ngcontent-%COMP%] {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: var(--color-text-muted);\n  padding: 40px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 50vw;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .empty-hint[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: flex-start;\n  cursor: default;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:disabled:hover {\n  background: var(--color-bg-surface-alt);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 200px;\n  padding-bottom: 60px;\n  border-color: var(--color-border-strong);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n/*# sourceMappingURL=fahrten.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(LayoutComponent, [{
@@ -95424,9 +98530,19 @@ var LayoutComponent = class _LayoutComponent {
         W\xE4hle eine Fahrt aus der Liste aus, um die Details zu sehen.
       </div>
 
-      <div class="view-toggle">
-        <button [class.active]="viewMode === 'routen'" (click)="setViewMode('routen')">Routen</button>
-        <button [class.active]="viewMode === 'details'" (click)="setViewMode('details')">Details</button>
+      <div class="card-actions">
+        <button type="button"
+                class="recenter-btn"
+                *ngIf="viewMode === 'routen'"
+                title="Karte zentrieren"
+                (click)="recenterMap()">
+          <span class="material-symbols-outlined">my_location</span>
+        </button>
+
+        <div class="view-toggle">
+          <button [class.active]="viewMode === 'routen'" (click)="setViewMode('routen')">Routen</button>
+          <button [class.active]="viewMode === 'details'" (click)="setViewMode('details')">Details</button>
+        </div>
       </div>
     </div>
 
@@ -95448,10 +98564,24 @@ var LayoutComponent = class _LayoutComponent {
         </div>
 
         <div class="details-full" *ngIf="selectedIndex === i">
-          <div><span>Fahrzeug:</span> {{ trip.vehicleId }}</div>
+          <div><span>Fahrzeug:</span> {{ vehicleLabel(trip.vehicleId) }}</div>
           <div><span>Telemetrie-Einheit:</span> {{ trip.telemetryUnitId }}</div>
-          <div><span>Fahrer:</span> {{ trip.driverId }}</div>
+          <div><span>Fahrer:</span> {{ driverLabel(trip.driverId) }}</div>
+          <div><span>Start:</span> {{ trip.start | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div><span>Ende:</span> {{ trip.end ? (trip.end | date:'dd.MM.yyyy HH:mm') : '-' }}</div>
           <div><span>Datenpunkte:</span> {{ trip.points.length }}</div>
+
+          <div class="form-error" *ngIf="deleteError">{{ deleteError }}</div>
+        </div>
+
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  [disabled]="!trip.end"
+                  [title]="!trip.end ? 'Laufende Fahrten k\xF6nnen nicht gel\xF6scht werden.' : ''"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, trip)">
+            {{ deleteConfirmIndex === i ? 'Wirklich L\xF6schen?' : 'L\xF6schen' }}
+          </button>
         </div>
 
       </div>
@@ -95678,8 +98808,20 @@ var LayoutComponent = class _LayoutComponent {
   </div>
 
 </div>
-`, styles: ["/* src/app/widgets/fahrten/fahrten.component.scss */\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .sidebar {\n  width: 260px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container .sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container .sidebar label,\n.container .sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.container .sidebar .autocomplete {\n  position: relative;\n}\n.container .sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container .sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container .sidebar .autocomplete .advanced-btn:hover {\n  color: var(--color-text-primary);\n}\n.container .sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container .sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container .sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.container .sidebar .autocomplete .add-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container .sidebar .autocomplete .add-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.container .sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container .sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container .sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: var(--color-text-primary);\n}\n.container .sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.container .sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.container .sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.container .sidebar .autocomplete .options .option:hover {\n  background: var(--color-border);\n}\n.container .sidebar input,\n.container .sidebar select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container .sidebar input:focus,\n.container .sidebar select:focus {\n  border-color: var(--color-accent);\n}\n.container .sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.container .sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .sidebar .filter-actions .apply-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container .sidebar .filter-actions .apply-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.container .sidebar .filter-actions .reset-btn {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.container .sidebar .filter-actions .reset-btn:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 12px;\n}\n.container .main .card .view-toggle {\n  display: flex;\n  gap: 8px;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  padding: 4px;\n}\n.container .main .card .view-toggle button {\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  padding: 8px 18px;\n  border-radius: 6px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.container .main .card .view-toggle button:hover {\n  color: var(--color-text-primary);\n}\n.container .main .card .view-toggle button.active {\n  background: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container .main .card .chart-placeholder {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: var(--color-text-muted);\n  padding: 40px;\n}\n.container .main .list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n}\n.container .main .list .empty-hint {\n  color: var(--color-text-muted);\n}\n.container .main .list .box {\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.container .main .list .box .title {\n  font-weight: bold;\n}\n.container .main .list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container .main .list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.container .main .list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container .main .list .box.active {\n  min-height: 150px;\n  border-color: var(--color-border-strong);\n}\n.container .main .pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n}\n.container .main .pagination .page-arrow,\n.container .main .pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.container .main .pagination .page-arrow:hover,\n.container .main .pagination .page-number:hover {\n  background: var(--color-border);\n}\n.container .main .pagination .page-arrow:disabled,\n.container .main .pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.container .main .pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.header {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n/*# sourceMappingURL=fahrten.component.css.map */\n"] }]
-  }], () => [{ type: TripService }, { type: VehicleService }, { type: TelemetryUnitService }, { type: PersonService }, { type: ChangeDetectorRef }], { vehicleAutocompleteRef: [{
+`, styles: ["/* src/app/widgets/fahrten/fahrten.component.scss */\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n  gap: 2vw;\n}\n.container .sidebar {\n  width: 18vw;\n  min-width: 272px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.container .sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n  margin-bottom: 4px;\n}\n.container .sidebar label,\n.container .sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.container .sidebar .autocomplete {\n  position: relative;\n}\n.container .sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.container .sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.container .sidebar .autocomplete .advanced-btn:hover {\n  color: var(--color-text-primary);\n}\n.container .sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.container .sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.container .sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.container .sidebar .autocomplete .add-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.container .sidebar .autocomplete .add-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.container .sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container .sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.container .sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.container .sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: var(--color-text-primary);\n}\n.container .sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.container .sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.container .sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.container .sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.container .sidebar .autocomplete .options .option:hover {\n  background: var(--color-border);\n}\n.container .sidebar input,\n.container .sidebar select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container .sidebar input:focus,\n.container .sidebar select:focus {\n  border-color: var(--color-accent);\n}\n.container .sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n  min-width: max-content;\n}\n.container .sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n  white-space: nowrap;\n}\n.container .sidebar .filter-actions .apply-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container .sidebar .filter-actions .apply-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.container .sidebar .filter-actions .reset-btn {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.container .sidebar .filter-actions .reset-btn:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.container .main {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 12px;\n  width: 50vw;\n}\n.container .main .card .card-actions {\n  position: relative;\n  width: 100%;\n  display: flex;\n  justify-content: center;\n}\n.container .main .card .recenter-btn {\n  position: absolute;\n  left: 0;\n  top: 50%;\n  transform: translateY(-50%);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 36px;\n  height: 36px;\n  padding: 0;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.container .main .card .recenter-btn .material-symbols-outlined {\n  font-size: 20px;\n}\n.container .main .card .recenter-btn:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.container .main .card .view-toggle {\n  display: flex;\n  gap: 8px;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  padding: 4px;\n}\n.container .main .card .view-toggle button {\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  padding: 8px 18px;\n  border-radius: 6px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.container .main .card .view-toggle button:hover {\n  color: var(--color-text-primary);\n}\n.container .main .card .view-toggle button.active {\n  background: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container .main .card .chart-placeholder {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  color: var(--color-text-muted);\n  padding: 40px;\n}\n.container .main .list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 50vw;\n}\n.container .main .list .empty-hint {\n  color: var(--color-text-muted);\n}\n.container .main .list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.container .main .list .box .title {\n  font-weight: bold;\n}\n.container .main .list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container .main .list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.container .main .list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container .main .list .box .form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.container .main .list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: flex-start;\n  cursor: default;\n}\n.container .main .list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .main .list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.container .main .list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.container .main .list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.container .main .list .box .actions .action-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.container .main .list .box .actions .action-btn:disabled:hover {\n  background: var(--color-bg-surface-alt);\n}\n.container .main .list .box.active {\n  min-height: 200px;\n  padding-bottom: 60px;\n  border-color: var(--color-border-strong);\n}\n.container .main .pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.container .main .pagination .page-arrow,\n.container .main .pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.container .main .pagination .page-arrow:hover,\n.container .main .pagination .page-number:hover {\n  background: var(--color-border);\n}\n.container .main .pagination .page-arrow:disabled,\n.container .main .pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.container .main .pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.header {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n/*# sourceMappingURL=fahrten.component.css.map */\n"] }]
+  }], () => [{ type: TripService }, { type: VehicleService }, { type: TelemetryUnitService }, { type: PersonService }, { type: VehicleLiveService }, { type: ChangeDetectorRef }], { presetVehicleId: [{
+    type: Input
+  }], presetVehicleIdChange: [{
+    type: Output
+  }], presetPersonId: [{
+    type: Input
+  }], presetPersonIdChange: [{
+    type: Output
+  }], presetTelemetryUnitId: [{
+    type: Input
+  }], presetTelemetryUnitIdChange: [{
+    type: Output
+  }], vehicleAutocompleteRef: [{
     type: ViewChild,
     args: ["vehicleAutocomplete"]
   }], telemetryAutocompleteRef: [{
@@ -95688,13 +98830,16 @@ var LayoutComponent = class _LayoutComponent {
   }], personAutocompleteRef: [{
     type: ViewChild,
     args: ["personAutocomplete"]
+  }], cardWidget: [{
+    type: ViewChild,
+    args: [CardWidget]
   }], onDocumentClick: [{
     type: HostListener,
     args: ["document:click", ["$event"]]
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(LayoutComponent, { className: "LayoutComponent", filePath: "src/app/widgets/fahrten/fahrten.component.ts", lineNumber: 23 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(LayoutComponent, { className: "LayoutComponent", filePath: "src/app/widgets/fahrten/fahrten.component.ts", lineNumber: 25 });
 })();
 
 // src/app/widgets/filter-sidebar/filter-sidebar.component.ts
@@ -96499,7 +99644,7 @@ var FilterSidebar = class _FilterSidebar {
       \u0275\u0275advance(4);
       \u0275\u0275classProp("active", ctx.hasActiveFilters);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.sidebar[_ngcontent-%COMP%] {\n  width: 260px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-title-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 28px;\n  height: 28px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  color: var(--color-text-muted);\n  cursor: pointer;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn[_ngcontent-%COMP%]   .material-symbols-outlined[_ngcontent-%COMP%] {\n  font-size: 18px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn.active[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn.active[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n/*# sourceMappingURL=filter-sidebar.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.sidebar[_ngcontent-%COMP%] {\n  width: 18vw;\n  min-width: 272px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-title-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  font-size: 16px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 28px;\n  height: 28px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  color: var(--color-text-muted);\n  cursor: pointer;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn[_ngcontent-%COMP%]   .material-symbols-outlined[_ngcontent-%COMP%] {\n  font-size: 18px;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-mode-toggle[_ngcontent-%COMP%]   .mode-btn.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%] {\n  position: relative;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .label-row[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%] {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .search-wrapper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .limit-hint[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   .year-range[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 0;\n  flex: 1;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.sidebar[_ngcontent-%COMP%]   .autocomplete[_ngcontent-%COMP%]   .options[_ngcontent-%COMP%]   .option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.sidebar[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.sidebar[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n  min-width: max-content;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n  white-space: nowrap;\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .apply-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn.active[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.sidebar[_ngcontent-%COMP%]   .filter-actions[_ngcontent-%COMP%]   .reset-btn.active[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n/*# sourceMappingURL=filter-sidebar.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FilterSidebar, [{
@@ -96695,7 +99840,7 @@ var FilterSidebar = class _FilterSidebar {
     <button class="reset-btn" [class.active]="hasActiveFilters" (click)="resetFilters()">Zur\xFCcksetzen</button>
   </div>
 </div>
-`, styles: ["/* src/app/widgets/filter-sidebar/filter-sidebar.component.scss */\n.sidebar {\n  width: 260px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.sidebar .filter-title-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 4px;\n}\n.sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n}\n.sidebar .filter-mode-toggle {\n  display: flex;\n  gap: 4px;\n}\n.sidebar .filter-mode-toggle .mode-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 28px;\n  height: 28px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  color: var(--color-text-muted);\n  cursor: pointer;\n}\n.sidebar .filter-mode-toggle .mode-btn .material-symbols-outlined {\n  font-size: 18px;\n}\n.sidebar .filter-mode-toggle .mode-btn:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.sidebar .filter-mode-toggle .mode-btn.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar label,\n.sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.sidebar .autocomplete {\n  position: relative;\n}\n.sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.sidebar .autocomplete .advanced-btn:hover {\n  color: var(--color-text-primary);\n}\n.sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.sidebar .autocomplete .add-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.sidebar .autocomplete .add-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: var(--color-text-primary);\n}\n.sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.sidebar .autocomplete .options .option:hover {\n  background: var(--color-border);\n}\n.sidebar input,\n.sidebar select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.sidebar input:focus,\n.sidebar select:focus {\n  border-color: var(--color-accent);\n}\n.sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n}\n.sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.sidebar .filter-actions .apply-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar .filter-actions .apply-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar .filter-actions .reset-btn {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.sidebar .filter-actions .reset-btn:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.sidebar .filter-actions .reset-btn.active {\n  background-color: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.sidebar .filter-actions .reset-btn.active:hover {\n  background-color: var(--color-accent-hover);\n}\n/*# sourceMappingURL=filter-sidebar.component.css.map */\n"] }]
+`, styles: ["/* src/app/widgets/filter-sidebar/filter-sidebar.component.scss */\n.sidebar {\n  width: 18vw;\n  min-width: 272px;\n  min-height: 600px;\n  background: var(--color-bg-surface);\n  color: var(--color-text-primary);\n  padding: 20px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  margin-top: 103px;\n  display: flex;\n  flex-direction: column;\n  gap: 16px;\n}\n.sidebar .filter-title-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 4px;\n}\n.sidebar .filter-title {\n  font-weight: bold;\n  font-size: 16px;\n}\n.sidebar .filter-mode-toggle {\n  display: flex;\n  gap: 4px;\n}\n.sidebar .filter-mode-toggle .mode-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 28px;\n  height: 28px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  color: var(--color-text-muted);\n  cursor: pointer;\n}\n.sidebar .filter-mode-toggle .mode-btn .material-symbols-outlined {\n  font-size: 18px;\n}\n.sidebar .filter-mode-toggle .mode-btn:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.sidebar .filter-mode-toggle .mode-btn.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar label,\n.sidebar .autocomplete {\n  display: flex;\n  flex-direction: column;\n  font-size: 13px;\n  color: var(--color-text-label);\n  gap: 6px;\n}\n.sidebar .autocomplete {\n  position: relative;\n}\n.sidebar .autocomplete .label-row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.sidebar .autocomplete .advanced-btn {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n}\n.sidebar .autocomplete .advanced-btn:hover {\n  color: var(--color-text-primary);\n}\n.sidebar .autocomplete .search-row {\n  display: flex;\n  gap: 8px;\n  align-items: flex-start;\n}\n.sidebar .autocomplete .search-wrapper {\n  position: relative;\n  flex: 1;\n  min-width: 0;\n}\n.sidebar .autocomplete .search-wrapper input {\n  width: 100%;\n}\n.sidebar .autocomplete .add-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.sidebar .autocomplete .add-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar .autocomplete .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.sidebar .autocomplete .chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.sidebar .autocomplete .chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.sidebar .autocomplete .chips .chip .chip-remove {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.sidebar .autocomplete .chips .chip .chip-remove:hover {\n  color: var(--color-text-primary);\n}\n.sidebar .autocomplete .limit-hint {\n  font-size: 12px;\n  color: var(--color-danger-hint);\n  margin-top: 4px;\n}\n.sidebar .autocomplete .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.sidebar .autocomplete .advanced-filter .field-label {\n  font-size: 12px;\n  color: var(--color-text-muted);\n  margin-top: 4px;\n}\n.sidebar .autocomplete .advanced-filter .year-range {\n  display: flex;\n  gap: 8px;\n}\n.sidebar .autocomplete .advanced-filter .year-range input {\n  width: 0;\n  flex: 1;\n}\n.sidebar .autocomplete .options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.sidebar .autocomplete .options .option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n}\n.sidebar .autocomplete .options .option:hover {\n  background: var(--color-border);\n}\n.sidebar input,\n.sidebar select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.sidebar input:focus,\n.sidebar select:focus {\n  border-color: var(--color-accent);\n}\n.sidebar .filter-actions {\n  display: flex;\n  gap: 8px;\n  margin-top: auto;\n  padding-top: 16px;\n  min-width: max-content;\n}\n.sidebar .filter-actions button {\n  flex: 1;\n  border: none;\n  border-radius: 6px;\n  padding: 10px 14px;\n  font-weight: 600;\n  cursor: pointer;\n  white-space: nowrap;\n}\n.sidebar .filter-actions .apply-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.sidebar .filter-actions .apply-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.sidebar .filter-actions .reset-btn {\n  background-color: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n}\n.sidebar .filter-actions .reset-btn:hover {\n  background-color: var(--color-bg-surface-hover);\n}\n.sidebar .filter-actions .reset-btn.active {\n  background-color: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.sidebar .filter-actions .reset-btn.active:hover {\n  background-color: var(--color-accent-hover);\n}\n/*# sourceMappingURL=filter-sidebar.component.css.map */\n"] }]
   }], null, { vehicles: [{
     type: Input
   }], telemetryUnitIds: [{
@@ -96725,9 +99870,9 @@ var FilterSidebar = class _FilterSidebar {
 })();
 
 // src/app/widgets/telemetry-units/telemetry-units.component.ts
-function TelemetryUnits_option_11_Template(rf, ctx) {
+function TelemetryUnits_option_10_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 16);
+    \u0275\u0275elementStart(0, "option", 18);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -96738,16 +99883,16 @@ function TelemetryUnits_option_11_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", unit_r1.id, " ");
   }
 }
-function TelemetryUnits_div_16_Template(rf, ctx) {
+function TelemetryUnits_div_17_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
     \u0275\u0275text(1, " Keine Datenerfassungseinheiten registriert. ");
     \u0275\u0275elementEnd();
   }
 }
-function TelemetryUnits_div_17_div_3_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 22)(1, "div");
+    \u0275\u0275elementStart(0, "div", 24)(1, "div");
     \u0275\u0275text(2);
     \u0275\u0275elementEnd()();
   }
@@ -96757,11 +99902,11 @@ function TelemetryUnits_div_17_div_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Fahrzeug-Identnr.: ", item_r5.vehicleId || "nicht verbunden", " ");
   }
 }
-function TelemetryUnits_div_17_div_4_ng_container_4_div_4_div_3_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_4_ng_container_4_div_4_div_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 30);
-    \u0275\u0275listener("mousedown", function TelemetryUnits_div_17_div_4_ng_container_4_div_4_div_3_Template_div_mousedown_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 32);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_4_ng_container_4_div_4_div_3_Template_div_mousedown_0_listener($event) {
       const vehicle_r9 = \u0275\u0275restoreView(_r8).$implicit;
       const item_r5 = \u0275\u0275nextContext(4).$implicit;
       const ctx_r3 = \u0275\u0275nextContext();
@@ -96780,11 +99925,11 @@ function TelemetryUnits_div_17_div_4_ng_container_4_div_4_div_3_Template(rf, ctx
     \u0275\u0275textInterpolate3(" ", vehicle_r9.Id, " \u2014 ", vehicle_r9.brand, " ", vehicle_r9.modelName, " ");
   }
 }
-function TelemetryUnits_div_17_div_4_ng_container_4_div_4_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_4_ng_container_4_div_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 29)(1, "div", 30);
-    \u0275\u0275listener("mousedown", function TelemetryUnits_div_17_div_4_ng_container_4_div_4_Template_div_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(0, "div", 31)(1, "div", 32);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_4_ng_container_4_div_4_Template_div_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r7);
       const item_r5 = \u0275\u0275nextContext(3).$implicit;
       const ctx_r3 = \u0275\u0275nextContext();
@@ -96793,7 +99938,7 @@ function TelemetryUnits_div_17_div_4_ng_container_4_div_4_Template(rf, ctx) {
     });
     \u0275\u0275text(2, "nicht verbunden");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, TelemetryUnits_div_17_div_4_ng_container_4_div_4_div_3_Template, 2, 5, "div", 31);
+    \u0275\u0275template(3, TelemetryUnits_div_18_div_4_ng_container_4_div_4_div_3_Template, 2, 5, "div", 33);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96802,12 +99947,12 @@ function TelemetryUnits_div_17_div_4_ng_container_4_div_4_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r3.vehicles);
   }
 }
-function TelemetryUnits_div_17_div_4_ng_container_4_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "div", 26)(2, "button", 27);
-    \u0275\u0275listener("mousedown", function TelemetryUnits_div_17_div_4_ng_container_4_Template_button_mousedown_2_listener($event) {
+    \u0275\u0275elementStart(1, "div", 28)(2, "button", 29);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_4_ng_container_4_Template_button_mousedown_2_listener($event) {
       \u0275\u0275restoreView(_r6);
       const i_r3 = \u0275\u0275nextContext(2).index;
       const ctx_r3 = \u0275\u0275nextContext();
@@ -96816,7 +99961,7 @@ function TelemetryUnits_div_17_div_4_ng_container_4_Template(rf, ctx) {
     });
     \u0275\u0275text(3);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, TelemetryUnits_div_17_div_4_ng_container_4_div_4_Template, 4, 1, "div", 28);
+    \u0275\u0275template(4, TelemetryUnits_div_18_div_4_ng_container_4_div_4_Template, 4, 1, "div", 30);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -96833,7 +99978,7 @@ function TelemetryUnits_div_17_div_4_ng_container_4_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r3.openVehicleDropdownIndex === i_r3);
   }
 }
-function TelemetryUnits_div_17_div_4_ng_template_5_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_4_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -96842,9 +99987,9 @@ function TelemetryUnits_div_17_div_4_ng_template_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate(item_r5.vehicleId || "nicht verbunden");
   }
 }
-function TelemetryUnits_div_17_div_4_div_7_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_4_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 32);
+    \u0275\u0275elementStart(0, "div", 34);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -96854,18 +99999,18 @@ function TelemetryUnits_div_17_div_4_div_7_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r3.editError);
   }
 }
-function TelemetryUnits_div_17_div_4_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 23);
-    \u0275\u0275listener("click", function TelemetryUnits_div_17_div_4_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 25);
+    \u0275\u0275listener("click", function TelemetryUnits_div_18_div_4_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
     \u0275\u0275elementStart(1, "div")(2, "span");
     \u0275\u0275text(3, "Fahrzeug-Identnr.:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, TelemetryUnits_div_17_div_4_ng_container_4_Template, 5, 4, "ng-container", 24)(5, TelemetryUnits_div_17_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(4, TelemetryUnits_div_18_div_4_ng_container_4_Template, 5, 4, "ng-container", 26)(5, TelemetryUnits_div_18_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(7, TelemetryUnits_div_17_div_4_div_7_Template, 2, 1, "div", 25);
+    \u0275\u0275template(7, TelemetryUnits_div_18_div_4_div_7_Template, 2, 1, "div", 27);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96878,19 +100023,19 @@ function TelemetryUnits_div_17_div_4_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r3.editError && ctx_r3.selectedIndex === i_r3);
   }
 }
-function TelemetryUnits_div_17_div_5_Template(rf, ctx) {
+function TelemetryUnits_div_18_div_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r12 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 33);
-    \u0275\u0275listener("click", function TelemetryUnits_div_17_div_5_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 35);
+    \u0275\u0275listener("click", function TelemetryUnits_div_18_div_5_Template_div_click_0_listener($event) {
       \u0275\u0275restoreView(_r12);
       const ctx_r3 = \u0275\u0275nextContext(2);
       return \u0275\u0275resetView(ctx_r3.onActionsClick($event));
-    })("mousedown", function TelemetryUnits_div_17_div_5_Template_div_mousedown_0_listener($event) {
+    })("mousedown", function TelemetryUnits_div_18_div_5_Template_div_mousedown_0_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(1, "button", 34);
-    \u0275\u0275listener("mousedown", function TelemetryUnits_div_17_div_5_Template_button_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(1, "button", 36);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_5_Template_button_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r12);
       const ctx_r9 = \u0275\u0275nextContext();
       const item_r5 = ctx_r9.$implicit;
@@ -96901,8 +100046,8 @@ function TelemetryUnits_div_17_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 35)(4, "button", 36);
-    \u0275\u0275listener("mousedown", function TelemetryUnits_div_17_div_5_Template_button_mousedown_4_listener($event) {
+    \u0275\u0275elementStart(3, "div", 37)(4, "button", 38);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_5_Template_button_mousedown_4_listener($event) {
       \u0275\u0275restoreView(_r12);
       const ctx_r3 = \u0275\u0275nextContext(2);
       ctx_r3.onActionMouseDown($event);
@@ -96910,8 +100055,8 @@ function TelemetryUnits_div_17_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(5, "Abbrechen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 36);
-    \u0275\u0275listener("mousedown", function TelemetryUnits_div_17_div_5_Template_button_mousedown_6_listener($event) {
+    \u0275\u0275elementStart(6, "button", 38);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_5_Template_button_mousedown_6_listener($event) {
       \u0275\u0275restoreView(_r12);
       const i_r3 = \u0275\u0275nextContext().index;
       const ctx_r3 = \u0275\u0275nextContext();
@@ -96919,6 +100064,16 @@ function TelemetryUnits_div_17_div_5_Template(rf, ctx) {
       return \u0275\u0275resetView(ctx_r3.toggleEdit(i_r3));
     });
     \u0275\u0275text(7);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(8, "button", 38);
+    \u0275\u0275listener("mousedown", function TelemetryUnits_div_18_div_5_Template_button_mousedown_8_listener($event) {
+      \u0275\u0275restoreView(_r12);
+      const item_r5 = \u0275\u0275nextContext().$implicit;
+      const ctx_r3 = \u0275\u0275nextContext();
+      ctx_r3.onActionMouseDown($event);
+      return \u0275\u0275resetView(ctx_r3.onShowTrips(item_r5));
+    });
+    \u0275\u0275text(9, "Fahrten");
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
@@ -96936,19 +100091,19 @@ function TelemetryUnits_div_17_div_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r3.editingIndex === i_r3 ? ctx_r3.isEditDirty(item_r5) ? "Speichern" : "Fertig" : "Bearbeiten", " ");
   }
 }
-function TelemetryUnits_div_17_Template(rf, ctx) {
+function TelemetryUnits_div_18_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 17);
-    \u0275\u0275listener("click", function TelemetryUnits_div_17_Template_div_click_0_listener() {
+    \u0275\u0275elementStart(0, "div", 19);
+    \u0275\u0275listener("click", function TelemetryUnits_div_18_Template_div_click_0_listener() {
       const i_r3 = \u0275\u0275restoreView(_r2).index;
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.selectItem(i_r3));
     });
-    \u0275\u0275elementStart(1, "div", 18);
+    \u0275\u0275elementStart(1, "div", 20);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, TelemetryUnits_div_17_div_3_Template, 3, 1, "div", 19)(4, TelemetryUnits_div_17_div_4_Template, 8, 3, "div", 20)(5, TelemetryUnits_div_17_div_5_Template, 8, 6, "div", 21);
+    \u0275\u0275template(3, TelemetryUnits_div_18_div_3_Template, 3, 1, "div", 21)(4, TelemetryUnits_div_18_div_4_Template, 8, 3, "div", 22)(5, TelemetryUnits_div_18_div_5_Template, 10, 6, "div", 23);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -96966,11 +100121,66 @@ function TelemetryUnits_div_17_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r3.selectedIndex === i_r3);
   }
 }
+function TelemetryUnits_div_19_button_4_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r14 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 42);
+    \u0275\u0275listener("click", function TelemetryUnits_div_19_button_4_Template_button_click_0_listener() {
+      const page_r15 = \u0275\u0275restoreView(_r14).$implicit;
+      const ctx_r3 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r3.goToPage(page_r15));
+    });
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const page_r15 = ctx.$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275classProp("active", page_r15 === ctx_r3.currentPage);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", page_r15, " ");
+  }
+}
+function TelemetryUnits_div_19_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r13 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 39)(1, "button", 40);
+    \u0275\u0275listener("click", function TelemetryUnits_div_19_Template_button_click_1_listener() {
+      \u0275\u0275restoreView(_r13);
+      const ctx_r3 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r3.prevPage());
+    });
+    \u0275\u0275elementStart(2, "span", 10);
+    \u0275\u0275text(3, "chevron_left");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275template(4, TelemetryUnits_div_19_button_4_Template, 2, 3, "button", 41);
+    \u0275\u0275elementStart(5, "button", 40);
+    \u0275\u0275listener("click", function TelemetryUnits_div_19_Template_button_click_5_listener() {
+      \u0275\u0275restoreView(_r13);
+      const ctx_r3 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r3.nextPage());
+    });
+    \u0275\u0275elementStart(6, "span", 10);
+    \u0275\u0275text(7, "chevron_right");
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("disabled", ctx_r3.currentPage === 1);
+    \u0275\u0275advance(3);
+    \u0275\u0275property("ngForOf", ctx_r3.pageNumbers);
+    \u0275\u0275advance();
+    \u0275\u0275property("disabled", ctx_r3.currentPage === ctx_r3.totalPages);
+  }
+}
 var TelemetryUnits = class _TelemetryUnits {
   service;
   vehicleService;
   personService;
+  vehicleLiveService;
   cdr;
+  showTrips = new EventEmitter();
   usb_connected_units = [];
   broadcastSub;
   registered_units = [];
@@ -96980,14 +100190,17 @@ var TelemetryUnits = class _TelemetryUnits {
   editingIndex = null;
   deleteConfirmIndex = null;
   selectedUnitId = null;
+  pageSize = 10;
+  currentPage = 1;
   editError = null;
   editSnapshot = null;
   appliedFilters = emptyAppliedFilters();
   openVehicleDropdownIndex = null;
-  constructor(service, vehicleService, personService, cdr) {
+  constructor(service, vehicleService, personService, vehicleLiveService, cdr) {
     this.service = service;
     this.vehicleService = vehicleService;
     this.personService = personService;
+    this.vehicleLiveService = vehicleLiveService;
     this.cdr = cdr;
   }
   onDocumentClick(event) {
@@ -97006,7 +100219,7 @@ var TelemetryUnits = class _TelemetryUnits {
   }
   ngOnInit() {
     this.loadAllUnits();
-    this.broadcastSub = this.service.pollConnectedUnits().subscribe((uuids) => {
+    this.broadcastSub = this.vehicleLiveService.usbUnitsChanged$.subscribe((uuids) => {
       this.usb_connected_units = uuids.map((id) => ({ id }));
       this.cdr.detectChanges();
     });
@@ -97093,8 +100306,36 @@ var TelemetryUnits = class _TelemetryUnits {
       return this.appliedFilters.mode === "union" ? results.some(Boolean) : results.every(Boolean);
     });
   }
+  get totalPages() {
+    return Math.max(1, Math.ceil(this.filteredUnits.length / this.pageSize));
+  }
+  get pageNumbers() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+  get pagedUnits() {
+    const start2 = (this.currentPage - 1) * this.pageSize;
+    return this.filteredUnits.slice(start2, start2 + this.pageSize);
+  }
+  prevPage() {
+    if (this.currentPage > 1)
+      this.currentPage--;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+  nextPage() {
+    if (this.currentPage < this.totalPages)
+      this.currentPage++;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+  goToPage(page) {
+    this.currentPage = page;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
   onFiltersApplied(filters) {
     this.appliedFilters = filters;
+    this.currentPage = 1;
     this.selectedIndex = null;
   }
   selectItem(index) {
@@ -97114,6 +100355,9 @@ var TelemetryUnits = class _TelemetryUnits {
   onActionMouseDown(event) {
     event.preventDefault();
   }
+  onShowTrips(item) {
+    this.showTrips.emit(item.id);
+  }
   onActionsClick(event) {
     event.stopPropagation();
     const target = event.target;
@@ -97128,7 +100372,7 @@ var TelemetryUnits = class _TelemetryUnits {
     }
     this.editingIndex = index;
     this.editError = null;
-    this.editSnapshot = __spreadValues({}, this.filteredUnits[index]);
+    this.editSnapshot = __spreadValues({}, this.pagedUnits[index]);
     this.deleteConfirmIndex = null;
   }
   isEditDirty(unit) {
@@ -97150,7 +100394,7 @@ var TelemetryUnits = class _TelemetryUnits {
     this.openVehicleDropdownIndex = null;
   }
   saveEdit(index) {
-    const unit = this.filteredUnits[index];
+    const unit = this.pagedUnits[index];
     this.editError = null;
     this.service.update(unit).subscribe({
       next: (updated) => {
@@ -97189,7 +100433,7 @@ var TelemetryUnits = class _TelemetryUnits {
     });
   }
   static \u0275fac = function TelemetryUnits_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TelemetryUnits)(\u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(ChangeDetectorRef));
+    return new (__ngFactoryType__ || _TelemetryUnits)(\u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(VehicleLiveService), \u0275\u0275directiveInject(ChangeDetectorRef));
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _TelemetryUnits, selectors: [["app-telemetry-units"]], hostBindings: function TelemetryUnits_HostBindings(rf, ctx) {
     if (rf & 1) {
@@ -97197,45 +100441,47 @@ var TelemetryUnits = class _TelemetryUnits {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 19, vars: 9, consts: [["vehicleView", ""], [1, "container"], [1, "main"], [1, "header"], [1, "toolbar"], [1, "create-btn", 3, "click", "disabled"], [1, "dropdown-wrapper"], [1, "dropdown", 3, "ngModelChange", "ngModel"], ["disabled", "", 3, "ngValue"], [3, "value", 4, "ngFor", "ngForOf"], [1, "refresh-btn", 3, "click"], [1, "material-symbols-outlined"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [3, "filtersApplied", "vehicles", "telemetryUnitIds", "persons"], [3, "value"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["class", "form-error", 4, "ngIf"], [1, "unit-select"], ["type", "button", 1, "unit-select-trigger", 3, "mousedown"], ["class", "unit-options", 4, "ngIf"], [1, "unit-options"], [1, "unit-option", 3, "mousedown"], ["class", "unit-option", 3, "disabled", "mousedown", 4, "ngFor", "ngForOf"], [1, "form-error"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"]], template: function TelemetryUnits_Template(rf, ctx) {
+  }, outputs: { showTrips: "showTrips" }, decls: 21, vars: 10, consts: [["vehicleView", ""], [1, "page"], [1, "header"], [1, "toolbar"], [1, "create-btn", 3, "click", "disabled"], [1, "dropdown-wrapper"], [1, "dropdown", 3, "ngModelChange", "ngModel"], ["disabled", "", 3, "ngValue"], [3, "value", 4, "ngFor", "ngForOf"], [1, "refresh-btn", 3, "click"], [1, "material-symbols-outlined"], [1, "container"], [1, "main"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], ["class", "pagination", 4, "ngIf"], [3, "filtersApplied", "vehicles", "telemetryUnitIds", "persons"], [3, "value"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["class", "form-error", 4, "ngIf"], [1, "unit-select"], ["type", "button", 1, "unit-select-trigger", 3, "mousedown"], ["class", "unit-options", 4, "ngIf"], [1, "unit-options"], [1, "unit-option", 3, "mousedown"], ["class", "unit-option", 3, "disabled", "mousedown", 4, "ngFor", "ngForOf"], [1, "form-error"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "page-number", 3, "click"]], template: function TelemetryUnits_Template(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275elementStart(0, "div", 1)(1, "div", 2)(2, "h1", 3);
-      \u0275\u0275text(3, "Datenerfassungseinheiten");
+      \u0275\u0275elementStart(0, "div", 1)(1, "h1", 2);
+      \u0275\u0275text(2, "Datenerfassungseinheiten");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(4, "div", 4)(5, "button", 5);
-      \u0275\u0275listener("click", function TelemetryUnits_Template_button_click_5_listener() {
+      \u0275\u0275elementStart(3, "div", 3)(4, "button", 4);
+      \u0275\u0275listener("click", function TelemetryUnits_Template_button_click_4_listener() {
         return ctx.createUnit();
       });
-      \u0275\u0275text(6, " Neu anlegen ");
+      \u0275\u0275text(5, " Neu anlegen ");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(7, "div", 6)(8, "select", 7);
-      \u0275\u0275twoWayListener("ngModelChange", function TelemetryUnits_Template_select_ngModelChange_8_listener($event) {
+      \u0275\u0275elementStart(6, "div", 5)(7, "select", 6);
+      \u0275\u0275twoWayListener("ngModelChange", function TelemetryUnits_Template_select_ngModelChange_7_listener($event) {
         \u0275\u0275twoWayBindingSet(ctx.selectedUnitId, $event) || (ctx.selectedUnitId = $event);
         return $event;
       });
-      \u0275\u0275elementStart(9, "option", 8);
-      \u0275\u0275text(10, " Verbundenes Ger\xE4t registrieren ");
+      \u0275\u0275elementStart(8, "option", 7);
+      \u0275\u0275text(9, " Verbundenes Ger\xE4t registrieren ");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(11, TelemetryUnits_option_11_Template, 2, 2, "option", 9);
+      \u0275\u0275template(10, TelemetryUnits_option_10_Template, 2, 2, "option", 8);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(12, "button", 10);
-      \u0275\u0275listener("click", function TelemetryUnits_Template_button_click_12_listener() {
+      \u0275\u0275elementStart(11, "button", 9);
+      \u0275\u0275listener("click", function TelemetryUnits_Template_button_click_11_listener() {
         return ctx.sendBroadcast();
       });
-      \u0275\u0275elementStart(13, "span", 11);
-      \u0275\u0275text(14, " refresh ");
+      \u0275\u0275elementStart(12, "span", 10);
+      \u0275\u0275text(13, " refresh ");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(15, "div", 12);
-      \u0275\u0275template(16, TelemetryUnits_div_16_Template, 2, 0, "div", 13)(17, TelemetryUnits_div_17_Template, 6, 6, "div", 14);
-      \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(18, "app-filter-sidebar", 15);
-      \u0275\u0275listener("filtersApplied", function TelemetryUnits_Template_app_filter_sidebar_filtersApplied_18_listener($event) {
+      \u0275\u0275elementStart(14, "div", 11)(15, "div", 12)(16, "div", 13);
+      \u0275\u0275template(17, TelemetryUnits_div_17_Template, 2, 0, "div", 14)(18, TelemetryUnits_div_18_Template, 6, 6, "div", 15);
+      \u0275\u0275elementEnd();
+      \u0275\u0275template(19, TelemetryUnits_div_19_Template, 8, 3, "div", 16);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(20, "app-filter-sidebar", 17);
+      \u0275\u0275listener("filtersApplied", function TelemetryUnits_Template_app_filter_sidebar_filtersApplied_20_listener($event) {
         return ctx.onFiltersApplied($event);
       });
-      \u0275\u0275elementEnd()();
+      \u0275\u0275elementEnd()()();
     }
     if (rf & 2) {
-      \u0275\u0275advance(5);
+      \u0275\u0275advance(4);
       \u0275\u0275property("disabled", !ctx.selectedUnitId);
       \u0275\u0275advance(3);
       \u0275\u0275twoWayProperty("ngModel", ctx.selectedUnitId);
@@ -97243,25 +100489,25 @@ var TelemetryUnits = class _TelemetryUnits {
       \u0275\u0275property("ngValue", null);
       \u0275\u0275advance(2);
       \u0275\u0275property("ngForOf", ctx.usb_connected_units);
-      \u0275\u0275advance(5);
+      \u0275\u0275advance(7);
       \u0275\u0275property("ngIf", ctx.filteredUnits.length === 0);
       \u0275\u0275advance();
-      \u0275\u0275property("ngForOf", ctx.filteredUnits);
+      \u0275\u0275property("ngForOf", ctx.pagedUnits);
+      \u0275\u0275advance();
+      \u0275\u0275property("ngIf", ctx.filteredUnits.length);
       \u0275\u0275advance();
       \u0275\u0275property("vehicles", ctx.vehicles)("telemetryUnitIds", ctx.telemetryUnitIds)("persons", ctx.persons);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, SelectControlValueAccessor, NgControlStatus, NgModel, FilterSidebar], styles: ["\n\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .top-box[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  padding: 20px;\n  color: var(--color-text-primary);\n  height: 200px;\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%] {\n  height: 680px;\n  width: 540px;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.3s ease;\n  min-height: 50px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n  color: var(--color-text-muted);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%] {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover {\n  background: transparent;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: var(--color-accent-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 150px;\n  align-items: stretch;\n  overflow: visible;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar {\n  width: 10px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar-track {\n  background: var(--color-track);\n  border-radius: 16px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar-thumb {\n  background: var(--color-scrollbar-thumb);\n  border-radius: 16px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar-thumb:hover {\n  background: var(--color-scrollbar-thumb-hover);\n}\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 16px;\n}\n.preview-input[_ngcontent-%COMP%] {\n  padding: 6px 10px;\n  min-width: 200px;\n}\n.dropdown[_ngcontent-%COMP%] {\n  padding: 6px 10px;\n}\n.main[_ngcontent-%COMP%]   .toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  margin-bottom: 16px;\n}\n.main[_ngcontent-%COMP%]   .preview-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  width: 240px;\n}\n.main[_ngcontent-%COMP%]   .preview-input[_ngcontent-%COMP%]::placeholder {\n  color: var(--color-text-muted);\n}\n.main[_ngcontent-%COMP%]   .dropdown[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  cursor: pointer;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.dropdown-wrapper[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 14px;\n}\n.refresh-btn[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 44px;\n  height: 44px;\n  padding: 0;\n  border: none;\n  outline: none;\n  background-color: transparent;\n  box-shadow: none;\n  border-radius: 8px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: background-color 0.2s ease, color 0.2s ease;\n}\n.refresh-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-bg-surface);\n  color: var(--color-text-primary);\n}\n.refresh-btn[_ngcontent-%COMP%]:focus, \n.refresh-btn[_ngcontent-%COMP%]:active {\n  outline: none;\n  box-shadow: none;\n}\n.material-symbols-outlined[_ngcontent-%COMP%] {\n  font-size: 30px;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/*# sourceMappingURL=telemetry-units.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, SelectControlValueAccessor, NgControlStatus, NgModel, FilterSidebar], styles: ["\n\n.page[_ngcontent-%COMP%] {\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  gap: 2vw;\n}\n.container[_ngcontent-%COMP%]     app-filter-sidebar .sidebar {\n  margin-top: 18px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding-top: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .top-box[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  padding: 20px;\n  color: var(--color-text-primary);\n  height: 200px;\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%] {\n  width: 50vw;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.3s ease;\n  min-height: 50px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n  color: var(--color-text-muted);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  border-color: var(--color-accent);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%] {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover {\n  background: transparent;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: var(--color-accent-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 150px;\n  align-items: stretch;\n  overflow: visible;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar {\n  width: 10px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar-track {\n  background: var(--color-track);\n  border-radius: 16px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar-thumb {\n  background: var(--color-scrollbar-thumb);\n  border-radius: 16px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]::-webkit-scrollbar-thumb:hover {\n  background: var(--color-scrollbar-thumb-hover);\n}\n.header[_ngcontent-%COMP%] {\n  width: 50vw;\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.toolbar[_ngcontent-%COMP%] {\n  width: 50vw;\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 16px;\n}\n.preview-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  width: 240px;\n}\n.preview-input[_ngcontent-%COMP%]::placeholder {\n  color: var(--color-text-muted);\n}\n.dropdown[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  cursor: pointer;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.dropdown-wrapper[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 14px;\n}\n.refresh-btn[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 44px;\n  height: 44px;\n  padding: 0;\n  border: none;\n  outline: none;\n  background-color: transparent;\n  box-shadow: none;\n  border-radius: 8px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: background-color 0.2s ease, color 0.2s ease;\n}\n.refresh-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-bg-surface);\n  color: var(--color-text-primary);\n}\n.refresh-btn[_ngcontent-%COMP%]:focus, \n.refresh-btn[_ngcontent-%COMP%]:active {\n  outline: none;\n  box-shadow: none;\n}\n.material-symbols-outlined[_ngcontent-%COMP%] {\n  font-size: 30px;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/*# sourceMappingURL=telemetry-units.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(TelemetryUnits, [{
     type: Component,
     args: [{ selector: "app-telemetry-units", standalone: true, imports: [CommonModule, FormsModule, FilterSidebar], template: `
-<div class="container">
-  <div class="main">
+<div class="page">
+  <h1 class="header">Datenerfassungseinheiten</h1>
 
-    <h1 class="header">Datenerfassungseinheiten</h1>
-
-    <div class="toolbar">
+  <div class="toolbar">
 
   <button class="create-btn"
           (click)="createUnit()"
@@ -97300,6 +100546,9 @@ var TelemetryUnits = class _TelemetryUnits {
 
 </div>
 
+<div class="container">
+  <div class="main">
+
     <div class="list">
 
   <div *ngIf="filteredUnits.length === 0">
@@ -97307,7 +100556,7 @@ var TelemetryUnits = class _TelemetryUnits {
   </div>
 
   <div class="box"
-     *ngFor="let item of filteredUnits; let i = index"
+     *ngFor="let item of pagedUnits; let i = index"
      (click)="selectItem(i)"
      [class.active]="selectedIndex === i">
 
@@ -97317,24 +100566,12 @@ var TelemetryUnits = class _TelemetryUnits {
   </div>
 
   <div class="details" *ngIf="selectedIndex !== i">
-    <!--
-    <div>
-      Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
-    </div>
-    -->
-
     <div>
       Fahrzeug-Identnr.: {{ item.vehicleId || 'nicht verbunden' }}
     </div>
   </div>
 
   <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
-    <!--
-    <div>
-      Fahrzeug zugewiesen: {{ item.connectedAt || '-' }}
-    </div>
-    -->
-
     <div>
       <span>Fahrzeug-Identnr.:</span>
       <ng-container *ngIf="editingIndex === i; else vehicleView">
@@ -97376,6 +100613,7 @@ var TelemetryUnits = class _TelemetryUnits {
               (mousedown)="onActionMouseDown($event); toggleEdit(i)">
         {{ editingIndex === i ? (isEditDirty(item) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
       </button>
+      <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(item)">Fahrten</button>
     </div>
   </div>
 
@@ -97383,6 +100621,27 @@ var TelemetryUnits = class _TelemetryUnits {
 
 
 </div>
+
+    <div class="pagination" *ngIf="filteredUnits.length">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
 
   </div>
 
@@ -97394,14 +100653,17 @@ var TelemetryUnits = class _TelemetryUnits {
   </app-filter-sidebar>
 
 </div>
-`, styles: ["/* src/app/widgets/telemetry-units/telemetry-units.component.scss */\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .top-box {\n  background: var(--color-bg-surface);\n  padding: 20px;\n  color: var(--color-text-primary);\n  height: 200px;\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n}\n.container .main .list {\n  height: 680px;\n  width: 540px;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.container .main .list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.3s ease;\n  min-height: 50px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n}\n.container .main .list .box .title {\n  font-weight: bold;\n}\n.container .main .list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container .main .list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n  color: var(--color-text-muted);\n}\n.container .main .list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container .main .list .box .details-full .inline-input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container .main .list .box .details-full .inline-input:focus {\n  border-color: var(--color-accent);\n}\n.container .main .list .box .details-full .unit-select {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.container .main .list .box .details-full .unit-select .unit-select-trigger {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.container .main .list .box .details-full .unit-select .unit-select-trigger:hover {\n  border-color: var(--color-accent);\n}\n.container .main .list .box .details-full .unit-select.open .unit-select-trigger {\n  border-color: var(--color-accent);\n}\n.container .main .list .box .details-full .unit-select .unit-options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option:hover {\n  background: var(--color-border);\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option.disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option.disabled:hover {\n  background: transparent;\n}\n.container .main .list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.container .main .list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.container .main .list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .main .list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.container .main .list .box .actions .action-btn.dirty {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container .main .list .box .actions .action-btn.dirty:hover {\n  background: var(--color-accent-hover);\n}\n.container .main .list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: var(--color-text-primary);\n}\n.container .main .list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.container .main .list .box.active {\n  min-height: 150px;\n  align-items: stretch;\n  overflow: visible;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.container .main::-webkit-scrollbar {\n  width: 10px;\n}\n.container .main::-webkit-scrollbar-track {\n  background: var(--color-track);\n  border-radius: 16px;\n}\n.container .main::-webkit-scrollbar-thumb {\n  background: var(--color-scrollbar-thumb);\n  border-radius: 16px;\n}\n.container .main::-webkit-scrollbar-thumb:hover {\n  background: var(--color-scrollbar-thumb-hover);\n}\n.header {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.create-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 16px;\n}\n.preview-input {\n  padding: 6px 10px;\n  min-width: 200px;\n}\n.dropdown {\n  padding: 6px 10px;\n}\n.main .toolbar {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  margin-bottom: 16px;\n}\n.main .preview-input {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  width: 240px;\n}\n.main .preview-input::placeholder {\n  color: var(--color-text-muted);\n}\n.main .dropdown {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  cursor: pointer;\n}\n.form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.dropdown-wrapper {\n  display: flex;\n  align-items: center;\n  gap: 14px;\n}\n.refresh-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 44px;\n  height: 44px;\n  padding: 0;\n  border: none;\n  outline: none;\n  background-color: transparent;\n  box-shadow: none;\n  border-radius: 8px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: background-color 0.2s ease, color 0.2s ease;\n}\n.refresh-btn:hover {\n  background-color: var(--color-bg-surface);\n  color: var(--color-text-primary);\n}\n.refresh-btn:focus,\n.refresh-btn:active {\n  outline: none;\n  box-shadow: none;\n}\n.material-symbols-outlined {\n  font-size: 30px;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/*# sourceMappingURL=telemetry-units.component.css.map */\n"] }]
-  }], () => [{ type: TelemetryUnitService }, { type: VehicleService }, { type: PersonService }, { type: ChangeDetectorRef }], { onDocumentClick: [{
+</div>
+`, styles: ["/* src/app/widgets/telemetry-units/telemetry-units.component.scss */\n.page {\n  margin-top: 120px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  gap: 2vw;\n}\n.container ::ng-deep app-filter-sidebar .sidebar {\n  margin-top: 18px;\n}\n.container .main {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding-top: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .top-box {\n  background: var(--color-bg-surface);\n  padding: 20px;\n  color: var(--color-text-primary);\n  height: 200px;\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n}\n.container .main .list {\n  width: 50vw;\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n}\n.container .main .list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 16px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.3s ease;\n  min-height: 50px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n}\n.container .main .list .box .title {\n  font-weight: bold;\n}\n.container .main .list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.container .main .list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n  color: var(--color-text-muted);\n}\n.container .main .list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.container .main .list .box .details-full .inline-input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.container .main .list .box .details-full .inline-input:focus {\n  border-color: var(--color-accent);\n}\n.container .main .list .box .details-full .unit-select {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.container .main .list .box .details-full .unit-select .unit-select-trigger {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.container .main .list .box .details-full .unit-select .unit-select-trigger:hover {\n  border-color: var(--color-accent);\n}\n.container .main .list .box .details-full .unit-select.open .unit-select-trigger {\n  border-color: var(--color-accent);\n}\n.container .main .list .box .details-full .unit-select .unit-options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option:hover {\n  background: var(--color-border);\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option.disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.container .main .list .box .details-full .unit-select .unit-options .unit-option.disabled:hover {\n  background: transparent;\n}\n.container .main .list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.container .main .list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.container .main .list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.container .main .list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.container .main .list .box .actions .action-btn.dirty {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.container .main .list .box .actions .action-btn.dirty:hover {\n  background: var(--color-accent-hover);\n}\n.container .main .list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.container .main .list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.container .main .list .box.active {\n  min-height: 150px;\n  align-items: stretch;\n  overflow: visible;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.container .main::-webkit-scrollbar {\n  width: 10px;\n}\n.container .main::-webkit-scrollbar-track {\n  background: var(--color-track);\n  border-radius: 16px;\n}\n.container .main::-webkit-scrollbar-thumb {\n  background: var(--color-scrollbar-thumb);\n  border-radius: 16px;\n}\n.container .main::-webkit-scrollbar-thumb:hover {\n  background: var(--color-scrollbar-thumb-hover);\n}\n.header {\n  width: 50vw;\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.create-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.toolbar {\n  width: 50vw;\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 16px;\n}\n.preview-input {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  width: 240px;\n}\n.preview-input::placeholder {\n  color: var(--color-text-muted);\n}\n.dropdown {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  padding: 10px 12px;\n  border-radius: 8px;\n  outline: none;\n  cursor: pointer;\n}\n.form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: var(--color-border);\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n.dropdown-wrapper {\n  display: flex;\n  align-items: center;\n  gap: 14px;\n}\n.refresh-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 44px;\n  height: 44px;\n  padding: 0;\n  border: none;\n  outline: none;\n  background-color: transparent;\n  box-shadow: none;\n  border-radius: 8px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: background-color 0.2s ease, color 0.2s ease;\n}\n.refresh-btn:hover {\n  background-color: var(--color-bg-surface);\n  color: var(--color-text-primary);\n}\n.refresh-btn:focus,\n.refresh-btn:active {\n  outline: none;\n  box-shadow: none;\n}\n.material-symbols-outlined {\n  font-size: 30px;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/*# sourceMappingURL=telemetry-units.component.css.map */\n"] }]
+  }], () => [{ type: TelemetryUnitService }, { type: VehicleService }, { type: PersonService }, { type: VehicleLiveService }, { type: ChangeDetectorRef }], { showTrips: [{
+    type: Output
+  }], onDocumentClick: [{
     type: HostListener,
     args: ["document:click", ["$event"]]
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(TelemetryUnits, { className: "TelemetryUnits", filePath: "src/app/widgets/telemetry-units/telemetry-units.component.ts", lineNumber: 21 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(TelemetryUnits, { className: "TelemetryUnits", filePath: "src/app/widgets/telemetry-units/telemetry-units.component.ts", lineNumber: 22 });
 })();
 
 // src/app/widgets/vehicle-map/vehicle-map.component.ts
@@ -97411,10 +100673,11 @@ var VehicleMap = class _VehicleMap {
   map;
   mapInitialized = false;
   markerLayer = L3.layerGroup();
+  lastPointsSignature = "";
   ngAfterViewInit() {
     this.map = L3.map("vehicle-map", {
       attributionControl: false
-    }).setView([50.9271, 11.5892], 13);
+    }).setView([48.8375, 10.0936], 13);
     L3.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png", {
       attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; OpenStreetMap contributors',
       maxZoom: 20,
@@ -97424,6 +100687,7 @@ var VehicleMap = class _VehicleMap {
     }).addTo(this.map);
     this.markerLayer.addTo(this.map);
     this.mapInitialized = true;
+    this.lastPointsSignature = this.pointsSignature();
     this.renderPoints();
   }
   ngAfterViewChecked() {
@@ -97432,27 +100696,56 @@ var VehicleMap = class _VehicleMap {
     }
   }
   ngOnChanges(changes) {
-    if (changes["points"] && this.mapInitialized) {
-      this.renderPoints();
-    }
+    if (!changes["points"] || !this.mapInitialized)
+      return;
+    const signature = this.pointsSignature();
+    if (signature === this.lastPointsSignature)
+      return;
+    this.lastPointsSignature = signature;
+    this.renderPoints();
+  }
+  pointsSignature() {
+    return this.points.map((p) => `${p.id}:${p.isMoving ? "1" : "0"}:${p.lat}:${p.lng}`).join("|");
   }
   renderPoints() {
     this.markerLayer.clearLayers();
-    const coordinates = [];
     this.points.forEach((point) => {
       const coord = [point.lat, point.lng];
-      coordinates.push(coord);
-      const marker = L3.circleMarker(coord, {
-        radius: 7,
-        color: "#373669",
-        fillColor: "#7376e0",
-        fillOpacity: 0.9,
-        weight: 2
-      }).addTo(this.markerLayer);
-      marker.bindTooltip(point.label, { permanent: false, direction: "top" });
+      const pulse = point.isMoving ? '<span class="vehicle-marker-pulse"></span>' : "";
+      const icon = L3.divIcon({
+        className: "vehicle-marker-icon",
+        html: `<div class="vehicle-marker">${pulse}<span class="vehicle-marker-dot"></span></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+      const marker3 = L3.marker(coord, { icon }).addTo(this.markerLayer);
+      marker3.bindTooltip(this.tooltipContent(point), { permanent: false, direction: "top" });
     });
+    this.recenter();
+  }
+  tooltipContent(point) {
+    const lines = [`Fahrzeug: ${point.label}`];
+    if (point.timestamp) {
+      lines.push(`Zeitstempel: ${new Date(point.timestamp).toLocaleString("de-DE")}`);
+    }
+    if (point.telemetryUnitId) {
+      lines.push(`T-Einheit: ${point.telemetryUnitId}`);
+    }
+    if (point.driverLabel) {
+      lines.push(`Fahrer: ${point.driverLabel}`);
+    }
+    if (point.speedKmh != null) {
+      lines.push(`Geschw.: ${point.speedKmh.toFixed(1)} km/h`);
+    }
+    if (point.accelMs2 != null) {
+      lines.push(`Beschleunigung: ${point.accelMs2.toFixed(2)} m/s\xB2`);
+    }
+    return lines.join("<br>");
+  }
+  recenter() {
+    const coordinates = this.points.map((p) => [p.lat, p.lng]);
     if (coordinates.length) {
-      this.map.fitBounds(L3.latLngBounds(coordinates), { padding: [40, 40] });
+      this.map.fitBounds(L3.latLngBounds(coordinates), { padding: [40, 40], maxZoom: 16 });
     }
   }
   static \u0275fac = function VehicleMap_Factory(__ngFactoryType__) {
@@ -97462,24 +100755,36 @@ var VehicleMap = class _VehicleMap {
     if (rf & 1) {
       \u0275\u0275domElement(0, "div", 0);
     }
-  }, styles: ["\n\n#vehicle-map[_ngcontent-%COMP%] {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile[_ngcontent-%COMP%] {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container[_ngcontent-%COMP%] {\n  background: var(--color-bg-map-tile);\n}\n/*# sourceMappingURL=vehicle-map.component.css.map */"] });
+  }, styles: ["\n\n#vehicle-map[_ngcontent-%COMP%] {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile[_ngcontent-%COMP%] {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container[_ngcontent-%COMP%] {\n  background: var(--color-bg-map-tile);\n}\n  .vehicle-marker-icon {\n  background: transparent;\n  border: none;\n}\n  .vehicle-marker {\n  position: relative;\n  width: 24px;\n  height: 24px;\n}\n  .vehicle-marker-dot {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  border: 3px solid var(--color-map-marker-border);\n  box-sizing: border-box;\n}\n  .vehicle-marker-pulse {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  animation: _ngcontent-%COMP%_vehicle-marker-pulse 1.6s ease-out infinite;\n}\n@keyframes _ngcontent-%COMP%_vehicle-marker-pulse {\n  0% {\n    transform: scale(1);\n    opacity: var(--color-map-marker-pulse-opacity, 0.7);\n  }\n  100% {\n    transform: scale(2.6);\n    opacity: 0;\n  }\n}\n/*# sourceMappingURL=vehicle-map.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(VehicleMap, [{
     type: Component,
-    args: [{ selector: "app-vehicle-map", imports: [], template: '<div id="vehicle-map"></div>\n', styles: ["/* src/app/widgets/vehicle-map/vehicle-map.component.scss */\n#vehicle-map {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container {\n  background: var(--color-bg-map-tile);\n}\n/*# sourceMappingURL=vehicle-map.component.css.map */\n"] }]
+    args: [{ selector: "app-vehicle-map", imports: [], template: '<div id="vehicle-map"></div>\n', styles: ["/* src/app/widgets/vehicle-map/vehicle-map.component.scss */\n#vehicle-map {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-map);\n}\n.leaflet-tile {\n  image-rendering: crisp-edges;\n  -ms-interpolation-mode: nearest-neighbor;\n  background-color: var(--color-bg-map-tile);\n}\n.leaflet-tile-container {\n  background: var(--color-bg-map-tile);\n}\n::ng-deep .vehicle-marker-icon {\n  background: transparent;\n  border: none;\n}\n::ng-deep .vehicle-marker {\n  position: relative;\n  width: 24px;\n  height: 24px;\n}\n::ng-deep .vehicle-marker-dot {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  border: 3px solid var(--color-map-marker-border);\n  box-sizing: border-box;\n}\n::ng-deep .vehicle-marker-pulse {\n  position: absolute;\n  inset: 2px;\n  border-radius: 50%;\n  background-color: var(--color-map-marker);\n  animation: vehicle-marker-pulse 1.6s ease-out infinite;\n}\n@keyframes vehicle-marker-pulse {\n  0% {\n    transform: scale(1);\n    opacity: var(--color-map-marker-pulse-opacity, 0.7);\n  }\n  100% {\n    transform: scale(2.6);\n    opacity: 0;\n  }\n}\n/*# sourceMappingURL=vehicle-map.component.css.map */\n"] }]
   }], null, { points: [{
     type: Input
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(VehicleMap, { className: "VehicleMap", filePath: "src/app/widgets/vehicle-map/vehicle-map.component.ts", lineNumber: 17 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(VehicleMap, { className: "VehicleMap", filePath: "src/app/widgets/vehicle-map/vehicle-map.component.ts", lineNumber: 23 });
 })();
 
 // src/app/widgets/vehicles/vehicles.component.ts
-function Vehicles_div_9_span_17_Template(rf, ctx) {
+function Vehicles_div_12_span_14_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 31);
+    \u0275\u0275elementStart(0, "span", 35);
+    \u0275\u0275text(1);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r1.yearError);
+  }
+}
+function Vehicles_div_12_span_18_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span", 35);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97489,9 +100794,9 @@ function Vehicles_div_9_span_17_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r1.identNrError);
   }
 }
-function Vehicles_div_9_option_23_Template(rf, ctx) {
+function Vehicles_div_12_option_24_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 32);
+    \u0275\u0275elementStart(0, "option", 36);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97502,9 +100807,9 @@ function Vehicles_div_9_option_23_Template(rf, ctx) {
     \u0275\u0275textInterpolate(license_r3);
   }
 }
-function Vehicles_div_9_div_35_Template(rf, ctx) {
+function Vehicles_div_12_div_36_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275elementStart(0, "div", 37);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97514,23 +100819,22 @@ function Vehicles_div_9_div_35_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r1.createError);
   }
 }
-function Vehicles_div_9_Template(rf, ctx) {
+function Vehicles_div_12_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 20)(1, "div", 21)(2, "label");
+    \u0275\u0275elementStart(0, "div", 21)(1, "div", 22)(2, "label");
     \u0275\u0275text(3, " Kennzeichen ");
-    \u0275\u0275elementStart(4, "input", 22);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_4_listener($event) {
+    \u0275\u0275elementStart(4, "input", 23);
+    \u0275\u0275listener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_4_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.licensePlate, $event) || (ctx_r1.newVehicle.licensePlate = $event);
-      return \u0275\u0275resetView($event);
+      return \u0275\u0275resetView(ctx_r1.onNewLicensePlateChange($event));
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(5, "label");
     \u0275\u0275text(6, " Marke * ");
-    \u0275\u0275elementStart(7, "input", 22);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_7_listener($event) {
+    \u0275\u0275elementStart(7, "input", 24);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.brand, $event) || (ctx_r1.newVehicle.brand = $event);
@@ -97539,8 +100843,8 @@ function Vehicles_div_9_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "label");
     \u0275\u0275text(9, " Modell * ");
-    \u0275\u0275elementStart(10, "input", 22);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_10_listener($event) {
+    \u0275\u0275elementStart(10, "input", 24);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_10_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.modelName, $event) || (ctx_r1.newVehicle.modelName = $event);
@@ -97549,90 +100853,102 @@ function Vehicles_div_9_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(11, "label");
     \u0275\u0275text(12, " Baujahr * ");
-    \u0275\u0275elementStart(13, "input", 23);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_13_listener($event) {
+    \u0275\u0275elementStart(13, "input", 25);
+    \u0275\u0275listener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_13_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
-      \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.year, $event) || (ctx_r1.newVehicle.year = $event);
-      return \u0275\u0275resetView($event);
+      return \u0275\u0275resetView(ctx_r1.onYearChange($event));
+    })("keydown", function Vehicles_div_12_Template_input_keydown_13_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onDigitFieldKeydown($event, ctx_r1.newVehicle.year));
     });
-    \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(14, "label");
-    \u0275\u0275text(15, " Fahrzeug-Identnr. * ");
-    \u0275\u0275elementStart(16, "input", 22);
-    \u0275\u0275listener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_16_listener($event) {
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(14, Vehicles_div_12_span_14_Template, 2, 1, "span", 26);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(15, "label");
+    \u0275\u0275text(16, " Fahrzeug-Identnr. * ");
+    \u0275\u0275elementStart(17, "input", 27);
+    \u0275\u0275listener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_17_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.onIdentNrChange($event));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275template(17, Vehicles_div_9_span_17_Template, 2, 1, "span", 24);
+    \u0275\u0275template(18, Vehicles_div_12_span_18_Template, 2, 1, "span", 26);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(18, "label");
-    \u0275\u0275text(19, " Ben\xF6tigter F\xFChrerschein * ");
-    \u0275\u0275elementStart(20, "select", 25);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_select_ngModelChange_20_listener($event) {
+    \u0275\u0275elementStart(19, "label");
+    \u0275\u0275text(20, " Ben\xF6tigter F\xFChrerschein * ");
+    \u0275\u0275elementStart(21, "select", 28);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_Template_select_ngModelChange_21_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.requiredLicense, $event) || (ctx_r1.newVehicle.requiredLicense = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(21, "option", 26);
-    \u0275\u0275text(22, "Bitte w\xE4hlen");
+    \u0275\u0275elementStart(22, "option", 29);
+    \u0275\u0275text(23, "Bitte w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(23, Vehicles_div_9_option_23_Template, 2, 2, "option", 27);
+    \u0275\u0275template(24, Vehicles_div_12_option_24_Template, 2, 2, "option", 30);
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(24, "label");
-    \u0275\u0275text(25, " Leistung (PS) * ");
-    \u0275\u0275elementStart(26, "input", 23);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_26_listener($event) {
+    \u0275\u0275elementStart(25, "label");
+    \u0275\u0275text(26, " Leistung (PS) * ");
+    \u0275\u0275elementStart(27, "input", 31);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_27_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.powerPs, $event) || (ctx_r1.newVehicle.powerPs = $event);
       return \u0275\u0275resetView($event);
     });
+    \u0275\u0275listener("keydown", function Vehicles_div_12_Template_input_keydown_27_listener($event) {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onPowerPsKeydown($event));
+    });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(27, "label");
-    \u0275\u0275text(28, " Farbe * ");
-    \u0275\u0275elementStart(29, "input", 22);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_29_listener($event) {
+    \u0275\u0275elementStart(28, "label");
+    \u0275\u0275text(29, " Farbe * ");
+    \u0275\u0275elementStart(30, "input", 24);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_30_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.color, $event) || (ctx_r1.newVehicle.color = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(30, "label");
-    \u0275\u0275text(31, " Erstzulassung ");
-    \u0275\u0275elementStart(32, "input", 28);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_9_Template_input_ngModelChange_32_listener($event) {
+    \u0275\u0275elementStart(31, "label");
+    \u0275\u0275text(32, " Erstzulassung ");
+    \u0275\u0275elementStart(33, "input", 32);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_Template_input_ngModelChange_33_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newVehicle.firstRegistration, $event) || (ctx_r1.newVehicle.firstRegistration = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(33, "button", 29);
-    \u0275\u0275listener("click", function Vehicles_div_9_Template_button_click_33_listener() {
+    \u0275\u0275elementStart(34, "button", 33);
+    \u0275\u0275listener("click", function Vehicles_div_12_Template_button_click_34_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.createVehicle());
     });
-    \u0275\u0275text(34, " Speichern ");
+    \u0275\u0275text(35, " Speichern ");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(35, Vehicles_div_9_div_35_Template, 2, 1, "div", 30);
+    \u0275\u0275template(36, Vehicles_div_12_div_36_Template, 2, 1, "div", 34);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
     \u0275\u0275advance(4);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.licensePlate);
+    \u0275\u0275property("ngModel", ctx_r1.newVehicle.licensePlate);
     \u0275\u0275advance(3);
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.brand);
     \u0275\u0275advance(3);
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.modelName);
     \u0275\u0275advance(3);
-    \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.year);
+    \u0275\u0275property("ngModel", ctx_r1.newVehicle.year);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.yearError);
     \u0275\u0275advance(3);
     \u0275\u0275property("ngModel", ctx_r1.newVehicle.identNr);
     \u0275\u0275advance();
@@ -97648,21 +100964,21 @@ function Vehicles_div_9_Template(rf, ctx) {
     \u0275\u0275advance(3);
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.newVehicle.firstRegistration);
     \u0275\u0275advance();
-    \u0275\u0275property("disabled", !ctx_r1.newVehicle.modelName || !ctx_r1.newVehicle.identNr || !ctx_r1.newVehicle.brand || !ctx_r1.newVehicle.year || !ctx_r1.newVehicle.requiredLicense || !ctx_r1.newVehicle.powerPs || !ctx_r1.newVehicle.color || !!ctx_r1.identNrError);
+    \u0275\u0275property("disabled", !ctx_r1.newVehicle.modelName || !ctx_r1.newVehicle.identNr || !ctx_r1.newVehicle.brand || !ctx_r1.newVehicle.year || !ctx_r1.newVehicle.requiredLicense || !ctx_r1.newVehicle.powerPs || !ctx_r1.newVehicle.color || !!ctx_r1.identNrError || !!ctx_r1.yearError);
     \u0275\u0275advance(2);
     \u0275\u0275property("ngIf", ctx_r1.createError);
   }
 }
-function Vehicles_div_11_Template(rf, ctx) {
+function Vehicles_div_14_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
     \u0275\u0275text(1, " Keine Fahrzeuge gefunden. ");
     \u0275\u0275elementEnd();
   }
 }
-function Vehicles_div_12_div_3_Template(rf, ctx) {
+function Vehicles_div_15_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 39);
+    \u0275\u0275elementStart(0, "div", 43);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97672,16 +100988,16 @@ function Vehicles_div_12_div_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Baujahr: ", vehicle_r6.year, " ");
   }
 }
-function Vehicles_div_12_div_4_ng_container_4_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 42);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(1, "input", 46);
+    \u0275\u0275listener("ngModelChange", function Vehicles_div_15_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r7);
       const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
-      \u0275\u0275twoWayBindingSet(vehicle_r6.licensePlate, $event) || (vehicle_r6.licensePlate = $event);
-      return \u0275\u0275resetView($event);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.onVehicleLicensePlateChange(vehicle_r6, $event));
     });
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
@@ -97689,10 +101005,10 @@ function Vehicles_div_12_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 2) {
     const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
     \u0275\u0275advance();
-    \u0275\u0275twoWayProperty("ngModel", vehicle_r6.licensePlate);
+    \u0275\u0275property("ngModel", vehicle_r6.licensePlate);
   }
 }
-function Vehicles_div_12_div_4_ng_template_5_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -97701,12 +101017,12 @@ function Vehicles_div_12_div_4_ng_template_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate(vehicle_r6.licensePlate);
   }
 }
-function Vehicles_div_12_div_4_ng_container_38_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_38_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 43);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_38_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(1, "input", 47);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_15_div_4_ng_container_38_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r8);
       const vehicle_r6 = \u0275\u0275nextContext(2).$implicit;
       \u0275\u0275twoWayBindingSet(vehicle_r6.firstRegistration, $event) || (vehicle_r6.firstRegistration = $event);
@@ -97721,7 +101037,7 @@ function Vehicles_div_12_div_4_ng_container_38_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", vehicle_r6.firstRegistration);
   }
 }
-function Vehicles_div_12_div_4_ng_template_39_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_template_39_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -97730,11 +101046,11 @@ function Vehicles_div_12_div_4_ng_template_39_Template(rf, ctx) {
     \u0275\u0275textInterpolate(vehicle_r6.firstRegistration);
   }
 }
-function Vehicles_div_12_div_4_ng_container_44_div_4_div_3_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_44_div_4_div_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 48);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_44_div_4_div_3_Template_div_mousedown_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 52);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_44_div_4_div_3_Template_div_mousedown_0_listener($event) {
       const unit_r12 = \u0275\u0275restoreView(_r11).$implicit;
       const vehicle_r6 = \u0275\u0275nextContext(4).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97753,11 +101069,11 @@ function Vehicles_div_12_div_4_ng_container_44_div_4_div_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", unit_r12.id, " ");
   }
 }
-function Vehicles_div_12_div_4_ng_container_44_div_4_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_44_div_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r10 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 47)(1, "div", 48);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_44_div_4_Template_div_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(0, "div", 51)(1, "div", 52);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_44_div_4_Template_div_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r10);
       const vehicle_r6 = \u0275\u0275nextContext(3).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97766,7 +101082,7 @@ function Vehicles_div_12_div_4_ng_container_44_div_4_Template(rf, ctx) {
     });
     \u0275\u0275text(2, "nicht verbunden");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Vehicles_div_12_div_4_ng_container_44_div_4_div_3_Template, 2, 3, "div", 49);
+    \u0275\u0275template(3, Vehicles_div_15_div_4_ng_container_44_div_4_div_3_Template, 2, 3, "div", 53);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -97775,12 +101091,12 @@ function Vehicles_div_12_div_4_ng_container_44_div_4_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.telemetryUnits);
   }
 }
-function Vehicles_div_12_div_4_ng_container_44_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_44_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "div", 44)(2, "button", 45);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_44_Template_button_mousedown_2_listener($event) {
+    \u0275\u0275elementStart(1, "div", 48)(2, "button", 49);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_44_Template_button_mousedown_2_listener($event) {
       \u0275\u0275restoreView(_r9);
       const i_r5 = \u0275\u0275nextContext(2).index;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97789,7 +101105,7 @@ function Vehicles_div_12_div_4_ng_container_44_Template(rf, ctx) {
     });
     \u0275\u0275text(3);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_44_div_4_Template, 4, 1, "div", 46);
+    \u0275\u0275template(4, Vehicles_div_15_div_4_ng_container_44_div_4_Template, 4, 1, "div", 50);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -97806,7 +101122,7 @@ function Vehicles_div_12_div_4_ng_container_44_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.openTelemetryDropdownIndex === i_r5);
   }
 }
-function Vehicles_div_12_div_4_ng_template_45_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_template_45_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -97815,27 +101131,27 @@ function Vehicles_div_12_div_4_ng_template_45_Template(rf, ctx) {
     \u0275\u0275textInterpolate((vehicle_r6.telemetryUnit == null ? null : vehicle_r6.telemetryUnit.id) || "nicht verbunden");
   }
 }
-function Vehicles_div_12_div_4_ng_container_50_div_7_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_50_div_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r15 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 54)(1, "input", 55);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_50_div_7_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(0, "div", 58)(1, "input", 59);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_15_div_4_ng_container_50_div_7_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext(4);
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedDriverFilter.firstName, $event) || (ctx_r1.advancedDriverFilter.firstName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "input", 56);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_50_div_7_Template_input_ngModelChange_2_listener($event) {
+    \u0275\u0275elementStart(2, "input", 60);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_15_div_4_ng_container_50_div_7_Template_input_ngModelChange_2_listener($event) {
       \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext(4);
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedDriverFilter.lastName, $event) || (ctx_r1.advancedDriverFilter.lastName = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 57);
-    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_12_div_4_ng_container_50_div_7_Template_input_ngModelChange_3_listener($event) {
+    \u0275\u0275elementStart(3, "input", 61);
+    \u0275\u0275twoWayListener("ngModelChange", function Vehicles_div_15_div_4_ng_container_50_div_7_Template_input_ngModelChange_3_listener($event) {
       \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext(4);
       \u0275\u0275twoWayBindingSet(ctx_r1.advancedDriverFilter.employeeNr, $event) || (ctx_r1.advancedDriverFilter.employeeNr = $event);
@@ -97853,11 +101169,11 @@ function Vehicles_div_12_div_4_ng_container_50_div_7_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r1.advancedDriverFilter.employeeNr);
   }
 }
-function Vehicles_div_12_div_4_ng_container_50_div_8_div_3_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_50_div_8_div_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r17 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 48);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_50_div_8_div_3_Template_div_mousedown_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 52);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_50_div_8_div_3_Template_div_mousedown_0_listener($event) {
       const person_r18 = \u0275\u0275restoreView(_r17).$implicit;
       const vehicle_r6 = \u0275\u0275nextContext(4).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97876,11 +101192,11 @@ function Vehicles_div_12_div_4_ng_container_50_div_8_div_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate3(" ", person_r18.firstName, " ", person_r18.lastName, " \u2014 ", person_r18.Id, " ");
   }
 }
-function Vehicles_div_12_div_4_ng_container_50_div_8_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_50_div_8_Template(rf, ctx) {
   if (rf & 1) {
     const _r16 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 47)(1, "div", 48);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_50_div_8_Template_div_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(0, "div", 51)(1, "div", 52);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_50_div_8_Template_div_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r16);
       const vehicle_r6 = \u0275\u0275nextContext(3).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97889,7 +101205,7 @@ function Vehicles_div_12_div_4_ng_container_50_div_8_Template(rf, ctx) {
     });
     \u0275\u0275text(2, "keinen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Vehicles_div_12_div_4_ng_container_50_div_8_div_3_Template, 2, 5, "div", 49);
+    \u0275\u0275template(3, Vehicles_div_15_div_4_ng_container_50_div_8_div_3_Template, 2, 5, "div", 53);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -97898,12 +101214,12 @@ function Vehicles_div_12_div_4_ng_container_50_div_8_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.filteredDriverOptions);
   }
 }
-function Vehicles_div_12_div_4_ng_container_50_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_container_50_Template(rf, ctx) {
   if (rf & 1) {
     const _r14 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "div", 50)(2, "div", 51)(3, "button", 45);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_50_Template_button_mousedown_3_listener($event) {
+    \u0275\u0275elementStart(1, "div", 54)(2, "div", 55)(3, "button", 49);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_50_Template_button_mousedown_3_listener($event) {
       \u0275\u0275restoreView(_r14);
       const i_r5 = \u0275\u0275nextContext(2).index;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97912,8 +101228,8 @@ function Vehicles_div_12_div_4_ng_container_50_Template(rf, ctx) {
     });
     \u0275\u0275text(4);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "button", 52);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_4_ng_container_50_Template_button_mousedown_5_listener($event) {
+    \u0275\u0275elementStart(5, "button", 56);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_4_ng_container_50_Template_button_mousedown_5_listener($event) {
       \u0275\u0275restoreView(_r14);
       const i_r5 = \u0275\u0275nextContext(2).index;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -97922,7 +101238,7 @@ function Vehicles_div_12_div_4_ng_container_50_Template(rf, ctx) {
     });
     \u0275\u0275text(6);
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(7, Vehicles_div_12_div_4_ng_container_50_div_7_Template, 4, 3, "div", 53)(8, Vehicles_div_12_div_4_ng_container_50_div_8_Template, 4, 1, "div", 46);
+    \u0275\u0275template(7, Vehicles_div_15_div_4_ng_container_50_div_7_Template, 4, 3, "div", 57)(8, Vehicles_div_15_div_4_ng_container_50_div_8_Template, 4, 1, "div", 50);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -97943,7 +101259,7 @@ function Vehicles_div_12_div_4_ng_container_50_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.openDriverDropdownIndex === i_r5);
   }
 }
-function Vehicles_div_12_div_4_ng_template_51_Template(rf, ctx) {
+function Vehicles_div_15_div_4_ng_template_51_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -97953,9 +101269,9 @@ function Vehicles_div_12_div_4_ng_template_51_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r1.getDriverLabel(vehicle_r6));
   }
 }
-function Vehicles_div_12_div_4_div_53_Template(rf, ctx) {
+function Vehicles_div_15_div_4_div_53_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 33);
+    \u0275\u0275elementStart(0, "div", 37);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -97965,16 +101281,16 @@ function Vehicles_div_12_div_4_div_53_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r1.editError);
   }
 }
-function Vehicles_div_12_div_4_Template(rf, ctx) {
+function Vehicles_div_15_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 40);
-    \u0275\u0275listener("click", function Vehicles_div_12_div_4_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 44);
+    \u0275\u0275listener("click", function Vehicles_div_15_div_4_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
     \u0275\u0275elementStart(1, "div")(2, "span");
     \u0275\u0275text(3, "Kennzeichen:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Vehicles_div_12_div_4_ng_container_4_Template, 2, 1, "ng-container", 41)(5, Vehicles_div_12_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(4, Vehicles_div_15_div_4_ng_container_4_Template, 2, 1, "ng-container", 45)(5, Vehicles_div_15_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(7, "div")(8, "span");
     \u0275\u0275text(9, "Marke:");
@@ -98014,19 +101330,19 @@ function Vehicles_div_12_div_4_Template(rf, ctx) {
     \u0275\u0275elementStart(35, "div")(36, "span");
     \u0275\u0275text(37, "Erstzulassung:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(38, Vehicles_div_12_div_4_ng_container_38_Template, 2, 1, "ng-container", 41)(39, Vehicles_div_12_div_4_ng_template_39_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(38, Vehicles_div_15_div_4_ng_container_38_Template, 2, 1, "ng-container", 45)(39, Vehicles_div_15_div_4_ng_template_39_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(41, "div")(42, "span");
     \u0275\u0275text(43, "Telemetrie-Einheit:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(44, Vehicles_div_12_div_4_ng_container_44_Template, 5, 4, "ng-container", 41)(45, Vehicles_div_12_div_4_ng_template_45_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(44, Vehicles_div_15_div_4_ng_container_44_Template, 5, 4, "ng-container", 45)(45, Vehicles_div_15_div_4_ng_template_45_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(47, "div")(48, "span");
     \u0275\u0275text(49, "Fahrer:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(50, Vehicles_div_12_div_4_ng_container_50_Template, 9, 6, "ng-container", 41)(51, Vehicles_div_12_div_4_ng_template_51_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(50, Vehicles_div_15_div_4_ng_container_50_Template, 9, 6, "ng-container", 45)(51, Vehicles_div_15_div_4_ng_template_51_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(53, Vehicles_div_12_div_4_div_53_Template, 2, 1, "div", 30);
+    \u0275\u0275template(53, Vehicles_div_15_div_4_div_53_Template, 2, 1, "div", 34);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -98064,19 +101380,19 @@ function Vehicles_div_12_div_4_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.editError && ctx_r1.selectedIndex === i_r5);
   }
 }
-function Vehicles_div_12_div_5_Template(rf, ctx) {
+function Vehicles_div_15_div_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r23 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 58);
-    \u0275\u0275listener("click", function Vehicles_div_12_div_5_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 62);
+    \u0275\u0275listener("click", function Vehicles_div_15_div_5_Template_div_click_0_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r1 = \u0275\u0275nextContext(2);
       return \u0275\u0275resetView(ctx_r1.onActionsClick($event));
-    })("mousedown", function Vehicles_div_12_div_5_Template_div_mousedown_0_listener($event) {
+    })("mousedown", function Vehicles_div_15_div_5_Template_div_mousedown_0_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(1, "button", 59);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_5_Template_button_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(1, "button", 63);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_5_Template_button_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r12 = \u0275\u0275nextContext();
       const vehicle_r6 = ctx_r12.$implicit;
@@ -98087,8 +101403,8 @@ function Vehicles_div_12_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 60)(4, "button", 61);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_5_Template_button_mousedown_4_listener($event) {
+    \u0275\u0275elementStart(3, "div", 64)(4, "button", 65);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_5_Template_button_mousedown_4_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r1 = \u0275\u0275nextContext(2);
       ctx_r1.onActionMouseDown($event);
@@ -98096,8 +101412,8 @@ function Vehicles_div_12_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(5, "Abbrechen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 61);
-    \u0275\u0275listener("mousedown", function Vehicles_div_12_div_5_Template_button_mousedown_6_listener($event) {
+    \u0275\u0275elementStart(6, "button", 65);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_5_Template_button_mousedown_6_listener($event) {
       \u0275\u0275restoreView(_r23);
       const i_r5 = \u0275\u0275nextContext().index;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -98106,7 +101422,14 @@ function Vehicles_div_12_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(7);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "button", 62);
+    \u0275\u0275elementStart(8, "button", 65);
+    \u0275\u0275listener("mousedown", function Vehicles_div_15_div_5_Template_button_mousedown_8_listener($event) {
+      \u0275\u0275restoreView(_r23);
+      const vehicle_r6 = \u0275\u0275nextContext().$implicit;
+      const ctx_r1 = \u0275\u0275nextContext();
+      ctx_r1.onActionMouseDown($event);
+      return \u0275\u0275resetView(ctx_r1.onShowTrips(vehicle_r6));
+    });
     \u0275\u0275text(9, "Fahrten");
     \u0275\u0275elementEnd()()();
   }
@@ -98125,19 +101448,19 @@ function Vehicles_div_12_div_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r1.editingIndex === i_r5 ? ctx_r1.isEditDirty(vehicle_r6) ? "Speichern" : "Fertig" : "Bearbeiten", " ");
   }
 }
-function Vehicles_div_12_Template(rf, ctx) {
+function Vehicles_div_15_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 34);
-    \u0275\u0275listener("click", function Vehicles_div_12_Template_div_click_0_listener() {
+    \u0275\u0275elementStart(0, "div", 38);
+    \u0275\u0275listener("click", function Vehicles_div_15_Template_div_click_0_listener() {
       const i_r5 = \u0275\u0275restoreView(_r4).index;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.selectItem(i_r5));
     });
-    \u0275\u0275elementStart(1, "div", 35);
+    \u0275\u0275elementStart(1, "div", 39);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Vehicles_div_12_div_3_Template, 2, 1, "div", 36)(4, Vehicles_div_12_div_4_Template, 54, 16, "div", 37)(5, Vehicles_div_12_div_5_Template, 10, 6, "div", 38);
+    \u0275\u0275template(3, Vehicles_div_15_div_3_Template, 2, 1, "div", 40)(4, Vehicles_div_15_div_4_Template, 54, 16, "div", 41)(5, Vehicles_div_15_div_5_Template, 10, 6, "div", 42);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -98155,11 +101478,11 @@ function Vehicles_div_12_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r5);
   }
 }
-function Vehicles_button_17_Template(rf, ctx) {
+function Vehicles_button_20_Template(rf, ctx) {
   if (rf & 1) {
     const _r24 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 63);
-    \u0275\u0275listener("click", function Vehicles_button_17_Template_button_click_0_listener() {
+    \u0275\u0275elementStart(0, "button", 66);
+    \u0275\u0275listener("click", function Vehicles_button_20_Template_button_click_0_listener() {
       const page_r25 = \u0275\u0275restoreView(_r24).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.goToPage(page_r25));
@@ -98175,11 +101498,15 @@ function Vehicles_button_17_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", page_r25, " ");
   }
 }
+var MOVING_TIMEOUT_MS = 5e3;
 var Vehicles = class _Vehicles {
   vehicleService;
   telemetryUnitService;
   personService;
+  vehicleLiveService;
   cdr;
+  vehicleMap;
+  showTrips = new EventEmitter();
   vehicles = [];
   pageSize = 10;
   currentPage = 1;
@@ -98192,18 +101519,9 @@ var Vehicles = class _Vehicles {
   editError = null;
   editSnapshot = null;
   identNrError = null;
-  telemetryUnits = [
-    // { id: 'TU-1001' },
-    // { id: 'TU-1002' },
-    // { id: 'TU-1003' }
-  ];
-  persons = [
-    // { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
-    // { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
-    // { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
-    // { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
-    // { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
-  ];
+  yearError = null;
+  telemetryUnits = [];
+  persons = [];
   licenseClasses = [
     "AM",
     "A1",
@@ -98225,6 +101543,9 @@ var Vehicles = class _Vehicles {
   openDriverDropdownIndex = null;
   showAdvancedDriverFilter = false;
   advancedDriverFilter = { firstName: "", lastName: "", employeeNr: "" };
+  movingVehicleIds = /* @__PURE__ */ new Set();
+  movingTimers = /* @__PURE__ */ new Map();
+  liveSubscription;
   onDocumentClick(event) {
     const target = event.target;
     if (this.deleteConfirmIndex !== null) {
@@ -98246,10 +101567,11 @@ var Vehicles = class _Vehicles {
       }
     }
   }
-  constructor(vehicleService, telemetryUnitService, personService, cdr) {
+  constructor(vehicleService, telemetryUnitService, personService, vehicleLiveService, cdr) {
     this.vehicleService = vehicleService;
     this.telemetryUnitService = telemetryUnitService;
     this.personService = personService;
+    this.vehicleLiveService = vehicleLiveService;
     this.cdr = cdr;
   }
   ngOnInit() {
@@ -98259,6 +101581,7 @@ var Vehicles = class _Vehicles {
           this.vehicles = vehicles;
         }
         this.cdr.detectChanges();
+        this.loadPositions();
       },
       error: () => {
       }
@@ -98278,6 +101601,52 @@ var Vehicles = class _Vehicles {
         if (persons?.length) {
           this.persons = persons;
         }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+      }
+    });
+    this.liveSubscription = this.vehicleLiveService.vehicleUpdate$.subscribe((update) => {
+      this.onVehicleUpdate(update);
+    });
+  }
+  ngOnDestroy() {
+    this.liveSubscription?.unsubscribe();
+    this.movingTimers.forEach((timer2) => clearTimeout(timer2));
+  }
+  onVehicleUpdate(update) {
+    const vehicle = this.vehicles.find((v) => v.Id === update.vehicleId);
+    if (vehicle) {
+      vehicle.lastLocation = {
+        lat: update.lat,
+        lng: update.lng,
+        timestamp: update.timestamp,
+        telemetryUnitId: update.telemetryUnitId,
+        speedKmh: update.speedKmh,
+        accelMs2: update.accelMs2
+      };
+    }
+    this.movingVehicleIds.add(update.vehicleId);
+    const existingTimer = this.movingTimers.get(update.vehicleId);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+    this.movingTimers.set(update.vehicleId, setTimeout(() => {
+      this.movingVehicleIds.delete(update.vehicleId);
+      this.movingTimers.delete(update.vehicleId);
+      this.cdr.detectChanges();
+    }, MOVING_TIMEOUT_MS));
+    this.cdr.detectChanges();
+  }
+  loadPositions() {
+    this.vehicleService.loadPositions().subscribe({
+      next: (positions) => {
+        this.vehicles.forEach((v) => {
+          const position = positions.get(v.Id);
+          if (position) {
+            v.lastLocation = position;
+          }
+        });
         this.cdr.detectChanges();
       },
       error: () => {
@@ -98320,6 +101689,13 @@ var Vehicles = class _Vehicles {
       const matchesEmployeeNr = !f.employeeNr || p.Id.toLowerCase().includes(f.employeeNr.toLowerCase());
       return matchesFirstName && matchesLastName && matchesEmployeeNr;
     });
+  }
+  getDriverTooltipLabel(vehicle) {
+    if (!vehicle.assignedPersonId)
+      return void 0;
+    const person = this.persons.find((p) => p.Id === vehicle.assignedPersonId);
+    const name = person ? `${person.firstName ?? ""} ${person.lastName ?? ""}`.trim() : "";
+    return name ? `${name} - ${vehicle.assignedPersonId}` : vehicle.assignedPersonId;
   }
   isPersonTakenByOtherVehicle(person, vehicle) {
     return this.vehicles.some((v) => v.Id !== vehicle.Id && v.assignedPersonId === person.Id);
@@ -98397,12 +101773,22 @@ var Vehicles = class _Vehicles {
     return this.filteredVehicles.slice(start2, start2 + this.pageSize);
   }
   get mapPoints() {
-    return this.pagedVehicles.filter((v) => v.lastLocation).map((v) => ({
+    const source = this.selectedIndex !== null ? [this.pagedVehicles[this.selectedIndex]] : this.pagedVehicles;
+    return source.filter((v) => v?.lastLocation).map((v) => ({
       id: v.Id,
       label: `${v.licensePlate ?? ""} \u2014 ${v.brand ?? ""} ${v.modelName ?? ""}`,
       lat: v.lastLocation.lat,
-      lng: v.lastLocation.lng
+      lng: v.lastLocation.lng,
+      timestamp: v.lastLocation.timestamp,
+      telemetryUnitId: v.lastLocation.telemetryUnitId,
+      speedKmh: v.lastLocation.speedKmh,
+      accelMs2: v.lastLocation.accelMs2,
+      driverLabel: this.getDriverTooltipLabel(v),
+      isMoving: this.movingVehicleIds.has(v.Id)
     }));
+  }
+  recenterMap() {
+    this.vehicleMap?.recenter();
   }
   onFiltersApplied(filters) {
     this.appliedFilters = filters;
@@ -98444,6 +101830,9 @@ var Vehicles = class _Vehicles {
   }
   onActionMouseDown(event) {
     event.preventDefault();
+  }
+  onShowTrips(vehicle) {
+    this.showTrips.emit(vehicle.identNr ?? vehicle.Id);
   }
   onActionsClick(event) {
     event.stopPropagation();
@@ -98519,18 +101908,54 @@ var Vehicles = class _Vehicles {
       this.newVehicle = this.emptyVehicle();
       this.createError = null;
       this.identNrError = null;
+      this.yearError = null;
     }
   }
+  onNewLicensePlateChange(value) {
+    this.newVehicle.licensePlate = (value ?? "").toUpperCase().slice(0, 10);
+  }
+  onVehicleLicensePlateChange(vehicle, value) {
+    vehicle.licensePlate = (value ?? "").toUpperCase().slice(0, 10);
+  }
+  onDigitFieldKeydown(event, currentValue, maxDigits = 4) {
+    if (!/^[0-9]$/.test(event.key))
+      return;
+    const currentLength = currentValue != null ? currentValue.toString().length : 0;
+    if (currentLength >= maxDigits) {
+      event.preventDefault();
+    }
+  }
+  onPowerPsKeydown(event) {
+    if (event.key === "-") {
+      event.preventDefault();
+      return;
+    }
+    this.onDigitFieldKeydown(event, this.newVehicle.powerPs);
+  }
+  onYearChange(value) {
+    this.newVehicle.year = value ?? void 0;
+    this.yearError = this.validateYear(value);
+  }
+  validateYear(value) {
+    if (value == null)
+      return null;
+    return value >= 1981 ? null : "Baujahr muss 1981 oder sp\xE4ter sein.";
+  }
   onIdentNrChange(value) {
-    const sanitized = (value ?? "").toUpperCase().replace(/[\s-]/g, "").slice(0, 17);
+    const sanitized = (value ?? "").toUpperCase().replace(/[\s-]/g, "");
     this.newVehicle.identNr = sanitized;
     this.identNrError = this.validateIdentNr(sanitized);
   }
   validateIdentNr(value) {
     if (!value)
       return null;
-    const isValid = value.length === 17 && !/[IOQ]/.test(value);
-    return isValid ? null : "Ident.-Nr. ung\xFCltig";
+    if (value.length !== 17) {
+      return "Ident.-Nr. muss genau 17 Zeichen haben.";
+    }
+    if (/[IOQ]/.test(value)) {
+      return "Ident.-Nr. ung\xFCltig (I, O, Q nicht erlaubt).";
+    }
+    return null;
   }
   createVehicle() {
     if (!this.newVehicle.modelName || !this.newVehicle.identNr || !this.newVehicle.brand || !this.newVehicle.year || !this.newVehicle.requiredLicense || !this.newVehicle.powerPs || !this.newVehicle.color)
@@ -98538,6 +101963,11 @@ var Vehicles = class _Vehicles {
     this.identNrError = this.validateIdentNr(this.newVehicle.identNr);
     if (this.identNrError) {
       this.createError = this.identNrError;
+      return;
+    }
+    this.yearError = this.validateYear(this.newVehicle.year);
+    if (this.yearError) {
+      this.createError = this.yearError;
       return;
     }
     this.createError = null;
@@ -98571,15 +102001,23 @@ var Vehicles = class _Vehicles {
     };
   }
   static \u0275fac = function Vehicles_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _Vehicles)(\u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(ChangeDetectorRef));
+    return new (__ngFactoryType__ || _Vehicles)(\u0275\u0275directiveInject(VehicleService), \u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(PersonService), \u0275\u0275directiveInject(VehicleLiveService), \u0275\u0275directiveInject(ChangeDetectorRef));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Vehicles, selectors: [["app-vehicles"]], hostBindings: function Vehicles_HostBindings(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Vehicles, selectors: [["app-vehicles"]], viewQuery: function Vehicles_Query(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275viewQuery(VehicleMap, 5);
+    }
+    if (rf & 2) {
+      let _t;
+      \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.vehicleMap = _t.first);
+    }
+  }, hostBindings: function Vehicles_HostBindings(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275listener("click", function Vehicles_click_HostBindingHandler($event) {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 22, vars: 12, consts: [["plateView", ""], ["firstRegistrationView", ""], ["unitView", ""], ["driverView", ""], [1, "container"], [1, "main"], [1, "header"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [3, "filtersApplied", "vehicles", "telemetryUnitIds", "persons", "licenseClasses"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "ngModel"], ["class", "field-error", 4, "ngIf"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [1, "field-error"], [3, "value"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "unit-select"], ["type", "button", 1, "unit-select-trigger", 3, "mousedown"], ["class", "unit-options", 4, "ngIf"], [1, "unit-options"], [1, "unit-option", 3, "mousedown"], ["class", "unit-option", 3, "disabled", "mousedown", 4, "ngFor", "ngForOf"], [1, "driver-select"], [1, "driver-select-row"], ["type", "button", 1, "advanced-btn", 3, "mousedown"], ["class", "advanced-filter", 4, "ngIf"], [1, "advanced-filter"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "action-btn"], [1, "page-number", 3, "click"]], template: function Vehicles_Template(rf, ctx) {
+  }, outputs: { showTrips: "showTrips" }, decls: 25, vars: 12, consts: [["plateView", ""], ["firstRegistrationView", ""], ["unitView", ""], ["driverView", ""], [1, "container"], [1, "main"], [1, "header"], [1, "card"], [3, "points"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["type", "button", "title", "Karte zentrieren", 1, "recenter-btn", 3, "click"], [1, "material-symbols-outlined"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [3, "filtersApplied", "vehicles", "telemetryUnitIds", "persons", "licenseClasses"], [1, "create-form"], [1, "form-grid"], ["type", "text", "maxlength", "10", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "20", 3, "ngModelChange", "ngModel"], ["type", "number", 3, "ngModelChange", "keydown", "ngModel"], ["class", "field-error", 4, "ngIf"], ["type", "text", 3, "ngModelChange", "ngModel"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "number", "min", "0", 3, "ngModelChange", "keydown", "ngModel"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [1, "field-error"], [3, "value"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], ["type", "text", "maxlength", "10", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "unit-select"], ["type", "button", 1, "unit-select-trigger", 3, "mousedown"], ["class", "unit-options", 4, "ngIf"], [1, "unit-options"], [1, "unit-option", 3, "mousedown"], ["class", "unit-option", 3, "disabled", "mousedown", 4, "ngFor", "ngForOf"], [1, "driver-select"], [1, "driver-select-row"], ["type", "button", 1, "advanced-btn", 3, "mousedown"], ["class", "advanced-filter", 4, "ngIf"], [1, "advanced-filter"], ["type", "text", "placeholder", "Vorname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nachname", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Mitarbeiter-Nr.", 3, "ngModelChange", "ngModel"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "page-number", 3, "click"]], template: function Vehicles_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "div", 4)(1, "div", 5)(2, "h1", 6);
       \u0275\u0275text(3, "Fahrzeuge");
@@ -98592,28 +102030,35 @@ var Vehicles = class _Vehicles {
         return ctx.toggleCreateForm();
       });
       \u0275\u0275text(8);
-      \u0275\u0275elementEnd()();
-      \u0275\u0275template(9, Vehicles_div_9_Template, 36, 13, "div", 11);
-      \u0275\u0275elementStart(10, "div", 12);
-      \u0275\u0275template(11, Vehicles_div_11_Template, 2, 0, "div", 13)(12, Vehicles_div_12_Template, 6, 8, "div", 14);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(13, "div", 15)(14, "button", 16);
-      \u0275\u0275listener("click", function Vehicles_Template_button_click_14_listener() {
+      \u0275\u0275elementStart(9, "button", 11);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_9_listener() {
+        return ctx.recenterMap();
+      });
+      \u0275\u0275elementStart(10, "span", 12);
+      \u0275\u0275text(11, "my_location");
+      \u0275\u0275elementEnd()()();
+      \u0275\u0275template(12, Vehicles_div_12_Template, 37, 14, "div", 13);
+      \u0275\u0275elementStart(13, "div", 14);
+      \u0275\u0275template(14, Vehicles_div_14_Template, 2, 0, "div", 15)(15, Vehicles_div_15_Template, 6, 8, "div", 16);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(16, "div", 17)(17, "button", 18);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_17_listener() {
         return ctx.prevPage();
       });
-      \u0275\u0275elementStart(15, "span", 17);
-      \u0275\u0275text(16, "chevron_left");
+      \u0275\u0275elementStart(18, "span", 12);
+      \u0275\u0275text(19, "chevron_left");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(17, Vehicles_button_17_Template, 2, 3, "button", 18);
-      \u0275\u0275elementStart(18, "button", 16);
-      \u0275\u0275listener("click", function Vehicles_Template_button_click_18_listener() {
+      \u0275\u0275template(20, Vehicles_button_20_Template, 2, 3, "button", 19);
+      \u0275\u0275elementStart(21, "button", 18);
+      \u0275\u0275listener("click", function Vehicles_Template_button_click_21_listener() {
         return ctx.nextPage();
       });
-      \u0275\u0275elementStart(19, "span", 17);
-      \u0275\u0275text(20, "chevron_right");
+      \u0275\u0275elementStart(22, "span", 12);
+      \u0275\u0275text(23, "chevron_right");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(21, "app-filter-sidebar", 19);
-      \u0275\u0275listener("filtersApplied", function Vehicles_Template_app_filter_sidebar_filtersApplied_21_listener($event) {
+      \u0275\u0275elementStart(24, "app-filter-sidebar", 20);
+      \u0275\u0275listener("filtersApplied", function Vehicles_Template_app_filter_sidebar_filtersApplied_24_listener($event) {
         return ctx.onFiltersApplied($event);
       });
       \u0275\u0275elementEnd()();
@@ -98623,7 +102068,7 @@ var Vehicles = class _Vehicles {
       \u0275\u0275property("points", ctx.mapPoints);
       \u0275\u0275advance(3);
       \u0275\u0275textInterpolate1(" ", ctx.showCreateForm ? "Abbrechen" : "Neu anlegen", " ");
-      \u0275\u0275advance();
+      \u0275\u0275advance(4);
       \u0275\u0275property("ngIf", ctx.showCreateForm);
       \u0275\u0275advance(2);
       \u0275\u0275property("ngIf", ctx.pagedVehicles.length === 0);
@@ -98638,7 +102083,7 @@ var Vehicles = class _Vehicles {
       \u0275\u0275advance(3);
       \u0275\u0275property("vehicles", ctx.vehicles)("telemetryUnitIds", ctx.telemetryUnitIds)("persons", ctx.persons)("licenseClasses", ctx.licenseClasses);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, VehicleMap, FilterSidebar], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   .field-error[_ngcontent-%COMP%] {\n  color: var(--color-danger-text);\n  font-size: 12px;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover, \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover, \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%] {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover, \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover {\n  background: transparent;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%] {\n  display: inline-flex;\n  flex-direction: column;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: center;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n  white-space: nowrap;\n  flex-shrink: 0;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: var(--color-accent-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 460px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=vehicles.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, MaxLengthValidator, MinValidator, NgModel, VehicleMap, FilterSidebar], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n  gap: 2vw;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.recenter-btn[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 36px;\n  height: 36px;\n  padding: 0;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.recenter-btn[_ngcontent-%COMP%]   .material-symbols-outlined[_ngcontent-%COMP%] {\n  font-size: 20px;\n}\n.recenter-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.create-form[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n  color-scheme: var(--color-scheme-form);\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   .field-error[_ngcontent-%COMP%] {\n  color: var(--color-danger-text);\n  font-size: 12px;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 50vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%] {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover, \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover, \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%], \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%] {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .unit-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover, \n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover {\n  background: transparent;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%] {\n  display: inline-flex;\n  flex-direction: column;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n  align-items: center;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%] {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n  white-space: nowrap;\n  flex-shrink: 0;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .driver-select-row[_ngcontent-%COMP%]   .advanced-btn[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .driver-select[_ngcontent-%COMP%]   .advanced-filter[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: var(--color-accent-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 460px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=vehicles.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Vehicles, [{
@@ -98656,28 +102101,36 @@ var Vehicles = class _Vehicles {
       <button class="create-btn" (click)="toggleCreateForm()">
         {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
       </button>
+
+      <button type="button" class="recenter-btn" title="Karte zentrieren" (click)="recenterMap()">
+        <span class="material-symbols-outlined">my_location</span>
+      </button>
     </div>
 
     <div class="create-form" *ngIf="showCreateForm">
       <div class="form-grid">
         <label>
           Kennzeichen
-          <input type="text" [(ngModel)]="newVehicle.licensePlate">
+          <input type="text" maxlength="10" [ngModel]="newVehicle.licensePlate" (ngModelChange)="onNewLicensePlateChange($event)">
         </label>
 
         <label>
           Marke *
-          <input type="text" [(ngModel)]="newVehicle.brand">
+          <input type="text" maxlength="20" [(ngModel)]="newVehicle.brand">
         </label>
 
         <label>
           Modell *
-          <input type="text" [(ngModel)]="newVehicle.modelName">
+          <input type="text" maxlength="20" [(ngModel)]="newVehicle.modelName">
         </label>
 
         <label>
           Baujahr *
-          <input type="number" [(ngModel)]="newVehicle.year">
+          <input type="number"
+                 [ngModel]="newVehicle.year"
+                 (ngModelChange)="onYearChange($event)"
+                 (keydown)="onDigitFieldKeydown($event, newVehicle.year)">
+          <span class="field-error" *ngIf="yearError">{{ yearError }}</span>
         </label>
 
         <label>
@@ -98698,12 +102151,12 @@ var Vehicles = class _Vehicles {
 
         <label>
           Leistung (PS) *
-          <input type="number" [(ngModel)]="newVehicle.powerPs">
+          <input type="number" min="0" [(ngModel)]="newVehicle.powerPs" (keydown)="onPowerPsKeydown($event)">
         </label>
 
         <label>
           Farbe *
-          <input type="text" [(ngModel)]="newVehicle.color">
+          <input type="text" maxlength="20" [(ngModel)]="newVehicle.color">
         </label>
 
         <label>
@@ -98716,7 +102169,7 @@ var Vehicles = class _Vehicles {
               (click)="createVehicle()"
               [disabled]="!newVehicle.modelName || !newVehicle.identNr || !newVehicle.brand
                           || !newVehicle.year || !newVehicle.requiredLicense
-                          || !newVehicle.powerPs || !newVehicle.color || !!identNrError">
+                          || !newVehicle.powerPs || !newVehicle.color || !!identNrError || !!yearError">
         Speichern
       </button>
 
@@ -98743,7 +102196,7 @@ var Vehicles = class _Vehicles {
           <div>
             <span>Kennzeichen:</span>
             <ng-container *ngIf="editingIndex === i; else plateView">
-              <input type="text" class="inline-input" [(ngModel)]="vehicle.licensePlate">
+              <input type="text" class="inline-input" maxlength="10" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
             </ng-container>
             <ng-template #plateView>{{ vehicle.licensePlate }}</ng-template>
           </div>
@@ -98843,7 +102296,7 @@ var Vehicles = class _Vehicles {
                     (mousedown)="onActionMouseDown($event); toggleEdit(i)">
               {{ editingIndex === i ? (isEditDirty(vehicle) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
-            <button class="action-btn">Fahrten</button>
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(vehicle)">Fahrten</button>
           </div>
         </div>
       </div>
@@ -98881,22 +102334,27 @@ var Vehicles = class _Vehicles {
   </app-filter-sidebar>
 
 </div>
-`, styles: ["/* src/app/widgets/vehicles/vehicles.component.scss */\n.header {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  justify-content: center;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: var(--color-accent);\n}\n.create-form .form-grid label .field-error {\n  color: var(--color-danger-text);\n  font-size: 12px;\n}\n.create-form .save-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .unit-select,\n.list .box .details-full .driver-select {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.list .box .details-full .unit-select .unit-select-trigger,\n.list .box .details-full .driver-select .unit-select-trigger {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.list .box .details-full .unit-select .unit-select-trigger:hover,\n.list .box .details-full .driver-select .unit-select-trigger:hover {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .unit-select.open .unit-select-trigger,\n.list .box .details-full .driver-select.open .unit-select-trigger {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .unit-select .unit-options,\n.list .box .details-full .driver-select .unit-options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.list .box .details-full .unit-select .unit-options .unit-option,\n.list .box .details-full .driver-select .unit-options .unit-option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.list .box .details-full .unit-select .unit-options .unit-option:hover,\n.list .box .details-full .driver-select .unit-options .unit-option:hover {\n  background: var(--color-border);\n}\n.list .box .details-full .unit-select .unit-options .unit-option.disabled,\n.list .box .details-full .driver-select .unit-options .unit-option.disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list .box .details-full .unit-select .unit-options .unit-option.disabled:hover,\n.list .box .details-full .driver-select .unit-options .unit-option.disabled:hover {\n  background: transparent;\n}\n.list .box .details-full .driver-select {\n  display: inline-flex;\n  flex-direction: column;\n}\n.list .box .details-full .driver-select .driver-select-row {\n  display: flex;\n  gap: 8px;\n  align-items: center;\n}\n.list .box .details-full .driver-select .driver-select-row .unit-select-trigger {\n  flex: 1;\n}\n.list .box .details-full .driver-select .driver-select-row .advanced-btn {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n  white-space: nowrap;\n  flex-shrink: 0;\n}\n.list .box .details-full .driver-select .driver-select-row .advanced-btn:hover {\n  color: var(--color-text-primary);\n}\n.list .box .details-full .driver-select .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.list .box .details-full .driver-select .advanced-filter input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .driver-select .advanced-filter input:focus {\n  border-color: var(--color-accent);\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list .box .actions .action-btn.dirty {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list .box .actions .action-btn.dirty:hover {\n  background: var(--color-accent-hover);\n}\n.list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: var(--color-text-primary);\n}\n.list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.list .box.active {\n  min-height: 460px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: var(--color-border);\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=vehicles.component.css.map */\n"] }]
-  }], () => [{ type: VehicleService }, { type: TelemetryUnitService }, { type: PersonService }, { type: ChangeDetectorRef }], { onDocumentClick: [{
+`, styles: ["/* src/app/widgets/vehicles/vehicles.component.scss */\n.header {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n  gap: 2vw;\n}\n.container .main {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container .main .card {\n  display: flex;\n  justify-content: center;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.recenter-btn {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 36px;\n  height: 36px;\n  padding: 0;\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 8px;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n.recenter-btn .material-symbols-outlined {\n  font-size: 20px;\n}\n.recenter-btn:hover {\n  background: var(--color-bg-surface-hover);\n  color: var(--color-text-primary);\n}\n.create-form {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n  color-scheme: var(--color-scheme-form);\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: var(--color-accent);\n}\n.create-form .form-grid label .field-error {\n  color: var(--color-danger-text);\n  font-size: 12px;\n}\n.create-form .save-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 400px;\n    opacity: 1;\n  }\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 50vw;\n}\n.list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .unit-select,\n.list .box .details-full .driver-select {\n  position: relative;\n  display: inline-block;\n  min-width: 38ch;\n}\n.list .box .details-full .unit-select .unit-select-trigger,\n.list .box .details-full .driver-select .unit-select-trigger {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.list .box .details-full .unit-select .unit-select-trigger:hover,\n.list .box .details-full .driver-select .unit-select-trigger:hover {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .unit-select.open .unit-select-trigger,\n.list .box .details-full .driver-select.open .unit-select-trigger {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .unit-select .unit-options,\n.list .box .details-full .driver-select .unit-options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.list .box .details-full .unit-select .unit-options .unit-option,\n.list .box .details-full .driver-select .unit-options .unit-option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.list .box .details-full .unit-select .unit-options .unit-option:hover,\n.list .box .details-full .driver-select .unit-options .unit-option:hover {\n  background: var(--color-border);\n}\n.list .box .details-full .unit-select .unit-options .unit-option.disabled,\n.list .box .details-full .driver-select .unit-options .unit-option.disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list .box .details-full .unit-select .unit-options .unit-option.disabled:hover,\n.list .box .details-full .driver-select .unit-options .unit-option.disabled:hover {\n  background: transparent;\n}\n.list .box .details-full .driver-select {\n  display: inline-flex;\n  flex-direction: column;\n}\n.list .box .details-full .driver-select .driver-select-row {\n  display: flex;\n  gap: 8px;\n  align-items: center;\n}\n.list .box .details-full .driver-select .driver-select-row .unit-select-trigger {\n  flex: 1;\n}\n.list .box .details-full .driver-select .driver-select-row .advanced-btn {\n  background: transparent;\n  border: none;\n  color: var(--color-accent-text);\n  font-size: 12px;\n  cursor: pointer;\n  padding: 0;\n  white-space: nowrap;\n  flex-shrink: 0;\n}\n.list .box .details-full .driver-select .driver-select-row .advanced-btn:hover {\n  color: var(--color-text-primary);\n}\n.list .box .details-full .driver-select .advanced-filter {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding: 10px;\n  margin-top: 6px;\n  background: var(--color-bg-elevated);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n}\n.list .box .details-full .driver-select .advanced-filter input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .driver-select .advanced-filter input:focus {\n  border-color: var(--color-accent);\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list .box .actions .action-btn.dirty {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list .box .actions .action-btn.dirty:hover {\n  background: var(--color-accent-hover);\n}\n.list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.list .box.active {\n  min-height: 460px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: var(--color-border);\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=vehicles.component.css.map */\n"] }]
+  }], () => [{ type: VehicleService }, { type: TelemetryUnitService }, { type: PersonService }, { type: VehicleLiveService }, { type: ChangeDetectorRef }], { vehicleMap: [{
+    type: ViewChild,
+    args: [VehicleMap]
+  }], showTrips: [{
+    type: Output
+  }], onDocumentClick: [{
     type: HostListener,
     args: ["document:click", ["$event"]]
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Vehicles, { className: "Vehicles", filePath: "src/app/widgets/vehicles/vehicles.component.ts", lineNumber: 21 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(Vehicles, { className: "Vehicles", filePath: "src/app/widgets/vehicles/vehicles.component.ts", lineNumber: 25 });
 })();
 
 // src/app/widgets/personen/personen.component.ts
-function Personen_div_7_div_16_div_3_Template(rf, ctx) {
+function Personen_div_8_div_16_div_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 36);
-    \u0275\u0275listener("mousedown", function Personen_div_7_div_16_div_3_Template_div_mousedown_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 37);
+    \u0275\u0275listener("mousedown", function Personen_div_8_div_16_div_3_Template_div_mousedown_0_listener($event) {
       const vehicle_r5 = \u0275\u0275restoreView(_r4).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(3);
       ctx_r1.onActionMouseDown($event);
@@ -98913,11 +102371,11 @@ function Personen_div_7_div_16_div_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate3(" ", vehicle_r5.Id, " \u2014 ", vehicle_r5.brand, " ", vehicle_r5.modelName, " ");
   }
 }
-function Personen_div_7_div_16_Template(rf, ctx) {
+function Personen_div_8_div_16_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 35)(1, "div", 36);
-    \u0275\u0275listener("mousedown", function Personen_div_7_div_16_Template_div_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(0, "div", 36)(1, "div", 37);
+    \u0275\u0275listener("mousedown", function Personen_div_8_div_16_Template_div_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r3);
       const ctx_r1 = \u0275\u0275nextContext(2);
       ctx_r1.onActionMouseDown($event);
@@ -98925,7 +102383,7 @@ function Personen_div_7_div_16_Template(rf, ctx) {
     });
     \u0275\u0275text(2, "Kein Fahrzeug");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Personen_div_7_div_16_div_3_Template, 2, 5, "div", 37);
+    \u0275\u0275template(3, Personen_div_8_div_16_div_3_Template, 2, 5, "div", 38);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -98934,9 +102392,9 @@ function Personen_div_7_div_16_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.vehicles);
   }
 }
-function Personen_div_7_option_24_Template(rf, ctx) {
+function Personen_div_8_option_24_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 38);
+    \u0275\u0275elementStart(0, "option", 39);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -98947,13 +102405,13 @@ function Personen_div_7_option_24_Template(rf, ctx) {
     \u0275\u0275textInterpolate(license_r6);
   }
 }
-function Personen_div_7_div_28_div_1_Template(rf, ctx) {
+function Personen_div_8_div_28_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 41);
+    \u0275\u0275elementStart(0, "div", 42);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "span", 42);
-    \u0275\u0275listener("click", function Personen_div_7_div_28_div_1_Template_span_click_2_listener() {
+    \u0275\u0275elementStart(2, "span", 43);
+    \u0275\u0275listener("click", function Personen_div_8_div_28_div_1_Template_span_click_2_listener() {
       const license_r8 = \u0275\u0275restoreView(_r7).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.removeLicenseFromNewPerson(license_r8.licenseClass));
@@ -98967,10 +102425,10 @@ function Personen_div_7_div_28_div_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate2(" ", license_r8.licenseClass, " (seit ", license_r8.obtainedDate, ") ");
   }
 }
-function Personen_div_7_div_28_Template(rf, ctx) {
+function Personen_div_8_div_28_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 39);
-    \u0275\u0275template(1, Personen_div_7_div_28_div_1_Template, 4, 2, "div", 40);
+    \u0275\u0275elementStart(0, "div", 40);
+    \u0275\u0275template(1, Personen_div_8_div_28_div_1_Template, 4, 2, "div", 41);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -98979,9 +102437,9 @@ function Personen_div_7_div_28_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.newPerson.licenses);
   }
 }
-function Personen_div_7_div_31_Template(rf, ctx) {
+function Personen_div_8_div_31_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 43);
+    \u0275\u0275elementStart(0, "div", 44);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -98991,13 +102449,13 @@ function Personen_div_7_div_31_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r1.createError);
   }
 }
-function Personen_div_7_Template(rf, ctx) {
+function Personen_div_8_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 18)(1, "div", 19)(2, "label");
-    \u0275\u0275text(3, " Vorname ");
-    \u0275\u0275elementStart(4, "input", 20);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_4_listener($event) {
+    \u0275\u0275elementStart(0, "div", 19)(1, "div", 20)(2, "label");
+    \u0275\u0275text(3, " Vorname * ");
+    \u0275\u0275elementStart(4, "input", 21);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_8_Template_input_ngModelChange_4_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.firstName, $event) || (ctx_r1.newPerson.firstName = $event);
@@ -99005,9 +102463,9 @@ function Personen_div_7_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(5, "label");
-    \u0275\u0275text(6, " Nachname ");
-    \u0275\u0275elementStart(7, "input", 20);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_7_listener($event) {
+    \u0275\u0275text(6, " Nachname * ");
+    \u0275\u0275elementStart(7, "input", 21);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_8_Template_input_ngModelChange_7_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.lastName, $event) || (ctx_r1.newPerson.lastName = $event);
@@ -99016,8 +102474,8 @@ function Personen_div_7_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "label");
     \u0275\u0275text(9, " Geburtsdatum ");
-    \u0275\u0275elementStart(10, "input", 21);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_10_listener($event) {
+    \u0275\u0275elementStart(10, "input", 22);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_8_Template_input_ngModelChange_10_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newPerson.birthDate, $event) || (ctx_r1.newPerson.birthDate = $event);
@@ -99026,8 +102484,8 @@ function Personen_div_7_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(11, "label");
     \u0275\u0275text(12, " Zugewiesenes Fahrzeug ");
-    \u0275\u0275elementStart(13, "div", 22)(14, "button", 23);
-    \u0275\u0275listener("mousedown", function Personen_div_7_Template_button_mousedown_14_listener($event) {
+    \u0275\u0275elementStart(13, "div", 23)(14, "button", 24);
+    \u0275\u0275listener("mousedown", function Personen_div_8_Template_button_mousedown_14_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       ctx_r1.onActionMouseDown($event);
@@ -99035,50 +102493,50 @@ function Personen_div_7_Template(rf, ctx) {
     });
     \u0275\u0275text(15);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(16, Personen_div_7_div_16_Template, 4, 1, "div", 24);
+    \u0275\u0275template(16, Personen_div_8_div_16_Template, 4, 1, "div", 25);
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(17, "div", 25)(18, "div", 26);
+    \u0275\u0275elementStart(17, "div", 26)(18, "div", 27);
     \u0275\u0275text(19, "F\xFChrerscheine");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(20, "div", 27)(21, "select", 28);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_select_ngModelChange_21_listener($event) {
+    \u0275\u0275elementStart(20, "div", 28)(21, "select", 29);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_8_Template_select_ngModelChange_21_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newLicenseClass, $event) || (ctx_r1.newLicenseClass = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(22, "option", 29);
+    \u0275\u0275elementStart(22, "option", 30);
     \u0275\u0275text(23, "Klasse w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(24, Personen_div_7_option_24_Template, 2, 2, "option", 30);
+    \u0275\u0275template(24, Personen_div_8_option_24_Template, 2, 2, "option", 31);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(25, "input", 21);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_7_Template_input_ngModelChange_25_listener($event) {
+    \u0275\u0275elementStart(25, "input", 22);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_8_Template_input_ngModelChange_25_listener($event) {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r1.newLicenseDate, $event) || (ctx_r1.newLicenseDate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(26, "button", 31);
-    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_26_listener() {
+    \u0275\u0275elementStart(26, "button", 32);
+    \u0275\u0275listener("click", function Personen_div_8_Template_button_click_26_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.addLicenseToNewPerson());
     });
     \u0275\u0275text(27, " + ");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(28, Personen_div_7_div_28_Template, 2, 1, "div", 32);
+    \u0275\u0275template(28, Personen_div_8_div_28_Template, 2, 1, "div", 33);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(29, "button", 33);
-    \u0275\u0275listener("click", function Personen_div_7_Template_button_click_29_listener() {
+    \u0275\u0275elementStart(29, "button", 34);
+    \u0275\u0275listener("click", function Personen_div_8_Template_button_click_29_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.createPerson());
     });
     \u0275\u0275text(30, " Speichern ");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(31, Personen_div_7_div_31_Template, 2, 1, "div", 34);
+    \u0275\u0275template(31, Personen_div_8_div_31_Template, 2, 1, "div", 35);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -99111,16 +102569,16 @@ function Personen_div_7_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.createError);
   }
 }
-function Personen_div_9_Template(rf, ctx) {
+function Personen_div_10_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
     \u0275\u0275text(1, " Keine Personen angelegt. ");
     \u0275\u0275elementEnd();
   }
 }
-function Personen_div_10_div_3_Template(rf, ctx) {
+function Personen_div_11_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 49);
+    \u0275\u0275elementStart(0, "div", 50);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -99130,12 +102588,12 @@ function Personen_div_10_div_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" Geburtsdatum: ", person_r11.birthDate, " ");
   }
 }
-function Personen_div_10_div_4_ng_container_4_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r12 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 54);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(1, "input", 55);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_11_div_4_ng_container_4_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r12);
       const person_r11 = \u0275\u0275nextContext(2).$implicit;
       \u0275\u0275twoWayBindingSet(person_r11.firstName, $event) || (person_r11.firstName = $event);
@@ -99150,7 +102608,7 @@ function Personen_div_10_div_4_ng_container_4_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", person_r11.firstName);
   }
 }
-function Personen_div_10_div_4_ng_template_5_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -99159,12 +102617,12 @@ function Personen_div_10_div_4_ng_template_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate(person_r11.firstName);
   }
 }
-function Personen_div_10_div_4_ng_container_10_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_container_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r13 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 54);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_10_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(1, "input", 55);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_11_div_4_ng_container_10_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r13);
       const person_r11 = \u0275\u0275nextContext(2).$implicit;
       \u0275\u0275twoWayBindingSet(person_r11.lastName, $event) || (person_r11.lastName = $event);
@@ -99179,7 +102637,7 @@ function Personen_div_10_div_4_ng_container_10_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", person_r11.lastName);
   }
 }
-function Personen_div_10_div_4_ng_template_11_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_template_11_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -99188,12 +102646,12 @@ function Personen_div_10_div_4_ng_template_11_Template(rf, ctx) {
     \u0275\u0275textInterpolate(person_r11.lastName);
   }
 }
-function Personen_div_10_div_4_ng_container_20_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_container_20_Template(rf, ctx) {
   if (rf & 1) {
     const _r14 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 55);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_ng_container_20_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(1, "input", 56);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_11_div_4_ng_container_20_Template_input_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r14);
       const person_r11 = \u0275\u0275nextContext(2).$implicit;
       \u0275\u0275twoWayBindingSet(person_r11.birthDate, $event) || (person_r11.birthDate = $event);
@@ -99208,7 +102666,7 @@ function Personen_div_10_div_4_ng_container_20_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", person_r11.birthDate);
   }
 }
-function Personen_div_10_div_4_ng_template_21_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_template_21_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -99217,9 +102675,9 @@ function Personen_div_10_div_4_ng_template_21_Template(rf, ctx) {
     \u0275\u0275textInterpolate(person_r11.birthDate);
   }
 }
-function Personen_div_10_div_4_ng_container_26_option_4_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_container_26_option_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 59);
+    \u0275\u0275elementStart(0, "option", 60);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -99232,21 +102690,21 @@ function Personen_div_10_div_4_ng_container_26_option_4_Template(rf, ctx) {
     \u0275\u0275textInterpolate3(" ", vehicle_r16.Id, " \u2014 ", vehicle_r16.brand, " ", vehicle_r16.modelName, " ");
   }
 }
-function Personen_div_10_div_4_ng_container_26_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_container_26_Template(rf, ctx) {
   if (rf & 1) {
     const _r15 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "select", 56);
-    \u0275\u0275listener("ngModelChange", function Personen_div_10_div_4_ng_container_26_Template_select_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(1, "select", 57);
+    \u0275\u0275listener("ngModelChange", function Personen_div_11_div_4_ng_container_26_Template_select_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r15);
       const person_r11 = \u0275\u0275nextContext(2).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.onVehicleAssignmentChange(person_r11, $event));
     });
-    \u0275\u0275elementStart(2, "option", 57);
+    \u0275\u0275elementStart(2, "option", 58);
     \u0275\u0275text(3, "kein Fahrzeug");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_26_option_4_Template, 2, 5, "option", 58);
+    \u0275\u0275template(4, Personen_div_11_div_4_ng_container_26_option_4_Template, 2, 5, "option", 59);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -99259,7 +102717,7 @@ function Personen_div_10_div_4_ng_container_26_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.vehicles);
   }
 }
-function Personen_div_10_div_4_ng_template_27_Template(rf, ctx) {
+function Personen_div_11_div_4_ng_template_27_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
@@ -99268,11 +102726,11 @@ function Personen_div_10_div_4_ng_template_27_Template(rf, ctx) {
     \u0275\u0275textInterpolate(person_r11.assignedVehicleId || "kein Fahrzeug");
   }
 }
-function Personen_div_10_div_4_div_32_div_1_span_2_Template(rf, ctx) {
+function Personen_div_11_div_4_div_32_div_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r17 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "span", 42);
-    \u0275\u0275listener("click", function Personen_div_10_div_4_div_32_div_1_span_2_Template_span_click_0_listener() {
+    \u0275\u0275elementStart(0, "span", 43);
+    \u0275\u0275listener("click", function Personen_div_11_div_4_div_32_div_1_span_2_Template_span_click_0_listener() {
       \u0275\u0275restoreView(_r17);
       const license_r18 = \u0275\u0275nextContext().$implicit;
       const person_r11 = \u0275\u0275nextContext(3).$implicit;
@@ -99283,11 +102741,11 @@ function Personen_div_10_div_4_div_32_div_1_span_2_Template(rf, ctx) {
     \u0275\u0275elementEnd();
   }
 }
-function Personen_div_10_div_4_div_32_div_1_Template(rf, ctx) {
+function Personen_div_11_div_4_div_32_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 41);
+    \u0275\u0275elementStart(0, "div", 42);
     \u0275\u0275text(1);
-    \u0275\u0275template(2, Personen_div_10_div_4_div_32_div_1_span_2_Template, 2, 0, "span", 60);
+    \u0275\u0275template(2, Personen_div_11_div_4_div_32_div_1_span_2_Template, 2, 0, "span", 61);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -99300,10 +102758,10 @@ function Personen_div_10_div_4_div_32_div_1_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.editingIndex === i_r10);
   }
 }
-function Personen_div_10_div_4_div_32_Template(rf, ctx) {
+function Personen_div_11_div_4_div_32_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 39);
-    \u0275\u0275template(1, Personen_div_10_div_4_div_32_div_1_Template, 3, 3, "div", 40);
+    \u0275\u0275elementStart(0, "div", 40);
+    \u0275\u0275template(1, Personen_div_11_div_4_div_32_div_1_Template, 3, 3, "div", 41);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -99312,9 +102770,9 @@ function Personen_div_10_div_4_div_32_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", person_r11.licenses);
   }
 }
-function Personen_div_10_div_4_div_33_option_4_Template(rf, ctx) {
+function Personen_div_11_div_4_div_33_option_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 38);
+    \u0275\u0275elementStart(0, "option", 39);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -99325,31 +102783,31 @@ function Personen_div_10_div_4_div_33_option_4_Template(rf, ctx) {
     \u0275\u0275textInterpolate(license_r20);
   }
 }
-function Personen_div_10_div_4_div_33_Template(rf, ctx) {
+function Personen_div_11_div_4_div_33_Template(rf, ctx) {
   if (rf & 1) {
     const _r19 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 27)(1, "select", 28);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_33_Template_select_ngModelChange_1_listener($event) {
+    \u0275\u0275elementStart(0, "div", 28)(1, "select", 29);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_11_div_4_div_33_Template_select_ngModelChange_1_listener($event) {
       \u0275\u0275restoreView(_r19);
       const ctx_r1 = \u0275\u0275nextContext(3);
       \u0275\u0275twoWayBindingSet(ctx_r1.editLicenseClass, $event) || (ctx_r1.editLicenseClass = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(2, "option", 29);
+    \u0275\u0275elementStart(2, "option", 30);
     \u0275\u0275text(3, "Klasse w\xE4hlen");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Personen_div_10_div_4_div_33_option_4_Template, 2, 2, "option", 30);
+    \u0275\u0275template(4, Personen_div_11_div_4_div_33_option_4_Template, 2, 2, "option", 31);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "input", 21);
-    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_10_div_4_div_33_Template_input_ngModelChange_5_listener($event) {
+    \u0275\u0275elementStart(5, "input", 22);
+    \u0275\u0275twoWayListener("ngModelChange", function Personen_div_11_div_4_div_33_Template_input_ngModelChange_5_listener($event) {
       \u0275\u0275restoreView(_r19);
       const ctx_r1 = \u0275\u0275nextContext(3);
       \u0275\u0275twoWayBindingSet(ctx_r1.editLicenseDate, $event) || (ctx_r1.editLicenseDate = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 31);
-    \u0275\u0275listener("click", function Personen_div_10_div_4_div_33_Template_button_click_6_listener() {
+    \u0275\u0275elementStart(6, "button", 32);
+    \u0275\u0275listener("click", function Personen_div_11_div_4_div_33_Template_button_click_6_listener() {
       \u0275\u0275restoreView(_r19);
       const person_r11 = \u0275\u0275nextContext(2).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -99371,9 +102829,9 @@ function Personen_div_10_div_4_div_33_Template(rf, ctx) {
     \u0275\u0275property("disabled", !ctx_r1.editLicenseClass || !ctx_r1.editLicenseDate);
   }
 }
-function Personen_div_10_div_4_div_34_Template(rf, ctx) {
+function Personen_div_11_div_4_div_34_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 43);
+    \u0275\u0275elementStart(0, "div", 44);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -99383,21 +102841,21 @@ function Personen_div_10_div_4_div_34_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r1.editError);
   }
 }
-function Personen_div_10_div_4_Template(rf, ctx) {
+function Personen_div_11_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 50);
-    \u0275\u0275listener("click", function Personen_div_10_div_4_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 51);
+    \u0275\u0275listener("click", function Personen_div_11_div_4_Template_div_click_0_listener($event) {
       return $event.stopPropagation();
     });
     \u0275\u0275elementStart(1, "div")(2, "span");
     \u0275\u0275text(3, "Vorname:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(4, Personen_div_10_div_4_ng_container_4_Template, 2, 1, "ng-container", 51)(5, Personen_div_10_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(4, Personen_div_11_div_4_ng_container_4_Template, 2, 1, "ng-container", 52)(5, Personen_div_11_div_4_ng_template_5_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(7, "div")(8, "span");
     \u0275\u0275text(9, "Nachname:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(10, Personen_div_10_div_4_ng_container_10_Template, 2, 1, "ng-container", 51)(11, Personen_div_10_div_4_ng_template_11_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(10, Personen_div_11_div_4_ng_container_10_Template, 2, 1, "ng-container", 52)(11, Personen_div_11_div_4_ng_template_11_Template, 1, 1, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(13, "div")(14, "span");
     \u0275\u0275text(15, "Mitarbeiter-Nr.:");
@@ -99407,19 +102865,19 @@ function Personen_div_10_div_4_Template(rf, ctx) {
     \u0275\u0275elementStart(17, "div")(18, "span");
     \u0275\u0275text(19, "Geburtsdatum:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(20, Personen_div_10_div_4_ng_container_20_Template, 2, 1, "ng-container", 51)(21, Personen_div_10_div_4_ng_template_21_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(20, Personen_div_11_div_4_ng_container_20_Template, 2, 1, "ng-container", 52)(21, Personen_div_11_div_4_ng_template_21_Template, 1, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(23, "div")(24, "span");
     \u0275\u0275text(25, "Zugewiesenes Fahrzeug:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(26, Personen_div_10_div_4_ng_container_26_Template, 5, 2, "ng-container", 51)(27, Personen_div_10_div_4_ng_template_27_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(26, Personen_div_11_div_4_ng_container_26_Template, 5, 2, "ng-container", 52)(27, Personen_div_11_div_4_ng_template_27_Template, 1, 1, "ng-template", null, 3, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(29, "div", 52)(30, "span");
+    \u0275\u0275elementStart(29, "div", 53)(30, "span");
     \u0275\u0275text(31, "F\xFChrerscheine:");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(32, Personen_div_10_div_4_div_32_Template, 2, 1, "div", 32)(33, Personen_div_10_div_4_div_33_Template, 8, 4, "div", 53);
+    \u0275\u0275template(32, Personen_div_11_div_4_div_32_Template, 2, 1, "div", 33)(33, Personen_div_11_div_4_div_33_Template, 8, 4, "div", 54);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(34, Personen_div_10_div_4_div_34_Template, 2, 1, "div", 34);
+    \u0275\u0275template(34, Personen_div_11_div_4_div_34_Template, 2, 1, "div", 35);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -99449,19 +102907,19 @@ function Personen_div_10_div_4_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.editError && ctx_r1.selectedIndex === i_r10);
   }
 }
-function Personen_div_10_div_5_Template(rf, ctx) {
+function Personen_div_11_div_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r26 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 61);
-    \u0275\u0275listener("click", function Personen_div_10_div_5_Template_div_click_0_listener($event) {
+    \u0275\u0275elementStart(0, "div", 62);
+    \u0275\u0275listener("click", function Personen_div_11_div_5_Template_div_click_0_listener($event) {
       \u0275\u0275restoreView(_r26);
       const ctx_r1 = \u0275\u0275nextContext(2);
       return \u0275\u0275resetView(ctx_r1.onActionsClick($event));
-    })("mousedown", function Personen_div_10_div_5_Template_div_mousedown_0_listener($event) {
+    })("mousedown", function Personen_div_11_div_5_Template_div_mousedown_0_listener($event) {
       return $event.stopPropagation();
     });
-    \u0275\u0275elementStart(1, "button", 62);
-    \u0275\u0275listener("mousedown", function Personen_div_10_div_5_Template_button_mousedown_1_listener($event) {
+    \u0275\u0275elementStart(1, "button", 63);
+    \u0275\u0275listener("mousedown", function Personen_div_11_div_5_Template_button_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r26);
       const ctx_r24 = \u0275\u0275nextContext();
       const person_r11 = ctx_r24.$implicit;
@@ -99472,8 +102930,8 @@ function Personen_div_10_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "div", 63)(4, "button", 64);
-    \u0275\u0275listener("mousedown", function Personen_div_10_div_5_Template_button_mousedown_4_listener($event) {
+    \u0275\u0275elementStart(3, "div", 64)(4, "button", 65);
+    \u0275\u0275listener("mousedown", function Personen_div_11_div_5_Template_button_mousedown_4_listener($event) {
       \u0275\u0275restoreView(_r26);
       const ctx_r1 = \u0275\u0275nextContext(2);
       ctx_r1.onActionMouseDown($event);
@@ -99481,8 +102939,8 @@ function Personen_div_10_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(5, "Abbrechen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "button", 64);
-    \u0275\u0275listener("mousedown", function Personen_div_10_div_5_Template_button_mousedown_6_listener($event) {
+    \u0275\u0275elementStart(6, "button", 65);
+    \u0275\u0275listener("mousedown", function Personen_div_11_div_5_Template_button_mousedown_6_listener($event) {
       \u0275\u0275restoreView(_r26);
       const i_r10 = \u0275\u0275nextContext().index;
       const ctx_r1 = \u0275\u0275nextContext();
@@ -99490,6 +102948,16 @@ function Personen_div_10_div_5_Template(rf, ctx) {
       return \u0275\u0275resetView(ctx_r1.toggleEdit(i_r10));
     });
     \u0275\u0275text(7);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(8, "button", 65);
+    \u0275\u0275listener("mousedown", function Personen_div_11_div_5_Template_button_mousedown_8_listener($event) {
+      \u0275\u0275restoreView(_r26);
+      const person_r11 = \u0275\u0275nextContext().$implicit;
+      const ctx_r1 = \u0275\u0275nextContext();
+      ctx_r1.onActionMouseDown($event);
+      return \u0275\u0275resetView(ctx_r1.onShowTrips(person_r11));
+    });
+    \u0275\u0275text(9, "Fahrten");
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
@@ -99507,19 +102975,19 @@ function Personen_div_10_div_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r1.editingIndex === i_r10 ? ctx_r1.isEditDirty(person_r11) ? "Speichern" : "Fertig" : "Bearbeiten", " ");
   }
 }
-function Personen_div_10_Template(rf, ctx) {
+function Personen_div_11_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 44);
-    \u0275\u0275listener("click", function Personen_div_10_Template_div_click_0_listener() {
+    \u0275\u0275elementStart(0, "div", 45);
+    \u0275\u0275listener("click", function Personen_div_11_Template_div_click_0_listener() {
       const i_r10 = \u0275\u0275restoreView(_r9).index;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.onBoxClick(i_r10));
     });
-    \u0275\u0275elementStart(1, "div", 45);
+    \u0275\u0275elementStart(1, "div", 46);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, Personen_div_10_div_3_Template, 2, 1, "div", 46)(4, Personen_div_10_div_4_Template, 35, 12, "div", 47)(5, Personen_div_10_div_5_Template, 8, 6, "div", 48);
+    \u0275\u0275template(3, Personen_div_11_div_3_Template, 2, 1, "div", 47)(4, Personen_div_11_div_4_Template, 35, 12, "div", 48)(5, Personen_div_11_div_5_Template, 10, 6, "div", 49);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -99537,11 +103005,11 @@ function Personen_div_10_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r1.selectedIndex === i_r10);
   }
 }
-function Personen_button_15_Template(rf, ctx) {
+function Personen_button_16_Template(rf, ctx) {
   if (rf & 1) {
     const _r27 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 65);
-    \u0275\u0275listener("click", function Personen_button_15_Template_button_click_0_listener() {
+    \u0275\u0275elementStart(0, "button", 66);
+    \u0275\u0275listener("click", function Personen_button_16_Template_button_click_0_listener() {
       const page_r28 = \u0275\u0275restoreView(_r27).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.goToPage(page_r28));
@@ -99562,6 +103030,7 @@ var Personen = class _Personen {
   vehicleService;
   telemetryUnitService;
   cdr;
+  showTrips = new EventEmitter();
   persons = [];
   vehicles = [];
   telemetryUnitIds = [];
@@ -99752,6 +103221,9 @@ var Personen = class _Personen {
   onActionMouseDown(event) {
     event.preventDefault();
   }
+  onShowTrips(person) {
+    this.showTrips.emit(person.Id);
+  }
   onActionsClick(event) {
     event.stopPropagation();
     const target = event.target;
@@ -99910,46 +103382,47 @@ var Personen = class _Personen {
         return ctx.onDocumentClick($event);
       }, \u0275\u0275resolveDocument);
     }
-  }, decls: 20, vars: 11, consts: [["firstNameView", ""], ["lastNameView", ""], ["birthDateView", ""], ["vehicleView", ""], [1, "container"], [1, "main"], [1, "header"], [1, "toolbar"], [1, "create-btn", 3, "click"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [3, "filtersApplied", "vehicles", "telemetryUnitIds", "persons", "licenseClasses"], [1, "create-form"], [1, "form-grid"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "vehicle-select"], ["type", "button", 1, "unit-select-trigger", 3, "mousedown"], ["class", "unit-options", 4, "ngIf"], [1, "license-editor"], [1, "field-label"], [1, "license-row"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [1, "unit-options"], [1, "unit-option", 3, "mousedown"], ["class", "unit-option", 3, "disabled", "mousedown", 4, "ngFor", "ngForOf"], [3, "value"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], [1, "license-section"], ["class", "license-row", 4, "ngIf"], ["type", "text", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", "disabled", 4, "ngFor", "ngForOf"], [3, "value", "disabled"], ["class", "chip-remove", 3, "click", 4, "ngIf"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "page-number", 3, "click"]], template: function Personen_Template(rf, ctx) {
+  }, outputs: { showTrips: "showTrips" }, decls: 21, vars: 11, consts: [["firstNameView", ""], ["lastNameView", ""], ["birthDateView", ""], ["vehicleView", ""], [1, "page"], [1, "header"], [1, "toolbar"], [1, "create-btn", 3, "click"], [1, "container"], [1, "main"], ["class", "create-form", 4, "ngIf"], [1, "list"], [4, "ngIf"], ["class", "box", 3, "active", "click", 4, "ngFor", "ngForOf"], [1, "pagination"], [1, "page-arrow", 3, "click", "disabled"], [1, "material-symbols-outlined"], ["class", "page-number", 3, "active", "click", 4, "ngFor", "ngForOf"], [3, "filtersApplied", "vehicles", "telemetryUnitIds", "persons", "licenseClasses"], [1, "create-form"], [1, "form-grid"], ["type", "text", "maxlength", "50", 3, "ngModelChange", "ngModel"], ["type", "date", 3, "ngModelChange", "ngModel"], [1, "vehicle-select"], ["type", "button", 1, "unit-select-trigger", 3, "mousedown"], ["class", "unit-options", 4, "ngIf"], [1, "license-editor"], [1, "field-label"], [1, "license-row"], [3, "ngModelChange", "ngModel"], ["value", "", "disabled", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "button", 1, "add-btn", 3, "click", "disabled"], ["class", "chips", 4, "ngIf"], [1, "save-btn", 3, "click", "disabled"], ["class", "form-error", 4, "ngIf"], [1, "unit-options"], [1, "unit-option", 3, "mousedown"], ["class", "unit-option", 3, "disabled", "mousedown", 4, "ngFor", "ngForOf"], [3, "value"], [1, "chips"], ["class", "chip", 4, "ngFor", "ngForOf"], [1, "chip"], [1, "chip-remove", 3, "click"], [1, "form-error"], [1, "box", 3, "click"], [1, "title"], ["class", "details", 4, "ngIf"], ["class", "details-full", 3, "click", 4, "ngIf"], ["class", "actions", 3, "click", "mousedown", 4, "ngIf"], [1, "details"], [1, "details-full", 3, "click"], [4, "ngIf", "ngIfElse"], [1, "license-section"], ["class", "license-row", 4, "ngIf"], ["type", "text", "maxlength", "50", 1, "inline-input", 3, "ngModelChange", "ngModel"], ["type", "date", 1, "inline-input", 3, "ngModelChange", "ngModel"], [1, "inline-input", 3, "ngModelChange", "ngModel"], ["value", ""], [3, "value", "disabled", 4, "ngFor", "ngForOf"], [3, "value", "disabled"], ["class", "chip-remove", 3, "click", 4, "ngIf"], [1, "actions", 3, "click", "mousedown"], [1, "action-btn", "delete-btn", 3, "mousedown"], [1, "actions-right"], [1, "action-btn", 3, "mousedown"], [1, "page-number", 3, "click"]], template: function Personen_Template(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275elementStart(0, "div", 4)(1, "div", 5)(2, "h1", 6);
-      \u0275\u0275text(3, "Personen");
+      \u0275\u0275elementStart(0, "div", 4)(1, "h1", 5);
+      \u0275\u0275text(2, "Personen");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(4, "div", 7)(5, "button", 8);
-      \u0275\u0275listener("click", function Personen_Template_button_click_5_listener() {
+      \u0275\u0275elementStart(3, "div", 6)(4, "button", 7);
+      \u0275\u0275listener("click", function Personen_Template_button_click_4_listener() {
         return ctx.toggleCreateForm();
       });
-      \u0275\u0275text(6);
+      \u0275\u0275text(5);
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(7, Personen_div_7_Template, 32, 14, "div", 9);
-      \u0275\u0275elementStart(8, "div", 10);
-      \u0275\u0275template(9, Personen_div_9_Template, 2, 0, "div", 11)(10, Personen_div_10_Template, 6, 8, "div", 12);
+      \u0275\u0275elementStart(6, "div", 8)(7, "div", 9);
+      \u0275\u0275template(8, Personen_div_8_Template, 32, 14, "div", 10);
+      \u0275\u0275elementStart(9, "div", 11);
+      \u0275\u0275template(10, Personen_div_10_Template, 2, 0, "div", 12)(11, Personen_div_11_Template, 6, 8, "div", 13);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(11, "div", 13)(12, "button", 14);
-      \u0275\u0275listener("click", function Personen_Template_button_click_12_listener() {
+      \u0275\u0275elementStart(12, "div", 14)(13, "button", 15);
+      \u0275\u0275listener("click", function Personen_Template_button_click_13_listener() {
         return ctx.prevPage();
       });
-      \u0275\u0275elementStart(13, "span", 15);
-      \u0275\u0275text(14, "chevron_left");
+      \u0275\u0275elementStart(14, "span", 16);
+      \u0275\u0275text(15, "chevron_left");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(15, Personen_button_15_Template, 2, 3, "button", 16);
-      \u0275\u0275elementStart(16, "button", 14);
-      \u0275\u0275listener("click", function Personen_Template_button_click_16_listener() {
+      \u0275\u0275template(16, Personen_button_16_Template, 2, 3, "button", 17);
+      \u0275\u0275elementStart(17, "button", 15);
+      \u0275\u0275listener("click", function Personen_Template_button_click_17_listener() {
         return ctx.nextPage();
       });
-      \u0275\u0275elementStart(17, "span", 15);
-      \u0275\u0275text(18, "chevron_right");
+      \u0275\u0275elementStart(18, "span", 16);
+      \u0275\u0275text(19, "chevron_right");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(19, "app-filter-sidebar", 17);
-      \u0275\u0275listener("filtersApplied", function Personen_Template_app_filter_sidebar_filtersApplied_19_listener($event) {
+      \u0275\u0275elementStart(20, "app-filter-sidebar", 18);
+      \u0275\u0275listener("filtersApplied", function Personen_Template_app_filter_sidebar_filtersApplied_20_listener($event) {
         return ctx.onFiltersApplied($event);
       });
-      \u0275\u0275elementEnd()();
+      \u0275\u0275elementEnd()()();
     }
     if (rf & 2) {
-      \u0275\u0275advance(6);
+      \u0275\u0275advance(5);
       \u0275\u0275textInterpolate1(" ", ctx.showCreateForm ? "Abbrechen" : "Neu anlegen", " ");
-      \u0275\u0275advance();
+      \u0275\u0275advance(3);
       \u0275\u0275property("ngIf", ctx.showCreateForm);
       \u0275\u0275advance(2);
       \u0275\u0275property("ngIf", ctx.pagedPersons.length === 0);
@@ -99964,32 +103437,33 @@ var Personen = class _Personen {
       \u0275\u0275advance(3);
       \u0275\u0275property("vehicles", ctx.vehicles)("telemetryUnitIds", ctx.telemetryUnitIds)("persons", ctx.persons)("licenseClasses", ctx.licenseClasses);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, FilterSidebar], styles: ["\n\n.header[_ngcontent-%COMP%] {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%] {\n  position: relative;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%] {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover {\n  background: transparent;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor[_ngcontent-%COMP%] {\n  margin-bottom: 16px;\n}\n.license-editor[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 13px;\n  color: var(--color-text-muted);\n  margin-bottom: 8px;\n}\n.license-section[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.license-section[_ngcontent-%COMP%]   .license-row[_ngcontent-%COMP%] {\n  margin-top: 8px;\n}\n.license-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%], \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus, \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 160px;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 60vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]   option[_ngcontent-%COMP%]:disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: var(--color-accent-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 520px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=personen.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, MaxLengthValidator, NgModel, FilterSidebar], styles: ["\n\n.page[_ngcontent-%COMP%] {\n  margin-top: 120px;\n}\n.header[_ngcontent-%COMP%] {\n  width: 50vw;\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.toolbar[_ngcontent-%COMP%] {\n  width: 50vw;\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 20px;\n}\n.container[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  gap: 2vw;\n}\n.container[_ngcontent-%COMP%]   .main[_ngcontent-%COMP%] {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding-top: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container[_ngcontent-%COMP%]     app-filter-sidebar .sidebar {\n  margin-top: 18px;\n}\n.create-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: _ngcontent-%COMP%_expand 0.25s ease;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.create-form[_ngcontent-%COMP%]   .form-grid[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%] {\n  position: relative;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%]:hover {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select.open[_ngcontent-%COMP%]   .unit-select-trigger[_ngcontent-%COMP%] {\n  border-color: var(--color-accent);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%] {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%] {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.create-form[_ngcontent-%COMP%]   .vehicle-select[_ngcontent-%COMP%]   .unit-options[_ngcontent-%COMP%]   .unit-option.disabled[_ngcontent-%COMP%]:hover {\n  background: transparent;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form[_ngcontent-%COMP%]   .save-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes _ngcontent-%COMP%_expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor[_ngcontent-%COMP%] {\n  margin-bottom: 16px;\n}\n.license-editor[_ngcontent-%COMP%]   .field-label[_ngcontent-%COMP%] {\n  font-size: 13px;\n  color: var(--color-text-muted);\n  margin-bottom: 8px;\n}\n.license-section[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.license-section[_ngcontent-%COMP%]   .license-row[_ngcontent-%COMP%] {\n  margin-top: 8px;\n}\n.license-row[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%], \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus, \n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.license-row[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  flex: 1;\n}\n.license-row[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 160px;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.license-row[_ngcontent-%COMP%]   .add-btn[_ngcontent-%COMP%]:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%] {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.chips[_ngcontent-%COMP%]   .chip[_ngcontent-%COMP%]   .chip-remove[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 50vw;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: bold;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%] {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]:focus {\n  border-color: var(--color-accent);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .details-full[_ngcontent-%COMP%]   .inline-input[_ngcontent-%COMP%]   option[_ngcontent-%COMP%]:disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%] {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .actions-right[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 8px;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn[_ngcontent-%COMP%]:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.dirty[_ngcontent-%COMP%]:hover {\n  background: var(--color-accent-hover);\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%] {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.list[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   .actions[_ngcontent-%COMP%]   .action-btn.danger[_ngcontent-%COMP%]:hover {\n  background: var(--color-danger-hover);\n}\n.list[_ngcontent-%COMP%]   .box.active[_ngcontent-%COMP%] {\n  min-height: 520px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.form-error[_ngcontent-%COMP%] {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.pagination[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%], \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%] {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:hover, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:hover {\n  background: var(--color-border);\n}\n.pagination[_ngcontent-%COMP%]   .page-arrow[_ngcontent-%COMP%]:disabled, \n.pagination[_ngcontent-%COMP%]   .page-number[_ngcontent-%COMP%]:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination[_ngcontent-%COMP%]   .page-number.active[_ngcontent-%COMP%] {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=personen.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Personen, [{
     type: Component,
-    args: [{ selector: "app-personen", standalone: true, imports: [CommonModule, FormsModule, FilterSidebar], template: `<div class="container">
+    args: [{ selector: "app-personen", standalone: true, imports: [CommonModule, FormsModule, FilterSidebar], template: `<div class="page">
+  <h1 class="header">Personen</h1>
+
+  <div class="toolbar">
+    <button class="create-btn" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
+    </button>
+  </div>
+
+  <div class="container">
   <div class="main">
-
-    <h1 class="header">Personen</h1>
-
-    <div class="toolbar">
-      <button class="create-btn" (click)="toggleCreateForm()">
-        {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
-      </button>
-    </div>
 
     <div class="create-form" *ngIf="showCreateForm">
       <div class="form-grid">
         <label>
-          Vorname
-          <input type="text" [(ngModel)]="newPerson.firstName">
+          Vorname *
+          <input type="text" maxlength="50" [(ngModel)]="newPerson.firstName">
         </label>
 
         <label>
-          Nachname
-          <input type="text" [(ngModel)]="newPerson.lastName">
+          Nachname *
+          <input type="text" maxlength="50" [(ngModel)]="newPerson.lastName">
         </label>
 
         <label>
@@ -100075,7 +103549,7 @@ var Personen = class _Personen {
           <div>
             <span>Vorname:</span>
             <ng-container *ngIf="editingIndex === i; else firstNameView">
-              <input type="text" class="inline-input" [(ngModel)]="person.firstName">
+              <input type="text" class="inline-input" maxlength="50" [(ngModel)]="person.firstName">
             </ng-container>
             <ng-template #firstNameView>{{ person.firstName }}</ng-template>
           </div>
@@ -100083,7 +103557,7 @@ var Personen = class _Personen {
           <div>
             <span>Nachname:</span>
             <ng-container *ngIf="editingIndex === i; else lastNameView">
-              <input type="text" class="inline-input" [(ngModel)]="person.lastName">
+              <input type="text" class="inline-input" maxlength="50" [(ngModel)]="person.lastName">
             </ng-container>
             <ng-template #lastNameView>{{ person.lastName }}</ng-template>
           </div>
@@ -100163,6 +103637,7 @@ var Personen = class _Personen {
                     (mousedown)="onActionMouseDown($event); toggleEdit(i)">
               {{ editingIndex === i ? (isEditDirty(person) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(person)">Fahrten</button>
           </div>
         </div>
       </div>
@@ -100199,9 +103674,12 @@ var Personen = class _Personen {
     (filtersApplied)="onFiltersApplied($event)">
   </app-filter-sidebar>
 
+  </div>
 </div>
-`, styles: ["/* src/app/widgets/personen/personen.component.scss */\n.header {\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  margin-top: 120px;\n}\n.container .main {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  padding: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.toolbar {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n.create-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: var(--color-accent);\n}\n.create-form .vehicle-select {\n  position: relative;\n}\n.create-form .vehicle-select .unit-select-trigger {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.create-form .vehicle-select .unit-select-trigger:hover {\n  border-color: var(--color-accent);\n}\n.create-form .vehicle-select.open .unit-select-trigger {\n  border-color: var(--color-accent);\n}\n.create-form .vehicle-select .unit-options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.create-form .vehicle-select .unit-options .unit-option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.create-form .vehicle-select .unit-options .unit-option:hover {\n  background: var(--color-border);\n}\n.create-form .vehicle-select .unit-options .unit-option.disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.create-form .vehicle-select .unit-options .unit-option.disabled:hover {\n  background: transparent;\n}\n.create-form .save-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor {\n  margin-bottom: 16px;\n}\n.license-editor .field-label {\n  font-size: 13px;\n  color: var(--color-text-muted);\n  margin-bottom: 8px;\n}\n.license-section span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.license-section .license-row {\n  margin-top: 8px;\n}\n.license-row {\n  display: flex;\n  gap: 8px;\n}\n.license-row select,\n.license-row input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.license-row select:focus,\n.license-row input:focus {\n  border-color: var(--color-accent);\n}\n.license-row select {\n  flex: 1;\n}\n.license-row input {\n  width: 160px;\n}\n.license-row .add-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row .add-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.license-row .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.chips .chip .chip-remove {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.chips .chip .chip-remove:hover {\n  color: var(--color-text-primary);\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 60vw;\n}\n.list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .inline-input option:disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list .box .actions .action-btn.dirty {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list .box .actions .action-btn.dirty:hover {\n  background: var(--color-accent-hover);\n}\n.list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: var(--color-text-primary);\n}\n.list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.list .box.active {\n  min-height: 520px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 60vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: var(--color-border);\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=personen.component.css.map */\n"] }]
-  }], () => [{ type: PersonService }, { type: VehicleService }, { type: TelemetryUnitService }, { type: ChangeDetectorRef }], { onDocumentClick: [{
+`, styles: ["/* src/app/widgets/personen/personen.component.scss */\n.page {\n  margin-top: 120px;\n}\n.header {\n  width: 50vw;\n  text-align: center;\n  color: var(--color-text-muted);\n  margin: 0 0 20px;\n}\n.toolbar {\n  width: 50vw;\n  display: flex;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 20px;\n}\n.container {\n  display: flex;\n  align-items: flex-start;\n  min-height: 100vh;\n  gap: 2vw;\n}\n.container .main {\n  flex: 0 0 auto;\n  display: flex;\n  flex-direction: column;\n  padding-top: 20px;\n  gap: 20px;\n  min-height: 0;\n}\n.container ::ng-deep app-filter-sidebar .sidebar {\n  margin-top: 18px;\n}\n.create-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n  width: 140px;\n  transition: all 0.2s ease;\n}\n.create-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  border-radius: 16px;\n  padding: 20px;\n  color: var(--color-text-primary);\n  overflow: hidden;\n  animation: expand 0.25s ease;\n}\n.create-form .form-grid {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n  margin-bottom: 16px;\n}\n.create-form .form-grid label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n  gap: 6px;\n}\n.create-form .form-grid label input,\n.create-form .form-grid label select {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  outline: none;\n}\n.create-form .form-grid label input:focus,\n.create-form .form-grid label select:focus {\n  border-color: var(--color-accent);\n}\n.create-form .vehicle-select {\n  position: relative;\n}\n.create-form .vehicle-select .unit-select-trigger {\n  width: 100%;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  text-align: left;\n  white-space: nowrap;\n  cursor: pointer;\n  outline: none;\n}\n.create-form .vehicle-select .unit-select-trigger:hover {\n  border-color: var(--color-accent);\n}\n.create-form .vehicle-select.open .unit-select-trigger {\n  border-color: var(--color-accent);\n}\n.create-form .vehicle-select .unit-options {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  right: 0;\n  margin-top: 4px;\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  max-height: 180px;\n  overflow-y: auto;\n  z-index: 20;\n}\n.create-form .vehicle-select .unit-options .unit-option {\n  padding: 8px 10px;\n  font-size: 14px;\n  color: var(--color-text-primary);\n  white-space: nowrap;\n  cursor: pointer;\n}\n.create-form .vehicle-select .unit-options .unit-option:hover {\n  background: var(--color-border);\n}\n.create-form .vehicle-select .unit-options .unit-option.disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.create-form .vehicle-select .unit-options .unit-option.disabled:hover {\n  background: transparent;\n}\n.create-form .save-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  padding: 10px 18px;\n  border-radius: 6px;\n  cursor: pointer;\n  font-weight: 600;\n}\n.create-form .save-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.create-form .save-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n@keyframes expand {\n  from {\n    max-height: 0;\n    opacity: 0;\n  }\n  to {\n    max-height: 600px;\n    opacity: 1;\n  }\n}\n.license-editor {\n  margin-bottom: 16px;\n}\n.license-editor .field-label {\n  font-size: 13px;\n  color: var(--color-text-muted);\n  margin-bottom: 8px;\n}\n.license-section span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.license-section .license-row {\n  margin-top: 8px;\n}\n.license-row {\n  display: flex;\n  gap: 8px;\n}\n.license-row select,\n.license-row input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.license-row select:focus,\n.license-row input:focus {\n  border-color: var(--color-accent);\n}\n.license-row select {\n  flex: 1;\n}\n.license-row input {\n  width: 160px;\n}\n.license-row .add-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n  flex-shrink: 0;\n}\n.license-row .add-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.license-row .add-btn:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n.chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 8px;\n}\n.chips .chip {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  background: var(--color-bg-surface-alt);\n  border: 1px solid var(--color-border);\n  border-radius: 999px;\n  padding: 4px 10px;\n  font-size: 13px;\n  color: var(--color-text-primary);\n}\n.chips .chip .chip-remove {\n  cursor: pointer;\n  color: var(--color-text-muted);\n}\n.chips .chip .chip-remove:hover {\n  color: var(--color-text-primary);\n}\n.list {\n  display: flex;\n  flex-direction: column;\n  gap: 12px;\n  color: var(--color-text-primary);\n  width: 50vw;\n}\n.list .box {\n  position: relative;\n  background: var(--color-bg-surface);\n  padding: 12px 16px;\n  border-radius: 12px;\n  border: 1px solid var(--color-border);\n  cursor: pointer;\n  transition: all 0.25s ease;\n}\n.list .box .title {\n  font-weight: bold;\n}\n.list .box .details {\n  color: var(--color-text-muted);\n  font-size: 14px;\n  margin-top: 4px;\n}\n.list .box .details-full {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  margin-top: 12px;\n  font-size: 14px;\n}\n.list .box .details-full span {\n  color: var(--color-text-muted);\n  margin-right: 6px;\n}\n.list .box .details-full .inline-input {\n  background: var(--color-bg-page);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 6px 10px;\n  color: var(--color-text-primary);\n  font-size: 14px;\n  outline: none;\n}\n.list .box .details-full .inline-input:focus {\n  border-color: var(--color-accent);\n}\n.list .box .details-full .inline-input option:disabled {\n  color: var(--color-text-disabled);\n  cursor: not-allowed;\n}\n.list .box .actions {\n  position: absolute;\n  bottom: 12px;\n  left: 16px;\n  right: 16px;\n  display: flex;\n  justify-content: space-between;\n  cursor: default;\n}\n.list .box .actions .actions-right {\n  display: flex;\n  gap: 8px;\n}\n.list .box .actions .action-btn {\n  background: var(--color-bg-surface-alt);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border);\n  border-radius: 6px;\n  padding: 8px 14px;\n  font-size: 13px;\n  font-weight: 600;\n  cursor: pointer;\n}\n.list .box .actions .action-btn:hover {\n  background: var(--color-bg-surface-hover);\n}\n.list .box .actions .action-btn.dirty {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n  color: var(--color-text-primary);\n}\n.list .box .actions .action-btn.dirty:hover {\n  background: var(--color-accent-hover);\n}\n.list .box .actions .action-btn.danger {\n  background: var(--color-danger);\n  border-color: var(--color-danger);\n  color: #ffffff;\n}\n.list .box .actions .action-btn.danger:hover {\n  background: var(--color-danger-hover);\n}\n.list .box.active {\n  min-height: 520px;\n  border-color: var(--color-border-strong);\n  padding-bottom: 60px;\n}\n.form-error {\n  margin-top: 12px;\n  color: var(--color-danger-text);\n  font-size: 13px;\n}\n.pagination {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  flex-wrap: wrap;\n  width: 50vw;\n}\n.pagination .page-arrow,\n.pagination .page-number {\n  background: var(--color-bg-surface);\n  border: 1px solid var(--color-border);\n  color: var(--color-text-primary);\n  border-radius: 6px;\n  width: 34px;\n  height: 34px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n.pagination .page-arrow:hover,\n.pagination .page-number:hover {\n  background: var(--color-border);\n}\n.pagination .page-arrow:disabled,\n.pagination .page-number:disabled {\n  opacity: 0.3;\n  cursor: not-allowed;\n}\n.pagination .page-number.active {\n  background: var(--color-accent);\n  border-color: var(--color-accent);\n}\n/*# sourceMappingURL=personen.component.css.map */\n"] }]
+  }], () => [{ type: PersonService }, { type: VehicleService }, { type: TelemetryUnitService }, { type: ChangeDetectorRef }], { showTrips: [{
+    type: Output
+  }], onDocumentClick: [{
     type: HostListener,
     args: ["document:click", ["$event"]]
   }] });
@@ -100248,49 +103726,82 @@ function MainPageComponent_div_20_Template(rf, ctx) {
 }
 function MainPageComponent_div_23_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "app-layout");
-    \u0275\u0275elementEnd();
+    const _r5 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div")(1, "app-layout", 25);
+    \u0275\u0275listener("presetVehicleIdChange", function MainPageComponent_div_23_Template_app_layout_presetVehicleIdChange_1_listener($event) {
+      \u0275\u0275restoreView(_r5);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.pendingTripVehicleId = $event);
+    })("presetPersonIdChange", function MainPageComponent_div_23_Template_app_layout_presetPersonIdChange_1_listener($event) {
+      \u0275\u0275restoreView(_r5);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.pendingTripPersonId = $event);
+    })("presetTelemetryUnitIdChange", function MainPageComponent_div_23_Template_app_layout_presetTelemetryUnitIdChange_1_listener($event) {
+      \u0275\u0275restoreView(_r5);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.pendingTripTelemetryUnitId = $event);
+    });
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("presetVehicleId", ctx_r2.pendingTripVehicleId)("presetPersonId", ctx_r2.pendingTripPersonId)("presetTelemetryUnitId", ctx_r2.pendingTripTelemetryUnitId);
   }
 }
 function MainPageComponent_div_24_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "app-personen");
-    \u0275\u0275elementEnd();
+    const _r6 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div")(1, "app-personen", 26);
+    \u0275\u0275listener("showTrips", function MainPageComponent_div_24_Template_app_personen_showTrips_1_listener($event) {
+      \u0275\u0275restoreView(_r6);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.onShowTripsForPerson($event));
+    });
+    \u0275\u0275elementEnd()();
   }
 }
 function MainPageComponent_div_25_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "app-vehicles");
-    \u0275\u0275elementEnd();
+    const _r7 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div")(1, "app-vehicles", 26);
+    \u0275\u0275listener("showTrips", function MainPageComponent_div_25_Template_app_vehicles_showTrips_1_listener($event) {
+      \u0275\u0275restoreView(_r7);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.onShowTripsForVehicle($event));
+    });
+    \u0275\u0275elementEnd()();
   }
 }
 function MainPageComponent_div_26_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div");
-    \u0275\u0275element(1, "app-telemetry-units");
-    \u0275\u0275elementEnd();
+    const _r8 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div")(1, "app-telemetry-units", 26);
+    \u0275\u0275listener("showTrips", function MainPageComponent_div_26_Template_app_telemetry_units_showTrips_1_listener($event) {
+      \u0275\u0275restoreView(_r8);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.onShowTripsForTelemetryUnit($event));
+    });
+    \u0275\u0275elementEnd()();
   }
 }
 function MainPageComponent_div_27_Template(rf, ctx) {
   if (rf & 1) {
-    const _r5 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 25)(1, "h2");
+    const _r9 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 27)(1, "h2");
     \u0275\u0275text(2, "Person anlegen");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "form", 26, 0);
+    \u0275\u0275elementStart(3, "form", 28, 0);
     \u0275\u0275listener("ngSubmit", function MainPageComponent_div_27_Template_form_ngSubmit_3_listener() {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.submitPerson());
     });
     \u0275\u0275elementStart(5, "label");
     \u0275\u0275text(6, " Vorname: ");
-    \u0275\u0275elementStart(7, "input", 27);
+    \u0275\u0275elementStart(7, "input", 29);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_7_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.firstName, $event) || (ctx_r2.person.firstName = $event);
       return \u0275\u0275resetView($event);
@@ -100298,9 +103809,9 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "label");
     \u0275\u0275text(9, " Nachname: ");
-    \u0275\u0275elementStart(10, "input", 28);
+    \u0275\u0275elementStart(10, "input", 30);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_10_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.lastName, $event) || (ctx_r2.person.lastName = $event);
       return \u0275\u0275resetView($event);
@@ -100308,9 +103819,9 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(11, "label");
     \u0275\u0275text(12, " Geburtsdatum: ");
-    \u0275\u0275elementStart(13, "input", 29);
+    \u0275\u0275elementStart(13, "input", 31);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_13_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.birthDate, $event) || (ctx_r2.person.birthDate = $event);
       return \u0275\u0275resetView($event);
@@ -100318,9 +103829,9 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(14, "label");
     \u0275\u0275text(15, " Geburtsort: ");
-    \u0275\u0275elementStart(16, "input", 30);
+    \u0275\u0275elementStart(16, "input", 32);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_16_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.birthPlace, $event) || (ctx_r2.person.birthPlace = $event);
       return \u0275\u0275resetView($event);
@@ -100328,9 +103839,9 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(17, "label");
     \u0275\u0275text(18, " Email: ");
-    \u0275\u0275elementStart(19, "input", 31);
+    \u0275\u0275elementStart(19, "input", 33);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_19_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.email, $event) || (ctx_r2.person.email = $event);
       return \u0275\u0275resetView($event);
@@ -100338,17 +103849,17 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(20, "label");
     \u0275\u0275text(21, " Adresse: ");
-    \u0275\u0275elementStart(22, "input", 32);
+    \u0275\u0275elementStart(22, "input", 34);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_22_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.address, $event) || (ctx_r2.person.address = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(23, "label", 33)(24, "input", 34);
+    \u0275\u0275elementStart(23, "label", 35)(24, "input", 36);
     \u0275\u0275twoWayListener("ngModelChange", function MainPageComponent_div_27_Template_input_ngModelChange_24_listener($event) {
-      \u0275\u0275restoreView(_r5);
+      \u0275\u0275restoreView(_r9);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.person.isAdmin, $event) || (ctx_r2.person.isAdmin = $event);
       return \u0275\u0275resetView($event);
@@ -100356,12 +103867,12 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275elementEnd();
     \u0275\u0275text(25, " Admin-Rechte ");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(26, "button", 35);
+    \u0275\u0275elementStart(26, "button", 37);
     \u0275\u0275text(27, "Person speichern");
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
-    const personForm_r6 = \u0275\u0275reference(4);
+    const personForm_r10 = \u0275\u0275reference(4);
     const ctx_r2 = \u0275\u0275nextContext();
     \u0275\u0275advance(7);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.person.firstName);
@@ -100378,11 +103889,11 @@ function MainPageComponent_div_27_Template(rf, ctx) {
     \u0275\u0275advance(2);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.person.isAdmin);
     \u0275\u0275advance(2);
-    \u0275\u0275property("disabled", !personForm_r6.form.valid);
+    \u0275\u0275property("disabled", !personForm_r10.form.valid);
   }
 }
 var MainPageComponent = class _MainPageComponent {
-  telemetryUnitService;
+  vehicleLiveService;
   cdr;
   person = {
     firstName: "",
@@ -100406,15 +103917,29 @@ var MainPageComponent = class _MainPageComponent {
     };
   }
   tabs = [
-    // 'Statistik',
     "Fahrzeuge",
     "Fahrten",
     "Personen",
     "Datenerfassungseinheiten"
   ];
   activeTab = "Fahrzeuge";
+  pendingTripVehicleId;
+  pendingTripPersonId;
+  pendingTripTelemetryUnitId;
   selectTab(tab) {
     this.activeTab = tab;
+  }
+  onShowTripsForVehicle(identNr) {
+    this.pendingTripVehicleId = identNr;
+    this.activeTab = "Fahrten";
+  }
+  onShowTripsForPerson(personId) {
+    this.pendingTripPersonId = personId;
+    this.activeTab = "Fahrten";
+  }
+  onShowTripsForTelemetryUnit(unitId) {
+    this.pendingTripTelemetryUnitId = unitId;
+    this.activeTab = "Fahrten";
   }
   sidebarClosed = false;
   toggleSidebar() {
@@ -100438,25 +103963,25 @@ var MainPageComponent = class _MainPageComponent {
   ];
   result;
   uuids = [];
-  broadcastSub;
-  constructor(telemetryUnitService, cdr) {
-    this.telemetryUnitService = telemetryUnitService;
+  usbSub;
+  constructor(vehicleLiveService, cdr) {
+    this.vehicleLiveService = vehicleLiveService;
     this.cdr = cdr;
     this.applyTheme();
   }
   ngOnInit() {
-    this.broadcastSub = this.telemetryUnitService.pollConnectedUnits().subscribe((uuids) => {
+    this.usbSub = this.vehicleLiveService.usbUnitsChanged$.subscribe((uuids) => {
       this.uuids = uuids;
       this.cdr.detectChanges();
     });
   }
   ngOnDestroy() {
-    this.broadcastSub?.unsubscribe();
+    this.usbSub?.unsubscribe();
   }
   static \u0275fac = function MainPageComponent_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _MainPageComponent)(\u0275\u0275directiveInject(TelemetryUnitService), \u0275\u0275directiveInject(ChangeDetectorRef));
+    return new (__ngFactoryType__ || _MainPageComponent)(\u0275\u0275directiveInject(VehicleLiveService), \u0275\u0275directiveInject(ChangeDetectorRef));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MainPageComponent, selectors: [["app-main-page"]], decls: 28, vars: 12, consts: [["personForm", "ngForm"], ["rel", "stylesheet", "href", \u0275\u0275trustConstantResourceUrl`https://unpkg.com/leaflet/dist/leaflet.css`], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0`, "rel", "stylesheet"], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/icon?family=Material+Icons`, "rel", "stylesheet"], [1, "header"], [1, "material-symbols-outlined", "app-menu", 3, "click"], [1, "tabs"], [3, "active", "click", 4, "ngFor", "ngForOf"], [1, "header-right"], [1, "material-symbols-outlined", "header-icon", 3, "click"], [1, "login-btn"], [1, "layout"], [1, "stripe"], [1, "tabs-vertical"], [1, "uuid-section"], [1, "uuid-title"], [1, "uuid-list"], ["class", "uuid-item", 4, "ngFor", "ngForOf"], [1, "main"], [1, "content"], [4, "ngIf"], ["class", "person-form", 4, "ngIf"], [3, "click"], [1, "uuid-item"], [1, "material-icons"], [1, "person-form"], [3, "ngSubmit"], ["type", "text", "name", "firstName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "lastName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "date", "name", "birthDate", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "birthPlace", 3, "ngModelChange", "ngModel"], ["type", "email", "name", "email", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "address", 3, "ngModelChange", "ngModel"], [1, "checkbox-label"], ["type", "checkbox", "name", "isAdmin", 3, "ngModelChange", "ngModel"], ["type", "submit", 3, "disabled"]], template: function MainPageComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _MainPageComponent, selectors: [["app-main-page"]], decls: 28, vars: 12, consts: [["personForm", "ngForm"], ["rel", "stylesheet", "href", \u0275\u0275trustConstantResourceUrl`https://unpkg.com/leaflet/dist/leaflet.css`], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0`, "rel", "stylesheet"], ["href", \u0275\u0275trustConstantResourceUrl`https://fonts.googleapis.com/icon?family=Material+Icons`, "rel", "stylesheet"], [1, "header"], [1, "material-symbols-outlined", "app-menu", 3, "click"], [1, "tabs"], [3, "active", "click", 4, "ngFor", "ngForOf"], [1, "header-right"], [1, "material-symbols-outlined", "header-icon", 3, "click"], [1, "login-btn"], [1, "layout"], [1, "stripe"], [1, "tabs-vertical"], [1, "uuid-section"], [1, "uuid-title"], [1, "uuid-list"], ["class", "uuid-item", 4, "ngFor", "ngForOf"], [1, "main"], [1, "content"], [4, "ngIf"], ["class", "person-form", 4, "ngIf"], [3, "click"], [1, "uuid-item"], [1, "material-icons"], [3, "presetVehicleIdChange", "presetPersonIdChange", "presetTelemetryUnitIdChange", "presetVehicleId", "presetPersonId", "presetTelemetryUnitId"], [3, "showTrips"], [1, "person-form"], [3, "ngSubmit"], ["type", "text", "name", "firstName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "lastName", "required", "", 3, "ngModelChange", "ngModel"], ["type", "date", "name", "birthDate", "required", "", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "birthPlace", 3, "ngModelChange", "ngModel"], ["type", "email", "name", "email", 3, "ngModelChange", "ngModel"], ["type", "text", "name", "address", 3, "ngModelChange", "ngModel"], [1, "checkbox-label"], ["type", "checkbox", "name", "isAdmin", 3, "ngModelChange", "ngModel"], ["type", "submit", 3, "disabled"]], template: function MainPageComponent_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275element(0, "link", 1)(1, "link", 2)(2, "link", 3);
       \u0275\u0275elementStart(3, "header", 4)(4, "span", 5);
@@ -100486,14 +104011,14 @@ var MainPageComponent = class _MainPageComponent {
       \u0275\u0275template(20, MainPageComponent_div_20_Template, 5, 1, "div", 17);
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(21, "div", 18)(22, "div", 19);
-      \u0275\u0275template(23, MainPageComponent_div_23_Template, 2, 0, "div", 20)(24, MainPageComponent_div_24_Template, 2, 0, "div", 20)(25, MainPageComponent_div_25_Template, 2, 0, "div", 20)(26, MainPageComponent_div_26_Template, 2, 0, "div", 20)(27, MainPageComponent_div_27_Template, 28, 8, "div", 21);
+      \u0275\u0275template(23, MainPageComponent_div_23_Template, 2, 3, "div", 20)(24, MainPageComponent_div_24_Template, 2, 0, "div", 20)(25, MainPageComponent_div_25_Template, 2, 0, "div", 20)(26, MainPageComponent_div_26_Template, 2, 0, "div", 20)(27, MainPageComponent_div_27_Template, 28, 8, "div", 21);
       \u0275\u0275elementEnd()()();
     }
     if (rf & 2) {
       \u0275\u0275advance(7);
       \u0275\u0275property("ngForOf", ctx.tabs);
       \u0275\u0275advance(3);
-      \u0275\u0275textInterpolate1(" ", ctx.isDarkMode ? "dark_mode" : "light_mode", " ");
+      \u0275\u0275textInterpolate1(" ", ctx.isDarkMode ? "light_mode" : "dark_mode", " ");
       \u0275\u0275advance(4);
       \u0275\u0275classProp("closed", ctx.sidebarClosed);
       \u0275\u0275advance(2);
@@ -100524,12 +104049,11 @@ var MainPageComponent = class _MainPageComponent {
     RequiredValidator,
     NgModel,
     NgForm,
-    // CardWidget,
     LayoutComponent,
     TelemetryUnits,
     Vehicles,
     Personen
-  ], styles: ['\n\nhtml[_ngcontent-%COMP%], \nbody[_ngcontent-%COMP%] {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n.app[_ngcontent-%COMP%] {\n  min-height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  height: 80px;\n  padding: 0 10px;\n  background-color: var(--color-bg-header);\n  border-bottom: 1px solid var(--color-border-header);\n  position: sticky;\n}\n.app-logo[_ngcontent-%COMP%] {\n  height: 40px;\n  width: auto;\n  display: block;\n}\n.main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n}\n.widget-container[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 400px);\n  gap: 20px;\n}\n.widget-container[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%] {\n  flex: 0 0 400px;\n}\n.layout[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  flex-direction: row;\n  background-color: var(--color-bg-page);\n}\n.content[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 20px;\n  color: var(--color-text-primary);\n}\n.leaflet-popup-content[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.leaflet-popup-content-wrapper[_ngcontent-%COMP%] {\n  padding: 8px 12px;\n}\n.leaflet-tooltip[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.app-menu[_ngcontent-%COMP%] {\n  font-variation-settings: "wght" 400;\n  font-size: 40px;\n  font-weight: 400;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  margin-right: 30px;\n  width: 44px;\n  height: 44px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 20%;\n}\n.app-menu[_ngcontent-%COMP%]:hover {\n  background: var(--color-hover-overlay);\n}\n.tab-container[_ngcontent-%COMP%] {\n  margin-top: 200px;\n  width: 100%;\n}\n.tabs[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 50%;\n  transform: translateX(-50%);\n}\n.tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  margin-right: 20px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-soft);\n  cursor: pointer;\n  font-size: 16px;\n  transition: color 0.2s;\n}\n.tabs[_ngcontent-%COMP%]   button.active[_ngcontent-%COMP%] {\n  color: var(--color-text-primary);\n}\n.tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.line[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 20px auto;\n  border-bottom: 2px solid var(--color-track);\n}\n.stripe[_ngcontent-%COMP%] {\n  width: 220px;\n  background-color: var(--color-bg-header);\n  transition: width 0.3s ease;\n  position: relative;\n  overflow: hidden;\n}\n.stripe.closed[_ngcontent-%COMP%] {\n  width: 60px;\n}\n.stripe.closed[_ngcontent-%COMP%]   .tab-label[_ngcontent-%COMP%] {\n  display: none;\n}\n.stripe.closed[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%] {\n  transform: rotate(180deg);\n}\n.stripe[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  font-size: 24px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: transform 0.3s, color 0.2s;\n}\n.stripe[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 50px 10px 10px 10px;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: color 0.2s;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]   .material-icons-outlined[_ngcontent-%COMP%] {\n  font-size: 24px;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]   .tab-label[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.person-form[_ngcontent-%COMP%] {\n  max-width: 500px;\n  margin-left: 20px 0 20px 0;\n  padding: 20px;\n  background: var(--color-bg-panel-legacy);\n  border-radius: 8px;\n  color: var(--color-text-primary);\n}\n.person-form[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  text-align: left;\n  margin-bottom: 20px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 15px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=text][_ngcontent-%COMP%], \n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=email][_ngcontent-%COMP%], \n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=date][_ngcontent-%COMP%] {\n  margin-top: 5px;\n  padding: 8px;\n  border-radius: 4px;\n  border: none;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   .checkbox-label[_ngcontent-%COMP%] {\n  flex-direction: row;\n  align-items: left;\n  gap: 10px;\n  font-size: 14px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  margin-top: 10px;\n  padding: 10px;\n  background-color: var(--color-grey-444);\n  border: none;\n  border-radius: 4px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  font-size: 16px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-grey-666);\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:disabled {\n  background-color: var(--color-grey-333);\n  cursor: not-allowed;\n}\n.header-right[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 0 20px;\n  justify-content: flex-end;\n  margin-left: auto;\n  color: var(--color-text-soft);\n}\n.header-icon[_ngcontent-%COMP%] {\n  font-size: 24px;\n  font-variation-settings: "FILL" 1;\n  cursor: pointer;\n  color: var(--color-text-primary);\n  width: 32px;\n  height: 32px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.header-icon[_ngcontent-%COMP%]:hover {\n  background: var(--color-hover-overlay);\n}\n.profile-icon[_ngcontent-%COMP%] {\n  font-size: 36px;\n  color: var(--color-text-primary);\n  width: 38px;\n  height: 38px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.profile-icon[_ngcontent-%COMP%]:hover {\n  background: var(--color-hover-overlay);\n}\n.login-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 8px;\n  padding: 8px 20px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n}\n.login-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.header-name[_ngcontent-%COMP%] {\n  font-size: 16px;\n  font-weight: 500;\n}\n.uuid-section[_ngcontent-%COMP%] {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  width: 220px;\n  border-top: 1px solid var(--color-grey-ccc);\n  padding: 10px;\n  color: var(--color-text-primary);\n  font-size: 8px;\n  z-index: 1000;\n}\n.uuid-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  margin-bottom: 5px;\n}\n.uuid-list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.uuid-item[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.cpu-icon[_ngcontent-%COMP%] {\n  font-size: 18px;\n  line-height: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.uuid-section[_ngcontent-%COMP%] {\n  opacity: 1;\n  transform: translateY(0);\n  transition: opacity 0.25s ease, transform 0.25s ease;\n}\n.uuid-section.closed[_ngcontent-%COMP%] {\n  opacity: 0;\n  transform: translateY(10px);\n  pointer-events: none;\n}\n/*# sourceMappingURL=main-page.component.css.map */'] });
+  ], styles: ['\n\nhtml[_ngcontent-%COMP%], \nbody[_ngcontent-%COMP%] {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n.app[_ngcontent-%COMP%] {\n  min-height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.header[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  height: 80px;\n  padding: 0 10px;\n  background-color: var(--color-bg-header);\n  border-bottom: 1px solid var(--color-border-header);\n  position: sticky;\n}\n.app-logo[_ngcontent-%COMP%] {\n  height: 40px;\n  width: auto;\n  display: block;\n}\n.main[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n}\n.widget-container[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 400px);\n  gap: 20px;\n}\n.widget-container[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%] {\n  flex: 0 0 400px;\n}\n.layout[_ngcontent-%COMP%] {\n  display: flex;\n  min-height: 100vh;\n  flex-direction: row;\n  background-color: var(--color-bg-page);\n}\n.content[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 20px;\n  color: var(--color-text-primary);\n}\n.leaflet-popup-content[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.leaflet-popup-content-wrapper[_ngcontent-%COMP%] {\n  padding: 8px 12px;\n}\n.leaflet-tooltip[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.app-menu[_ngcontent-%COMP%] {\n  font-variation-settings: "wght" 400;\n  font-size: 40px;\n  font-weight: 400;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  margin-right: 30px;\n  width: 44px;\n  height: 44px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 20%;\n}\n.app-menu[_ngcontent-%COMP%]:hover {\n  background: var(--color-hover-overlay);\n}\n.tab-container[_ngcontent-%COMP%] {\n  margin-top: 200px;\n  width: 100%;\n}\n.tabs[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 50%;\n  transform: translateX(-50%);\n}\n.tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  margin-right: 20px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-soft);\n  cursor: pointer;\n  font-size: 16px;\n  transition: color 0.2s;\n}\n.tabs[_ngcontent-%COMP%]   button.active[_ngcontent-%COMP%] {\n  color: var(--color-text-primary);\n}\n.tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.line[_ngcontent-%COMP%] {\n  width: 80%;\n  margin: 20px auto;\n  border-bottom: 2px solid var(--color-track);\n}\n.stripe[_ngcontent-%COMP%] {\n  width: 220px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-header);\n  transition: width 0.15s ease;\n  position: relative;\n  overflow: hidden;\n}\n.stripe.closed[_ngcontent-%COMP%] {\n  width: 60px;\n}\n.stripe.closed[_ngcontent-%COMP%]   .tab-label[_ngcontent-%COMP%] {\n  display: none;\n}\n.stripe.closed[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%] {\n  transform: rotate(180deg);\n}\n.stripe[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  font-size: 24px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: transform 0.15s, color 0.1s;\n}\n.stripe[_ngcontent-%COMP%]   .close-sidebar[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 50px 10px 10px 10px;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: color 0.2s;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  color: var(--color-text-primary);\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]   .material-icons-outlined[_ngcontent-%COMP%] {\n  font-size: 24px;\n}\n.stripe[_ngcontent-%COMP%]   .tabs-vertical[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]   .tab-label[_ngcontent-%COMP%] {\n  font-size: 16px;\n}\n.person-form[_ngcontent-%COMP%] {\n  max-width: 500px;\n  margin-left: 20px 0 20px 0;\n  padding: 20px;\n  background: var(--color-bg-panel-legacy);\n  border-radius: 8px;\n  color: var(--color-text-primary);\n}\n.person-form[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  text-align: left;\n  margin-bottom: 20px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 15px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=text][_ngcontent-%COMP%], \n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=email][_ngcontent-%COMP%], \n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[type=date][_ngcontent-%COMP%] {\n  margin-top: 5px;\n  padding: 8px;\n  border-radius: 4px;\n  border: none;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   .checkbox-label[_ngcontent-%COMP%] {\n  flex-direction: row;\n  align-items: left;\n  gap: 10px;\n  font-size: 14px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  margin-top: 10px;\n  padding: 10px;\n  background-color: var(--color-grey-444);\n  border: none;\n  border-radius: 4px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  font-size: 16px;\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-grey-666);\n}\n.person-form[_ngcontent-%COMP%]   form[_ngcontent-%COMP%]   button[_ngcontent-%COMP%]:disabled {\n  background-color: var(--color-grey-333);\n  cursor: not-allowed;\n}\n.header-right[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 0 20px;\n  justify-content: flex-end;\n  margin-left: auto;\n  color: var(--color-text-soft);\n}\n.header-icon[_ngcontent-%COMP%] {\n  font-size: 24px;\n  font-variation-settings: "FILL" 1;\n  cursor: pointer;\n  color: var(--color-text-primary);\n  width: 32px;\n  height: 32px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.header-icon[_ngcontent-%COMP%]:hover {\n  background: var(--color-hover-overlay);\n}\n.profile-icon[_ngcontent-%COMP%] {\n  font-size: 36px;\n  color: var(--color-text-primary);\n  width: 38px;\n  height: 38px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.profile-icon[_ngcontent-%COMP%]:hover {\n  background: var(--color-hover-overlay);\n}\n.login-btn[_ngcontent-%COMP%] {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 8px;\n  padding: 8px 20px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n}\n.login-btn[_ngcontent-%COMP%]:hover {\n  background-color: var(--color-accent-hover);\n}\n.header-name[_ngcontent-%COMP%] {\n  font-size: 16px;\n  font-weight: 500;\n}\n.uuid-section[_ngcontent-%COMP%] {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  width: 220px;\n  border-top: 1px solid var(--color-grey-ccc);\n  padding: 10px;\n  color: var(--color-text-primary);\n  font-size: 8px;\n  z-index: 1000;\n}\n.uuid-title[_ngcontent-%COMP%] {\n  font-weight: bold;\n  margin-bottom: 5px;\n}\n.uuid-list[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.uuid-item[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.cpu-icon[_ngcontent-%COMP%] {\n  font-size: 18px;\n  line-height: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.uuid-section[_ngcontent-%COMP%] {\n  opacity: 1;\n  transform: translateY(0);\n  transition: opacity 0.125s ease 0.15s, transform 0.125s ease 0.15s;\n}\n.uuid-section.closed[_ngcontent-%COMP%] {\n  opacity: 0;\n  transform: translateY(10px);\n  transition: none;\n  pointer-events: none;\n}\n/*# sourceMappingURL=main-page.component.css.map */'] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MainPageComponent, [{
@@ -100537,7 +104061,6 @@ var MainPageComponent = class _MainPageComponent {
     args: [{ selector: "app-main-page", standalone: true, imports: [
       CommonModule,
       FormsModule,
-      // CardWidget,
       LayoutComponent,
       TelemetryUnits,
       Vehicles,
@@ -100562,21 +104085,9 @@ var MainPageComponent = class _MainPageComponent {
   </nav>
 
   <div class="header-right">
-    <!--
-    <span class="material-symbols-outlined header-icon">
-      settings
-    </span>
-    -->
-
     <span class="material-symbols-outlined header-icon" (click)="toggleTheme()">
-      {{ isDarkMode ? 'dark_mode' : 'light_mode' }}
+      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
     </span>
-
-    <!--
-    <span class="material-symbols-outlined profile-icon">
-      account_circle
-    </span>
-    -->
 
     <button class="login-btn">Login</button>
   </div>
@@ -100588,15 +104099,6 @@ var MainPageComponent = class _MainPageComponent {
   <div class="stripe" [class.closed]="sidebarClosed" >
 
     <nav class="tabs-vertical">
-
-      <!--
-      <button *ngFor="let tab of sidebarTabs"
-            (click)="selectTab(tab.label)"
-            [class.active]="activeTab === tab.label">
-        <span class="material-symbols-outlined">{{ tab.icon }}</span>
-        <span class="tab-label">{{ tab.label }}</span>
-      </button>
-      -->
     </nav>
 
       <div class="uuid-section" [class.closed]="sidebarClosed">
@@ -100616,28 +104118,27 @@ var MainPageComponent = class _MainPageComponent {
 
   <div class="main">
     <div class="content">
-      
-      <!--
-      <div *ngIf="activeTab === 'Statistik'">
-        <h1>Hier stehen Statistiken</h1>
-        <app-card-widget></app-card-widget>
-      </div>
-      -->
-
       <div *ngIf="activeTab === 'Fahrten'">
-          <app-layout></app-layout>
+          <app-layout
+            [presetVehicleId]="pendingTripVehicleId"
+            (presetVehicleIdChange)="pendingTripVehicleId = $event"
+            [presetPersonId]="pendingTripPersonId"
+            (presetPersonIdChange)="pendingTripPersonId = $event"
+            [presetTelemetryUnitId]="pendingTripTelemetryUnitId"
+            (presetTelemetryUnitIdChange)="pendingTripTelemetryUnitId = $event">
+          </app-layout>
       </div>
 
       <div *ngIf="activeTab === 'Personen'">
-        <app-personen></app-personen>
+        <app-personen (showTrips)="onShowTripsForPerson($event)"></app-personen>
       </div>
 
       <div *ngIf="activeTab === 'Fahrzeuge'">
-        <app-vehicles></app-vehicles>
+        <app-vehicles (showTrips)="onShowTripsForVehicle($event)"></app-vehicles>
       </div>
 
       <div *ngIf="activeTab === 'Datenerfassungseinheiten'">
-        <app-telemetry-units></app-telemetry-units>
+        <app-telemetry-units (showTrips)="onShowTripsForTelemetryUnit($event)"></app-telemetry-units>
       </div>
 
       <div *ngIf="activeTab === 'Person anlegen'" class="person-form">
@@ -100686,11 +104187,11 @@ var MainPageComponent = class _MainPageComponent {
     </div>
   </div>
 </div>
-`, styles: ['/* src/app/pages/main-page/main-page.component.scss */\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n.app {\n  min-height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.header {\n  display: flex;\n  align-items: center;\n  height: 80px;\n  padding: 0 10px;\n  background-color: var(--color-bg-header);\n  border-bottom: 1px solid var(--color-border-header);\n  position: sticky;\n}\n.app-logo {\n  height: 40px;\n  width: auto;\n  display: block;\n}\n.main {\n  flex: 1;\n  display: flex;\n}\n.widget-container {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 400px);\n  gap: 20px;\n}\n.widget-container > * {\n  flex: 0 0 400px;\n}\n.layout {\n  display: flex;\n  min-height: 100vh;\n  flex-direction: row;\n  background-color: var(--color-bg-page);\n}\n.content {\n  flex: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 20px;\n  color: var(--color-text-primary);\n}\n.leaflet-popup-content {\n  font-size: 16px;\n}\n.leaflet-popup-content-wrapper {\n  padding: 8px 12px;\n}\n.leaflet-tooltip {\n  font-size: 16px;\n}\n.app-menu {\n  font-variation-settings: "wght" 400;\n  font-size: 40px;\n  font-weight: 400;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  margin-right: 30px;\n  width: 44px;\n  height: 44px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 20%;\n}\n.app-menu:hover {\n  background: var(--color-hover-overlay);\n}\n.tab-container {\n  margin-top: 200px;\n  width: 100%;\n}\n.tabs {\n  position: absolute;\n  left: 50%;\n  transform: translateX(-50%);\n}\n.tabs button {\n  margin-right: 20px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-soft);\n  cursor: pointer;\n  font-size: 16px;\n  transition: color 0.2s;\n}\n.tabs button.active {\n  color: var(--color-text-primary);\n}\n.tabs button:hover {\n  color: var(--color-text-primary);\n}\n.line {\n  width: 80%;\n  margin: 20px auto;\n  border-bottom: 2px solid var(--color-track);\n}\n.stripe {\n  width: 220px;\n  background-color: var(--color-bg-header);\n  transition: width 0.3s ease;\n  position: relative;\n  overflow: hidden;\n}\n.stripe.closed {\n  width: 60px;\n}\n.stripe.closed .tab-label {\n  display: none;\n}\n.stripe.closed .close-sidebar {\n  transform: rotate(180deg);\n}\n.stripe .close-sidebar {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  font-size: 24px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: transform 0.3s, color 0.2s;\n}\n.stripe .close-sidebar:hover {\n  color: var(--color-text-primary);\n}\n.stripe .tabs-vertical {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 50px 10px 10px 10px;\n}\n.stripe .tabs-vertical button {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: color 0.2s;\n}\n.stripe .tabs-vertical button:hover {\n  color: var(--color-text-primary);\n}\n.stripe .tabs-vertical button .material-icons-outlined {\n  font-size: 24px;\n}\n.stripe .tabs-vertical button .tab-label {\n  font-size: 16px;\n}\n.person-form {\n  max-width: 500px;\n  margin-left: 20px 0 20px 0;\n  padding: 20px;\n  background: var(--color-bg-panel-legacy);\n  border-radius: 8px;\n  color: var(--color-text-primary);\n}\n.person-form h2 {\n  text-align: left;\n  margin-bottom: 20px;\n}\n.person-form form {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 15px;\n}\n.person-form form label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n}\n.person-form form label input[type=text],\n.person-form form label input[type=email],\n.person-form form label input[type=date] {\n  margin-top: 5px;\n  padding: 8px;\n  border-radius: 4px;\n  border: none;\n}\n.person-form form .checkbox-label {\n  flex-direction: row;\n  align-items: left;\n  gap: 10px;\n  font-size: 14px;\n}\n.person-form form button {\n  margin-top: 10px;\n  padding: 10px;\n  background-color: var(--color-grey-444);\n  border: none;\n  border-radius: 4px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  font-size: 16px;\n}\n.person-form form button:hover {\n  background-color: var(--color-grey-666);\n}\n.person-form form button:disabled {\n  background-color: var(--color-grey-333);\n  cursor: not-allowed;\n}\n.header-right {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 0 20px;\n  justify-content: flex-end;\n  margin-left: auto;\n  color: var(--color-text-soft);\n}\n.header-icon {\n  font-size: 24px;\n  font-variation-settings: "FILL" 1;\n  cursor: pointer;\n  color: var(--color-text-primary);\n  width: 32px;\n  height: 32px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.header-icon:hover {\n  background: var(--color-hover-overlay);\n}\n.profile-icon {\n  font-size: 36px;\n  color: var(--color-text-primary);\n  width: 38px;\n  height: 38px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.profile-icon:hover {\n  background: var(--color-hover-overlay);\n}\n.login-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 8px;\n  padding: 8px 20px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n}\n.login-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.header-name {\n  font-size: 16px;\n  font-weight: 500;\n}\n.uuid-section {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  width: 220px;\n  border-top: 1px solid var(--color-grey-ccc);\n  padding: 10px;\n  color: var(--color-text-primary);\n  font-size: 8px;\n  z-index: 1000;\n}\n.uuid-title {\n  font-weight: bold;\n  margin-bottom: 5px;\n}\n.uuid-list {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.uuid-item {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.cpu-icon {\n  font-size: 18px;\n  line-height: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.uuid-section {\n  opacity: 1;\n  transform: translateY(0);\n  transition: opacity 0.25s ease, transform 0.25s ease;\n}\n.uuid-section.closed {\n  opacity: 0;\n  transform: translateY(10px);\n  pointer-events: none;\n}\n/*# sourceMappingURL=main-page.component.css.map */\n'] }]
-  }], () => [{ type: TelemetryUnitService }, { type: ChangeDetectorRef }], null);
+`, styles: ['/* src/app/pages/main-page/main-page.component.scss */\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n.app {\n  min-height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.header {\n  display: flex;\n  align-items: center;\n  height: 80px;\n  padding: 0 10px;\n  background-color: var(--color-bg-header);\n  border-bottom: 1px solid var(--color-border-header);\n  position: sticky;\n}\n.app-logo {\n  height: 40px;\n  width: auto;\n  display: block;\n}\n.main {\n  flex: 1;\n  display: flex;\n}\n.widget-container {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 400px);\n  gap: 20px;\n}\n.widget-container > * {\n  flex: 0 0 400px;\n}\n.layout {\n  display: flex;\n  min-height: 100vh;\n  flex-direction: row;\n  background-color: var(--color-bg-page);\n}\n.content {\n  flex: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  padding: 20px;\n  color: var(--color-text-primary);\n}\n.leaflet-popup-content {\n  font-size: 16px;\n}\n.leaflet-popup-content-wrapper {\n  padding: 8px 12px;\n}\n.leaflet-tooltip {\n  font-size: 16px;\n}\n.app-menu {\n  font-variation-settings: "wght" 400;\n  font-size: 40px;\n  font-weight: 400;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  margin-right: 30px;\n  width: 44px;\n  height: 44px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 20%;\n}\n.app-menu:hover {\n  background: var(--color-hover-overlay);\n}\n.tab-container {\n  margin-top: 200px;\n  width: 100%;\n}\n.tabs {\n  position: absolute;\n  left: 50%;\n  transform: translateX(-50%);\n}\n.tabs button {\n  margin-right: 20px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-soft);\n  cursor: pointer;\n  font-size: 16px;\n  transition: color 0.2s;\n}\n.tabs button.active {\n  color: var(--color-text-primary);\n}\n.tabs button:hover {\n  color: var(--color-text-primary);\n}\n.line {\n  width: 80%;\n  margin: 20px auto;\n  border-bottom: 2px solid var(--color-track);\n}\n.stripe {\n  width: 220px;\n  flex-shrink: 0;\n  background-color: var(--color-bg-header);\n  transition: width 0.15s ease;\n  position: relative;\n  overflow: hidden;\n}\n.stripe.closed {\n  width: 60px;\n}\n.stripe.closed .tab-label {\n  display: none;\n}\n.stripe.closed .close-sidebar {\n  transform: rotate(180deg);\n}\n.stripe .close-sidebar {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  font-size: 24px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  transition: transform 0.15s, color 0.1s;\n}\n.stripe .close-sidebar:hover {\n  color: var(--color-text-primary);\n}\n.stripe .tabs-vertical {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 50px 10px 10px 10px;\n}\n.stripe .tabs-vertical button {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  background: transparent;\n  border: none;\n  color: var(--color-text-label);\n  cursor: pointer;\n  transition: color 0.2s;\n}\n.stripe .tabs-vertical button:hover {\n  color: var(--color-text-primary);\n}\n.stripe .tabs-vertical button .material-icons-outlined {\n  font-size: 24px;\n}\n.stripe .tabs-vertical button .tab-label {\n  font-size: 16px;\n}\n.person-form {\n  max-width: 500px;\n  margin-left: 20px 0 20px 0;\n  padding: 20px;\n  background: var(--color-bg-panel-legacy);\n  border-radius: 8px;\n  color: var(--color-text-primary);\n}\n.person-form h2 {\n  text-align: left;\n  margin-bottom: 20px;\n}\n.person-form form {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 15px;\n}\n.person-form form label {\n  display: flex;\n  flex-direction: column;\n  font-size: 14px;\n}\n.person-form form label input[type=text],\n.person-form form label input[type=email],\n.person-form form label input[type=date] {\n  margin-top: 5px;\n  padding: 8px;\n  border-radius: 4px;\n  border: none;\n}\n.person-form form .checkbox-label {\n  flex-direction: row;\n  align-items: left;\n  gap: 10px;\n  font-size: 14px;\n}\n.person-form form button {\n  margin-top: 10px;\n  padding: 10px;\n  background-color: var(--color-grey-444);\n  border: none;\n  border-radius: 4px;\n  color: var(--color-text-primary);\n  cursor: pointer;\n  font-size: 16px;\n}\n.person-form form button:hover {\n  background-color: var(--color-grey-666);\n}\n.person-form form button:disabled {\n  background-color: var(--color-grey-333);\n  cursor: not-allowed;\n}\n.header-right {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n  padding: 0 20px;\n  justify-content: flex-end;\n  margin-left: auto;\n  color: var(--color-text-soft);\n}\n.header-icon {\n  font-size: 24px;\n  font-variation-settings: "FILL" 1;\n  cursor: pointer;\n  color: var(--color-text-primary);\n  width: 32px;\n  height: 32px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.header-icon:hover {\n  background: var(--color-hover-overlay);\n}\n.profile-icon {\n  font-size: 36px;\n  color: var(--color-text-primary);\n  width: 38px;\n  height: 38px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 50%;\n}\n.profile-icon:hover {\n  background: var(--color-hover-overlay);\n}\n.login-btn {\n  background-color: var(--color-accent);\n  color: var(--color-text-primary);\n  border: none;\n  border-radius: 8px;\n  padding: 8px 20px;\n  font-size: 16px;\n  font-weight: 500;\n  cursor: pointer;\n}\n.login-btn:hover {\n  background-color: var(--color-accent-hover);\n}\n.header-name {\n  font-size: 16px;\n  font-weight: 500;\n}\n.uuid-section {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  width: 220px;\n  border-top: 1px solid var(--color-grey-ccc);\n  padding: 10px;\n  color: var(--color-text-primary);\n  font-size: 8px;\n  z-index: 1000;\n}\n.uuid-title {\n  font-weight: bold;\n  margin-bottom: 5px;\n}\n.uuid-list {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.uuid-item {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.cpu-icon {\n  font-size: 18px;\n  line-height: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.uuid-section {\n  opacity: 1;\n  transform: translateY(0);\n  transition: opacity 0.125s ease 0.15s, transform 0.125s ease 0.15s;\n}\n.uuid-section.closed {\n  opacity: 0;\n  transform: translateY(10px);\n  transition: none;\n  pointer-events: none;\n}\n/*# sourceMappingURL=main-page.component.css.map */\n'] }]
+  }], () => [{ type: VehicleLiveService }, { type: ChangeDetectorRef }], null);
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(MainPageComponent, { className: "MainPageComponent", filePath: "src/app/pages/main-page/main-page.component.ts", lineNumber: 31 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(MainPageComponent, { className: "MainPageComponent", filePath: "src/app/pages/main-page/main-page.component.ts", lineNumber: 29 });
 })();
 
 // src/app/app.routes.ts

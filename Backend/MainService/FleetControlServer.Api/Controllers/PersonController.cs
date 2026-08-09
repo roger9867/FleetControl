@@ -70,7 +70,12 @@ public class PersonController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _service.DeleteAsync(id);
+        var (success, error) = await _service.DeleteAsync(id);
+
+        if (!success)
+        {
+            return BadRequest(error);
+        }
 
         return NoContent();
     }

@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["src/app/widgets/trip-chart/trip-chart.component.scss"],
-  "sourcesContent": [".chart {\n  width: 800px;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n}\n"],
+  "sourcesContent": [".chart {\n  width: 50vw;\n  height: 600px;\n  border: 1px solid var(--color-border);\n  border-radius: 20px;\n  background-color: var(--color-bg-map);\n}\n"],
   "mappings": ";AAAA,CAAA;AACE,SAAA;AACA,UAAA;AACA,UAAA,IAAA,MAAA,IAAA;AACA,iBAAA;AACA,oBAAA,IAAA;;",
   "names": []
 }

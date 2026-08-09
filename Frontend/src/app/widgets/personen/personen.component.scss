@@ -1,30 +1,40 @@
+.page {
+  margin-top: 120px;
+}
+
 .header {
+  width: 50vw;
   text-align: center;
   color: var(--color-text-muted);
   margin: 0 0 20px;
+}
+
+.toolbar {
+  width: 50vw;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .container {
   display: flex;
   align-items: flex-start;
   min-height: 100vh;
-  margin-top: 120px;
   gap: 2vw;
 
   .main {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding-top: 20px;
     gap: 20px;
     min-height: 0;
   }
-}
 
-.toolbar {
-  display: flex;
-  gap: 12px;
-  align-items: center;
+  ::ng-deep app-filter-sidebar .sidebar {
+    margin-top: 18px;
+  }
 }
 
 .create-btn {
@@ -362,7 +372,7 @@
         &.danger {
           background: var(--color-danger);
           border-color: var(--color-danger);
-          color: var(--color-text-primary);
+          color: #ffffff;
 
           &:hover {
             background: var(--color-danger-hover);

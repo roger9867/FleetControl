@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -21,6 +21,8 @@ import { Person } from '../../models/person.model';
 })
 export class TelemetryUnits implements OnInit, OnDestroy
 {
+  @Output() showTrips = new EventEmitter<string>();
+
   usb_connected_units: TelemetryUnit[] = [];
   private broadcastSub?: Subscription;
 
@@ -32,6 +34,9 @@ export class TelemetryUnits implements OnInit, OnDestroy
   editingIndex: number | null = null;
   deleteConfirmIndex: number | null = null;
   selectedUnitId: string | null = null;
+
+  pageSize = 10;
+  currentPage = 1;
 
   editError: string | null = null;
   editSnapshot: TelemetryUnit | null = null;
@@ -68,9 +73,6 @@ export class TelemetryUnits implements OnInit, OnDestroy
   }
 
   ngOnInit(): void {
-    // this.vehicles = this.generateDummyVehicles();
-    // this.persons = this.generateDummyPersons();
-
     this.loadAllUnits();
 
     this.broadcastSub = this.vehicleLiveService.usbUnitsChanged$
@@ -174,8 +176,40 @@ export class TelemetryUnits implements OnInit, OnDestroy
     });
   }
 
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredUnits.length / this.pageSize));
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pagedUnits(): TelemetryUnit[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredUnits.slice(start, start + this.pageSize);
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) this.currentPage--;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) this.currentPage++;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.selectedIndex = null;
+    this.editingIndex = null;
+  }
+
   onFiltersApplied(filters: AppliedFilters): void {
     this.appliedFilters = filters;
+    this.currentPage = 1;
     this.selectedIndex = null;
   }
 
@@ -199,6 +233,10 @@ export class TelemetryUnits implements OnInit, OnDestroy
     event.preventDefault();
   }
 
+  onShowTrips(item: TelemetryUnit): void {
+    this.showTrips.emit(item.id);
+  }
+
   onActionsClick(event: MouseEvent): void {
     event.stopPropagation();
 
@@ -216,7 +254,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
 
     this.editingIndex = index;
     this.editError = null;
-    this.editSnapshot = { ...this.filteredUnits[index] };
+    this.editSnapshot = { ...this.pagedUnits[index] };
     this.deleteConfirmIndex = null;
   }
 
@@ -243,7 +281,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
   }
 
   private saveEdit(index: number): void {
-    const unit = this.filteredUnits[index];
+    const unit = this.pagedUnits[index];
     this.editError = null;
 
     this.service.update(unit).subscribe({
@@ -286,31 +324,4 @@ export class TelemetryUnits implements OnInit, OnDestroy
       }
     });
   }
-
-  // private generateDummyVehicles(): Vehicle[] {
-  //   const identNrs = ['IDENT-1000', 'IDENT-1001', 'IDENT-1002', 'IDENT-1003', 'IDENT-1004'];
-  //   const plates = ['FL-1000', 'FL-1001', 'FL-1002', 'FL-1003', 'FL-1004'];
-  //   const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford'];
-  //   const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit'];
-  //   const personIds = ['p1', 'p2', 'p3', 'p4', 'p5'];
-  //
-  //   return identNrs.map((identNr, i) => ({
-  //     Id: identNr,
-  //     identNr,
-  //     licensePlate: plates[i],
-  //     brand: brands[i],
-  //     modelName: models[i],
-  //     assignedPersonId: personIds[i]
-  //   }));
-  // }
-  //
-  // private generateDummyPersons(): Person[] {
-  //   return [
-  //     { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt' },
-  //     { Id: 'p2', firstName: 'Ben', lastName: 'Müller' },
-  //     { Id: 'p3', firstName: 'Clara', lastName: 'Fischer' },
-  //     { Id: 'p4', firstName: 'David', lastName: 'Weber' },
-  //     { Id: 'p5', firstName: 'Emma', lastName: 'Meyer' }
-  //   ];
-  // }
 }

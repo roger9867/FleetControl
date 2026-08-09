@@ -61,6 +61,10 @@ namespace FleetControlServer.Service.Grpc {
     static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest> __Marshaller_telemetry_GetLatestPointsByVehicleRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse> __Marshaller_telemetry_GetLatestPointsByVehicleResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest> __Marshaller_telemetry_DeleteTelemetryPointsRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse> __Marshaller_telemetry_DeleteTelemetryPointsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest, global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse> __Method_GetTelemetryPoints = new grpc::Method<global::FleetControlServer.Service.Grpc.GetTelemetryPointsRequest, global::FleetControlServer.Service.Grpc.GetTelemetryPointsResponse>(
@@ -85,6 +89,14 @@ namespace FleetControlServer.Service.Grpc {
         "GetLatestPointsByVehicle",
         __Marshaller_telemetry_GetLatestPointsByVehicleRequest,
         __Marshaller_telemetry_GetLatestPointsByVehicleResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest, global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse> __Method_DeleteTelemetryPoints = new grpc::Method<global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest, global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "DeleteTelemetryPoints",
+        __Marshaller_telemetry_DeleteTelemetryPointsRequest,
+        __Marshaller_telemetry_DeleteTelemetryPointsResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -250,6 +262,58 @@ namespace FleetControlServer.Service.Grpc {
       public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleResponse> GetLatestPointsByVehicleAsync(global::FleetControlServer.Service.Grpc.GetLatestPointsByVehicleRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetLatestPointsByVehicle, null, options, request);
+      }
+      /// <summary>
+      /// Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+      /// Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse DeleteTelemetryPoints(global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return DeleteTelemetryPoints(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      /// Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+      /// Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse DeleteTelemetryPoints(global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_DeleteTelemetryPoints, null, options, request);
+      }
+      /// <summary>
+      /// Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+      /// Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse> DeleteTelemetryPointsAsync(global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return DeleteTelemetryPointsAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      /// Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+      /// Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual grpc::AsyncUnaryCall<global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsResponse> DeleteTelemetryPointsAsync(global::FleetControlServer.Service.Grpc.DeleteTelemetryPointsRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_DeleteTelemetryPoints, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]

@@ -18,21 +18,9 @@
   </nav>
 
   <div class="header-right">
-    <!--
-    <span class="material-symbols-outlined header-icon">
-      settings
-    </span>
-    -->
-
     <span class="material-symbols-outlined header-icon" (click)="toggleTheme()">
       {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
     </span>
-
-    <!--
-    <span class="material-symbols-outlined profile-icon">
-      account_circle
-    </span>
-    -->
 
     <button class="login-btn">Login</button>
   </div>
@@ -44,15 +32,6 @@
   <div class="stripe" [class.closed]="sidebarClosed" >
 
     <nav class="tabs-vertical">
-
-      <!--
-      <button *ngFor="let tab of sidebarTabs"
-            (click)="selectTab(tab.label)"
-            [class.active]="activeTab === tab.label">
-        <span class="material-symbols-outlined">{{ tab.icon }}</span>
-        <span class="tab-label">{{ tab.label }}</span>
-      </button>
-      -->
     </nav>
 
       <div class="uuid-section" [class.closed]="sidebarClosed">
@@ -72,28 +51,27 @@
 
   <div class="main">
     <div class="content">
-      
-      <!--
-      <div *ngIf="activeTab === 'Statistik'">
-        <h1>Hier stehen Statistiken</h1>
-        <app-card-widget></app-card-widget>
-      </div>
-      -->
-
       <div *ngIf="activeTab === 'Fahrten'">
-          <app-layout></app-layout>
+          <app-layout
+            [presetVehicleId]="pendingTripVehicleId"
+            (presetVehicleIdChange)="pendingTripVehicleId = $event"
+            [presetPersonId]="pendingTripPersonId"
+            (presetPersonIdChange)="pendingTripPersonId = $event"
+            [presetTelemetryUnitId]="pendingTripTelemetryUnitId"
+            (presetTelemetryUnitIdChange)="pendingTripTelemetryUnitId = $event">
+          </app-layout>
       </div>
 
       <div *ngIf="activeTab === 'Personen'">
-        <app-personen></app-personen>
+        <app-personen (showTrips)="onShowTripsForPerson($event)"></app-personen>
       </div>
 
       <div *ngIf="activeTab === 'Fahrzeuge'">
-        <app-vehicles></app-vehicles>
+        <app-vehicles (showTrips)="onShowTripsForVehicle($event)"></app-vehicles>
       </div>
 
       <div *ngIf="activeTab === 'Datenerfassungseinheiten'">
-        <app-telemetry-units></app-telemetry-units>
+        <app-telemetry-units (showTrips)="onShowTripsForTelemetryUnit($event)"></app-telemetry-units>
       </div>
 
       <div *ngIf="activeTab === 'Person anlegen'" class="person-form">

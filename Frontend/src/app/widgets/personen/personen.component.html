@@ -1,24 +1,25 @@
-<div class="container">
+<div class="page">
+  <h1 class="header">Personen</h1>
+
+  <div class="toolbar">
+    <button class="create-btn" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
+    </button>
+  </div>
+
+  <div class="container">
   <div class="main">
-
-    <h1 class="header">Personen</h1>
-
-    <div class="toolbar">
-      <button class="create-btn" (click)="toggleCreateForm()">
-        {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
-      </button>
-    </div>
 
     <div class="create-form" *ngIf="showCreateForm">
       <div class="form-grid">
         <label>
-          Vorname
-          <input type="text" [(ngModel)]="newPerson.firstName">
+          Vorname *
+          <input type="text" maxlength="50" [(ngModel)]="newPerson.firstName">
         </label>
 
         <label>
-          Nachname
-          <input type="text" [(ngModel)]="newPerson.lastName">
+          Nachname *
+          <input type="text" maxlength="50" [(ngModel)]="newPerson.lastName">
         </label>
 
         <label>
@@ -104,7 +105,7 @@
           <div>
             <span>Vorname:</span>
             <ng-container *ngIf="editingIndex === i; else firstNameView">
-              <input type="text" class="inline-input" [(ngModel)]="person.firstName">
+              <input type="text" class="inline-input" maxlength="50" [(ngModel)]="person.firstName">
             </ng-container>
             <ng-template #firstNameView>{{ person.firstName }}</ng-template>
           </div>
@@ -112,7 +113,7 @@
           <div>
             <span>Nachname:</span>
             <ng-container *ngIf="editingIndex === i; else lastNameView">
-              <input type="text" class="inline-input" [(ngModel)]="person.lastName">
+              <input type="text" class="inline-input" maxlength="50" [(ngModel)]="person.lastName">
             </ng-container>
             <ng-template #lastNameView>{{ person.lastName }}</ng-template>
           </div>
@@ -192,6 +193,7 @@
                     (mousedown)="onActionMouseDown($event); toggleEdit(i)">
               {{ editingIndex === i ? (isEditDirty(person) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
             </button>
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(person)">Fahrten</button>
           </div>
         </div>
       </div>
@@ -228,4 +230,5 @@
     (filtersApplied)="onFiltersApplied($event)">
   </app-filter-sidebar>
 
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,6 @@ import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 import { PersonService } from '../../services/person.service';
 import { VehicleLiveService, VehiclePositionUpdate } from '../../services/vehicle-live.service';
 
-// Kein Live-Update fuer diese Zeit -> Fahrzeug gilt wieder als static.
 const MOVING_TIMEOUT_MS = 5000;
 
 @Component({
@@ -26,6 +25,8 @@ const MOVING_TIMEOUT_MS = 5000;
 export class Vehicles implements OnInit, OnDestroy
 {
   @ViewChild(VehicleMap) vehicleMap?: VehicleMap;
+
+  @Output() showTrips = new EventEmitter<string>();
 
   vehicles: Vehicle[] = [];
 
@@ -46,19 +47,9 @@ export class Vehicles implements OnInit, OnDestroy
   identNrError: string | null = null;
   yearError: string | null = null;
 
-  telemetryUnits: TelemetryUnit[] = [
-    // { id: 'TU-1001' },
-    // { id: 'TU-1002' },
-    // { id: 'TU-1003' }
-  ];
+  telemetryUnits: TelemetryUnit[] = [];
 
-  persons: Person[] = [
-    // { Id: 'p1', firstName: 'Anna', lastName: 'Schmidt', birthDate: '1970-05-20' },
-    // { Id: 'p2', firstName: 'Ben', lastName: 'Müller', birthDate: '1971-05-20' },
-    // { Id: 'p3', firstName: 'Clara', lastName: 'Fischer', birthDate: '1972-05-20' },
-    // { Id: 'p4', firstName: 'David', lastName: 'Weber', birthDate: '1973-05-20' },
-    // { Id: 'p5', firstName: 'Emma', lastName: 'Meyer', birthDate: '1974-05-20' }
-  ];
+  persons: Person[] = [];
 
   licenseClasses: string[] = [
     'AM', 'A1', 'A2', 'A', 'B', 'BE',
@@ -112,8 +103,6 @@ export class Vehicles implements OnInit, OnDestroy
   ) {}
 
   ngOnInit(): void {
-    // this.vehicles = this.generateDummyVehicles(40);
-
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
         if (vehicles?.length) {
@@ -415,6 +404,10 @@ export class Vehicles implements OnInit, OnDestroy
     event.preventDefault();
   }
 
+  onShowTrips(vehicle: Vehicle): void {
+    this.showTrips.emit(vehicle.identNr ?? vehicle.Id);
+  }
+
   onActionsClick(event: MouseEvent): void {
     event.stopPropagation();
 
@@ -508,6 +501,7 @@ export class Vehicles implements OnInit, OnDestroy
       this.newVehicle = this.emptyVehicle();
       this.createError = null;
       this.identNrError = null;
+      this.yearError = null;
     }
   }
 
@@ -617,38 +611,4 @@ export class Vehicles implements OnInit, OnDestroy
       firstRegistration: ''
     };
   }
-
-  // private generateDummyVehicles(count: number): Vehicle[] {
-  //   const brands = ['VW', 'Mercedes', 'BMW', 'Audi', 'Ford', 'Opel', 'Renault', 'Toyota'];
-  //   const models = ['Transporter', 'Sprinter', 'X3', 'A4', 'Transit', 'Astra', 'Trafic', 'Hilux'];
-  //   const colors = ['Schwarz', 'Weiß', 'Silber', 'Blau', 'Rot', 'Grau'];
-  //
-  //   const baseLat = 50.9271;
-  //   const baseLng = 11.5892;
-  //
-  //   return Array.from({ length: count }, (_, i) => {
-  //     const year = 2010 + (i % 15);
-  //     const offset = (i % 10) - 5;
-  //     const identNr = `${100000 + i}`;
-  //
-  //     return {
-  //       Id: identNr,
-  //       brand: brands[i % brands.length],
-  //       modelName: models[i % models.length],
-  //       licensePlate: `FL-${1000 + i}`,
-  //       year,
-  //       identNr,
-  //       requiredLicense: this.licenseClasses[i % this.licenseClasses.length],
-  //       powerPs: 90 + ((i * 15) % 300),
-  //       color: colors[i % colors.length],
-  //       firstRegistration: `${year}-01-01`,
-  //       assignedPersonId: i % 3 === 0 ? this.persons[i % this.persons.length].Id : null,
-  //       lastLocation: {
-  //         lat: baseLat + offset * 0.003 + (Math.random() - 0.5) * 0.001,
-  //         lng: baseLng + offset * 0.003 + (Math.random() - 0.5) * 0.001,
-  //         timestamp: new Date(2026, 6, 20, 8, i % 60, 0).toISOString()
-  //       }
-  //     };
-  //   });
-  // }
 }

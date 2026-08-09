@@ -61,6 +61,10 @@ namespace TelemetryDataService {
     static readonly grpc::Marshaller<global::TelemetryDataService.GetLatestPointsByVehicleRequest> __Marshaller_telemetry_GetLatestPointsByVehicleRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetLatestPointsByVehicleRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::TelemetryDataService.GetLatestPointsByVehicleResponse> __Marshaller_telemetry_GetLatestPointsByVehicleResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.GetLatestPointsByVehicleResponse.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::TelemetryDataService.DeleteTelemetryPointsRequest> __Marshaller_telemetry_DeleteTelemetryPointsRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.DeleteTelemetryPointsRequest.Parser));
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Marshaller<global::TelemetryDataService.DeleteTelemetryPointsResponse> __Marshaller_telemetry_DeleteTelemetryPointsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::TelemetryDataService.DeleteTelemetryPointsResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::TelemetryDataService.GetTelemetryPointsRequest, global::TelemetryDataService.GetTelemetryPointsResponse> __Method_GetTelemetryPoints = new grpc::Method<global::TelemetryDataService.GetTelemetryPointsRequest, global::TelemetryDataService.GetTelemetryPointsResponse>(
@@ -85,6 +89,14 @@ namespace TelemetryDataService {
         "GetLatestPointsByVehicle",
         __Marshaller_telemetry_GetLatestPointsByVehicleRequest,
         __Marshaller_telemetry_GetLatestPointsByVehicleResponse);
+
+    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+    static readonly grpc::Method<global::TelemetryDataService.DeleteTelemetryPointsRequest, global::TelemetryDataService.DeleteTelemetryPointsResponse> __Method_DeleteTelemetryPoints = new grpc::Method<global::TelemetryDataService.DeleteTelemetryPointsRequest, global::TelemetryDataService.DeleteTelemetryPointsResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "DeleteTelemetryPoints",
+        __Marshaller_telemetry_DeleteTelemetryPointsRequest,
+        __Marshaller_telemetry_DeleteTelemetryPointsResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -130,6 +142,19 @@ namespace TelemetryDataService {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      /// Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+      /// Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
+      public virtual global::System.Threading.Tasks.Task<global::TelemetryDataService.DeleteTelemetryPointsResponse> DeleteTelemetryPoints(global::TelemetryDataService.DeleteTelemetryPointsRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
@@ -140,7 +165,8 @@ namespace TelemetryDataService {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_GetTelemetryPoints, serviceImpl.GetTelemetryPoints)
           .AddMethod(__Method_GetLatestPoints, serviceImpl.GetLatestPoints)
-          .AddMethod(__Method_GetLatestPointsByVehicle, serviceImpl.GetLatestPointsByVehicle).Build();
+          .AddMethod(__Method_GetLatestPointsByVehicle, serviceImpl.GetLatestPointsByVehicle)
+          .AddMethod(__Method_DeleteTelemetryPoints, serviceImpl.DeleteTelemetryPoints).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the service binding logic.
@@ -153,6 +179,7 @@ namespace TelemetryDataService {
       serviceBinder.AddMethod(__Method_GetTelemetryPoints, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.GetTelemetryPointsRequest, global::TelemetryDataService.GetTelemetryPointsResponse>(serviceImpl.GetTelemetryPoints));
       serviceBinder.AddMethod(__Method_GetLatestPoints, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.GetLatestPointsRequest, global::TelemetryDataService.GetLatestPointsResponse>(serviceImpl.GetLatestPoints));
       serviceBinder.AddMethod(__Method_GetLatestPointsByVehicle, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.GetLatestPointsByVehicleRequest, global::TelemetryDataService.GetLatestPointsByVehicleResponse>(serviceImpl.GetLatestPointsByVehicle));
+      serviceBinder.AddMethod(__Method_DeleteTelemetryPoints, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::TelemetryDataService.DeleteTelemetryPointsRequest, global::TelemetryDataService.DeleteTelemetryPointsResponse>(serviceImpl.DeleteTelemetryPoints));
     }
 
   }

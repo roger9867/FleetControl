@@ -17,8 +17,6 @@
   background: var(--color-bg-map-tile);
 }
 
-// Leaflet haengt Marker-DOM ausserhalb von Angulars View-Encapsulation ein -
-// ohne ::ng-deep wuerden diese Regeln nie matchen.
 ::ng-deep .vehicle-marker-icon {
   background: transparent;
   border: none;
