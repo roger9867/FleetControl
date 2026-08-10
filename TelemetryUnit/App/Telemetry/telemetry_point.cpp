@@ -16,6 +16,28 @@ float TelemetryPoint::nmea_to_decimal(const char* nmea)
     return degrees + (minutes / 60.0f);
 }
 
+uint8_t TelemetryPoint::is_valid_nmea_coordinate(const char* token, int min_digits_before_decimal)
+{
+    if (!token || token[0] == '\0')
+        return 0;
+
+    const char* dot = strchr(token, '.');
+    if (!dot)
+        return 0;
+
+    int digits_before_dot = 0;
+
+    for (const char* c = token; c < dot; c++)
+    {
+        if (*c < '0' || *c > '9')
+            return 0;
+
+        digits_before_dot++;
+    }
+
+    return digits_before_dot >= min_digits_before_decimal;
+}
+
 GnssData TelemetryPoint::parse_gnss(const char* response)
 {
     GnssData out{};
@@ -44,6 +66,7 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
     char* token = strtok(buf, ",");
 
     int field = 0;
+    bool fields_valid = true;
 
     char lat_dir = 'N';
     char lon_dir = 'E';
@@ -53,7 +76,10 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
         switch (field)
         {
             case 4: // latitude ddmm.mmmmmm
-                out.latitude = nmea_to_decimal(token);
+                if (is_valid_nmea_coordinate(token, 4))
+                    out.latitude = nmea_to_decimal(token);
+                else
+                    fields_valid = false;
                 break;
 
             case 5: // N/S
@@ -61,7 +87,10 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
                 break;
 
             case 6: // longitude dddmm.mmmmmm
-                out.longitude = nmea_to_decimal(token);
+                if (is_valid_nmea_coordinate(token, 5))
+                    out.longitude = nmea_to_decimal(token);
+                else
+                    fields_valid = false;
                 break;
 
             case 7: // E/W
@@ -96,7 +125,7 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
         out.longitude *= -1.0f;
 
     // einfache Validierung
-    if (out.latitude != 0.0f || out.longitude != 0.0f)
+    if (fields_valid && (out.latitude != 0.0f || out.longitude != 0.0f))
         out.valid = true;
 
     // Beschleunigung nur zwischen zwei gültigen Fixes berechnen, sonst

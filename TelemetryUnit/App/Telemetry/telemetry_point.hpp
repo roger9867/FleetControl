@@ -33,4 +33,5 @@ class TelemetryPoint
         float nmea_to_decimal(const char* nmea);
         void format_timestamp(char* out, unsigned out_len);
         float calculate_accel_in_ms2(float new_speed_kmh);
+        uint8_t is_valid_nmea_coordinate(const char* token, int min_digits_before_decimal);
 };

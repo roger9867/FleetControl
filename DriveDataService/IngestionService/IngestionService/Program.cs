@@ -27,6 +27,7 @@ builder.Services.AddSingleton<MqttClientService>();
 builder.Services.AddSingleton<TripClient>();
 builder.Services.AddSingleton<AssignmentClient>();
 builder.Services.AddSingleton<AssignmentCache>();
+builder.Services.AddSingleton<GpsPlausibilityFilter>();
 builder.Services.AddSingleton<PendingTripEndQueue>();
 builder.Services.AddSingleton<RabbitMqPublisher>();
 

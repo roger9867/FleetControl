@@ -9,6 +9,7 @@ public class MessageHandler
     private readonly InfluxWriter _writer;
     private readonly TripReactor _tripReactor;
     private readonly AssignmentCache _assignmentCache;
+    private readonly GpsPlausibilityFilter _gpsPlausibilityFilter;
     private readonly ILogger<MessageHandler> _logger;
 
 
@@ -16,11 +17,13 @@ public class MessageHandler
         InfluxWriter writer,
         TripReactor tripReactor,
         AssignmentCache assignmentCache,
+        GpsPlausibilityFilter gpsPlausibilityFilter,
         ILogger<MessageHandler> logger)
     {
         _writer = writer;
         _tripReactor = tripReactor;
         _assignmentCache = assignmentCache;
+        _gpsPlausibilityFilter = gpsPlausibilityFilter;
         _logger = logger;
     }
 
@@ -74,6 +77,12 @@ public class MessageHandler
                     "Unbekannte DeviceId {deviceId} - Nachricht wird verworfen",
                     data.DeviceId);
 
+                return;
+            }
+
+
+            if (!_gpsPlausibilityFilter.IsPlausible(data.DeviceId, data.Latitude, data.Longitude, data.Timestamp))
+            {
                 return;
             }
 

@@ -89,13 +89,13 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
 
         if (isOngoing && isLastPoint) {
           const icon = L.divIcon({
-            className: 'vehicle-marker-icon',
-            html: `<div class="vehicle-marker">`
-              + `<span class="vehicle-marker-pulse" style="background-color:${color}"></span>`
-              + `<span class="vehicle-marker-dot" style="background-color:${color};border-color:${color}"></span>`
+            className: 'trip-marker-icon',
+            html: `<div class="trip-marker">`
+              + `<span class="trip-marker-pulse" style="background-color:${color}"></span>`
+              + `<span class="trip-marker-dot" style="background-color:${color};border-color:${color}"></span>`
               + `</div>`,
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
           });
 
           const marker = L.marker(coordinates[index], { icon }).addTo(this.routeLayer);
