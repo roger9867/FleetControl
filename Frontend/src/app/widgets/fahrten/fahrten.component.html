@@ -141,7 +141,7 @@
 
       <div class="chips" *ngIf="filterVehicleIds.length">
         <div class="chip" *ngFor="let vehicleId of filterVehicleIds">
-          {{ vehicleId }}
+          {{ vehicleLabel(vehicleId) }}
           <span class="chip-remove" (click)="removeVehicleFilter(vehicleId)">&times;</span>
         </div>
       </div>

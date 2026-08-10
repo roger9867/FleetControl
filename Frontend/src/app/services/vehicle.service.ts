@@ -28,6 +28,7 @@ interface VehicleRequestDto {
 interface VehiclePositionDto {
   vehicleId: string;
   telemetryUnitId: string;
+  driverId?: string | null;
   lat: number;
   lng: number;
   speedKmh: number;
@@ -40,6 +41,7 @@ export type VehiclePosition = {
   lng: number;
   timestamp: string;
   telemetryUnitId?: string;
+  driverId?: string | null;
   speedKmh?: number;
   accelMs2?: number;
 };
@@ -80,6 +82,7 @@ export class VehicleService {
         lng: p.lng,
         timestamp: p.timestamp,
         telemetryUnitId: p.telemetryUnitId,
+        driverId: p.driverId,
         speedKmh: p.speedKmh,
         accelMs2: p.accelMs2
       }]))),

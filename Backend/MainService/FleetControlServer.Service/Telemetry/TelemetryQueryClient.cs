@@ -10,7 +10,9 @@ public record TelemetryPointResult(
     double Lat,
     double Lon,
     double SpeedKmh,
-    double AccelMs2);
+    double AccelMs2,
+    string? DriverId = null,
+    string? DeviceId = null);
 
 // gRPC client for TelemetryDataService — mirrors IngestionService's TripClient
 // pattern (same unencrypted-HTTP/2 workaround, since MainService/TelemetryDataService
@@ -98,7 +100,9 @@ public class TelemetryQueryClient
                 p.Point.Lat,
                 p.Point.Lon,
                 p.Point.SpeedKmh,
-                p.Point.AccelMs2));
+                p.Point.AccelMs2,
+                string.IsNullOrEmpty(p.Point.DriverId) ? null : p.Point.DriverId,
+                string.IsNullOrEmpty(p.Point.DeviceId) ? null : p.Point.DeviceId));
     }
 
     public async Task<bool> DeleteTelemetryPointsAsync(

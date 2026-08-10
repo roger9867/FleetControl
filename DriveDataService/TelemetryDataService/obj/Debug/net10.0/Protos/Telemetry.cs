@@ -28,40 +28,41 @@ namespace TelemetryDataService {
             "cm90b2J1Zi90aW1lc3RhbXAucHJvdG8iggEKGUdldFRlbGVtZXRyeVBvaW50",
             "c1JlcXVlc3QSEQoJZGV2aWNlX2lkGAEgASgJEikKBXN0YXJ0GAIgASgLMhou",
             "Z29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAyABKAsyGi5nb29n",
-            "bGUucHJvdG9idWYuVGltZXN0YW1wIn8KDlRlbGVtZXRyeVBvaW50Ei0KCXRp",
-            "bWVzdGFtcBgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASCwoD",
-            "bGF0GAIgASgBEgsKA2xvbhgDIAEoARIRCglzcGVlZF9rbWgYBCABKAESEQoJ",
-            "YWNjZWxfbXMyGAUgASgBIkcKGkdldFRlbGVtZXRyeVBvaW50c1Jlc3BvbnNl",
-            "EikKBnBvaW50cxgBIAMoCzIZLnRlbGVtZXRyeS5UZWxlbWV0cnlQb2ludCIs",
-            "ChZHZXRMYXRlc3RQb2ludHNSZXF1ZXN0EhIKCmRldmljZV9pZHMYASADKAki",
-            "UAoRRGV2aWNlTGF0ZXN0UG9pbnQSEQoJZGV2aWNlX2lkGAEgASgJEigKBXBv",
-            "aW50GAIgASgLMhkudGVsZW1ldHJ5LlRlbGVtZXRyeVBvaW50IkcKF0dldExh",
-            "dGVzdFBvaW50c1Jlc3BvbnNlEiwKBnBvaW50cxgBIAMoCzIcLnRlbGVtZXRy",
-            "eS5EZXZpY2VMYXRlc3RQb2ludCI2Ch9HZXRMYXRlc3RQb2ludHNCeVZlaGlj",
-            "bGVSZXF1ZXN0EhMKC3ZlaGljbGVfaWRzGAEgAygJIlIKElZlaGljbGVMYXRl",
-            "c3RQb2ludBISCgp2ZWhpY2xlX2lkGAEgASgJEigKBXBvaW50GAIgASgLMhku",
-            "dGVsZW1ldHJ5LlRlbGVtZXRyeVBvaW50IlEKIEdldExhdGVzdFBvaW50c0J5",
-            "VmVoaWNsZVJlc3BvbnNlEi0KBnBvaW50cxgBIAMoCzIdLnRlbGVtZXRyeS5W",
-            "ZWhpY2xlTGF0ZXN0UG9pbnQihQEKHERlbGV0ZVRlbGVtZXRyeVBvaW50c1Jl",
-            "cXVlc3QSEQoJZGV2aWNlX2lkGAEgASgJEikKBXN0YXJ0GAIgASgLMhouZ29v",
-            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAyABKAsyGi5nb29nbGUu",
-            "cHJvdG9idWYuVGltZXN0YW1wIjAKHURlbGV0ZVRlbGVtZXRyeVBvaW50c1Jl",
-            "c3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgyrgMKDlRlbGVtZXRyeVF1ZXJ5EmEK",
-            "EkdldFRlbGVtZXRyeVBvaW50cxIkLnRlbGVtZXRyeS5HZXRUZWxlbWV0cnlQ",
-            "b2ludHNSZXF1ZXN0GiUudGVsZW1ldHJ5LkdldFRlbGVtZXRyeVBvaW50c1Jl",
-            "c3BvbnNlElgKD0dldExhdGVzdFBvaW50cxIhLnRlbGVtZXRyeS5HZXRMYXRl",
-            "c3RQb2ludHNSZXF1ZXN0GiIudGVsZW1ldHJ5LkdldExhdGVzdFBvaW50c1Jl",
-            "c3BvbnNlEnMKGEdldExhdGVzdFBvaW50c0J5VmVoaWNsZRIqLnRlbGVtZXRy",
-            "eS5HZXRMYXRlc3RQb2ludHNCeVZlaGljbGVSZXF1ZXN0GisudGVsZW1ldHJ5",
-            "LkdldExhdGVzdFBvaW50c0J5VmVoaWNsZVJlc3BvbnNlEmoKFURlbGV0ZVRl",
-            "bGVtZXRyeVBvaW50cxInLnRlbGVtZXRyeS5EZWxldGVUZWxlbWV0cnlQb2lu",
-            "dHNSZXF1ZXN0GigudGVsZW1ldHJ5LkRlbGV0ZVRlbGVtZXRyeVBvaW50c1Jl",
-            "c3BvbnNlQheqAhRUZWxlbWV0cnlEYXRhU2VydmljZWIGcHJvdG8z"));
+            "bGUucHJvdG9idWYuVGltZXN0YW1wIqUBCg5UZWxlbWV0cnlQb2ludBItCgl0",
+            "aW1lc3RhbXAYASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEgsK",
+            "A2xhdBgCIAEoARILCgNsb24YAyABKAESEQoJc3BlZWRfa21oGAQgASgBEhEK",
+            "CWFjY2VsX21zMhgFIAEoARIRCglkcml2ZXJfaWQYBiABKAkSEQoJZGV2aWNl",
+            "X2lkGAcgASgJIkcKGkdldFRlbGVtZXRyeVBvaW50c1Jlc3BvbnNlEikKBnBv",
+            "aW50cxgBIAMoCzIZLnRlbGVtZXRyeS5UZWxlbWV0cnlQb2ludCIsChZHZXRM",
+            "YXRlc3RQb2ludHNSZXF1ZXN0EhIKCmRldmljZV9pZHMYASADKAkiUAoRRGV2",
+            "aWNlTGF0ZXN0UG9pbnQSEQoJZGV2aWNlX2lkGAEgASgJEigKBXBvaW50GAIg",
+            "ASgLMhkudGVsZW1ldHJ5LlRlbGVtZXRyeVBvaW50IkcKF0dldExhdGVzdFBv",
+            "aW50c1Jlc3BvbnNlEiwKBnBvaW50cxgBIAMoCzIcLnRlbGVtZXRyeS5EZXZp",
+            "Y2VMYXRlc3RQb2ludCI2Ch9HZXRMYXRlc3RQb2ludHNCeVZlaGljbGVSZXF1",
+            "ZXN0EhMKC3ZlaGljbGVfaWRzGAEgAygJIlIKElZlaGljbGVMYXRlc3RQb2lu",
+            "dBISCgp2ZWhpY2xlX2lkGAEgASgJEigKBXBvaW50GAIgASgLMhkudGVsZW1l",
+            "dHJ5LlRlbGVtZXRyeVBvaW50IlEKIEdldExhdGVzdFBvaW50c0J5VmVoaWNs",
+            "ZVJlc3BvbnNlEi0KBnBvaW50cxgBIAMoCzIdLnRlbGVtZXRyeS5WZWhpY2xl",
+            "TGF0ZXN0UG9pbnQihQEKHERlbGV0ZVRlbGVtZXRyeVBvaW50c1JlcXVlc3QS",
+            "EQoJZGV2aWNlX2lkGAEgASgJEikKBXN0YXJ0GAIgASgLMhouZ29vZ2xlLnBy",
+            "b3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYAyABKAsyGi5nb29nbGUucHJvdG9i",
+            "dWYuVGltZXN0YW1wIjAKHURlbGV0ZVRlbGVtZXRyeVBvaW50c1Jlc3BvbnNl",
+            "Eg8KB3N1Y2Nlc3MYASABKAgyrgMKDlRlbGVtZXRyeVF1ZXJ5EmEKEkdldFRl",
+            "bGVtZXRyeVBvaW50cxIkLnRlbGVtZXRyeS5HZXRUZWxlbWV0cnlQb2ludHNS",
+            "ZXF1ZXN0GiUudGVsZW1ldHJ5LkdldFRlbGVtZXRyeVBvaW50c1Jlc3BvbnNl",
+            "ElgKD0dldExhdGVzdFBvaW50cxIhLnRlbGVtZXRyeS5HZXRMYXRlc3RQb2lu",
+            "dHNSZXF1ZXN0GiIudGVsZW1ldHJ5LkdldExhdGVzdFBvaW50c1Jlc3BvbnNl",
+            "EnMKGEdldExhdGVzdFBvaW50c0J5VmVoaWNsZRIqLnRlbGVtZXRyeS5HZXRM",
+            "YXRlc3RQb2ludHNCeVZlaGljbGVSZXF1ZXN0GisudGVsZW1ldHJ5LkdldExh",
+            "dGVzdFBvaW50c0J5VmVoaWNsZVJlc3BvbnNlEmoKFURlbGV0ZVRlbGVtZXRy",
+            "eVBvaW50cxInLnRlbGVtZXRyeS5EZWxldGVUZWxlbWV0cnlQb2ludHNSZXF1",
+            "ZXN0GigudGVsZW1ldHJ5LkRlbGV0ZVRlbGVtZXRyeVBvaW50c1Jlc3BvbnNl",
+            "QheqAhRUZWxlbWV0cnlEYXRhU2VydmljZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetTelemetryPointsRequest), global::TelemetryDataService.GetTelemetryPointsRequest.Parser, new[]{ "DeviceId", "Start", "End" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.TelemetryPoint), global::TelemetryDataService.TelemetryPoint.Parser, new[]{ "Timestamp", "Lat", "Lon", "SpeedKmh", "AccelMs2" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.TelemetryPoint), global::TelemetryDataService.TelemetryPoint.Parser, new[]{ "Timestamp", "Lat", "Lon", "SpeedKmh", "AccelMs2", "DriverId", "DeviceId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetTelemetryPointsResponse), global::TelemetryDataService.GetTelemetryPointsResponse.Parser, new[]{ "Points" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.GetLatestPointsRequest), global::TelemetryDataService.GetLatestPointsRequest.Parser, new[]{ "DeviceIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::TelemetryDataService.DeviceLatestPoint), global::TelemetryDataService.DeviceLatestPoint.Parser, new[]{ "DeviceId", "Point" }, null, null, null, null),
@@ -407,6 +408,8 @@ namespace TelemetryDataService {
       lon_ = other.lon_;
       speedKmh_ = other.speedKmh_;
       accelMs2_ = other.accelMs2_;
+      driverId_ = other.driverId_;
+      deviceId_ = other.deviceId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -476,6 +479,30 @@ namespace TelemetryDataService {
       }
     }
 
+    /// <summary>Field number for the "driver_id" field.</summary>
+    public const int DriverIdFieldNumber = 6;
+    private string driverId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DriverId {
+      get { return driverId_; }
+      set {
+        driverId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "device_id" field.</summary>
+    public const int DeviceIdFieldNumber = 7;
+    private string deviceId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DeviceId {
+      get { return deviceId_; }
+      set {
+        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -496,6 +523,8 @@ namespace TelemetryDataService {
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Lon, other.Lon)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(SpeedKmh, other.SpeedKmh)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(AccelMs2, other.AccelMs2)) return false;
+      if (DriverId != other.DriverId) return false;
+      if (DeviceId != other.DeviceId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -508,6 +537,8 @@ namespace TelemetryDataService {
       if (Lon != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Lon);
       if (SpeedKmh != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(SpeedKmh);
       if (AccelMs2 != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(AccelMs2);
+      if (DriverId.Length != 0) hash ^= DriverId.GetHashCode();
+      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -546,6 +577,14 @@ namespace TelemetryDataService {
         output.WriteRawTag(41);
         output.WriteDouble(AccelMs2);
       }
+      if (DriverId.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(DriverId);
+      }
+      if (DeviceId.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(DeviceId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -576,6 +615,14 @@ namespace TelemetryDataService {
         output.WriteRawTag(41);
         output.WriteDouble(AccelMs2);
       }
+      if (DriverId.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(DriverId);
+      }
+      if (DeviceId.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(DeviceId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -600,6 +647,12 @@ namespace TelemetryDataService {
       }
       if (AccelMs2 != 0D) {
         size += 1 + 8;
+      }
+      if (DriverId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DriverId);
+      }
+      if (DeviceId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -630,6 +683,12 @@ namespace TelemetryDataService {
       }
       if (other.AccelMs2 != 0D) {
         AccelMs2 = other.AccelMs2;
+      }
+      if (other.DriverId.Length != 0) {
+        DriverId = other.DriverId;
+      }
+      if (other.DeviceId.Length != 0) {
+        DeviceId = other.DeviceId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -673,6 +732,14 @@ namespace TelemetryDataService {
             AccelMs2 = input.ReadDouble();
             break;
           }
+          case 50: {
+            DriverId = input.ReadString();
+            break;
+          }
+          case 58: {
+            DeviceId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -713,6 +780,14 @@ namespace TelemetryDataService {
           }
           case 41: {
             AccelMs2 = input.ReadDouble();
+            break;
+          }
+          case 50: {
+            DriverId = input.ReadString();
+            break;
+          }
+          case 58: {
+            DeviceId = input.ReadString();
             break;
           }
         }

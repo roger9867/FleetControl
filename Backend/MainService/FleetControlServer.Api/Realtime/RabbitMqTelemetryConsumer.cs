@@ -102,7 +102,8 @@ public class RabbitMqTelemetryConsumer : BackgroundService
                             message.Lon,
                             message.SpeedKmh,
                             message.AccelMs2,
-                            message.Timestamp),
+                            message.Timestamp,
+                            message.DriverId),
                         stoppingToken);
                 }
             }

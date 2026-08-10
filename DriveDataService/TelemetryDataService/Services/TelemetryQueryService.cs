@@ -182,10 +182,18 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
             "|> filter(fn: (r) => r._measurement == \"sensor\") " +
             $"|> filter(fn: (r) => contains(value: r.vehicleId, set: [{vehicleIdSet}])) " +
             "|> filter(fn: (r) => r._field == \"lat\" or r._field == \"lon\" or r._field == \"speedKmh\" or r._field == \"accelMs2\") " +
-            "|> group(columns: [\"vehicleId\", \"_field\"]) " +
+            "|> group(columns: [\"vehicleId\", \"deviceId\", \"driverId\", \"_field\"]) " +
             "|> last() " +
+            "|> group(columns: [\"vehicleId\", \"deviceId\", \"driverId\"]) " +
+            "|> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\") " +
+            // Ein Fahrzeug kann in den letzten 90 Tagen mehrere unterschiedliche
+            // (deviceId, driverId)-Kombinationen gehabt haben - das erzeugt bis
+            // hierher eine Zeile pro Kombination. Nochmal nach vehicleId
+            // gruppieren und nur die insgesamt juengste Zeile behalten, sonst
+            // gibt es pro Fahrzeug mehrere Treffer.
             "|> group(columns: [\"vehicleId\"]) " +
-            "|> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
+            "|> sort(columns: [\"_time\"], desc: true) " +
+            "|> limit(n: 1)";
 
         try
         {
@@ -211,7 +219,9 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
                             Lat = ToDouble(record.GetValueByKey("lat")),
                             Lon = ToDouble(record.GetValueByKey("lon")),
                             SpeedKmh = ToDouble(record.GetValueByKey("speedKmh")),
-                            AccelMs2 = ToDouble(record.GetValueByKey("accelMs2"))
+                            AccelMs2 = ToDouble(record.GetValueByKey("accelMs2")),
+                            DriverId = record.GetValueByKey("driverId") as string ?? string.Empty,
+                            DeviceId = record.GetValueByKey("deviceId") as string ?? string.Empty
                         }
                     });
                 }

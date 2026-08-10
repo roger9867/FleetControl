@@ -152,6 +152,7 @@ export class Vehicles implements OnInit, OnDestroy
         lng: update.lng,
         timestamp: update.timestamp,
         telemetryUnitId: update.telemetryUnitId,
+        driverId: update.driverId,
         speedKmh: update.speedKmh,
         accelMs2: update.accelMs2
       };
@@ -232,15 +233,15 @@ export class Vehicles implements OnInit, OnDestroy
     });
   }
 
-  private getDriverTooltipLabel(vehicle: Vehicle): string | undefined {
-    if (!vehicle.assignedPersonId) return undefined;
+  private getDriverTooltipLabel(driverId?: string | null): string | undefined {
+    if (!driverId) return undefined;
 
-    const person = this.persons.find(p => p.Id === vehicle.assignedPersonId);
+    const person = this.persons.find(p => p.Id === driverId);
     const name = person ? `${person.firstName ?? ''} ${person.lastName ?? ''}`.trim() : '';
 
     return name
-      ? `${name} - ${vehicle.assignedPersonId}`
-      : vehicle.assignedPersonId;
+      ? `${name} - ${driverId}`
+      : driverId;
   }
 
   isPersonTakenByOtherVehicle(person: Person, vehicle: Vehicle): boolean {
@@ -349,7 +350,7 @@ export class Vehicles implements OnInit, OnDestroy
         telemetryUnitId: v.lastLocation!.telemetryUnitId,
         speedKmh: v.lastLocation!.speedKmh,
         accelMs2: v.lastLocation!.accelMs2,
-        driverLabel: this.getDriverTooltipLabel(v),
+        driverLabel: this.getDriverTooltipLabel(v.lastLocation!.driverId),
         isMoving: this.movingVehicleIds.has(v.Id)
       }));
   }

@@ -16,6 +16,7 @@ public class MqttClientService
     private IMqttClient? _client;
     private MqttClientOptions? _options;
     private CancellationToken _stoppingToken;
+    private readonly SemaphoreSlim _reconnectLock = new(1, 1);
 
 
     public MqttClientService(
@@ -70,20 +71,32 @@ public class MqttClientService
                 return;
             }
 
-            _logger.LogError(
-                e.Exception,
-                "MQTT-Verbindung verloren ({reason}), versuche erneut zu verbinden",
-                e.Reason);
+            if (!await _reconnectLock.WaitAsync(0))
+            {
+                return;
+            }
 
-            await ConnectWithRetryAsync(
-                _options!,
-                _stoppingToken);
+            try
+            {
+                _logger.LogError(
+                    e.Exception,
+                    "MQTT-Verbindung verloren ({reason}), versuche erneut zu verbinden",
+                    e.Reason);
 
-            await _client.SubscribeAsync(
-                _configuration["Mqtt:Topic"]!);
+                await ConnectWithRetryAsync(
+                    _options!,
+                    _stoppingToken);
 
-            _logger.LogInformation(
-                "MQTT nach Verbindungsverlust wieder verbunden und Topic neu abonniert");
+                await _client.SubscribeAsync(
+                    _configuration["Mqtt:Topic"]!);
+
+                _logger.LogInformation(
+                    "MQTT nach Verbindungsverlust wieder verbunden und Topic neu abonniert");
+            }
+            finally
+            {
+                _reconnectLock.Release();
+            }
         };
 
 
@@ -111,9 +124,18 @@ public class MqttClientService
         _options = optionsBuilder.Build();
 
 
-        await ConnectWithRetryAsync(
-            _options,
-            token);
+        await _reconnectLock.WaitAsync(token);
+
+        try
+        {
+            await ConnectWithRetryAsync(
+                _options,
+                token);
+        }
+        finally
+        {
+            _reconnectLock.Release();
+        }
 
 
         await _client.SubscribeAsync(

@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export interface VehiclePositionUpdate {
   vehicleId: string;
   telemetryUnitId: string;
+  driverId?: string | null;
   lat: number;
   lng: number;
   speedKmh: number;
@@ -21,17 +22,27 @@ export interface TripEndedUpdate {
   endTimestamp: string;
 }
 
+export interface TripStartedUpdate {
+  tripId: string;
+  vehicleId: string | null;
+  telemetryUnitId: string;
+  driverId: string | null;
+  startTimestamp: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class VehicleLiveService {
 
   private connection: signalR.HubConnection;
   private vehicleUpdateSubject = new Subject<VehiclePositionUpdate>();
   private tripEndedSubject = new Subject<TripEndedUpdate>();
+  private tripStartedSubject = new Subject<TripStartedUpdate>();
   private usbUnitsChangedSubject = new Subject<string[]>();
 
   vehicleUpdate$ = this.vehicleUpdateSubject.asObservable();
   vehicleMoving$ = this.vehicleUpdate$.pipe(map(update => update.vehicleId));
   tripEnded$ = this.tripEndedSubject.asObservable();
+  tripStarted$ = this.tripStartedSubject.asObservable();
   usbUnitsChanged$ = this.usbUnitsChangedSubject.asObservable();
 
   constructor() {
@@ -48,6 +59,10 @@ export class VehicleLiveService {
 
     this.connection.on('TripEnded', (update: TripEndedUpdate) => {
       this.tripEndedSubject.next(update);
+    });
+
+    this.connection.on('TripStarted', (update: TripStartedUpdate) => {
+      this.tripStartedSubject.next(update);
     });
 
     this.connection.on('UsbUnitsChanged', (uuids: string[]) => {

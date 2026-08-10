@@ -33,6 +33,18 @@ public class TripGrpcService : TripService.TripServiceBase
             throw new RpcException(new Status(StatusCode.NotFound, $"TelemetryUnit with id '{telemetryUnitId}' does not exist."));
         }
 
+        // Best-effort: die Fahrten-Seite soll die neue Fahrt sofort in der
+        // Liste anzeigen, statt erst den ersten Positions-Punkt (VehicleUpdate)
+        // ins Leere laufen zu lassen, weil die Fahrt lokal noch nicht existiert.
+        await _hub.Clients.All.SendAsync(
+            "TripStarted",
+            new TripStartedMessage(
+                trip.Id.ToString(),
+                trip.VehicleId,
+                trip.TelemetryUnitId.ToString(),
+                trip.DriverId,
+                trip.StartTimestamp));
+
         return new StartTripResponse
         {
             TripId = trip.Id.ToString(),

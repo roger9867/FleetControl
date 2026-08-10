@@ -38,6 +38,8 @@ message TelemetryPoint {
   double lon = 3;
   double speed_kmh = 4;
   double accel_ms2 = 5;
+  string driver_id = 6;
+  string device_id = 7;
 }
 
 message GetTelemetryPointsResponse {

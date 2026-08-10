@@ -11,4 +11,5 @@ public record VehicleUpdateMessage(
     double Lng,
     double SpeedKmh,
     double AccelMs2,
-    DateTime Timestamp);
+    DateTime Timestamp,
+    string? DriverId = null);

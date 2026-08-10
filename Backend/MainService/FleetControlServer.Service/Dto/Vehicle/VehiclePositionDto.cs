@@ -6,6 +6,8 @@ public class VehiclePositionDto
 
     public string TelemetryUnitId { get; set; } = null!;
 
+    public string? DriverId { get; set; }
+
     public double Lat { get; set; }
 
     public double Lng { get; set; }

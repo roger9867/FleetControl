@@ -66,7 +66,9 @@ export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
   }
 
   private pointsSignature(): string {
-    return this.points.map(p => `${p.id}:${p.isMoving ? '1' : '0'}:${p.lat}:${p.lng}`).join('|');
+    return this.points
+      .map(p => `${p.id}:${p.isMoving ? '1' : '0'}:${p.lat}:${p.lng}:${p.driverLabel ?? ''}:${p.telemetryUnitId ?? ''}:${p.timestamp ?? ''}`)
+      .join('|');
   }
 
   private renderPoints(): void {
@@ -101,9 +103,7 @@ export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
     if (point.telemetryUnitId) {
       lines.push(`T-Einheit: ${point.telemetryUnitId}`);
     }
-    if (point.driverLabel) {
-      lines.push(`Fahrer: ${point.driverLabel}`);
-    }
+    lines.push(`Fahrer: ${point.driverLabel ?? ''}`);
     if (point.speedKmh != null) {
       lines.push(`Geschw.: ${point.speedKmh.toFixed(1)} km/h`);
     }

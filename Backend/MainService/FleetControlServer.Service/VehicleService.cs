@@ -171,7 +171,8 @@ public class VehicleService
             result.Add(new VehiclePositionDto
             {
                 VehicleId = vehicle.Id,
-                TelemetryUnitId = vehicle.TelemetryUnit?.Id.ToString() ?? string.Empty,
+                TelemetryUnitId = point.DeviceId ?? string.Empty,
+                DriverId = point.DriverId,
                 Lat = point.Lat,
                 Lng = point.Lon,
                 SpeedKmh = point.SpeedKmh,

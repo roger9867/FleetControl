@@ -13,7 +13,7 @@ import { TripService } from '../../services/trip.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 import { PersonService } from '../../services/person.service';
-import { VehicleLiveService, VehiclePositionUpdate, TripEndedUpdate } from '../../services/vehicle-live.service';
+import { VehicleLiveService, VehiclePositionUpdate, TripEndedUpdate, TripStartedUpdate } from '../../services/vehicle-live.service';
 
 @Component({
   selector: 'app-layout',
@@ -74,14 +74,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
   filterPersonIds: string[] = [];
   filterStart = '';
   filterStop = '';
-  sampleIntervalSeconds = 30;
+  sampleIntervalSeconds = 10;
 
   appliedFilterVehicleIds: string[] = [];
   appliedFilterTelemetryUnitIds: string[] = [];
   appliedFilterPersonIds: string[] = [];
   appliedFilterStart = '';
   appliedFilterStop = '';
-  appliedSampleIntervalSeconds = 30;
+  appliedSampleIntervalSeconds = 10;
 
   vehicleSearch = '';
   showVehicleOptions = false;
@@ -106,6 +106,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   private liveSubscription?: Subscription;
   private tripEndedSubscription?: Subscription;
+  private tripStartedSubscription?: Subscription;
 
   constructor(
     private tripService: TripService,
@@ -171,11 +172,33 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.tripEndedSubscription = this.vehicleLiveService.tripEnded$.subscribe(update => {
       this.onTripEnded(update);
     });
+
+    this.tripStartedSubscription = this.vehicleLiveService.tripStarted$.subscribe(update => {
+      this.onTripStarted(update);
+    });
   }
 
   ngOnDestroy(): void {
     this.liveSubscription?.unsubscribe();
     this.tripEndedSubscription?.unsubscribe();
+    this.tripStartedSubscription?.unsubscribe();
+  }
+
+  private onTripStarted(update: TripStartedUpdate): void {
+    if (this.currentTripPage !== 1 || this.trips.some(t => t.id === update.tripId)) return;
+
+    this.trips = [{
+      id: update.tripId,
+      vehicleId: update.vehicleId,
+      telemetryUnitId: update.telemetryUnitId,
+      driverId: update.driverId,
+      start: update.startTimestamp,
+      end: null,
+      points: []
+    }, ...this.trips];
+
+    this.totalTripCount++;
+    this.cdr.detectChanges();
   }
 
   private onTripEnded(update: TripEndedUpdate): void {
@@ -370,7 +393,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   selectVehicle(vehicle: Vehicle): void {
-    this.filterVehicleId = vehicle.licensePlate ?? '';
+    this.filterVehicleId = vehicle.Id;
     this.vehicleSearch = vehicle.licensePlate ?? '';
     this.showVehicleOptions = false;
   }
@@ -541,13 +564,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.filterPersonIds = [];
     this.filterStart = '';
     this.filterStop = '';
-    this.sampleIntervalSeconds = 30;
+    this.sampleIntervalSeconds = 10;
     this.appliedFilterVehicleIds = [];
     this.appliedFilterTelemetryUnitIds = [];
     this.appliedFilterPersonIds = [];
     this.appliedFilterStart = '';
     this.appliedFilterStop = '';
-    this.appliedSampleIntervalSeconds = 30;
+    this.appliedSampleIntervalSeconds = 10;
     this.vehicleSearch = '';
     this.telemetrySearch = '';
     this.personSearch = '';
