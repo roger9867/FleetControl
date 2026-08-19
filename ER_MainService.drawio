@@ -169,6 +169,9 @@
             <mxRectangle height="30" width="220" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="QFHe7UZCxpkUgzRg-7XT-32" edge="1" parent="1" source="hjNeOwvheHqVLiXe_xoG-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERzeroToOne;endFill=0;" target="hjNeOwvheHqVLiXe_xoG-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="hjNeOwvheHqVLiXe_xoG-40" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;whiteSpace=wrap;" value="Vehicles" vertex="1">
           <mxGeometry height="330" width="240" x="80" y="560" as="geometry" />
         </mxCell>
