@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="VqcdpEj5MhzT9HnX5R05">
-    <mxGraphModel dx="1075" dy="978" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="896" dy="815" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -34,7 +34,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="hjNeOwvheHqVLiXe_xoG-14" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;whiteSpace=wrap;" value="VehicleDrivers" vertex="1">
-          <mxGeometry height="150" width="180" x="400" y="670" as="geometry" />
+          <mxGeometry height="150" width="180" x="550" y="700" as="geometry" />
         </mxCell>
         <mxCell id="hjNeOwvheHqVLiXe_xoG-15" parent="hjNeOwvheHqVLiXe_xoG-14" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;html=1;" value="" vertex="1">
           <mxGeometry height="30" width="180" y="30" as="geometry" />
@@ -355,6 +355,12 @@
         <mxCell id="hjNeOwvheHqVLiXe_xoG-65" parent="hjNeOwvheHqVLiXe_xoG-63" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;html=1;whiteSpace=wrap;" value="ObtainedDate DATE" vertex="1">
           <mxGeometry height="30" width="120" x="60" as="geometry">
             <mxRectangle height="30" width="120" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QFHe7UZCxpkUgzRg-7XT-30" edge="1" parent="1" source="QFHe7UZCxpkUgzRg-7XT-7" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToOne;startArrow=ERzeroToOne;rounded=0;entryX=-0.001;entryY=-0.056;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.996;exitY=-0.023;exitDx=0;exitDy=0;exitPerimeter=0;startFill=0;endFill=0;" target="hjNeOwvheHqVLiXe_xoG-24" value="">
+          <mxGeometry height="100" relative="1" width="100" as="geometry">
+            <mxPoint x="360" y="740" as="sourcePoint" />
+            <mxPoint x="460" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
