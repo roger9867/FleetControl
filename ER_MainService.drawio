@@ -172,11 +172,6 @@
         <mxCell id="QFHe7UZCxpkUgzRg-7XT-32" edge="1" parent="1" source="hjNeOwvheHqVLiXe_xoG-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERzeroToOne;endFill=0;" target="hjNeOwvheHqVLiXe_xoG-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="QFHe7UZCxpkUgzRg-7XT-34" edge="1" parent="1" source="hjNeOwvheHqVLiXe_xoG-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=ERzeroToMany;startFill=0;endArrow=ERmandOne;endFill=0;exitX=0.666;exitY=-0.001;exitDx=0;exitDy=0;exitPerimeter=0;" target="hjNeOwvheHqVLiXe_xoG-57">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="240" y="550" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="hjNeOwvheHqVLiXe_xoG-40" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;whiteSpace=wrap;" value="Vehicles" vertex="1">
           <mxGeometry height="330" width="360" x="80" y="560" as="geometry" />
         </mxCell>
