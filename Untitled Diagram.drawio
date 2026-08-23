@@ -20,7 +20,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-107" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PendingTripEndRetryService" vertex="1">
-          <mxGeometry height="52" width="200" x="1845" y="1590" as="geometry" />
+          <mxGeometry height="52" width="200" x="1830" y="1590" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-108" parent="x4gMo4hVQ__LLFB5ge43-107" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ RetryPendingTripState()" vertex="1">
           <mxGeometry height="26" width="200" y="26" as="geometry" />
@@ -46,8 +46,11 @@
         <mxCell id="x4gMo4hVQ__LLFB5ge43-125" parent="x4gMo4hVQ__LLFB5ge43-124" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ GetCurrentAssignment(): Assignment[]" vertex="1">
           <mxGeometry height="26" width="380" y="26" as="geometry" />
         </mxCell>
+        <mxCell id="x4gMo4hVQ__LLFB5ge43-195" edge="1" parent="1" source="x4gMo4hVQ__LLFB5ge43-111" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=14;endSize=8;startArrow=diamondThin;startFill=0;endArrow=none;endFill=0;" target="x4gMo4hVQ__LLFB5ge43-115">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-111" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PendingTripEndQueue" vertex="1">
-          <mxGeometry height="78" width="255" x="1817.5" y="1400" as="geometry" />
+          <mxGeometry height="78" width="255" x="1802.5" y="1400" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-112" parent="x4gMo4hVQ__LLFB5ge43-111" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Enqueue(entry: PendingTripEnd)" vertex="1">
           <mxGeometry height="26" width="255" y="26" as="geometry" />
@@ -88,8 +91,8 @@
         <mxCell id="x4gMo4hVQ__LLFB5ge43-132" parent="x4gMo4hVQ__LLFB5ge43-128" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="DriverId: String" vertex="1">
           <mxGeometry height="26" width="380" y="104" as="geometry" />
         </mxCell>
-        <mxCell id="x4gMo4hVQ__LLFB5ge43-115" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&amp;lt;&amp;lt;Datatype&amp;gt;&amp;gt;&lt;div&gt;PendingTripEnd&lt;/div&gt;" vertex="1">
-          <mxGeometry height="104" width="180" x="2150" y="1338" as="geometry" />
+        <mxCell id="x4gMo4hVQ__LLFB5ge43-115" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;PendingTripEnd&lt;/span&gt;" vertex="1">
+          <mxGeometry height="104" width="180" x="2170" y="1387" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-116" parent="x4gMo4hVQ__LLFB5ge43-115" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="DeviceId: String" vertex="1">
           <mxGeometry height="26" width="180" y="26" as="geometry" />
@@ -590,7 +593,7 @@
         <mxCell id="x4gMo4hVQ__LLFB5ge43-95" parent="x4gMo4hVQ__LLFB5ge43-89" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;labelBorderColor=none;labelBackgroundColor=none;fontColor=default;" value="+ TripStartTimestamp: DateTime" vertex="1">
           <mxGeometry height="26" width="230" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="x4gMo4hVQ__LLFB5ge43-96" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&amp;lt;&amp;lt;Enumeration&amp;gt;&amp;gt;&lt;div&gt;TripState&lt;/div&gt;" vertex="1">
+        <mxCell id="x4gMo4hVQ__LLFB5ge43-96" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;TripState&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="130" width="140" x="2200" y="1084" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-97" parent="x4gMo4hVQ__LLFB5ge43-96" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="Connected" vertex="1">
