@@ -652,6 +652,11 @@
         <mxCell id="x4gMo4hVQ__LLFB5ge43-194" edge="1" parent="1" source="x4gMo4hVQ__LLFB5ge43-188" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;endArrow=none;endFill=0;startArrow=blockThin;startFill=1;" target="x4gMo4hVQ__LLFB5ge43-103">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="x4gMo4hVQ__LLFB5ge43-196" connectable="0" parent="x4gMo4hVQ__LLFB5ge43-194" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="uses" vertex="1">
+          <mxGeometry relative="1" x="-0.2667" y="-2" as="geometry">
+            <mxPoint x="126" y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-188" parent="1" style="html=1;whiteSpace=wrap;" value="«external»&lt;br&gt;&lt;b&gt;MainService&lt;/b&gt;" vertex="1">
           <mxGeometry height="50" width="110" x="980" y="1592" as="geometry" />
         </mxCell>
