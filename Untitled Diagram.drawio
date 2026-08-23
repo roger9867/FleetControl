@@ -88,7 +88,7 @@
           <mxGeometry height="26" width="200" y="156" as="geometry" />
         </mxCell>
         <mxCell id="DhQ0LcdkzxuMYXI9m7hJ-39" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="TelemetryFsm" vertex="1">
-          <mxGeometry height="104" width="200" x="40" y="280" as="geometry" />
+          <mxGeometry height="104" width="200" x="40" y="277" as="geometry" />
         </mxCell>
         <mxCell id="DhQ0LcdkzxuMYXI9m7hJ-42" parent="DhQ0LcdkzxuMYXI9m7hJ-39" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- currentState: TelemetryState" vertex="1">
           <mxGeometry height="26" width="200" y="26" as="geometry" />
@@ -177,7 +177,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-1" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="NetworkFsm" vertex="1">
-          <mxGeometry height="104" width="200" x="330" y="280" as="geometry" />
+          <mxGeometry height="104" width="200" x="330" y="277" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-2" parent="x4gMo4hVQ__LLFB5ge43-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- currentState: NetworkState" vertex="1">
           <mxGeometry height="26" width="200" y="26" as="geometry" />
@@ -195,7 +195,7 @@
           <mxGeometry height="26" width="200" y="78" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-6" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="GnssFsm" vertex="1">
-          <mxGeometry height="156" width="190" x="590" y="280" as="geometry" />
+          <mxGeometry height="156" width="190" x="590" y="277" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-7" parent="x4gMo4hVQ__LLFB5ge43-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- currentState: GnssState" vertex="1">
           <mxGeometry height="26" width="190" y="26" as="geometry" />
@@ -228,6 +228,11 @@
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="656.12" y="610" as="sourcePoint" />
             <mxPoint x="656.12" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="x4gMo4hVQ__LLFB5ge43-32" edge="1" parent="1" source="DhQ0LcdkzxuMYXI9m7hJ-15" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;endArrow=none;endFill=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="109.2" y="276.26" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
