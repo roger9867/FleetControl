@@ -631,7 +631,7 @@
         <mxCell id="x4gMo4hVQ__LLFB5ge43-181" parent="1" style="html=1;whiteSpace=wrap;" value="«external»&lt;br&gt;&lt;b&gt;MQTT-Broker&lt;/b&gt;" vertex="1">
           <mxGeometry height="50" width="110" x="1285" y="619" as="geometry" />
         </mxCell>
-        <mxCell id="x4gMo4hVQ__LLFB5ge43-101" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=8 8;strokeColor=light-dark(#FFFFFF,#FFFFFF);strokeWidth=2;arcSize=0;" value="" vertex="1">
+        <mxCell id="x4gMo4hVQ__LLFB5ge43-101" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=8 8;strokeColor=light-dark(#000000,#FFFFFF);strokeWidth=2;arcSize=0;" value="" vertex="1">
           <mxGeometry height="208" width="315" x="1505" y="540" as="geometry" />
         </mxCell>
         <mxCell id="x4gMo4hVQ__LLFB5ge43-185" edge="1" parent="1" source="x4gMo4hVQ__LLFB5ge43-70" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;endArrow=none;endFill=0;" target="x4gMo4hVQ__LLFB5ge43-74">
