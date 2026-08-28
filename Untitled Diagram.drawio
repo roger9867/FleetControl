@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="lw2GaVi8QtIeF5WYgMME">
-    <mxGraphModel dx="793" dy="1120" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1105" dy="1680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1863,6 +1863,216 @@
             </Array>
             <mxPoint x="2710.0000000000005" y="5206" as="sourcePoint" />
             <mxPoint x="2999.9999999999995" y="4825" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-83" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="490" width="660" x="1930" y="5850" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-84" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="640" x="1940" y="5860" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-85" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 40px;&quot;&gt;Wechselnder&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 40px;&quot;&gt;Inhalt&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="400" width="640" x="1940" y="5930" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-86" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;u&gt;Fahrzeuge&lt;/u&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="2065" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-87" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrten" vertex="1">
+          <mxGeometry height="30" width="60" x="2160" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-88" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Personen" vertex="1">
+          <mxGeometry height="30" width="60" x="2250" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-89" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Telemetrieeinheiten" vertex="1">
+          <mxGeometry height="30" width="60" x="2370" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-90" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=none;fontColor=#ffffff;strokeColor=light-dark(#6F0000,#CC0000);strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="120" x="2036" y="5870" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-91" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;endWidth=20;strokeWidth=3;strokeColor=light-dark(#CC0000,#CC0000);fillColor=light-dark(#CC0000,#CC0000);" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="2189.17" y="5985" as="sourcePoint" />
+            <mxPoint x="2189.17" y="5905" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-92" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="500" width="660" x="2700" y="5850" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-93" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="640" x="2710" y="5860" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-95" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;u&gt;Fahrzeuge&lt;/u&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="2835" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-96" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrten" vertex="1">
+          <mxGeometry height="30" width="60" x="2930" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-97" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Personen" vertex="1">
+          <mxGeometry height="30" width="60" x="3020" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-98" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Telemetrieeinheiten" vertex="1">
+          <mxGeometry height="30" width="60" x="3140" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-101" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;Karte mit Fahrzeugpositionen&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="320" x="2870" y="5955" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-102" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="2870" y="6200" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-103" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="2870" y="6290" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-104" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;Fahrzeugdetails&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="320" x="2870" y="6220" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-106" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Neu" vertex="1">
+          <mxGeometry height="30" width="60" x="2870" y="6158" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-107" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Filter&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="100" x="3210" y="5955" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-121" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="2870" y="6316" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-122" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="500" width="660" x="2700" y="6420" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-123" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="640" x="2710" y="6430" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-124" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrzeuge" vertex="1">
+          <mxGeometry height="30" width="60" x="2835" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-125" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;u&gt;Fahrten&lt;/u&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="2930" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-126" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Personen" vertex="1">
+          <mxGeometry height="30" width="60" x="3020" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-127" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Telemetrieeinheiten" vertex="1">
+          <mxGeometry height="30" width="60" x="3140" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-128" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;Karte mit Fahrtrouten&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="320" x="2870" y="6525" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-129" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="2870" y="6770" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-130" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="2870" y="6860" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-131" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;Fahrtdetails&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="320" x="2870" y="6790" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-133" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Filter&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="100" x="3210" y="6525" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-134" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="2870" y="6886" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-135" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;u&gt;Karte&lt;/u&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="2970" y="6728" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-136" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Graph" vertex="1">
+          <mxGeometry height="30" width="60" x="3050" y="6728" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-137" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="500" width="660" x="3460" y="5850" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-138" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="640" x="3470" y="5860" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-139" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrzeuge" vertex="1">
+          <mxGeometry height="30" width="60" x="3595" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-140" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrten" vertex="1">
+          <mxGeometry height="30" width="60" x="3690" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-141" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;u&gt;Personen&lt;/u&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="3780" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-142" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Telemetrieeinheiten" vertex="1">
+          <mxGeometry height="30" width="60" x="3900" y="5875" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-144" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6000" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-145" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6105" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-146" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;Personendetails&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="320" x="3630" y="6030" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-147" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Neu" vertex="1">
+          <mxGeometry height="30" width="60" x="3630" y="5955" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-148" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Filter&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="100" x="3970" y="6000" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-149" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6134" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-150" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6163" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-151" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6192" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-152" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="500" width="660" x="3460" y="6420" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-153" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="640" x="3470" y="6430" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-154" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrzeuge" vertex="1">
+          <mxGeometry height="30" width="60" x="3595" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-155" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fahrten" vertex="1">
+          <mxGeometry height="30" width="60" x="3690" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-156" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Personen" vertex="1">
+          <mxGeometry height="30" width="60" x="3780" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-157" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;u&gt;Telemetrieeinheiten&lt;/u&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="3900" y="6445" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-158" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6570" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-159" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6675" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-160" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;font-size: 19px;&quot;&gt;Details Telemetrieeinheit&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="320" x="3630" y="6600" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-161" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Neu" vertex="1">
+          <mxGeometry height="30" width="60" x="3630" y="6525" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-162" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Filter&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="100" x="3970" y="6570" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-163" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6704" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-164" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6733" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-165" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="14" width="320" x="3630" y="6762" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-166" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Verbundene Hardware UUID..." vertex="1">
+          <mxGeometry height="30" width="185" x="3695" y="6525" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-168" parent="1" style="shape=mxgraph.basic.arc;html=1;startAngle=0.3;endAngle=0.1;endArrow=classic;endFill=1;rotation=0;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="3900" y="6525" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-169" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=none;fontColor=#ffffff;strokeColor=light-dark(#6F0000,#CC0000);strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="53" width="55" x="3888" y="6513" as="geometry" />
+        </mxCell>
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-170" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;endWidth=20;strokeWidth=3;strokeColor=light-dark(#CC0000,#CC0000);fillColor=light-dark(#CC0000,#CC0000);" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="4030" y="6538.79" as="sourcePoint" />
+            <mxPoint x="3950" y="6538.79" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
