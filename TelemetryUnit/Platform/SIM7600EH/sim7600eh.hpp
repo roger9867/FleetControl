@@ -53,7 +53,7 @@ class Sim7600
     private:
         const char* APN_TOKEN = "internet";
         const char* TOPIC_NAME = "drivedata";
-        const char* IP_BROKER = "74.248.185.45";
+        const char* IP_BROKER = "74.248.232.214";
         const char* MQTT_USER = "mqttuser";
         const char* MQTT_PASSWORD = "hihohihe1967";
         uint32_t PORT_BROKER = 1883;
