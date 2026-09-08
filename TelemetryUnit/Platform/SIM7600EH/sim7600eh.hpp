@@ -60,7 +60,4 @@ class Sim7600
 
         void memset(uint8_t *buf, uint8_t value, uint32_t len);
         bool wait_for_char(char token, uint32_t timeout);
-
-
-
 };

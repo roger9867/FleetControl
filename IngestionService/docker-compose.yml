@@ -1,0 +1,27 @@
+version: '3.9'
+
+# Benoetigt eine laufende InfluxDB unter localhost:8086 - die wird nicht hier,
+# sondern zentral ueber DriveDataService/docker-compose.yml gestartet (network_mode: host,
+# daher unabhaengig davon, welcher Compose-Stack sie hochgefahren hat).
+services:
+  ingestionservice:
+    build:
+      context: ./IngestionService
+      dockerfile: Dockerfile
+      network: host
+
+    container_name: ingestionservice
+    network_mode: host
+
+    environment:
+      Mqtt__Host: ${MQTT_HOST}
+      Mqtt__Port: ${MQTT_PORT}
+      Mqtt__Username: ${MQTT_USERNAME}
+      Mqtt__Password: ${MQTT_PASSWORD}
+      Mqtt__UseTls: ${MQTT_USE_TLS}
+      Mqtt__Topic: ${MQTT_TOPIC}
+      InfluxDB__Url: http://localhost:8086
+      InfluxDB__Token: ${INFLUXDB_TOKEN}
+      InfluxDB__Org: ${INFLUXDB_ORG}
+      InfluxDB__Bucket: ${INFLUXDB_BUCKET}
+      TripService__Address: ${TRIP_SERVICE_ADDRESS}

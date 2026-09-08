@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
+import { FilterComponent, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
 import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 import { VehicleService } from '../../services/vehicle.service';
 import { PersonService } from '../../services/person.service';
-import { VehicleLiveService } from '../../services/vehicle-live.service';
+import { UsbTelemetryService } from '../../services/usb-telemetry.service';
 import { TelemetryUnit } from '../../models/telemetry-unit.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
@@ -15,11 +15,11 @@ import { Person } from '../../models/person.model';
 @Component({
   selector: 'app-telemetry-units',
   standalone: true,
-  imports: [CommonModule, FormsModule, FilterSidebar],
+  imports: [CommonModule, FormsModule, FilterComponent],
   templateUrl: './telemetry-units.component.html',
   styleUrls: ['./telemetry-units.component.scss']
 })
-export class TelemetryUnits implements OnInit, OnDestroy
+export class TelemetryUnitPageComponent implements OnInit, OnDestroy
 {
   @Output() showTrips = new EventEmitter<string>();
 
@@ -49,7 +49,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
     private service: TelemetryUnitService,
     private vehicleService: VehicleService,
     private personService: PersonService,
-    private vehicleLiveService: VehicleLiveService,
+    private usbTelemetryService: UsbTelemetryService,
     private cdr: ChangeDetectorRef
   ) {
 
@@ -75,7 +75,7 @@ export class TelemetryUnits implements OnInit, OnDestroy
   ngOnInit(): void {
     this.loadAllUnits();
 
-    this.broadcastSub = this.vehicleLiveService.usbUnitsChanged$
+    this.broadcastSub = this.usbTelemetryService.connectedUnitIds$
       .subscribe(uuids => {
         this.usb_connected_units = uuids.map(id => ({ id }));
         this.cdr.detectChanges();
@@ -138,12 +138,13 @@ export class TelemetryUnits implements OnInit, OnDestroy
       });
   }
 
-  sendBroadcast(): void {
-    this.service.broadcastCommand()
-      .subscribe(res => {
-        this.usb_connected_units = this.service.filterUuidResponses(res).map(id => ({ id }));
-        this.cdr.detectChanges();
-      });
+  async sendBroadcast(): Promise<void> {
+    try {
+      await this.usbTelemetryService.broadcastToAll();
+    } catch (err: any) {
+      if (err?.name === 'NotFoundError') return;
+      console.error('Serial-Broadcast fehlgeschlagen', err);
+    }
   }
 
   ngOnDestroy(): void {

@@ -181,26 +181,32 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-  bool armed = false;
-  bool last_pin = true;
+  const uint32_t DEBOUNCE_MS = 30;
+
+  bool stable_pin = HAL_GPIO_ReadPin(UserButton_GPIO_Port, UserButton_Pin);
+  bool last_reading = stable_pin;
+  uint32_t last_change = HAL_GetTick();
 
 for (;;)
 {
     bool pin = HAL_GPIO_ReadPin(UserButton_GPIO_Port, UserButton_Pin);
 
-    if (pin == PIN_STATE_LOW)
+    if (pin != last_reading)
     {
-        armed = true;
+        last_reading = pin;
+        last_change = HAL_GetTick();
     }
-
-    if (armed && last_pin == PIN_STATE_LOW && pin == PIN_STATE_HIGH)
+    else if ((HAL_GetTick() - last_change) >= DEBOUNCE_MS && pin != stable_pin)
     {
-        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-        armed = false;
-        led_state = !led_state;
-    }
+        // Bestätigte, entprellte Flanke: nur beim Loslassen (LOW -> HIGH) togglen
+        if (stable_pin == PIN_STATE_LOW && pin == PIN_STATE_HIGH)
+        {
+            HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+            led_state = !led_state;
+        }
 
-    last_pin = pin;
+        stable_pin = pin;
+    }
 
     osDelay(1);
 }
@@ -220,10 +226,10 @@ void start_command_handler(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    //if (led_state)
-    //{
+    if (led_state)
+    {
       check_for_device_id_request_command(&huart2);
-    //}
+    }
     osDelay(1);
   }
   /* USER CODE END start_command_handler */

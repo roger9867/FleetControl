@@ -11,7 +11,7 @@ import { Trip } from '../../models/trip.model';
   templateUrl: './trip-chart.component.html',
   styleUrls: ['./trip-chart.component.scss']
 })
-export class TripChart implements OnChanges {
+export class TripChartComponent implements OnChanges {
 
   @Input() trips: Trip[] = [];
 

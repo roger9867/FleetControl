@@ -21,17 +21,17 @@
       <div class="form-grid">
         <label>
           Kennzeichen
-          <input type="text" maxlength="10" [ngModel]="newVehicle.licensePlate" (ngModelChange)="onNewLicensePlateChange($event)">
+          <input type="text" maxlength="9" [ngModel]="newVehicle.licensePlate" (ngModelChange)="onNewLicensePlateChange($event)">
         </label>
 
         <label>
           Marke *
-          <input type="text" maxlength="20" [(ngModel)]="newVehicle.brand">
+          <input type="text" maxlength="50" [(ngModel)]="newVehicle.brand">
         </label>
 
         <label>
           Modell *
-          <input type="text" maxlength="20" [(ngModel)]="newVehicle.modelName">
+          <input type="text" maxlength="50" [(ngModel)]="newVehicle.modelName">
         </label>
 
         <label>
@@ -66,7 +66,7 @@
 
         <label>
           Farbe *
-          <input type="text" maxlength="20" [(ngModel)]="newVehicle.color">
+          <input type="text" maxlength="50" [(ngModel)]="newVehicle.color">
         </label>
 
         <label>
@@ -106,7 +106,7 @@
           <div>
             <span>Kennzeichen:</span>
             <ng-container *ngIf="editingIndex === i; else plateView">
-              <input type="text" class="inline-input" maxlength="10" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
+              <input type="text" class="inline-input" maxlength="9" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
             </ng-container>
             <ng-template #plateView>{{ vehicle.licensePlate }}</ng-template>
           </div>

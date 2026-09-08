@@ -20,7 +20,7 @@ export interface VehicleMapPoint {
   templateUrl: './vehicle-map.component.html',
   styleUrl: './vehicle-map.component.scss',
 })
-export class VehicleMap implements AfterViewInit, AfterViewChecked, OnChanges {
+export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnChanges {
 
   @Input() points: VehicleMapPoint[] = [];
 

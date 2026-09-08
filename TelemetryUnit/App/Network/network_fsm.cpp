@@ -80,7 +80,15 @@ void NetworkFSM::step()
                 last_health_check = HAL_GetTick();
                 current_state = NetworkState::NetworkMqttConnected;
             }
-
+            // new addition for fsm correction
+            else
+            {
+                const char msg[] = "[FSM] MQTT connection failed -> ERROR\r\n";
+                network_module.huart_debug.write(
+                    (uint8_t*)msg, strlen(msg));
+                    current_state = NetworkState::NetworkError;
+            }
+            //
             break;
         }
 

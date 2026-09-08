@@ -37,13 +37,11 @@ export class VehicleLiveService {
   private vehicleUpdateSubject = new Subject<VehiclePositionUpdate>();
   private tripEndedSubject = new Subject<TripEndedUpdate>();
   private tripStartedSubject = new Subject<TripStartedUpdate>();
-  private usbUnitsChangedSubject = new Subject<string[]>();
 
   vehicleUpdate$ = this.vehicleUpdateSubject.asObservable();
   vehicleMoving$ = this.vehicleUpdate$.pipe(map(update => update.vehicleId));
   tripEnded$ = this.tripEndedSubject.asObservable();
   tripStarted$ = this.tripStartedSubject.asObservable();
-  usbUnitsChanged$ = this.usbUnitsChangedSubject.asObservable();
 
   constructor() {
     const hubUrl = `${environment.apiUrl.replace(/\/api\/?$/, '')}/hubs/vehicles`;
@@ -63,10 +61,6 @@ export class VehicleLiveService {
 
     this.connection.on('TripStarted', (update: TripStartedUpdate) => {
       this.tripStartedSubject.next(update);
-    });
-
-    this.connection.on('UsbUnitsChanged', (uuids: string[]) => {
-      this.usbUnitsChangedSubject.next(uuids);
     });
 
     this.connection.start().catch(() => {});

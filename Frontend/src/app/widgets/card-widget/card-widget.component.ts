@@ -10,7 +10,7 @@ import { Vehicle } from '../../models/vehicle.model';
   templateUrl: './card-widget.component.html',
   styleUrl: './card-widget.component.scss',
 })
-export class CardWidget implements AfterViewInit, AfterViewChecked, OnChanges {
+export class CardWidgetComponent implements AfterViewInit, AfterViewChecked, OnChanges {
 
   @Input() trips: Trip[] = [];
   @Input() vehicles: Vehicle[] = [];

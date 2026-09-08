@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { VehicleMap, VehicleMapPoint } from '../vehicle-map/vehicle-map.component';
-import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
+import { VehicleMapComponent, VehicleMapPoint } from '../vehicle-map/vehicle-map.component';
+import { FilterComponent, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
 import { TelemetryUnit } from '../../models/telemetry-unit.model';
@@ -18,13 +18,13 @@ const MOVING_TIMEOUT_MS = 5000;
 @Component({
   selector: 'app-vehicles',
   standalone: true,
-  imports: [CommonModule, FormsModule, VehicleMap, FilterSidebar],
+  imports: [CommonModule, FormsModule, VehicleMapComponent, FilterComponent],
   templateUrl: './vehicles.component.html',
   styleUrls: ['./vehicles.component.scss']
 })
-export class Vehicles implements OnInit, OnDestroy
+export class VehiclesPageComponent implements OnInit, OnDestroy
 {
-  @ViewChild(VehicleMap) vehicleMap?: VehicleMap;
+  @ViewChild(VehicleMapComponent) vehicleMap?: VehicleMapComponent;
 
   @Output() showTrips = new EventEmitter<string>();
 

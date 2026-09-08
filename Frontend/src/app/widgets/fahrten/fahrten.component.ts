@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { CardWidget } from '../card-widget/card-widget.component';
-import { TripChart } from '../trip-chart/trip-chart.component';
+import { CardWidgetComponent } from '../card-widget/card-widget.component';
+import { TripChartComponent } from '../trip-chart/trip-chart.component';
 import { Trip, TripPoint } from '../../models/trip.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { Person } from '../../models/person.model';
@@ -18,11 +18,11 @@ import { VehicleLiveService, VehiclePositionUpdate, TripEndedUpdate, TripStarted
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardWidget, TripChart],
+  imports: [CommonModule, FormsModule, CardWidgetComponent, TripChartComponent],
   templateUrl: './fahrten.component.html',
   styleUrls: ['./fahrten.component.scss']
 })
-export class LayoutComponent implements OnInit, OnDestroy {
+export class TripsPageComponent implements OnInit, OnDestroy {
 
   @Input() presetVehicleId?: string;
   @Output() presetVehicleIdChange = new EventEmitter<string | undefined>();
@@ -95,7 +95,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   @ViewChild('vehicleAutocomplete') vehicleAutocompleteRef?: ElementRef<HTMLElement>;
   @ViewChild('telemetryAutocomplete') telemetryAutocompleteRef?: ElementRef<HTMLElement>;
   @ViewChild('personAutocomplete') personAutocompleteRef?: ElementRef<HTMLElement>;
-  @ViewChild(CardWidget) cardWidget?: CardWidget;
+  @ViewChild(CardWidgetComponent) cardWidget?: CardWidgetComponent;
 
   selectedIndex: number | null = null;
   deleteConfirmIndex: number | null = null;

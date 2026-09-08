@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, HostListener, Output, EventEmitte
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { FilterSidebar, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
+import { FilterComponent, AppliedFilters, emptyAppliedFilters } from '../filter-sidebar/filter-sidebar.component';
 import { Person } from '../../models/person.model';
 import { Vehicle } from '../../models/vehicle.model';
 import { PersonService } from '../../services/person.service';
@@ -12,11 +12,11 @@ import { TelemetryUnitService } from '../../services/telemetry-unit.service';
 @Component({
   selector: 'app-personen',
   standalone: true,
-  imports: [CommonModule, FormsModule, FilterSidebar],
+  imports: [CommonModule, FormsModule, FilterComponent],
   templateUrl: './personen.component.html',
   styleUrls: ['./personen.component.scss']
 })
-export class Personen implements OnInit
+export class PersonPageComponent implements OnInit
 {
   @Output() showTrips = new EventEmitter<string>();
 

@@ -21,7 +21,6 @@ void check_for_device_id_request_command(UART_HandleTypeDef* huartx)
 
     while (true)
     {
-        // ❌ KEIN Mutex um Receive
         if (HAL_UART_Receive(huartx, &byte_read, 1, HAL_MAX_DELAY) == HAL_OK)
         {
             if (byte_read == '\n' || byte_read == '\r')

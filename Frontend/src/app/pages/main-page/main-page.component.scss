@@ -28,6 +28,7 @@ html, body {
 
 .main {
   flex: 1;
+  min-width: 0;
   display: flex;
 }
 
@@ -50,11 +51,17 @@ html, body {
 
 .content {
   flex: 1;
+  min-width: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  overflow: hidden;
   color: var(--color-text-primary);
+}
+
+.content-inner {
+  transform-origin: center center;
 }
 
 .leaflet-popup-content {
@@ -97,6 +104,67 @@ html, body {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.tabs-measure {
+  visibility: hidden;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tabs-dropdown {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tabs-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.tabs-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-header);
+  border: 1px solid var(--color-border-header);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1001;
+  min-width: 180px;
+
+  button {
+    background: transparent;
+    border: none;
+    color: var(--color-text-soft);
+    cursor: pointer;
+    font-size: 16px;
+    text-align: left;
+    padding: 10px 16px;
+
+    &:hover {
+      background: var(--color-hover-overlay);
+    }
+
+    &.active {
+      color: var(--color-text-primary);
+    }
+  }
 }
 
 .tabs button {

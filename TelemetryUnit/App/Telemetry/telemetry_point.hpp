@@ -17,6 +17,7 @@ struct GnssData
     bool valid;
 };
 
+
 class TelemetryPoint
 {
     public:

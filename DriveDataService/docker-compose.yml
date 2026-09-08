@@ -19,48 +19,5 @@ services:
       DOCKER_INFLUXDB_INIT_BUCKET: Events
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-secret-token
 
-  ingestionservice:
-    build:
-      context: ./IngestionService/IngestionService
-      dockerfile: Dockerfile
-      network: host
-
-    container_name: ingestionservice
-    network_mode: host
-    depends_on:
-      - influxdb
-    environment:
-      Mqtt__Host: ${MQTT_HOST}
-      Mqtt__Port: ${MQTT_PORT}
-      Mqtt__Username: ${MQTT_USERNAME}
-      Mqtt__Password: ${MQTT_PASSWORD}
-      Mqtt__UseTls: ${MQTT_USE_TLS}
-      Mqtt__Topic: ${MQTT_TOPIC}
-      InfluxDB__Url: http://localhost:8086
-      InfluxDB__Token: ${INFLUXDB_TOKEN}
-      InfluxDB__Org: ${INFLUXDB_ORG}
-      InfluxDB__Bucket: ${INFLUXDB_BUCKET}
-      TripService__Address: ${TRIP_SERVICE_ADDRESS}
-
-  # gRPC-Gegenstueck zu IngestionService: liest die von IngestionService in
-  # InfluxDB geschriebenen Punkte fuer MainService zurueck (TelemetryQuery).
-  # Port 5002 fest gesetzt, da MainServices appsettings darauf verweist.
-  telemetrydataservice:
-    build:
-      context: ./TelemetryDataService
-      dockerfile: Dockerfile
-      network: host
-
-    container_name: telemetrydataservice
-    network_mode: host
-    depends_on:
-      - influxdb
-    environment:
-      ASPNETCORE_URLS: http://+:5002
-      InfluxDB__Url: http://localhost:8086
-      InfluxDB__Token: ${INFLUXDB_TOKEN}
-      InfluxDB__Org: ${INFLUXDB_ORG}
-      InfluxDB__Bucket: ${INFLUXDB_BUCKET}
-
 volumes:
   influxdb-data:

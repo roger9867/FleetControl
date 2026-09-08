@@ -2,13 +2,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<header class="header">
+<header class="header" #headerEl>
 
-  <span class="material-symbols-outlined app-menu"
+  <span class="material-symbols-outlined app-menu" #appMenuEl
     (click)="toggleSidebar()">
   apps</span>
 
-  <nav class="tabs">
+  <nav class="tabs" *ngIf="!tabsCollapsed">
     <button
       *ngFor="let tab of tabs"
       (click)="selectTab(tab)"
@@ -17,7 +17,28 @@
     </button>
   </nav>
 
-  <div class="header-right">
+  <div class="tabs-dropdown" *ngIf="tabsCollapsed">
+    <button class="tabs-dropdown-toggle" (click)="tabsDropdownOpen = !tabsDropdownOpen; $event.stopPropagation()">
+      {{ activeTab }}
+      <span class="material-symbols-outlined">expand_more</span>
+    </button>
+
+    <div class="tabs-dropdown-menu" *ngIf="tabsDropdownOpen" (click)="$event.stopPropagation()">
+      <button
+        *ngFor="let tab of tabs"
+        (click)="selectTab(tab); tabsDropdownOpen = false"
+        [class.active]="activeTab === tab">
+        {{ tab }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Nur zum Messen der natuerlichen Breite, nie sichtbar -->
+  <nav class="tabs tabs-measure" #tabsMeasureEl>
+    <button *ngFor="let tab of tabs">{{ tab }}</button>
+  </nav>
+
+  <div class="header-right" #headerRightEl>
     <span class="material-symbols-outlined header-icon" (click)="toggleTheme()">
       {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
     </span>
@@ -50,7 +71,8 @@
   </div>
 
   <div class="main">
-    <div class="content">
+    <div class="content" #contentEl>
+    <div class="content-inner" #contentInner [style.transform]="'scale(' + contentScale + ')'">
       <div *ngIf="activeTab === 'Fahrten'">
           <app-layout
             [presetVehicleId]="pendingTripVehicleId"
@@ -74,6 +96,7 @@
         <app-telemetry-units (showTrips)="onShowTripsForTelemetryUnit($event)"></app-telemetry-units>
       </div>
 
+      <!--
       <div *ngIf="activeTab === 'Person anlegen'" class="person-form">
         <h2>Person anlegen</h2>
 
@@ -117,6 +140,8 @@
         </form>
 
       </div>
+      -->
+    </div>
     </div>
   </div>
 </div>

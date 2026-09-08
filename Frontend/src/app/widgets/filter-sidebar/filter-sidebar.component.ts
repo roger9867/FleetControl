@@ -78,7 +78,7 @@ export function emptyAppliedFilters(): AppliedFilters {
   templateUrl: './filter-sidebar.component.html',
   styleUrls: ['./filter-sidebar.component.scss']
 })
-export class FilterSidebar
+export class FilterComponent
 {
   @Input() vehicles: Vehicle[] = [];
   @Input() telemetryUnitIds: string[] = [];
