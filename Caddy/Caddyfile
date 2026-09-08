@@ -1,0 +1,13 @@
+fleetcontrol.polandcentral.cloudapp.azure.com {
+    handle /api/* {
+        reverse_proxy localhost:5000
+    }
+
+    handle /hubs/* {
+        reverse_proxy localhost:5000
+    }
+
+    handle {
+        reverse_proxy localhost:4200
+    }
+}

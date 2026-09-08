@@ -68,7 +68,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular", policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200") // Angular dev server
+            .WithOrigins(
+                "http://localhost:4200",
+                "http://74.248.232.214:4200",
+                "https://fleetcontrol.polandcentral.cloudapp.azure.com") // Angular dev server: lokal, direkt per VM-IP, und ueber Caddy/Domain
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials(); // SignalR-Handshake (negotiate) benoetigt Credentials
@@ -145,7 +148,13 @@ app.MapGrpcService<AssignmentGrpcService>();
 // SignalR Hub fuer Live-Updates (Fahrzeug-Bewegungszustand)
 app.MapHub<VehicleHub>("/hubs/vehicles");
 
-
+// Migrationen automatisch anwenden statt manuell per dotnet-ef - die Postgres
+// ist nur intern (network_mode: host) erreichbar, ein externes "dotnet ef
+// database update" waere auf der VM nicht ohne SDK/offenen DB-Port moeglich.
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+}
 
 
 app.Run();

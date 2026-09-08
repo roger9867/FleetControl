@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ej4C9tF3NHo=",
+  "dgSpecHash": "AvLF6oSxO5w=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/roger/.nuget/packages/microsoft.build/17.7.2/microsoft.build.17.7.2.nupkg.sha512",
@@ -59,9 +59,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-23rf-6693-g89p",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -71,9 +71,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-37gx-xxp4-5rgx",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -83,9 +83,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-6588-8gv4-xfgh",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -95,9 +95,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-8q5v-6pqq-x66h",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -107,9 +107,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-cvvh-rhrc-wg4q",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -119,9 +119,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-g8r8-53c2-pm3f",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -131,9 +131,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-mmjf-rqrv-855v",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"
@@ -143,9 +143,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'System.Security.Cryptography.Xml' 9.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-w3x6-4m5h-cxqf",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj",
       "libraryId": "System.Security.Cryptography.Xml",
       "targetGraphs": [
         "net10.0"

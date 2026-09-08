@@ -5626,11 +5626,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
+      "projectUniqueName": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
       "projectName": "FleetControlServer.Api",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
       "packagesPath": "/home/roger/.nuget/packages/",
-      "outputPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Api/obj/",
+      "outputPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/roger/.nuget/NuGet/NuGet.Config"
@@ -5645,11 +5645,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj": {
-              "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj"
+            "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj": {
+              "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Data/FleetControlServer.Data.csproj"
             },
-            "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Service/FleetControlServer.Service.csproj": {
-              "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Service/FleetControlServer.Service.csproj"
+            "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Service/FleetControlServer.Service.csproj": {
+              "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Service/FleetControlServer.Service.csproj"
             }
           }
         }

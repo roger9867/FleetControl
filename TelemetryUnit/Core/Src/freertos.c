@@ -83,7 +83,12 @@ const osThreadAttr_t GnssFSM_attributes = {
 osThreadId_t NetworkFsmHandle;
 const osThreadAttr_t NetworkFsm_attributes = {
   .name = "NetworkFsm",
-  .stack_size = 256 * 4,
+  // War 256*4 (1024B) - moeglicherweise zu knapp fuer den Publish-Pfad
+  // (parse_gnss hat einen 256B-Stack-Puffer, dazu telemetry_fsm_step ->
+  // publish_timestamp -> parse_gnss/to_json/mqtt_publish verschachtelt).
+  // Nur moderat erhoeht, da configTOTAL_HEAP_SIZE (FreeRTOSConfig.h) den
+  // Stack fuer ALLE Tasks zusammen liefert und begrenzt ist.
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for huart_sim_mutex */

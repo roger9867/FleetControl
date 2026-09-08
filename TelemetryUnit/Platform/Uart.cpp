@@ -20,7 +20,7 @@ HAL_StatusTypeDef Uart::read(
 
     acquire();
 
-    while ((HAL_GetTick() - start) < timeout_ms && idx < (max_len - 1))
+    while ((HAL_GetTick() - start) < timeout_ms && idx < max_len)
     {
         if (HAL_UART_Receive(huart, &c, 1, 10) == HAL_OK)
         {

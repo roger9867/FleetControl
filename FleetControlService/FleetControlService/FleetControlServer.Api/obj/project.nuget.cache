@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YVpdK8D3POo=",
+  "dgSpecHash": "5afsp0tP7ZQ=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/google.protobuf/3.35.1/google.protobuf.3.35.1.nupkg.sha512",
     "/home/roger/.nuget/packages/grpc.aspnetcore/2.80.0/grpc.aspnetcore.2.80.0.nupkg.sha512",
@@ -82,9 +82,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Microsoft.OpenApi' 2.3.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
+      "projectPath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
       "warningLevel": 1,
-      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
+      "filePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Api/FleetControlServer.Api.csproj",
       "libraryId": "Microsoft.OpenApi",
       "targetGraphs": [
         "net10.0"

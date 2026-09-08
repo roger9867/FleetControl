@@ -1,21 +1,20 @@
 version: "3.9"
 
+# Benoetigt eine laufende Postgres unter localhost:5432 - die wird zentral
+# ueber Postgres/docker-compose.yml gestartet (network_mode: host, daher
+# unabhaengig davon, welcher Compose-Stack sie hochgefahren hat).
 services:
-  postgres:
-    image: postgres:16
-    container_name: postgres_db
-    restart: always
+  fleetcontrolservice:
+    build:
+      context: ./FleetControlService
+      dockerfile: Dockerfile
+      network: host
+
+    container_name: fleetcontrolservice
+    network_mode: host
 
     environment:
-      POSTGRES_USER: postgresuser
-      POSTGRES_PASSWORD: fleetcontrol
-      POSTGRES_DB: fleetcontroldb
-
-    ports:
-      - "5432:5432"
-
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      ASPNETCORE_ENVIRONMENT: Development
+      Http__Port: 5000
+      Grpc__Port: 5001
+      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=fleetcontroldb;Username=postgresuser;Password=fleetcontrol"

@@ -14,7 +14,7 @@ export class TelemetryUnitService {
 
   createUnit(dto: TelemetryUnit): Observable<{ id: string }> {
     return this.http.post<{ id: string }>(
-      ` ${this.baseUrl}/TelemetryUnit`,
+      `${this.baseUrl}/TelemetryUnit`,
       dto
     );
   }

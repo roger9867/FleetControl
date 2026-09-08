@@ -15,15 +15,27 @@ bool Sim7600::check_connection()
 
 
 
+// Einzelschritte einzeln loggen, damit auf dem Debug-UART sichtbar ist, an
+// welcher Stelle (SIM/Signal/Netzanmeldung/APN/PDP) es tatsaechlich haengt,
+// statt nur ein pauschales "kein Netz" am Ende zu sehen. Bewusst eine
+// gewoehnliche freie Funktion statt einer Lambda (frueherer Versuch mit
+// Lambda hat den Task zum Absturz gebracht).
+static void log_network_step(Uart& huart_debug, const char* name, bool ok)
+{
+    char msg[48];
+    int len = snprintf(msg, sizeof(msg), "[NET] %s: %s\r\n", name, ok ? "OK" : "FAILED");
+    huart_debug.write((uint8_t*)msg, len);
+}
+
 void Sim7600::establish_network_connection()
 {
-    check_connection();
-    check_sim();
-    check_network();
-    check_signal();
-    check_attach();
-    set_apn();
-    activate_pdp();
+    log_network_step(huart_debug, "check_connection", check_connection());
+    log_network_step(huart_debug, "check_sim", check_sim());
+    log_network_step(huart_debug, "check_network", check_network());
+    log_network_step(huart_debug, "check_signal", check_signal());
+    log_network_step(huart_debug, "check_attach", check_attach());
+    log_network_step(huart_debug, "set_apn", set_apn());
+    log_network_step(huart_debug, "activate_pdp", activate_pdp());
 }
 
 
@@ -261,6 +273,13 @@ bool Sim7600::get_ip(char* out_ip, uint16_t max_len)
 
     //huart_sim.release();
 
+    {
+        const char prefix[] = "[NET] CGPADDR raw: ";
+        huart_debug.write((uint8_t*)prefix, sizeof(prefix) - 1);
+        huart_debug.write(response, strlen((char*)response));
+        huart_debug.write((uint8_t*)"\r\n", 2);
+    }
+
     if (!ok)
         return false;
 
@@ -305,20 +324,22 @@ void Sim7600::memset(uint8_t *buf, uint8_t value, uint32_t len)
 
 bool Sim7600::activate_gnss()
 {
-    
     uint8_t cmd1[] = "AT+CGNSSPWR=1\r\n";
     uint8_t cmd2[] = "AT+CGPS=1\r\n";
 
+    // Vorher flushen (funktioniert jetzt dank des Uart::read()-Fixes) statt
+    // hier zusaetzlich blockierend auf die eigenen Antworten zu warten - der
+    // naechste AT-Befehl flusht seinerseits vor dem Senden.
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
     // GNSS Power ON
-    //huart_sim.acquire();
     huart_sim.write(cmd1, sizeof(cmd1)-1);
     HAL_Delay(1000);
 
     // GPS Start
     huart_sim.write(cmd2, sizeof(cmd2)-1);
     HAL_Delay(1000);
-
-    //huart_sim.release();
 
     return true;
 }

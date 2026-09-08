@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "COJiPqv59gg=",
+  "dgSpecHash": "eg2muso3Bls=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Service/FleetControlServer.Service.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Service/FleetControlServer.Service.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/google.protobuf/3.35.1/google.protobuf.3.35.1.nupkg.sha512",
     "/home/roger/.nuget/packages/grpc.core.api/2.80.0/grpc.core.api.2.80.0.nupkg.sha512",

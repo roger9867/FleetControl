@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uGnNwJB9nF8=",
+  "dgSpecHash": "cnrvyLiXP20=",
   "success": true,
-  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/Backend/FleetControlService/FleetControlServer.Infra/FleetControlServer.Infra.csproj",
+  "projectFilePath": "/home/roger/Studium/Semester_6/Modulprojekt/FleetControl/FleetControlService/FleetControlService/FleetControlServer.Infra/FleetControlServer.Infra.csproj",
   "expectedPackageFiles": [
     "/home/roger/.nuget/packages/runtime.android-arm.runtime.native.system.io.ports/10.0.0/runtime.android-arm.runtime.native.system.io.ports.10.0.0.nupkg.sha512",
     "/home/roger/.nuget/packages/runtime.android-arm64.runtime.native.system.io.ports/10.0.0/runtime.android-arm64.runtime.native.system.io.ports.10.0.0.nupkg.sha512",

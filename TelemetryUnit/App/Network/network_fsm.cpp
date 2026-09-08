@@ -54,7 +54,7 @@ void NetworkFSM::step()
             }
             else
             {
-                const char msg[] = "[FSM] MQTT CONNECT FAILED\r\n";
+                const char msg[] = "[FSM] NO IP YET (SIM/Signal/APN/PDP) -> ERROR\r\n";
                 network_module.huart_debug.write((uint8_t*)msg, strlen(msg));
 
                 current_state = NetworkState::NetworkError;

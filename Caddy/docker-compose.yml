@@ -1,0 +1,21 @@
+version: "3.9"
+
+# Reverse Proxy: holt/erneuert automatisch ein echtes Let's-Encrypt-Zertifikat
+# fuer die Domain aus dem Caddyfile und terminiert TLS. Leitet intern per
+# Klartext-HTTP an Frontend (4200) und Backend (5000) weiter - beide muessen
+# bereits laufen (network_mode: host, "localhost" ist daher die VM selbst).
+services:
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: unless-stopped
+    network_mode: host
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

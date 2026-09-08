@@ -10,3 +10,10 @@ doc/
 
 # Modules
 Modules/
+
+# Runtime data/logs from local Docker infra (Mosquitto, InfluxDB, RabbitMQ, Postgres)
+MQTT/data/
+MQTT/log/
+MQTT/passwordfile
+**/pgdata/
+**/influxdb-data/

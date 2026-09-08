@@ -126,6 +126,12 @@ void Sim7600::gnss_nmea_start()
     osDelay(1000);
     uint8_t cmd[] = "AT+CGNSTST=1\r\n";
 
+    // Vorher flushen (funktioniert jetzt dank des Uart::read()-Fixes) statt
+    // hier zusaetzlich blockierend auf die eigene Antwort zu warten - der
+    // naechste AT-Befehl flusht seinerseits vor dem Senden.
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     uint8_t msg[] = "[GNSS] NMEA STREAM STARTED\r\n";

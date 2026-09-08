@@ -1,23 +1,24 @@
 version: '3.9'
 
+# gRPC-Gegenstueck zu IngestionService: liest die von IngestionService in
+# InfluxDB geschriebenen Punkte fuer FleetControlService zurueck (TelemetryQuery).
+# Port 5002 fest gesetzt, da FleetControlServices appsettings darauf verweist.
+# Benoetigt eine laufende InfluxDB unter localhost:8086 - die wird zentral
+# ueber InfluxDB/docker-compose.yml gestartet (network_mode: host, daher
+# unabhaengig davon, welcher Compose-Stack sie hochgefahren hat).
 services:
-  influxdb:
-    image: influxdb:2.7
-    container_name: influxdb
+  drivedataservice:
+    build:
+      context: ./DriveDataService
+      dockerfile: Dockerfile
+      network: host
 
-    ports:
-      - "8086:8086"
-
-    volumes:
-      - influxdb-data:/var/lib/influxdb2
+    container_name: drivedataservice
+    network_mode: host
 
     environment:
-      DOCKER_INFLUXDB_INIT_MODE: setup
-      DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: geheim123
-      DOCKER_INFLUXDB_INIT_ORG: MyOrg
-      DOCKER_INFLUXDB_INIT_BUCKET: Events
-      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-secret-token
-
-volumes:
-  influxdb-data:
+      ASPNETCORE_URLS: http://+:5002
+      InfluxDB__Url: http://localhost:8086
+      InfluxDB__Token: ${INFLUXDB_TOKEN}
+      InfluxDB__Org: ${INFLUXDB_ORG}
+      InfluxDB__Bucket: ${INFLUXDB_BUCKET}

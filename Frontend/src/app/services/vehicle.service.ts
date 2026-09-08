@@ -6,11 +6,6 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Vehicle } from '../models/vehicle.model';
 
-const LICENSE_TYPES = [
-  'AM', 'A1', 'A2', 'A', 'B', 'B96', 'BE',
-  'C1', 'C1E', 'C', 'CE', 'D1', 'D1E', 'D', 'DE', 'L', 'T'
-];
-
 interface VehicleRequestDto {
   modelName: string;
   licensePlate?: string | null;
@@ -47,13 +42,14 @@ export type VehiclePosition = {
 };
 
 interface VehicleResponseDto {
-  id: string;
+  // Der Fahrzeug-VIN ist der Primaerschluessel - die Domain-Entity wird 1:1
+  // serialisiert, es gibt kein separates "id"-Feld (siehe Vehicle.cs).
+  vehicleIdentificationNumber: string;
   modelName: string;
-  identificationNumber: string;
   licensePlateNumber?: string | null;
   brand?: string | null;
   year?: number | null;
-  requiredLicense?: number | null;
+  requiredLicense?: string | null;
   powerPs?: number | null;
   color?: string | null;
   firstRegistration?: string | null;
@@ -136,13 +132,13 @@ export class VehicleService {
 
   private toVehicle(dto: VehicleResponseDto): Vehicle {
     return {
-      Id: dto.id,
+      Id: dto.vehicleIdentificationNumber,
       modelName: dto.modelName,
-      identNr: dto.identificationNumber,
+      identNr: dto.vehicleIdentificationNumber,
       licensePlate: dto.licensePlateNumber ?? undefined,
       brand: dto.brand ?? undefined,
       year: dto.year ?? undefined,
-      requiredLicense: dto.requiredLicense != null ? LICENSE_TYPES[dto.requiredLicense] : undefined,
+      requiredLicense: dto.requiredLicense ?? undefined,
       powerPs: dto.powerPs ?? undefined,
       color: dto.color ?? undefined,
       firstRegistration: dto.firstRegistration ?? undefined,
