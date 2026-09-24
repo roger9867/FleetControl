@@ -2,11 +2,7 @@ using System.Collections.Concurrent;
 
 namespace IngestionService.Assignments;
 
-// Hält die beim Start per gRPC geladenen T-Einheit<->Fahrzeug/Fahrer-Tupel im
-// Speicher, damit jeder eingehende MQTT-Datenpunkt ohne erneuten Server-Call
-// nachschlagen kann, ob und womit seine Geräte-ID aktuell verknüpft ist.
-// ConcurrentDictionary, weil TryGet (pro MQTT-Nachricht) und Update (per
-// gRPC-Push von MainService, jederzeit) nebenläufig auftreten können.
+// Hält Zuordnungen von Telemetrieeinheit, Fahrer, Fahrzeug
 public class AssignmentCache
 {
     private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(5);
@@ -25,6 +21,8 @@ public class AssignmentCache
         _logger = logger;
     }
 
+    // Lädt beim Start einmalig den kompletten Zuordnungsbestand von FleetControlApi
+    // Wiederholung alle 5s bei Misserfolg, bis es gelingt
     public async Task LoadAsync(CancellationToken token = default)
     {
         var attempt = 0;
@@ -34,7 +32,7 @@ public class AssignmentCache
             attempt++;
 
             _logger.LogInformation(
-                "Lade T-Einheit-Zuordnungen von MainService (Versuch {attempt})",
+                "Lade T-Einheit-Zuordnungen von FleetControlApi (Versuch {attempt})",
                 attempt);
 
             try
@@ -72,17 +70,19 @@ public class AssignmentCache
         }
     }
 
+    // Schlägt die aktuelle Zuordnung einer Geräte-ID nach, ohne einen Server-Call auszulösen
     public bool TryGet(string telemetryUnitId, out Assignment? assignment)
     {
         return _assignments.TryGetValue(telemetryUnitId, out assignment);
     }
 
+    // Übernimmt eine per gRPC-Push von FleetControlApi gemeldete Zuordnungsänderung in den Cache
     public void Update(Assignment assignment)
     {
         _assignments[assignment.TelemetryUnitId] = assignment;
 
         _logger.LogInformation(
-            "T-Einheit-Zuordnung für {telemetryUnitId} aktualisiert (Push von MainService)",
+            "T-Einheit-Zuordnung für {telemetryUnitId} aktualisiert (Push von FleetControlService)",
             assignment.TelemetryUnitId);
     }
 }

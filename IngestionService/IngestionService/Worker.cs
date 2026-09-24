@@ -2,6 +2,8 @@ using IngestionService.Assignments;
 
 namespace IngestionService;
 
+// Einstiegspunkt der Verarbeitungskette: lädt beim Start den Zuordnungs-Cache
+// und verbindet danach MQTT-Client.
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
@@ -12,8 +14,8 @@ public class Worker : BackgroundService
     public Worker(
         ILogger<Worker> logger,
         MqttClientService mqttClientService,
-        AssignmentCache assignmentCache)
-    {
+        AssignmentCache assignmentCache
+    ) {
         _logger = logger;
         _mqttClientService = mqttClientService;
         _assignmentCache = assignmentCache;
@@ -21,12 +23,17 @@ public class Worker : BackgroundService
 
 
     protected override async Task ExecuteAsync(
-        CancellationToken stoppingToken)
-    {
+        CancellationToken stoppingToken
+    ) {
+        // Zuordnungs-Cache muss vor dem MQTT-Client geladen werden, damit
+        // eintreffende Datenpunkte nicht als "unbekanntes Gerät" verworfen werden
         await _assignmentCache.LoadAsync(stoppingToken);
+
+        // Aufbau MQTT-Verbindung
         await _mqttClientService.StartAsync(stoppingToken);
 
 
+        // Reiner Lebenszeichen-Loop, damit der BackgroundService am laufen bleibt
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation(

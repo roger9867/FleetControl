@@ -53,11 +53,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     App/Telemetry/telemetry_fsm.cpp
     App/Telemetry/telemetry_point.cpp
 
-    Platform/GetDeviceId/get_device_id.c
+    Platform/GetDeviceId/get_device_id.cpp
     Platform/GetDeviceId/device_id_as_uuid.c
     Platform/Uart.cpp
-    Platform/SIM7600EH/at_buffer.cpp
-    Platform/SIM7600EH/sim7600eh_interface.cpp
     Platform/SIM7600EH/sim7600eh.cpp
     Platform/PrintUtils/print_utils.c
 )

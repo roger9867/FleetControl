@@ -8,7 +8,7 @@
 #define MPU6050_CONFIG 0x1A // DLPF config
 #define MPU6050_GYRO_CONFIG 0x1B // Full range
 #define MPU6050_ACCEL_CONFIG 0x1C // Accel. full scale range = Messbereich
-#define MPU6050_FIFO_EN 0x23 //FIFO enable / disable
+#define MPU6050_FIFO_EN 0x23 // FIFO enable / disable
 #define MPU6050_USER_CONTROL 0x6A // enable FIFO buffers b6=1, b2=FIFO reset=1 wenn FIFO_En=0 -> clears to 0 after
 
 #define MPU6050_GYRO_OUT_H 0x43

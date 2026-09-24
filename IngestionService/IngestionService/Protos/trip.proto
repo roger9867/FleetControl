@@ -6,6 +6,9 @@ import "google/protobuf/timestamp.proto";
 
 package trip;
 
+// Von TripReactor genutzt, um erkannte Fahrtbeginne/-enden an FleetControlApi zu melden
+// Übertragen werden jeweils nur Geräte-ID und Zeitstempel, da eine
+// Fahrt dort allein daraus angelegt wird.
 service TripService {
   rpc StartTrip (StartTripRequest) returns (StartTripResponse);
   rpc EndTrip (EndTripRequest) returns (EndTripResponse);
@@ -23,8 +26,8 @@ message StartTripResponse {
 message EndTripRequest {
   string telemetry_unit_id = 1;
   google.protobuf.Timestamp end_timestamp = 2;
-  // Nur gesetzt, falls der ursprüngliche StartTrip-Call fehlgeschlagen ist.
-  // Wird verwendet, um den Trip nachträglich mit Start- und Endzeitpunkt anzulegen.
+  // Nur gesetzt, falls der ursprüngliche StartTrip-Call fehlgeschlagen ist
+  // Wird verwendet, um den Trip nachträglich mit Start- und Endzeitpunkt anzulegen
   google.protobuf.Timestamp start_timestamp = 3;
 }
 

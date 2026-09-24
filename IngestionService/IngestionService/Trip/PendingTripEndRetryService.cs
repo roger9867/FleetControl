@@ -3,7 +3,7 @@ using IngestionService.Logging;
 namespace IngestionService.Trip;
 
 // Versucht alle 30 Sekunden, offene Fahrtenden (EndTrip fehlgeschlagen) erneut
-// an MainService zu melden. Bei Erfolg wird der Eintrag aus der Queue consumed.
+// an FleetControlApi zu melden. Bei Erfolg wird der Eintrag aus der Queue consumed
 public class PendingTripEndRetryService : BackgroundService
 {
     private static readonly TimeSpan RetryInterval = TimeSpan.FromSeconds(30);
@@ -15,16 +15,17 @@ public class PendingTripEndRetryService : BackgroundService
     public PendingTripEndRetryService(
         PendingTripEndQueue queue,
         TripClient tripClient,
-        ILogger<PendingTripEndRetryService> logger)
-    {
+        ILogger<PendingTripEndRetryService> logger
+    ) {
         _queue = queue;
         _tripClient = tripClient;
         _logger = logger;
     }
 
+    // Läuft im Hintergrund und stößt alle 30 Sekunden einen erneuten Zustellversuch für offene Fahrtenden an
     protected override async Task ExecuteAsync(
-        CancellationToken stoppingToken)
-    {
+        CancellationToken stoppingToken
+    ) {
         using var timer = new PeriodicTimer(RetryInterval);
 
         while (await timer.WaitForNextTickAsync(stoppingToken))
@@ -33,6 +34,8 @@ public class PendingTripEndRetryService : BackgroundService
         }
     }
 
+    // Versucht für jedes noch offene Fahrtende erneut, EndTrip an FleetControlApi zu melden,
+    // entfernt den Eintrag aus der Queue, sobald die Meldung erfolgreich war
     private async Task RetryPendingTripEndsAsync()
     {
         foreach (var pending in _queue.Snapshot())

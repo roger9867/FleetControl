@@ -1,5 +1,8 @@
 #include "gnss.h"
 
+/*
+ * Komplette Datei ungenutzt
+
 void my_memset(uint8_t *buf, uint8_t value, uint32_t len)
 {
     for (uint32_t i = 0; i < len; i++)
@@ -56,9 +59,6 @@ void confirm_connection()
     uint8_t msg[] = "\r\n[AT DONE]\r\n";
     HAL_UART_Transmit(pc, msg, sizeof(msg) - 1, 1000);
 }
-
-
-
 
 
 void Sim7600::gnss_on()
@@ -126,9 +126,6 @@ void Sim7600::gnss_nmea_start()
     osDelay(1000);
     uint8_t cmd[] = "AT+CGNSTST=1\r\n";
 
-    // Vorher flushen (funktioniert jetzt dank des Uart::read()-Fixes) statt
-    // hier zusaetzlich blockierend auf die eigene Antwort zu warten - der
-    // naechste AT-Befehl flusht seinerseits vor dem Senden.
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
@@ -139,15 +136,9 @@ void Sim7600::gnss_nmea_start()
 }
 
 
-
-
-
-
-
-
 void sim7600_gnss_stop(UART_HandleTypeDef* sim)
 {
-    uint8_t cmd[] = "AT+CGNSTST=0\r\n";
+    uint8_t cmd[] = "AT+CGNTST=0\r\n";
     HAL_UART_Transmit(sim, cmd, sizeof(cmd) - 1, HAL_MAX_DELAY);
 }
 
@@ -202,16 +193,11 @@ void sim7600_get_gps(UART_HandleTypeDef* pc,
         }
     }
 
-    // --------------------------------------------------
-    // String terminieren
-    // --------------------------------------------------
     buffer[idx] = '\0';
 
-    // --------------------------------------------------
-    // Ausgabe an PC
-    // --------------------------------------------------
     HAL_UART_Transmit(pc, buffer, idx, HAL_MAX_DELAY);
 
     uint8_t msg[] = "\r\n[GNSS INFO DONE]\r\n";
     HAL_UART_Transmit(pc, msg, sizeof(msg) - 1, HAL_MAX_DELAY);
 }
+*/

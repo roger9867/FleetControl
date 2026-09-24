@@ -1,6 +1,7 @@
 #include "at_buffer.hpp"
 
-
+/*
+ * Ungenutzt
 
 void AtBuffer::push(uint8_t c)
 {
@@ -46,3 +47,4 @@ const char* AtBuffer::get_line()
 
     return line;
 }
+*/

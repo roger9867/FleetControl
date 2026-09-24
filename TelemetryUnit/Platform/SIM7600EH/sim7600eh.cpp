@@ -6,20 +6,16 @@
 #include "FreeRTOS.h"
 
 
-bool Sim7600::check_connection()
-{
-    send_cmd("AT\r\n");
-
-    return wait_for("OK", 2000);
-}
+// Implementierung von Sim7600eh.cpp nach folgendem gemeinsamen Muster:
+// 1. UART-Puffer flushen (uebrig gebliebene, ungelesene Bytes vom letzten Befehl verwerfen)
+// 2. AT-Befehl über UART senden
+// 3. Antwort mit Timeout senden
 
 
 
 // Einzelschritte einzeln loggen, damit auf dem Debug-UART sichtbar ist, an
-// welcher Stelle (SIM/Signal/Netzanmeldung/APN/PDP) es tatsaechlich haengt,
-// statt nur ein pauschales "kein Netz" am Ende zu sehen. Bewusst eine
-// gewoehnliche freie Funktion statt einer Lambda (frueherer Versuch mit
-// Lambda hat den Task zum Absturz gebracht).
+// welcher Stelle (SIM/Signal/Netzanmeldung/APN/PDP) es tatsaechlich hängt,
+// statt nur "kein Netz" am Ende zu sehen.
 static void log_network_step(Uart& huart_debug, const char* name, bool ok)
 {
     char msg[48];
@@ -29,44 +25,12 @@ static void log_network_step(Uart& huart_debug, const char* name, bool ok)
 
 void Sim7600::establish_network_connection()
 {
-    log_network_step(huart_debug, "check_connection", check_connection());
     log_network_step(huart_debug, "check_sim", check_sim());
     log_network_step(huart_debug, "check_network", check_network());
     log_network_step(huart_debug, "check_signal", check_signal());
     log_network_step(huart_debug, "check_attach", check_attach());
     log_network_step(huart_debug, "set_apn", set_apn());
     log_network_step(huart_debug, "activate_pdp", activate_pdp());
-}
-
-
-void Sim7600::on_uart_rx(uint8_t c)
-{
-    at_buffer.push(c);
-}
-
-bool Sim7600::wait_for(const char* token, uint32_t timeout)
-{
-    uint32_t start = HAL_GetTick();
-
-    while (HAL_GetTick() - start < timeout)
-    {
-        if (at_buffer.has_line())
-        {
-            const char* line = at_buffer.get_line();
-
-            huart_debug.write((uint8_t*)line, strlen(line));
-
-            if (strstr(line, token))
-                return true;
-        }
-    }
-
-    return false;
-}
-
-void Sim7600::send_cmd(const char* cmd)
-{
-    huart_sim.write((uint8_t*)cmd, strlen(cmd));
 }
 
 
@@ -77,13 +41,10 @@ bool Sim7600::is_network_ready()
 }
 
 
-
 bool Sim7600::check_sim()
 {
     uint8_t cmd[] = "AT+CPIN?\r\n";
     uint8_t response[128] = {0};
-
-    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -91,8 +52,6 @@ bool Sim7600::check_sim()
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 1000) == HAL_OK);
-
-    //huart_sim.release();
 
     if (!ok)
     {
@@ -116,16 +75,12 @@ bool Sim7600::check_network()
     uint8_t cmd[] = "AT+CREG?\r\n";
     uint8_t response[128] = {0};
 
-    //huart_sim.acquire();
-
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
-
-    //huart_sim.release();
 
     if (!ok)
     {
@@ -142,12 +97,11 @@ bool Sim7600::check_network()
     return registered;
 }
 
+
 bool Sim7600::check_signal()
 {
     uint8_t cmd[] = "AT+CSQ\r\n";
     uint8_t response[128] = {0};
-
-    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -155,8 +109,6 @@ bool Sim7600::check_signal()
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
-
-    //huart_sim.release();
 
     if (!ok)
     {
@@ -185,12 +137,11 @@ bool Sim7600::check_signal()
     return (rssi >= 10);
 }
 
+
 bool Sim7600::check_attach()
 {
     uint8_t cmd[] = "AT+CGATT?\r\n";
     uint8_t response[128] = {0};
-
-    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -198,8 +149,6 @@ bool Sim7600::check_attach()
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
-
-    //huart_sim.release();
 
     if (!ok)
     {
@@ -215,6 +164,7 @@ bool Sim7600::check_attach()
     return (*(p + 8) == '1');
 }
 
+
 bool Sim7600::set_apn()
 {
     uint8_t cmd[64];
@@ -223,8 +173,6 @@ bool Sim7600::set_apn()
     snprintf((char*)cmd, sizeof(cmd),
              "AT+CGDCONT=1,\"IP\",\"%s\"\r\n", APN_TOKEN);
 
-    //huart_sim.acquire();
-
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
@@ -232,17 +180,14 @@ bool Sim7600::set_apn()
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 2000) == HAL_OK);
 
-    //huart_sim.release();
-
     return ok && strstr((char*)response, "OK");
 }
+
 
 bool Sim7600::activate_pdp()
 {
     uint8_t cmd[] = "AT+CGACT=1,1\r\n";
     uint8_t response[128] = {0};
-
-    //huart_sim.acquire();
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
@@ -250,8 +195,6 @@ bool Sim7600::activate_pdp()
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 5000) == HAL_OK);
-
-    //huart_sim.release();
 
     return ok && strstr((char*)response, "OK");
 }
@@ -262,16 +205,12 @@ bool Sim7600::get_ip(char* out_ip, uint16_t max_len)
     uint8_t cmd[] = "AT+CGPADDR\r\n";
     uint8_t response[128] = {0};
 
-    //huart_sim.acquire();
-
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
     bool ok = (huart_sim.read(response, sizeof(response) - 1, 3000) == HAL_OK);
-
-    //huart_sim.release();
 
     {
         const char prefix[] = "[NET] CGPADDR raw: ";
@@ -305,15 +244,6 @@ bool Sim7600::get_ip(char* out_ip, uint16_t max_len)
 }
 
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-// gnss
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 void Sim7600::memset(uint8_t *buf, uint8_t value, uint32_t len)
 {
     for (uint32_t i = 0; i < len; i++)
@@ -327,9 +257,6 @@ bool Sim7600::activate_gnss()
     uint8_t cmd1[] = "AT+CGNSSPWR=1\r\n";
     uint8_t cmd2[] = "AT+CGPS=1\r\n";
 
-    // Vorher flushen (funktioniert jetzt dank des Uart::read()-Fixes) statt
-    // hier zusaetzlich blockierend auf die eigenen Antworten zu warten - der
-    // naechste AT-Befehl flusht seinerseits vor dem Senden.
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
@@ -346,25 +273,25 @@ bool Sim7600::activate_gnss()
 
 bool Sim7600::gnss_nmea_start()
 {
-    //huart_sim.acquire();
     uint8_t cmd[] = "AT+CGNSTST=1\r\n";
+
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+
     huart_sim.write(cmd, sizeof(cmd)-1);
-    //huart_sim.release();
     return true;
 }
 
 
-
-
-
 void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
 {
-    //huart_sim.acquire();
-
     uint8_t cmd[] = "AT+CGNSSINFO\r\n";
 
     // Buffer löschen
     memset(buffer, 0, buffer_length);
+
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     // Command senden
     huart_sim.write(cmd, sizeof(cmd) - 1);
@@ -374,9 +301,7 @@ void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
 
     // Sicherheit
     buffer[buffer_length - 1] = '\0';
-    //huart_sim.release();
 
-    //huart_debug.acquire();
     // Debug Ausgabe
     huart_debug.write(
         buffer,
@@ -389,7 +314,6 @@ void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
         msg,
         sizeof(msg) - 1
     );
-    //huart_debug.release();
 }
 
 
@@ -399,13 +323,11 @@ bool Sim7600::has_fix()
 
     get_gnss(buffer, sizeof(buffer));
 
-    // Prefix finden
+    // Präfix finden
     char* p = strstr((char*)buffer, "+CGNSSINFO:");
-    //huart_debug.acquire();
 
     if (p == nullptr)
     {
-        
         uint8_t msg[] =
             "[GNSS] PARSE ERROR\r\n";
 
@@ -413,7 +335,6 @@ bool Sim7600::has_fix()
             msg,
             sizeof(msg) - 1
         );
-        //huart_debug.release();
         return false;
     }
 
@@ -430,7 +351,6 @@ bool Sim7600::has_fix()
             sizeof(msg) - 1
         );
 
-        //huart_debug.release();
         return false;
     }
 
@@ -444,7 +364,6 @@ bool Sim7600::has_fix()
             msg,
             sizeof(msg) - 1
         );
-        //huart_debug.release();
         return true;
     }
 
@@ -456,7 +375,6 @@ bool Sim7600::has_fix()
         sizeof(msg) - 1
     );
 
-    //huart_debug.release();
     return false;
 }
 
@@ -479,9 +397,6 @@ bool Sim7600::get_gnss_fix(uint8_t* buffer, uint16_t buffer_length)
 }
 
 
-///////////////////////////////////////////////
-
-
 bool Sim7600::mqtt_start()
 {
     uint8_t cmd[] = "AT+CMQTTSTART\r\n";
@@ -491,7 +406,7 @@ bool Sim7600::mqtt_start()
     huart_debug.write((uint8_t*)msg, strlen(msg));
 
     uint8_t c;
-    //while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     huart_sim.write(cmd, sizeof(cmd)-1);
 
@@ -514,7 +429,7 @@ bool Sim7600::mqtt_create_client()
     huart_debug.write((uint8_t*)msg, strlen(msg));
 
     uint8_t c;
-    //while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     huart_sim.write(cmd, sizeof(cmd)-1);
 
@@ -544,18 +459,17 @@ bool Sim7600::mqtt_connect()
              MQTT_USER,
              MQTT_PASSWORD);
 
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     huart_sim.write(cmd, strlen((char*)cmd));
-
 
     bool ok = (huart_sim.read(response,
                               sizeof(response)-1,
                               3000)==HAL_OK);
 
-
     huart_debug.write(response,
                       strlen((char*)response));
-
 
     if(ok && strstr((char*)response,"OK"))
     {
@@ -578,7 +492,7 @@ bool Sim7600::mqtt_stop()
     uint8_t response[128] = {0};
 
     uint8_t c;
-    //while (huart_sim.read(&c,1,10)==HAL_OK){}
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     huart_sim.write(cmd, sizeof(cmd)-1);
 
@@ -588,14 +502,12 @@ bool Sim7600::mqtt_stop()
 }
 
 
-
 bool Sim7600::mqtt_disconnect()
 {
     uint8_t response[128] = {0};
-    uint8_t c;
 
-    // UART leeren
-    // while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
     const char msg[] = "[MQTT] Disconnect\r\n";
     huart_debug.write((uint8_t*)msg, strlen(msg));
@@ -631,7 +543,10 @@ bool Sim7600::mqtt_publish(const char* payload)
     uint8_t cmd[64];
     uint8_t response[128] = {0};
 
+    uint8_t c;
+    while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
+    // 1. Topic-Laenge ankündigen
     snprintf((char*)cmd,
              sizeof(cmd),
              "AT+CMQTTTOPIC=0,%u\r\n",
@@ -642,7 +557,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-
+    // 2. Topic-Text senden
     huart_sim.write((uint8_t*)TOPIC_NAME, strlen(TOPIC_NAME));
 
     memset(response,0,sizeof(response));
@@ -650,7 +565,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-
+    // 3. Payload-Laenge ankuendigen
     snprintf((char*)cmd,
              sizeof(cmd),
              "AT+CMQTTPAYLOAD=0,%u\r\n",
@@ -663,7 +578,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-
+    // 4. Payload-Text senden
     huart_sim.write((uint8_t*)payload, strlen(payload));
 
     memset(response,0,sizeof(response));
@@ -671,7 +586,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-
+    // 5. Publish auslösen
     uint8_t pub[]="AT+CMQTTPUB=0,1,60\r\n";
 
     huart_sim.write(pub,sizeof(pub)-1);
@@ -684,7 +599,6 @@ bool Sim7600::mqtt_publish(const char* payload)
 
     return (strstr((char*)response, "OK") != nullptr);
 }
-
 
 
 bool Sim7600::is_mqtt_connected()
@@ -706,7 +620,7 @@ bool Sim7600::is_mqtt_connected()
 
     huart_debug.write(response, strlen((char*)response));
 
-    // je nach SIM7600 Firmware Status prüfen
+    //  Status prüfen
     if (strstr((char*)response, "CONNECTED"))
     {
         return true;

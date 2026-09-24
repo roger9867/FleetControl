@@ -1,8 +1,6 @@
 version: '3.9'
 
-# Benoetigt eine laufende InfluxDB unter localhost:8086 - die wird nicht hier,
-# sondern zentral ueber DriveDataService/docker-compose.yml gestartet (network_mode: host,
-# daher unabhaengig davon, welcher Compose-Stack sie hochgefahren hat).
+# Benoetigt eine laufende InfluxDB unter localhost:8086
 services:
   ingestionservice:
     build:
@@ -11,8 +9,11 @@ services:
       network: host
 
     container_name: ingestionservice
+    # Host-Netzwerk, damit der Dienst InfluxDB und FleetControlApi (gRPC)
+    # unter localhost auf der VM erreichen kann, ohne eigenes Docker-Netzwerk
     network_mode: host
 
+    # Aus .env übernommene Konfiguration für MQTT-Broker, InfluxDB und TripService
     environment:
       Mqtt__Host: ${MQTT_HOST}
       Mqtt__Port: ${MQTT_PORT}

@@ -25,9 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "../../Platform/SIM7600EH/sim7600eh_interface.h"
 #include "../../Platform/GetDeviceId/get_device_id.h"
-//#include <string.h>
 #include "../../App/Network/interface.h"
 #include "../../App/Gnss/interface.h"
 #include "../../App/Telemetry/interface.h"
@@ -72,23 +70,11 @@ const osThreadAttr_t CommandHandler_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
-/* Definitions for GnssFSM */
-osThreadId_t GnssFSMHandle;
-const osThreadAttr_t GnssFSM_attributes = {
-  .name = "GnssFSM",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for NetworkFsm */
-osThreadId_t NetworkFsmHandle;
-const osThreadAttr_t NetworkFsm_attributes = {
-  .name = "NetworkFsm",
-  // War 256*4 (1024B) - moeglicherweise zu knapp fuer den Publish-Pfad
-  // (parse_gnss hat einen 256B-Stack-Puffer, dazu telemetry_fsm_step ->
-  // publish_timestamp -> parse_gnss/to_json/mqtt_publish verschachtelt).
-  // Nur moderat erhoeht, da configTOTAL_HEAP_SIZE (FreeRTOSConfig.h) den
-  // Stack fuer ALLE Tasks zusammen liefert und begrenzt ist.
-  .stack_size = 512 * 4,
+/* Definitions for FsmTask */
+osThreadId_t FsmTaskHandle;
+const osThreadAttr_t FsmTask_attributes = {
+  .name = "FsmTask",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for huart_sim_mutex */
@@ -115,8 +101,7 @@ const osMutexAttr_t huart_debug_mutex_attributes = {
 
 void StartDefaultTask(void *argument);
 void start_command_handler(void *argument);
-void start_gnss_fsm(void *argument);
-void start_network_fsm(void *argument);
+void start_fsm_task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -159,11 +144,8 @@ void MX_FREERTOS_Init(void) {
   /* creation of CommandHandler */
   CommandHandlerHandle = osThreadNew(start_command_handler, NULL, &CommandHandler_attributes);
 
-  /* creation of GnssFSM */
-  GnssFSMHandle = osThreadNew(start_gnss_fsm, NULL, &GnssFSM_attributes);
-
-  /* creation of NetworkFsm */
-  NetworkFsmHandle = osThreadNew(start_network_fsm, NULL, &NetworkFsm_attributes);
+  /* creation of FsmTask */
+  FsmTaskHandle = osThreadNew(start_fsm_task, NULL, &FsmTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -177,9 +159,9 @@ void MX_FREERTOS_Init(void) {
 
 /* USER CODE BEGIN Header_StartDefaultTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
+  * @brief  Default-Task, Umschalten der Betriebsmodi: Befehlsausgabe / Normalbetrieb
+  * @param  argument: Nicht verwendet
+  * @retval Keiner
   */
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
@@ -220,9 +202,9 @@ for (;;)
 
 /* USER CODE BEGIN Header_start_command_handler */
 /**
-* @brief Function implementing the CommandHandler thread.
-* @param argument: Not used
-* @retval None
+* @brief Implementiert die Befehlshandler-Task.
+* @param argument: Nicht verwendet
+* @retval Keiner
 */
 /* USER CODE END Header_start_command_handler */
 void start_command_handler(void *argument)
@@ -233,42 +215,26 @@ void start_command_handler(void *argument)
   {
     if (led_state)
     {
-      check_for_device_id_request_command(&huart2);
+      check_for_device_id_request_command();
     }
     osDelay(1);
   }
   /* USER CODE END start_command_handler */
 }
 
-/* USER CODE BEGIN Header_start_gnss_fsm */
+/* USER CODE BEGIN Header_start_fsm_task */
 /**
-* @brief Function implementing the GnssFSM thread.
-* @param argument: Not used
-* @retval None
+* @brief Führt den FsmTask-Thread aus. Tickt GNSS-, Network- und
+*        TelemetryFsm in dieser Reihenfolge (GNSS/Network muessen bereit
+*        sein, bevor Telemetry publizieren kann).
+* @param argument: Nicht verwendet
+* @retval Nichts
 */
-/* USER CODE END Header_start_gnss_fsm */
-void start_gnss_fsm(void *argument)
+/* USER CODE END Header_start_fsm_task */
+void start_fsm_task(void *argument)
 {
-  /* USER CODE BEGIN start_gnss_fsm */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END start_gnss_fsm */
-}
+  /* USER CODE BEGIN start_fsm_task */
 
-/* USER CODE BEGIN Header_start_network_fsm */
-/**
-* @brief Function implementing the NetworkFsm thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_start_network_fsm */
-void start_network_fsm(void *argument)
-{
-  /* USER CODE BEGIN start_network_fsm */
-  
   /* Infinite loop */
   for(;;)
   {
@@ -278,10 +244,9 @@ void start_network_fsm(void *argument)
       network_fsm_step();
       telemetry_fsm_step();
     }
-    //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
     osDelay(1000);
   }
-  /* USER CODE END start_network_fsm */
+  /* USER CODE END start_fsm_task */
 }
 
 /* Private application code --------------------------------------------------*/

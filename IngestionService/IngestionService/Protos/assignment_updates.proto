@@ -4,10 +4,8 @@ option csharp_namespace = "IngestionService.Assignments";
 
 package assignment_updates;
 
-// Umgekehrte Richtung zu assignments.proto: hier ist IngestionService der
-// Server - MainService pusht eine geänderte T-Einheit-Zuordnung, sobald sie
-// sich ändert, statt dass IngestionService sie erst beim nächsten eigenen
-// Reload mitbekommt.
+// Abfrage-Service, mit dem FleetControlApi die Zuordnungen / Systemzustand pusht
+// (IngestionService ist Server)
 service AssignmentUpdateService {
   rpc PushAssignmentUpdate (AssignmentUpdate) returns (PushAssignmentUpdateResponse);
 }

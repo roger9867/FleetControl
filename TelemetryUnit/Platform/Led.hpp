@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+ * Ungenutzt, siehe Led.cpp.
+
 class Led
 {
 
@@ -14,3 +17,4 @@ private:
     GPIO_TypeDef* led_gpio_port;
     uint16_t led_gpio_pin;
 };
+*/

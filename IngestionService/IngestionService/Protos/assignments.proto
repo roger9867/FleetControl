@@ -4,14 +4,13 @@ option csharp_namespace = "IngestionService.Assignments";
 
 package assignments;
 
+// Von IngestionService genutzt, um den kompletten
+// Zuordnungsbestand einmalig beim Start in AssignmentCache zu laden.
 service AssignmentService {
   rpc GetCurrentAssignments (GetCurrentAssignmentsRequest) returns (GetCurrentAssignmentsResponse);
 }
 
 message Assignment {
-  // Jede registrierte T-Einheit liefert genau eine Zeile, auch ohne
-  // Verknüpfung - daher immer gesetzt, im Gegensatz zu den drei Feldern
-  // unten, die bei fehlender Verknüpfung fehlen (nicht leerer String).
   string telemetry_unit_id = 1;
   optional string vehicle_id = 2;
   optional string license_plate = 3;

@@ -1,5 +1,6 @@
 namespace IngestionService.RabbitMq;
 
+// Event-Payload für Live-Karten-Updates des UI
 public record TelemetryEventMessage(
     string DeviceId,
     string? VehicleId,

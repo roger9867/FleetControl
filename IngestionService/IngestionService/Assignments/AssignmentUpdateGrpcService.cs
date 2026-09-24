@@ -2,6 +2,7 @@ using Grpc.Core;
 
 namespace IngestionService.Assignments;
 
+// Kapselt den gRPC Service für die Sendung von Zuordnungsupdates von FleetControlApi
 public class AssignmentUpdateGrpcService : AssignmentUpdateService.AssignmentUpdateServiceBase
 {
     private readonly AssignmentCache _cache;
@@ -13,8 +14,8 @@ public class AssignmentUpdateGrpcService : AssignmentUpdateService.AssignmentUpd
 
     public override Task<PushAssignmentUpdateResponse> PushAssignmentUpdate(
         AssignmentUpdate request,
-        ServerCallContext context)
-    {
+        ServerCallContext context
+    ) {
         var assignment = new Assignment
         {
             TelemetryUnitId = request.TelemetryUnitId

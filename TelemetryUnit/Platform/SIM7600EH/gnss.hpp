@@ -11,6 +11,8 @@
 extern osMutexId_t huart_sim_mutexHandle;
 extern osMutexId_t huart_debug_mutexHandle;
 
+/*
+ * Ungenutzt: nirgends instanziiert
 
 class Gnss
 {
@@ -27,3 +29,4 @@ class Gnss
     private:
 
 };
+*/

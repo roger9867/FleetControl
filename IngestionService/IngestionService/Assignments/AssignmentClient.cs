@@ -2,6 +2,8 @@ using Grpc.Net.Client;
 
 namespace IngestionService.Assignments;
 
+// Kapselt den generierten gRPC-Client für AssignmentService von FleetControlApi,
+// über den der komplette Zuordnungsbestand beim Start abgefragt wird
 public class AssignmentClient
 {
     private readonly AssignmentService.AssignmentServiceClient _client;
@@ -9,9 +11,7 @@ public class AssignmentClient
     public AssignmentClient(
         IConfiguration configuration)
     {
-        // Grpc.Net.Client verweigert HTTP/2 über Klartext-HTTP (kein TLS/ALPN)
-        // standardmäßig - MainService läuft ohne TLS, daher muss das hier
-        // explizit erlaubt werden.
+        // Erlauben von HTTP/2 über Klartext-HTTP, standardmäßig verboten
         AppContext.SetSwitch(
             "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport",
             true);
@@ -23,6 +23,7 @@ public class AssignmentClient
         _client = new AssignmentService.AssignmentServiceClient(channel);
     }
 
+    // Fragt bei FleetControlApi den aktuellen Zuordnungsbestand ab
     public async Task<IReadOnlyList<Assignment>> GetCurrentAssignmentsAsync()
     {
         var response = await _client.GetCurrentAssignmentsAsync(new GetCurrentAssignmentsRequest());

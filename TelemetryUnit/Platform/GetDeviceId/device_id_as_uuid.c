@@ -2,7 +2,7 @@
 
 
 void stm32_get_uid_as_uuid(char *out) {
-    // Read all three parts of device uid
+    // Alle drei Teile der Geräte-UID lesen
     uint32_t uid0 = *(uint32_t*)0x1FFFF7E8;
     uint32_t uid1 = *(uint32_t*)0x1FFFF7EC;
     uint32_t uid2 = *(uint32_t*)0x1FFFF7F0;
@@ -12,6 +12,7 @@ void stm32_get_uid_as_uuid(char *out) {
 
     char* uid_pos = chars_as_hex;
 
+    // Jeden Teil in Hex umwandeln und aneinanderhängen
     i32toStringHex(char_buf, uid0);
     for (char* hex_ptr = char_buf; *hex_ptr;  hex_ptr++) {
         *uid_pos++ = *hex_ptr;
@@ -27,14 +28,14 @@ void stm32_get_uid_as_uuid(char *out) {
         *uid_pos++ = *hex_ptr;
     }
 
-    // pad to 32 hex chars
+    // Auf 32 Hex-Zeichen auffüllen
     while ((uid_pos - chars_as_hex) < 32) {
         *uid_pos++ = '0';
     }
 
     *uid_pos = '\0';
 
-    // Set '-' for UUID format: 8-4-4-4-12
+    // '-' für UUID-Format einfügen: 8-4-4-4-12
     int index_hex = 0;
     int index_out = 0;
 

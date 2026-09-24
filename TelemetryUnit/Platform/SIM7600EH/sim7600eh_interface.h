@@ -1,3 +1,5 @@
+
+/*
 #pragma once
 
 #include "main.h"
@@ -22,3 +24,4 @@ const char* get_gnss();
 #ifdef __cplusplus
 }
 #endif
+*/

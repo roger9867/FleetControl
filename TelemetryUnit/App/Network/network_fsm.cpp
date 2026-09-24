@@ -28,6 +28,7 @@ void NetworkFSM::step()
 {
     switch (current_state)
     {
+        // Verbindungsaufbau anstossen
         case NetworkState::NetworkIdle:
         {
             const char msg[] = "[FSM] Idle -> starting connection\r\n";
@@ -42,6 +43,7 @@ void NetworkFSM::step()
             break;
         }
 
+        // warten, bis eine IP-Adresse zugewiesen wurde
         case NetworkState::NetworkConnecting:
         {
             if (network_module.is_network_ready())
@@ -62,6 +64,7 @@ void NetworkFSM::step()
             break;
         }
         
+        // IP vorhanden, MQTT-Client aufbauen und mit dem Broker verbinden
         case NetworkState::NetworkReady:
         {
             if (!network_module.is_network_ready())
@@ -80,7 +83,6 @@ void NetworkFSM::step()
                 last_health_check = HAL_GetTick();
                 current_state = NetworkState::NetworkMqttConnected;
             }
-            // new addition for fsm correction
             else
             {
                 const char msg[] = "[FSM] MQTT connection failed -> ERROR\r\n";
@@ -88,22 +90,11 @@ void NetworkFSM::step()
                     (uint8_t*)msg, strlen(msg));
                     current_state = NetworkState::NetworkError;
             }
-            //
             break;
         }
 
         case NetworkState::NetworkMqttConnected:
         {
-            // Publishing is owned by TelemetryFsm; this state just stays
-            // connected and ready for it, but we still need to notice when
-            // the modem silently dies (e.g. SIM7600 loses power) so we can
-            // fall back into a clean reinit instead of parking here forever.
-            //
-            // We only trust signals we know are accurate: basic IP
-            // connectivity (AT+CGPADDR, checked periodically) and actual
-            // publish failures reported by TelemetryFsm. There is no
-            // reliable AT+CMQTT*STATUS* query on this modem, so we don't
-            // poll for one.
             bool lost_connection = false;
 
             if (HAL_GetTick() - last_health_check >= HEALTH_CHECK_INTERVAL_MS)
@@ -131,6 +122,7 @@ void NetworkFSM::step()
             break;
         }
 
+        // Fehlerzustand ist nur ein Durchgangspunkt, springt sofort zurück zu Idle
         case NetworkState::NetworkError:
         {
             const char msg[] = "[FSM] ERROR -> reset\r\n";

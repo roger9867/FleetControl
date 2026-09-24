@@ -1,0 +1,159 @@
+
+<div class="page">
+  <!-- Header -->
+  <h1 class="header">Datenerfassungseinheiten</h1>
+
+  <!-- Toolbar: Neues Gerät anlegen / USB-Gerät registrieren -->
+  <div class="toolbar">
+
+  <button class="create-btn"
+          (click)="createUnit()"
+          [disabled]="!selectedUnitId || isUnitAlreadyRegistered(selectedUnitId)">
+    Neu anlegen
+  </button>
+
+  <div class="dropdown-wrapper">
+
+    <select class="dropdown"
+            [(ngModel)]="selectedUnitId">
+
+      <option [ngValue]="null" disabled>
+        Verbundenes Gerät registrieren
+      </option>
+
+      <option *ngFor="let unit of usb_connected_units"
+              [value]="unit.id"
+              [disabled]="isUnitAlreadyRegistered(unit.id)">
+
+        {{ unit.id }}
+
+      </option>
+
+    </select>
+
+    <button class="refresh-btn"
+            (click)="sendBroadcast()">
+
+      <span class="material-symbols-outlined">
+        refresh
+      </span>
+
+    </button>
+
+  </div>
+
+</div>
+
+<div class="container">
+  <div class="main">
+
+    <!-- Tabelle mit Ergebnissen: Liste der Datenerfassungseinheiten -->
+    <div class="list">
+
+  <div *ngIf="filteredUnits.length === 0">
+    Keine Datenerfassungseinheiten registriert.
+  </div>
+
+  <div class="box"
+     *ngFor="let item of pagedUnits; let i = index"
+     (click)="selectItem(i)"
+     [class.active]="selectedIndex === i">
+
+  <div class="title">
+    Geräte-ID: {{ item.id }}
+
+  </div>
+
+  <div class="details" *ngIf="selectedIndex !== i">
+    <div>
+      Fahrzeug-Identnr.: {{ item.vehicleId || 'nicht verbunden' }}
+    </div>
+  </div>
+
+  <!-- Bearbeiten-Formular: Fahrzeugzuordnung der Einheit -->
+  <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+    <div>
+      <span>Fahrzeug-Identnr.:</span>
+      <ng-container *ngIf="editingIndex === i; else vehicleView">
+        <div class="unit-select" [class.open]="openVehicleDropdownIndex === i">
+          <button type="button"
+                  class="unit-select-trigger"
+                  (mousedown)="onActionMouseDown($event); toggleVehicleDropdown(i, $event)">
+            {{ item.vehicleId || 'nicht verbunden' }}
+          </button>
+
+          <div class="unit-options" *ngIf="openVehicleDropdownIndex === i">
+            <div class="unit-option" (mousedown)="onActionMouseDown($event); selectVehicleForUnit(item, '')">nicht verbunden</div>
+            <div class="unit-option"
+                 *ngFor="let vehicle of vehicles"
+                 [class.disabled]="isVehicleTakenByOtherUnit(vehicle, item)"
+                 (mousedown)="onActionMouseDown($event); selectVehicleForUnit(item, vehicle.Id, isVehicleTakenByOtherUnit(vehicle, item))">
+              {{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #vehicleView>{{ item.vehicleId || 'nicht verbunden' }}</ng-template>
+    </div>
+
+    <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
+  </div>
+
+  <!-- Aktionen: Löschen, Bearbeiten, Fahrten anzeigen -->
+  <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+    <button class="action-btn delete-btn"
+            [class.danger]="deleteConfirmIndex === i"
+            (mousedown)="onActionMouseDown($event); confirmDelete(i, item)">
+      {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+    </button>
+
+    <div class="actions-right">
+      <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+      <button class="action-btn"
+              [class.dirty]="editingIndex === i && isEditDirty(item)"
+              (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+        {{ editingIndex === i ? (isEditDirty(item) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
+      </button>
+      <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(item)">Fahrten</button>
+    </div>
+  </div>
+
+</div>
+
+
+</div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="filteredUnits.length">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Filterleiste -->
+  <app-filter-sidebar
+    [vehicles]="vehicles"
+    [telemetryUnitIds]="telemetryUnitIds"
+    [persons]="persons"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filter-sidebar>
+
+</div>
+</div>

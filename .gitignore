@@ -17,3 +17,33 @@ MQTT/log/
 MQTT/passwordfile
 **/pgdata/
 **/influxdb-data/
+
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# JetBrains IDEs (Rider, IntelliJ)
+.idea/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log
+
+# Local environment/secret files (keep committed .env.example templates)
+.env
+.env.local
+!.env.example
+!**/.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini

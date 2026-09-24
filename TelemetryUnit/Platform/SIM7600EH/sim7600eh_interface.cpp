@@ -2,9 +2,15 @@
 #include "sim7600eh.hpp"
 #include "usart.h"
 
+/*
+ * Komplette Datei ungenutzt: keiner dieser extern "C"-Wrapper wird von
+ * Core/ oder App/ aufgerufen. Die tatsaechlich verwendete Sim7600-Instanz
+ * lebt in App/Network/interface.cpp; diese hier war eine zweite, nie
+ * genutzte Kopie.
+
 static Sim7600 sim;
 
-extern "C" bool check_connection()
+extern "C" bool check_connection() // ungenutzt, Sim7600::check_connection() haengt an AtBuffer
 {
     return sim.check_connection();
 }
@@ -44,8 +50,6 @@ extern "C" bool get_ip(char* out_ip, uint16_t max_len)
     return sim.get_ip(out_ip, max_len) ? true : false;
 }
 
-////////////////////////////////////////////////////////////////////////
-/*
 extern "C" bool activate_gnss()
 {
     return sim.activate_gnss() ? true : false;

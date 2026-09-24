@@ -18,12 +18,13 @@ public class InfluxWriteWorker : BackgroundService
     private readonly ILogger<InfluxWriteWorker> _logger;
 
 
+    // Baut den InfluxDB-Client aus der Konfiguration auf 
     public InfluxWriteWorker(
         InfluxWriter writer,
         RabbitMqPublisher rabbitMqPublisher,
         IConfiguration config,
-        ILogger<InfluxWriteWorker> logger)
-    {
+        ILogger<InfluxWriteWorker> logger
+    ) {
         _writer = writer;
         _rabbitMqPublisher = rabbitMqPublisher;
 
@@ -40,9 +41,11 @@ public class InfluxWriteWorker : BackgroundService
     }
 
 
+    // Liest fortlaufend Datenpunkte aus der Warteschlange, schreibt sie nach InfluxDB
+    // und veröffentlicht sie bei Erfolg über RabbitMQ für Live-Kartenupdates
     protected override async Task ExecuteAsync(
-        CancellationToken stoppingToken)
-    {
+        CancellationToken stoppingToken
+    ) {
         await foreach (var item in _writer.Reader.ReadAllAsync(stoppingToken))
         {
             var point =
@@ -52,9 +55,6 @@ public class InfluxWriteWorker : BackgroundService
                 .Tag("topic", item.Topic)
                 .Tag("state", item.State.ToString());
 
-            // Nur gesetzt, wenn die T-Einheit beim Start tatsächlich verknüpft
-            // war - fehlende Tags statt leerer Werte, damit sich die
-            // Verbindungshistorie später sauber rekonstruieren lässt.
             if (item.Assignment.HasVehicleId)
                 point = point.Tag("vehicleId", item.Assignment.VehicleId);
 

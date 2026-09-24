@@ -3,11 +3,9 @@ using RabbitMQ.Client;
 
 namespace IngestionService.RabbitMq;
 
-// Best-effort: veröffentlicht Events nach RabbitMQ, blockiert die
-// Influx-Schreib-Pipeline dabei aber nie. Ist RabbitMQ nicht erreichbar,
-// wird das Event verworfen und der nächste Datenpunkt versucht die
-// Verbindung erneut aufzubauen - anders als bei MQTT/gRPC ist RabbitMQ hier
-// ein Nebeneffekt (Frontend-Benachrichtigung), kein kritischer Pfad.
+// Sendet Events für Live-Karten-Updates des UI über RabbitMQ
+// Ist RabbitMQ nicht erreichbar, wird das Event verworfen
+// und der nächste Datenpunkt versucht die Verbindung erneut aufzubauen
 public class RabbitMqPublisher : IAsyncDisposable
 {
     private readonly IConfiguration _configuration;
@@ -21,17 +19,19 @@ public class RabbitMqPublisher : IAsyncDisposable
 
     public RabbitMqPublisher(
         IConfiguration configuration,
-        ILogger<RabbitMqPublisher> logger)
-    {
+        ILogger<RabbitMqPublisher> logger
+    ) {
         _configuration = configuration;
         _logger = logger;
     }
 
+    // Serialisiert die Payload zu JSON und sendet sie
+    // Schlägt publish fehl, wird die Verbindung verworfen statt Neuversuch
     public async Task PublishAsync(
         string routingKey,
         object payload,
-        CancellationToken token = default)
-    {
+        CancellationToken token = default
+    ) {
         var channel = await GetChannelAsync(token);
 
         if (channel == null)
@@ -62,6 +62,9 @@ public class RabbitMqPublisher : IAsyncDisposable
         }
     }
 
+    // Liefert den bestehenden offenen Kanal oder baut bei Bedarf
+    // Verbindung und Kanal neu auf.
+    // Gibt null zurück, wenn RabbitMQ nicht erreichbar ist
     private async Task<IChannel?> GetChannelAsync(CancellationToken token)
     {
         if (_channel is { IsOpen: true })
@@ -117,6 +120,8 @@ public class RabbitMqPublisher : IAsyncDisposable
         }
     }
 
+    // Schließt Kanal und Verbindung nach einem fehlgeschlagenen Publish-Versuch, damit
+    // der nächste Aufruf von GetChannelAsync eine frische Verbindung aufbaut
     private async Task ResetConnectionAsync()
     {
         try
@@ -126,13 +131,13 @@ public class RabbitMqPublisher : IAsyncDisposable
         }
         catch
         {
-            // Best-effort Aufräumen — die alte Verbindung ist ohnehin defekt.
         }
 
         _channel = null;
         _connection = null;
     }
 
+    // Gibt Kanal und Verbindung beim Herunterfahren des Diensts sauber frei
     public async ValueTask DisposeAsync()
     {
         if (_channel != null) await _channel.DisposeAsync();

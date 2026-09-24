@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+option csharp_namespace = "FleetControlServer.Service.Grpc";
+
+import "google/protobuf/timestamp.proto";
+
+package telemetry;
+
+service TelemetryQuery {
+  // Liefert alle Telemetriepunkte eines Geräts im angefragten Zeitfenster
+  rpc GetTelemetryPoints (GetTelemetryPointsRequest) returns (GetTelemetryPointsResponse);
+
+  // Ein Punkt pro angefragter Geräte-ID, die jeweils letzte je gemeldete Position
+  rpc GetLatestPoints (GetLatestPointsRequest) returns (GetLatestPointsResponse);
+
+  // Wie GetLatestPoints, aber über das vehicleId-Tag statt deviceId
+  rpc GetLatestPointsByVehicle (GetLatestPointsByVehicleRequest) returns (GetLatestPointsByVehicleResponse);
+
+  // Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
+  // Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+  rpc DeleteTelemetryPoints (DeleteTelemetryPointsRequest) returns (DeleteTelemetryPointsResponse);
+}
+
+// Anfrage für alle Telemetriepunkte eines Geräts in einem Zeitfenster
+message GetTelemetryPointsRequest {
+  string device_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+}
+
+message TelemetryPoint {
+  google.protobuf.Timestamp timestamp = 1;
+  double lat = 2;
+  double lon = 3;
+  double speed_kmh = 4;
+  double accel_ms2 = 5;
+  string driver_id = 6;
+  string device_id = 7;
+}
+
+message GetTelemetryPointsResponse {
+  repeated TelemetryPoint points = 1;
+}
+
+// Anfrage nach dem jeweils letzten Telemetriepunkt mehrerer Geräte
+message GetLatestPointsRequest {
+  repeated string device_ids = 1;
+}
+
+// Letzter bekannter Telemetriepunkt eines Geräts.
+message DeviceLatestPoint {
+  string device_id = 1;
+  TelemetryPoint point = 2;
+}
+
+message GetLatestPointsResponse {
+  repeated DeviceLatestPoint points = 1;
+}
+
+// Anfrage nach dem jeweils letzten Telemetriepunkt mehrerer Fahrzeuge.
+message GetLatestPointsByVehicleRequest {
+  repeated string vehicle_ids = 1;
+}
+
+// Letzter bekannter Telemetriepunkt eines Fahrzeugs.
+message VehicleLatestPoint {
+  string vehicle_id = 1;
+  TelemetryPoint point = 2;
+}
+
+message GetLatestPointsByVehicleResponse {
+  repeated VehicleLatestPoint points = 1;
+}
+
+// Anfrage zum Löschen aller Telemetriepunkte eines Geräts in einem Zeitfenster.
+message DeleteTelemetryPointsRequest {
+  string device_id = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+}
+
+message DeleteTelemetryPointsResponse {
+  bool success = 1;
+}

@@ -6,23 +6,26 @@ import "google/protobuf/timestamp.proto";
 
 package telemetry;
 
-// Reads back the InfluxDB points that IngestionService wrote for a device,
-// scoped to a time range (a trip's Start/EndTimestamp).
+
 service TelemetryQuery {
+
+
+  // Liest die InfluxDB-Datenpunkte, die IngestionService fuer eine
+  // telemetrieeinheit gespeichert hat, eingegrenzt auf den Zeitraum (Start/EndTimestamp
+  // einer Fahrt).
   rpc GetTelemetryPoints (GetTelemetryPointsRequest) returns (GetTelemetryPointsResponse);
 
-  // Ein Punkt pro angefragter Geräte-ID - die jeweils letzte je gemeldete
-  // Position. Geräte ohne jemals gemeldete Daten fehlen einfach in der
+  // Ein Punkt pro  Geräte-ID - die jeweils letzte gemeldete
+  // Position. Geräte ohne gemeldete Daten fehlen einfach in der
   // Antwort, statt einen Fehler auszulösen.
   rpc GetLatestPoints (GetLatestPointsRequest) returns (GetLatestPointsResponse);
 
-  // Wie GetLatestPoints, aber ueber das vehicleId-Tag statt deviceId -
+  // Wie GetLatestPoints, aber ueber vehicleId statt deviceId -
   // fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
   // geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
   rpc GetLatestPointsByVehicle (GetLatestPointsByVehicleRequest) returns (GetLatestPointsByVehicleResponse);
 
-  // Loescht alle Punkte eines Geraets in [start, end) - genutzt, wenn eine
-  // Fahrt geloescht wird, damit keine verwaisten InfluxDB-Punkte zurueckbleiben.
+  // Loescht alle Punkte eines Geraets
   rpc DeleteTelemetryPoints (DeleteTelemetryPointsRequest) returns (DeleteTelemetryPointsResponse);
 }
 

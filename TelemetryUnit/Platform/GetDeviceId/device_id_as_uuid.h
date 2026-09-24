@@ -8,17 +8,11 @@
 extern "C" {
 #endif
 
-/**
- * @brief Generates a UUID-formatted string from the STM32 unique device ID.
- *
- * Reads the 96-bit STM32 hardware unique identifier and converts it into
- * a UUID-style string using the format:
- *  XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- *
- * @param[out] out Pointer to a character buffer that receives UUID string.
- *                 The buffer must be at least 37 bytes long
- *                 (36 characters + null terminator).
- */
+// Erzeugt einen UUID-formatierten String aus der eindeutigen STM32-Geraete-ID.
+// Liest die 96-Bit STM32-Hardware-UID und wandelt sie in einen UUID-String
+// im Format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX um.
+// out muss auf einen Puffer von mindestens 37 Byte zeigen
+// (36 Zeichen + Nullterminierung).
 void stm32_get_uid_as_uuid(char *out);
 
 #ifdef __cplusplus

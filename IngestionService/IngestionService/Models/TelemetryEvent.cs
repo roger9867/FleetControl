@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace IngestionService.Models;
 
+// Mapping MQTT-JSON eines Datenpunkts der Telemetrieeinheit
 public class TelemetryEvent
 {
     [JsonPropertyName("device_id")]

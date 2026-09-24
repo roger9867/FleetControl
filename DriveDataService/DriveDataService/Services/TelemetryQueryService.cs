@@ -4,15 +4,17 @@ using InfluxDB.Client;
 
 namespace TelemetryDataService.Services;
 
-// Reads back what IngestionService/InfluxWriteWorker wrote: measurement
-// "sensor", tagged by deviceId (== TelemetryUnit.Id), fields lat/lon/
-// speedKmh/accelMs2. There is no tripId in InfluxDB, so a trip's points are
-// selected purely by deviceId + [start, end) time range.
+// Liest gespeicherte Datenpunkte:
+// Measurement "sensor", getaggt mit deviceId, Felder lat/lon/speedKmh/accelMs2.
+// Es gibt keine tripId in InfluxDB, daher werden die Punkte einer Fahrt
+// ausschliesslich ueber deviceId, Anfangs- u. Endzeitpunkt bestimmt
 public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
 {
     private readonly InfluxDBClient _client;
     private readonly string _bucket;
     private readonly string _org;
+
+    // Zustandsausgabe
     private readonly ILogger<TelemetryQueryService> _logger;
 
     public TelemetryQueryService(IConfiguration config, ILogger<TelemetryQueryService> logger)
@@ -26,18 +28,18 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         _logger = logger;
     }
 
+
+    // Ausgabe von Telemetriedatenpunkten
     public override async Task<GetTelemetryPointsResponse> GetTelemetryPoints(
         GetTelemetryPointsRequest request,
-        ServerCallContext context)
-    {
+        ServerCallContext context
+    ) {
         var response = new GetTelemetryPointsResponse();
 
         var start = request.Start.ToDateTime();
         var end = request.End.ToDateTime();
 
-        // deviceId is compared case-insensitively: TelemetryUnitId.ToString() is
-        // always lowercase, but the actual devices report their id in whatever
-        // case their firmware uses (observed uppercase in practice).
+        // deviceId wird case-insensitiv verglichen
         var flux =
             "import \"strings\" " +
             $"from(bucket: \"{_bucket}\") " +
@@ -86,10 +88,11 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
+    // Den letzten Punkt aller Geraete ausgeben
     public override async Task<GetLatestPointsResponse> GetLatestPoints(
         GetLatestPointsRequest request,
-        ServerCallContext context)
-    {
+        ServerCallContext context
+    ) {
         var response = new GetLatestPointsResponse();
 
         if (request.DeviceIds.Count == 0)
@@ -101,13 +104,12 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
             ", ",
             request.DeviceIds.Select(id => $"\"{id.ToLowerInvariant()}\""));
 
-        // last() aggregates per input table, not per device - grouping by
-        // (deviceId, _field) first guarantees exactly one "last" row per
-        // field per device, regardless of which other tags (vehicleId,
-        // driverId, ...) happened to be attached at write time. Re-grouping
-        // by deviceId alone before pivot lets it recombine those fields -
-        // which always share the same _time, since InfluxWriteWorker writes
-        // lat/lon/speedKmh/accelMs2 as one atomic point - into a single row.
+        // last() aggregiert pro Input-Tabelle, nicht pro Telemetrieeinheit - vorheriges
+        // Gruppieren nach (deviceId, _field) garantiert genau eine "last"-Zeile
+        // pro Feld und Geraet, unabhaengig davon, welche anderen Tags
+        // (vehicleId, driverId, etc) beim Schreiben gesetzt waren. Erneutes
+        // Gruppieren nach deviceId allein erlaubt es, diese
+        // Felder wieder zu einer Zeile zusammenzufuehren.
         var flux =
             "import \"strings\" " +
             $"from(bucket: \"{_bucket}\") " +
@@ -161,6 +163,7 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
+    // Wie GetLatestPoints, aber ueber vehicleId statt deviceId
     public override async Task<GetLatestPointsByVehicleResponse> GetLatestPointsByVehicle(
         GetLatestPointsByVehicleRequest request,
         ServerCallContext context)
@@ -238,20 +241,16 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
+    // Alle Punkte innerhalb einer Zeitspanne für ein Gerät löschen
     public override async Task<DeleteTelemetryPointsResponse> DeleteTelemetryPoints(
         DeleteTelemetryPointsRequest request,
-        ServerCallContext context)
-    {
+        ServerCallContext context
+    ) {
         var start = request.Start.ToDateTime();
         var end = request.End.ToDateTime();
 
         try
         {
-            // The Delete API's predicate language only supports tag
-            // equality/inequality (no strings.toLower()), unlike Flux
-            // queries. So the actual stored casing of deviceId has to be
-            // discovered first via a case-insensitive query, then deleted
-            // by exact match.
             var flux =
                 "import \"strings\" " +
                 $"from(bucket: \"{_bucket}\") " +

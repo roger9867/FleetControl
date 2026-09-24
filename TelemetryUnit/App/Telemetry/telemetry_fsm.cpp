@@ -38,8 +38,8 @@ bool TelemetryFsm::publish_timestamp()
         return false;
     }
 
-    // GNSS data comes from GnssFSM's own polling (already at 1 Hz) instead
-    // of issuing a second, redundant AT+CGNSSINFO query per publish.
+    // GNSS-Daten kommen aus GnssFSM statt eine zweite,
+    //  redundante AT+CGNSSINFO-Abfrage pro Publish zu senden.
     telemetry_point.parse_gnss(gnss_fsm_get_last_response());
 
     const char* json = telemetry_point.to_json();
@@ -64,6 +64,7 @@ void TelemetryFsm::step()
 {
     switch (current_state)
     {
+        // warten, bis Netzwerk und GNSS gleichzeitig bereit sind
         case TelemetryState::Idle:
         {
             if (is_network_ready() && is_gnss_ready())
@@ -85,6 +86,7 @@ void TelemetryFsm::step()
             break;
         }
 
+        // im festen Intervall Telemetriepunkte senden, solange alles bereit bleibt
         case TelemetryState::Publishing:
         {
             if (!is_network_ready() || !is_gnss_ready())
@@ -106,6 +108,7 @@ void TelemetryFsm::step()
             break;
         }
 
+        // Fehlerzustand ist nur ein Durchgangspunkt, springt sofort zurück zu Idle
         case TelemetryState::Error:
         {
             const char msg[] = "[TELEMETRY FSM] Error -> Idle\r\n";

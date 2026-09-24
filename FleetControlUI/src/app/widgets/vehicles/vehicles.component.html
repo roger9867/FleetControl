@@ -1,0 +1,252 @@
+<div class="container">
+  <div class="main">
+
+    <h1 class="header">Fahrzeuge</h1>
+
+    <!-- Karte -->
+    <div class="card">
+      <app-vehicle-map [points]="mapPoints"></app-vehicle-map>
+    </div>
+
+    <!-- Toolbar (Neu anlegen, Zentrieren) -->
+    <div class="toolbar">
+      <button class="create-btn" (click)="toggleCreateForm()">
+        {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
+      </button>
+
+      <button type="button" class="recenter-btn" title="Karte zentrieren" (click)="recenterMap()">
+        <span class="material-symbols-outlined">my_location</span>
+      </button>
+    </div>
+
+    <!-- Erstellen-Formular -->
+    <div class="create-form" *ngIf="showCreateForm">
+      <div class="form-grid">
+        <label>
+          Kennzeichen
+          <input type="text" maxlength="9" [ngModel]="newVehicle.licensePlate" (ngModelChange)="onNewLicensePlateChange($event)">
+        </label>
+
+        <label>
+          Marke *
+          <input type="text" maxlength="50" [(ngModel)]="newVehicle.brand">
+        </label>
+
+        <label>
+          Modell *
+          <input type="text" maxlength="50" [(ngModel)]="newVehicle.modelName">
+        </label>
+
+        <label>
+          Baujahr *
+          <input type="number"
+                 [ngModel]="newVehicle.year"
+                 (ngModelChange)="onYearChange($event)"
+                 (keydown)="onDigitFieldKeydown($event, newVehicle.year)">
+          <span class="field-error" *ngIf="yearError">{{ yearError }}</span>
+        </label>
+
+        <label>
+          Fahrzeug-Identnr. *
+          <input type="text"
+                 [ngModel]="newVehicle.identNr"
+                 (ngModelChange)="onIdentNrChange($event)">
+          <span class="field-error" *ngIf="identNrError">{{ identNrError }}</span>
+        </label>
+
+        <label>
+          Benötigter Führerschein *
+          <select [(ngModel)]="newVehicle.requiredLicense">
+            <option value="" disabled>Bitte wählen</option>
+            <option *ngFor="let license of licenseClasses" [value]="license">{{ license }}</option>
+          </select>
+        </label>
+
+        <label>
+          Leistung (PS) *
+          <input type="number" min="0" [(ngModel)]="newVehicle.powerPs" (keydown)="onPowerPsKeydown($event)">
+        </label>
+
+        <label>
+          Farbe *
+          <input type="text" maxlength="50" [(ngModel)]="newVehicle.color">
+        </label>
+
+        <label>
+          Erstzulassung
+          <input type="date" [(ngModel)]="newVehicle.firstRegistration">
+        </label>
+      </div>
+
+      <button class="save-btn"
+              (click)="createVehicle()"
+              [disabled]="!newVehicle.modelName || !newVehicle.identNr || !newVehicle.brand
+                          || !newVehicle.year || !newVehicle.requiredLicense
+                          || !newVehicle.powerPs || !newVehicle.color || !!identNrError || !!yearError">
+        Speichern
+      </button>
+
+      <div class="form-error" *ngIf="createError">{{ createError }}</div>
+    </div>
+
+    <!-- Liste der Fahrzeuge -->
+    <div class="list">
+      <div *ngIf="pagedVehicles.length === 0">
+        Keine Fahrzeuge gefunden.
+      </div>
+
+      <div class="box"
+           *ngFor="let vehicle of pagedVehicles; let i = index"
+           (click)="selectItem(i)"
+           [class.active]="selectedIndex === i">
+
+        <div class="title">{{ vehicle.brand }} {{ vehicle.modelName }} - {{ vehicle.identNr }}</div>
+
+        <div class="details" *ngIf="selectedIndex !== i">
+          Baujahr: {{ vehicle.year }}
+        </div>
+
+        <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+          <div>
+            <span>Kennzeichen:</span>
+            <ng-container *ngIf="editingIndex === i; else plateView">
+              <input type="text" class="inline-input" maxlength="9" [ngModel]="vehicle.licensePlate" (ngModelChange)="onVehicleLicensePlateChange(vehicle, $event)">
+            </ng-container>
+            <ng-template #plateView>{{ vehicle.licensePlate }}</ng-template>
+          </div>
+
+          <div><span>Marke:</span> {{ vehicle.brand }}</div>
+          <div><span>Modell:</span> {{ vehicle.modelName }}</div>
+          <div><span>Baujahr:</span> {{ vehicle.year }}</div>
+          <div><span>Fahrzeug-Identnr.:</span> {{ vehicle.identNr }}</div>
+          <div><span>Benötigter Führerschein:</span> {{ vehicle.requiredLicense }}</div>
+          <div><span>Leistung:</span> {{ vehicle.powerPs }} PS</div>
+          <div><span>Farbe:</span> {{ vehicle.color }}</div>
+
+          <div>
+            <span>Erstzulassung:</span>
+            <ng-container *ngIf="editingIndex === i; else firstRegistrationView">
+              <input type="date" class="inline-input" [(ngModel)]="vehicle.firstRegistration">
+            </ng-container>
+            <ng-template #firstRegistrationView>{{ vehicle.firstRegistration }}</ng-template>
+          </div>
+
+          <div>
+            <span>Telemetrie-Einheit:</span>
+            <ng-container *ngIf="editingIndex === i; else unitView">
+              <div class="unit-select" [class.open]="openTelemetryDropdownIndex === i">
+                <button type="button"
+                        class="unit-select-trigger"
+                        (mousedown)="onActionMouseDown($event); toggleTelemetryDropdown(i, $event)">
+                  {{ vehicle.telemetryUnit?.id || 'nicht verbunden' }}
+                </button>
+
+                <div class="unit-options" *ngIf="openTelemetryDropdownIndex === i">
+                  <div class="unit-option" (mousedown)="onActionMouseDown($event); selectTelemetryUnit(vehicle, '')">nicht verbunden</div>
+                  <div class="unit-option"
+                       *ngFor="let unit of telemetryUnits"
+                       [class.disabled]="isUnitTakenByOtherVehicle(unit, vehicle)"
+                       (mousedown)="onActionMouseDown($event); selectTelemetryUnit(vehicle, unit.id, isUnitTakenByOtherVehicle(unit, vehicle))">
+                    {{ unit.id }}
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #unitView>{{ vehicle.telemetryUnit?.id || 'nicht verbunden' }}</ng-template>
+          </div>
+
+          <div>
+            <span>Fahrer:</span>
+            <ng-container *ngIf="editingIndex === i; else driverView">
+              <div class="driver-select" [class.open]="openDriverDropdownIndex === i">
+                <div class="driver-select-row">
+                  <button type="button"
+                          class="unit-select-trigger"
+                          (mousedown)="onActionMouseDown($event); toggleDriverDropdown(i, $event)">
+                    {{ getDriverLabel(vehicle) }}
+                  </button>
+
+                  <button type="button"
+                          class="advanced-btn"
+                          (mousedown)="onActionMouseDown($event); toggleAdvancedDriverFilter(i, $event)">
+                    {{ showAdvancedDriverFilter ? 'Erweitert ▲' : 'Erweitert ▼' }}
+                  </button>
+                </div>
+
+                <div class="advanced-filter" *ngIf="showAdvancedDriverFilter">
+                  <input type="text" placeholder="Vorname" [(ngModel)]="advancedDriverFilter.firstName">
+                  <input type="text" placeholder="Nachname" [(ngModel)]="advancedDriverFilter.lastName">
+                  <input type="text" placeholder="Mitarbeiter-Nr." [(ngModel)]="advancedDriverFilter.employeeNr">
+                </div>
+
+                <div class="unit-options" *ngIf="openDriverDropdownIndex === i">
+                  <div class="unit-option" (mousedown)="onActionMouseDown($event); selectDriver(vehicle, '')">keinen</div>
+                  <div class="unit-option"
+                       *ngFor="let person of filteredDriverOptions"
+                       [class.disabled]="isPersonTakenByOtherVehicle(person, vehicle)"
+                       (mousedown)="onActionMouseDown($event); selectDriver(vehicle, person.Id, isPersonTakenByOtherVehicle(person, vehicle))">
+                    {{ person.firstName }} {{ person.lastName }} &mdash; {{ person.Id }}
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #driverView>{{ getDriverLabel(vehicle) }}</ng-template>
+          </div>
+
+          <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
+        </div>
+
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, vehicle)">
+            {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+          </button>
+
+          <div class="actions-right">
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+            <button class="action-btn"
+                    [class.dirty]="editingIndex === i && isEditDirty(vehicle)"
+                    (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+              {{ editingIndex === i ? (isEditDirty(vehicle) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
+            </button>
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(vehicle)">Fahrten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Filterleiste (Sidebar) -->
+  <app-filter-sidebar
+    [vehicles]="vehicles"
+    [telemetryUnitIds]="telemetryUnitIds"
+    [persons]="persons"
+    [licenseClasses]="licenseClasses"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filter-sidebar>
+
+</div>

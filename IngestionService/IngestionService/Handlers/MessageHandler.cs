@@ -1,9 +1,13 @@
 using System.Text.Json;
 using IngestionService.Assignments;
+using IngestionService.Plausibility;
 using IngestionService.Influx;
 using IngestionService.Models;
 using IngestionService.Trip;
 
+// Verarbeitet einen einzelnen eingehenden MQTT-Datenpunkt: parsen, gegen
+// Zuordnungs-Cache und Plausibilitätsfilter prüfen, an den Fahrtzustandsautomaten
+// weiterreichen und anschließend zur Persistierung übergeben
 public class MessageHandler
 {
     private readonly InfluxWriter _writer;
@@ -28,10 +32,13 @@ public class MessageHandler
     }
 
 
+    // Verarbeitungskette für einen eingehenden Datenpunkt: JSON parsen, fehlende
+    // DeviceId oder unbekannte Geräte verwerfen, Plausibilität prüfen und den
+    // Punkt danach an Zustandsautomat und Persistenz weiterreichen
     public async Task HandleAsync(
         string topic,
-        string payload)
-    {
+        string payload
+    ) {
         try
         {
             var data =
@@ -43,13 +50,13 @@ public class MessageHandler
         });
 
         _logger.LogInformation(
-    "Parsed: DeviceId={deviceId}, Lat={lat}, Lon={lon}, SpeedKmh={speed}, AccelMs2={accel}, Timestamp={timestamp}",
-    data?.DeviceId,
-    data?.Latitude,
-    data?.Longitude,
-    data?.SpeedKmh,
-    data?.AccelerationMs2,
-    data?.Timestamp);
+            "Parsed: DeviceId={deviceId}, Lat={lat}, Lon={lon}, SpeedKmh={speed}, AccelMs2={accel}, Timestamp={timestamp}",
+            data?.DeviceId,
+            data?.Latitude,
+            data?.Longitude,
+            data?.SpeedKmh,
+            data?.AccelerationMs2,
+            data?.Timestamp);
 
 
             if (data == null)
@@ -71,6 +78,7 @@ public class MessageHandler
             }
 
 
+            // Nur für im System bekannte Geräte werden Daten gespeichert
             if (!_assignmentCache.TryGet(data.DeviceId, out var assignment))
             {
                 _logger.LogWarning(
@@ -81,6 +89,8 @@ public class MessageHandler
             }
 
 
+            // Verwirft Punkte mit Positionsfehlern der Telemetrieeinheit,
+            //  bevor sie den Zustandsautomaten oder die Datenbank erreichen
             if (!_gpsPlausibilityFilter.IsPlausible(data.DeviceId, data.Latitude, data.Longitude, data.Timestamp))
             {
                 return;

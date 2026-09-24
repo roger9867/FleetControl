@@ -5,6 +5,13 @@ using System.Linq;
 using MQTTnet;
 using System.Text;
 
+
+
+
+// Baut die MQTT-Verbindung zum konfigurierten Broker auf, abonniert die
+// Topic und reicht eingehende Nachrichten an den MessageHandler
+// weiter.
+//  baut die Verbindung bei Verbindungsverlust automatisch neu auf
 public class MqttClientService
 {
     private static readonly TimeSpan ReconnectDelay = TimeSpan.FromSeconds(5);
@@ -16,51 +23,50 @@ public class MqttClientService
     private IMqttClient? _client;
     private MqttClientOptions? _options;
     private CancellationToken _stoppingToken;
+
+    // Verhindert, dass mehrere gleichzeitig eintreffende Disconnect-Events
+    // jeweils eigene, parallel laufende Reconnect-Versuche starten.
     private readonly SemaphoreSlim _reconnectLock = new(1, 1);
 
 
     public MqttClientService(
         IConfiguration configuration,
         ILogger<MqttClientService> logger,
-        MessageHandler handler)
-    {
+        MessageHandler handler
+    ) {
         _configuration = configuration;
         _logger = logger;
         _handler = handler;
     }
 
 
+    // Registriert die Callbacks für eingehende Nachrichten und Verbindungsabbrüche,
+    // baut danach die Erstverbindung auf und abonniert die konfigurierte Topic
     public async Task StartAsync(
-        CancellationToken token)
-    {
-        _logger.LogInformation(
-            "MqttClientService StartAsync aufgerufen");
+        CancellationToken token
+    ) {
+        _logger.LogInformation("MqttClientService StartAsync aufgerufen");
 
         _stoppingToken = token;
-
         var factory = new MqttClientFactory();
-
         _client = factory.CreateMqttClient();
 
 
+        // Topic und Payload zur Verarbeitung weiterleiten
         _client.ApplicationMessageReceivedAsync += async e =>
         {
             var topic = e.ApplicationMessage.Topic;
 
             var payload =
-                Encoding.UTF8.GetString(
-                    e.ApplicationMessage.Payload.FirstSpan);
-
+                Encoding.UTF8.GetString(e.ApplicationMessage.Payload.FirstSpan);
 
             _logger.LogInformation(
                 "MQTT [{topic}]: {msg}",
                 topic,
-                payload);
+                payload
+            );
 
-
-            await HandleMessage(
-                topic,
-                payload);
+            await HandleMessage(topic, payload);
         };
 
 
@@ -147,10 +153,11 @@ public class MqttClientService
     }
 
 
+    // Versucht in einer Endlosschleife, die Verbindung zum Broker aufzubauen
     private async Task ConnectWithRetryAsync(
         MqttClientOptions options,
-        CancellationToken token)
-    {
+        CancellationToken token
+    ) {
         var attempt = 0;
 
         while (true)
@@ -195,10 +202,11 @@ public class MqttClientService
     }
 
 
+    // Wrapper, der eine eingehende MQTT-Nachricht an MessageHandler weiterreicht
     private async Task HandleMessage(
         string topic,
-        string payload)
-    {
+        string payload
+    ) {
         await _handler.HandleAsync(
             topic,
             payload);

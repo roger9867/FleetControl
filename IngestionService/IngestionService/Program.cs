@@ -1,5 +1,6 @@
 using IngestionService;
 using IngestionService.Assignments;
+using IngestionService.Plausibility;
 using IngestionService.Influx;
 using IngestionService.RabbitMq;
 using IngestionService.Trip;
@@ -7,9 +8,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Nur gRPC (kein REST), daher genügt ein einzelner HTTP/2-Port ohne die
-// HTTP/1.1-/HTTP/2-ALPN-Problematik, die MainService wegen seiner REST-API
-// zusätzlich lösen muss.
 var grpcPort = builder.Configuration.GetValue<int?>("Grpc:Port") ?? 5010;
 
 builder.WebHost.ConfigureKestrel(options =>
@@ -20,6 +18,7 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
+// Registrierung als Singleton
 builder.Services.AddSingleton<MessageHandler>();
 builder.Services.AddSingleton<InfluxWriter>();
 builder.Services.AddHostedService<InfluxWriteWorker>();
@@ -35,13 +34,16 @@ builder.Services.AddSingleton<TripReactor>();
 builder.Services.AddHostedService(
     sp => sp.GetRequiredService<TripReactor>());
 
+// Hintergrunddienste
 builder.Services.AddHostedService<PendingTripEndRetryService>();
 builder.Services.AddHostedService<Worker>();
 
+// gRPC-Serverfunktion aktivieren
 builder.Services.AddGrpc();
 
 var app = builder.Build();
 
+// Server-Endpunkt, über den FleetControlApi Zuordnungsänderungen zur Laufzeit pusht
 app.MapGrpcService<AssignmentUpdateGrpcService>();
 
 app.Run();

@@ -5,22 +5,22 @@
 Uart::Uart(UART_HandleTypeDef* _huart, osMutexId_t& huart_sim_mutexHandle)
     : huart(_huart), mutex(huart_sim_mutexHandle)
 {
-    //init();
 }
 
 HAL_StatusTypeDef Uart::read(
     uint8_t* buffer,
     uint16_t max_len,
-    uint32_t timeout_ms)
-{
+    uint32_t timeout_ms
+) {
     uint16_t idx = 0;
     uint8_t c;
 
-    uint32_t start = HAL_GetTick();
+    // Aktuelle Zeit in Ticks des SysTick-Timer-Registers holen
+    uint32_t startTime = HAL_GetTick();
 
     acquire();
 
-    while ((HAL_GetTick() - start) < timeout_ms && idx < max_len)
+    while ((HAL_GetTick() - startTime) < timeout_ms && idx < max_len)
     {
         if (HAL_UART_Receive(huart, &c, 1, 10) == HAL_OK)
         {
@@ -28,7 +28,7 @@ HAL_StatusTypeDef Uart::read(
             buffer[idx] = '\0';
 
             // Timeout zurücksetzen, solange Daten kommen
-            start = HAL_GetTick();
+            startTime = HAL_GetTick();
 
             // Prompt zum Senden von Topic/Payload
             if (strchr((char*)buffer, '>') != nullptr)
@@ -54,21 +54,24 @@ HAL_StatusTypeDef Uart::read(
 HAL_StatusTypeDef Uart::readRaw(
     uint8_t* buffer,
     uint16_t max_len,
-    uint32_t timeout_ms)
-{
+    uint32_t timeout_ms
+) {
     uint16_t idx = 0;
     uint8_t c;
 
-    uint32_t start = HAL_GetTick();
+    // Aktuelle Zeit in Ticks des SysTick-Timer-Registers holen
+    uint32_t startTime = HAL_GetTick();
 
     acquire();
-    while ((HAL_GetTick() - start) < timeout_ms && idx < max_len)
+
+    while ((HAL_GetTick() - startTime) < timeout_ms && idx < max_len)
     {
         if (HAL_UART_Receive(huart, &c, 1, 10) == HAL_OK)
         {
             buffer[idx++] = c;
         }
     }
+
     release();
 
     return (idx > 0) ? HAL_OK : HAL_TIMEOUT;
@@ -77,8 +80,8 @@ HAL_StatusTypeDef Uart::readRaw(
 HAL_StatusTypeDef Uart::write(
     uint8_t* data,
     uint16_t len,
-    uint32_t timeout_ms)
-{
+    uint32_t timeout_ms
+) {
     acquire();
 
     HAL_StatusTypeDef status =
@@ -98,14 +101,3 @@ void Uart::release()
 {
     osMutexRelease(mutex);
 }
-
-/*
-void Uart::init()
-{
-    osMutexAttr_t attr = {
-        .name = "uart_mutex"
-    };
-
-    mutex = osMutexNew(&attr);
-}
-*/

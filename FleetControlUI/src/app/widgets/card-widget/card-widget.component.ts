@@ -1,0 +1,196 @@
+import { Component, AfterViewInit, AfterViewChecked, OnChanges, SimpleChanges, Input } from '@angular/core';
+import * as L from 'leaflet';
+
+import { Trip, TripPoint } from '../../models/trip.model';
+import { Vehicle } from '../../models/vehicle.model';
+
+@Component({
+  selector: 'app-card-widget',
+  imports: [],
+  templateUrl: './card-widget.component.html',
+  styleUrl: './card-widget.component.scss',
+})
+export class CardWidgetComponent implements AfterViewInit, AfterViewChecked, OnChanges {
+
+  @Input() trips: Trip[] = [];
+  @Input() vehicles: Vehicle[] = [];
+
+  private map!: L.Map;
+  private mapInitialized = false;
+  private routeLayer = L.layerGroup();
+  private lastTripsSignature = '';
+
+  private readonly routeColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6'];
+
+  // Erstellt die Leaflet-Karte samt Kachel-Layer und rendert die ersten Fahrtrouten.
+  ngAfterViewInit(): void {
+    // 1. Karte initialisieren und Startansicht setzen
+    this.map = L.map('map', {
+      attributionControl: false
+    }).setView([48.8375, 10.0936], 14);
+
+
+// 2. Kartenkacheln laden
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; OpenStreetMap contributors',
+    maxZoom: 20,
+    detectRetina: true,
+    tileSize: 512,
+    zoomOffset: -1
+}).addTo(this.map);
+
+    // 3. Routen-Layer einhaengen und erste Fahrten zeichnen
+    this.routeLayer.addTo(this.map);
+    this.mapInitialized = true;
+
+    this.lastTripsSignature = this.tripsSignature();
+    this.renderTrips();
+  }
+
+  // Passt die Kartengrösse nach jeder Änderungspruefung an das aktuelle Layout an
+  ngAfterViewChecked(): void {
+    if (this.mapInitialized) {
+      this.map.invalidateSize();
+    }
+  }
+
+  // Rendert die Routen neu, sobald sich die übergebenen Fahrten tatsächlich geändert haben
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['trips'] || !this.mapInitialized) return;
+
+    const signature = this.tripsSignature();
+    if (signature === this.lastTripsSignature) return;
+
+    this.lastTripsSignature = signature;
+    this.renderTrips();
+  }
+
+  // Erzeugt eine vergleichbare Signatur aller Fahrten, um unnötiges Neurendern zu vermeiden
+  private tripsSignature(): string {
+    return this.trips.map(t => `${t.id}:${t.points.length}:${t.end ? '1' : '0'}`).join('|');
+  }
+
+  // Zeichnet für jede Fahrt die Route mit Punkten, Start-/Zielmarkierung und zentriert anschliessend die Karte
+  private renderTrips(): void {
+    this.routeLayer.clearLayers();
+
+    if (!this.trips.length) {
+      return;
+    }
+
+    const allPoints: L.LatLngExpression[] = [];
+
+    this.trips.forEach((trip, tripIndex) => {
+      const color = this.routeColors[tripIndex % this.routeColors.length];
+      const coordinates: L.LatLngExpression[] = trip.points.map(p => [p.lat, p.lng]);
+      const isOngoing = !trip.end;
+
+      // Route als Linie zeichnen
+      L.polyline(coordinates, {
+        color,
+        weight: 4,
+        lineJoin: 'round',
+        opacity: 0.65,
+      }).addTo(this.routeLayer);
+
+      // Punktmarker je Fahrtpunkt zeichnen (aktuelle Position bei laufender Fahrt pulsierend hervorheben)
+      trip.points.forEach((point, index) => {
+        const isLastPoint = index === trip.points.length - 1;
+
+        if (isOngoing && isLastPoint) {
+          const icon = L.divIcon({
+            className: 'trip-marker-icon',
+            html: `<div class="trip-marker">`
+              + `<span class="trip-marker-pulse" style="background-color:${color}"></span>`
+              + `<span class="trip-marker-dot" style="background-color:${color};border-color:${color}"></span>`
+              + `</div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+          });
+
+          const marker = L.marker(coordinates[index], { icon }).addTo(this.routeLayer);
+          marker.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: 'top' });
+          return;
+        }
+
+        const marker = L.circleMarker(coordinates[index], {
+          radius: 5,
+          color,
+          fillColor: color,
+          fillOpacity: 1,
+          opacity: 1,
+          weight: 2
+        }).addTo(this.routeLayer);
+
+        marker.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: 'top' });
+      });
+
+      // Start- und (falls beendet) Zielmarkierung zeichnen
+      if (coordinates.length) {
+        const startMarker = L.circleMarker(coordinates[0], {
+          radius: 12,
+          color,
+          fillColor: color,
+          fillOpacity: 1,
+          opacity: 1,
+          weight: 2
+        }).addTo(this.routeLayer);
+        startMarker.bindTooltip(
+          this.pointTooltip(trip, trip.points[0], 'Start'),
+          { permanent: false, direction: 'top' }
+        );
+
+        if (!isOngoing) {
+          const endCoord = coordinates[coordinates.length - 1];
+          const endMarker = L.circleMarker(endCoord, {
+            radius: 14,
+            color,
+            fillOpacity: 0,
+            opacity: 1,
+            weight: 3
+          }).addTo(this.routeLayer);
+          endMarker.bindTooltip(
+            this.pointTooltip(trip, trip.points[trip.points.length - 1], 'Ziel'),
+            { permanent: false, direction: 'top' }
+          );
+        }
+      }
+
+      allPoints.push(...coordinates);
+    });
+
+    this.recenter();
+  }
+
+  // Zentriert und zoomt die Karte so, dass alle Fahrtpunkte sichtbar sind
+  recenter(): void {
+    const allPoints: L.LatLngExpression[] = this.trips.flatMap(trip =>
+      trip.points.map(p => [p.lat, p.lng] as L.LatLngExpression)
+    );
+
+    if (allPoints.length) {
+      this.map.fitBounds(L.latLngBounds(allPoints), { padding: [30, 30] });
+    }
+  }
+
+  // Baut den HTML-Text des Tooltips für einen Fahrtpunkt aus Fahrzeug-, Fahrer- und Messwerten
+  private pointTooltip(trip: Trip, point: TripPoint, label?: string): string {
+    const time = new Date(point.timestamp).toLocaleString('de-DE');
+    const zeitLine = label ? `Zeit: ${time} — ${label}` : `Zeit: ${time}`;
+
+    return `Kennzeichen: ${this.licensePlate(trip.vehicleId)}<br>`
+      + `T-Einheit-ID: ${trip.telemetryUnitId}<br>`
+      + `Fahrer: ${trip.driverId ?? '–'}<br>`
+      + `${zeitLine}<br>`
+      + `Geschwindigkeit: ${point.speedKmh.toFixed(1)} km/h<br>`
+      + `Beschleunigung: ${point.accelMs2.toFixed(2)} m/s²<br>`
+      + `Koordinaten: ${point.lat.toFixed(6)}, ${point.lng.toFixed(6)}`;
+  }
+
+  // Ermittelt das Kennzeichen des Fahrzeugs zu einer Fahrzeug-ID.
+  private licensePlate(vehicleId?: string | null): string {
+    if (!vehicleId) return '–';
+    const vehicle = this.vehicles.find(v => v.Id === vehicleId);
+    return vehicle?.licensePlate || '–';
+  }
+}

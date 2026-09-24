@@ -1,3 +1,5 @@
+/*
+
 #pragma once
 
 #include <cstdint>
@@ -14,3 +16,4 @@ private:
     char buf[512];
     uint16_t idx = 0;
 };
+*/

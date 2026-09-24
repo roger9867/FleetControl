@@ -6,6 +6,7 @@
 #include <cstdio>
 
 
+// NMEA-Format ddmm.mmmmmm: erste 2 (Lat) bzw. 3 (Lon) Ziffern sind Grad, Rest Minuten
 float TelemetryPoint::nmea_to_decimal(const char* nmea)
 {
     float val = atof(nmea);
@@ -38,9 +39,9 @@ uint8_t TelemetryPoint::is_valid_nmea_coordinate(const char* token, int min_digi
     return digits_before_dot >= min_digits_before_decimal;
 }
 
-GnssData TelemetryPoint::parse_gnss(const char* response)
+TelemetryData TelemetryPoint::parse_gnss(const char* response)
 {
-    GnssData out{};
+    TelemetryData out{};
     out.valid = false;
 
     if (!response)
@@ -140,7 +141,6 @@ GnssData TelemetryPoint::parse_gnss(const char* response)
 
 void TelemetryPoint::format_timestamp(char* out, unsigned out_len)
 {
-    // gnss_data.date is NMEA ddmmyy, gnss_data.time is NMEA hhmmss.sss
     int day = 0, month = 0, year = 0;
     int hour = 0, minute = 0, second = 0;
 
@@ -156,6 +156,7 @@ void TelemetryPoint::format_timestamp(char* out, unsigned out_len)
     );
 }
 
+// Beschleunigung als Geschwindigkeitsänderung seit dem letzten Fix geteilt durch die vergangene Zeit
 float TelemetryPoint::calculate_accel_in_ms2(float new_speed_kmh)
 {
     uint32_t now = HAL_GetTick();

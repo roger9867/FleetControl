@@ -6,21 +6,22 @@
 
 extern osMutexId_t huart_debug_mutexHandle;
 
-/**
- * @brief Checks UART input for incoming commands and processes them.
- *
- * Reads bytes from the specified UART interface, builds a command string,
- * and executes matching commands when a line ending is received.
- *
- * Supported command:
- * - get_device_id formatted as UUID
- *
- * Responses are transmitted over the same UART interface.
- *
- * This function is to be called repeatedly.
- *
- * @param[in] huartx Pointer to the UART handle used for communication.
- */
-void check_for_device_id_request_command(UART_HandleTypeDef* huartx);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Prüft eingehende UART-Befehle und fuehrt sie aus.
+// Liest Bytes vom Debug-UART, baut daraus einen Befehlsstring auf
+// und führt passende Befehle aus, sobald ein Zeilenende empfangen wurde.
+//
+// Unterstuetzter Befehl:
+// - get_device_id, liefert die Device-ID als UUID formatiert
+//
+// Diese Funktion muss wiederholt aufgerufen werden.
+void check_for_device_id_request_command(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  //__GET_DEVICE_ID_H__

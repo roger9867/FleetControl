@@ -1,6 +1,8 @@
 #include "Led.hpp"
 #include "main.h"
 
+/*
+ * Ungenutzt: steht nicht in CMakeLists.txt, wird nirgends instanziiert
 
 void Led::Led(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
@@ -22,3 +24,4 @@ void Led::toggle()
 {
     HAL_GPIO_TogglePin(led_gpio_port, led_gpio_pin);
 }
+*/

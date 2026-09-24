@@ -1,0 +1,239 @@
+<div class="page">
+  <h1 class="header">Personen</h1>
+
+  <!-- Toolbar (Neu anlegen) -->
+  <div class="toolbar">
+    <button class="create-btn" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
+    </button>
+  </div>
+
+  <div class="container">
+  <div class="main">
+
+    <!-- Erstellen-Formular -->
+    <div class="create-form" *ngIf="showCreateForm">
+      <div class="form-grid">
+        <label>
+          Vorname *
+          <input type="text" maxlength="50" [(ngModel)]="newPerson.firstName">
+        </label>
+
+        <label>
+          Nachname *
+          <input type="text" maxlength="50" [(ngModel)]="newPerson.lastName">
+        </label>
+
+        <label>
+          Geburtsdatum
+          <input type="date" [(ngModel)]="newPerson.birthDate">
+        </label>
+
+        <label>
+          Zugewiesenes Fahrzeug
+          <div class="vehicle-select" [class.open]="showNewVehicleDropdown">
+            <button type="button"
+                    class="unit-select-trigger"
+                    (mousedown)="onActionMouseDown($event); toggleNewVehicleDropdown()">
+              {{ vehicleLabel(newPerson.assignedVehicleId) }}
+            </button>
+
+            <div class="unit-options" *ngIf="showNewVehicleDropdown">
+              <div class="unit-option" (mousedown)="onActionMouseDown($event); selectNewPersonVehicle(null)">Kein Fahrzeug</div>
+              <div class="unit-option"
+                   *ngFor="let vehicle of vehicles"
+                   [class.disabled]="isVehicleTakenByOtherPerson(vehicle, newPerson)"
+                   (mousedown)="onActionMouseDown($event); selectNewPersonVehicle(vehicle.Id, isVehicleTakenByOtherPerson(vehicle, newPerson))">
+                {{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+              </div>
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <div class="license-editor">
+        <div class="field-label">Führerscheine</div>
+
+        <div class="license-row">
+          <select [(ngModel)]="newLicenseClass">
+            <option value="" disabled>Klasse wählen</option>
+            <option *ngFor="let license of availableNewLicenseClasses" [value]="license">{{ license }}</option>
+          </select>
+
+          <input type="date" [(ngModel)]="newLicenseDate">
+
+          <button type="button"
+                  class="add-btn"
+                  [disabled]="!newLicenseClass || !newLicenseDate"
+                  (click)="addLicenseToNewPerson()">
+            +
+          </button>
+        </div>
+
+        <div class="chips" *ngIf="newPerson.licenses?.length">
+          <div class="chip" *ngFor="let license of newPerson.licenses">
+            {{ license.licenseClass }} (seit {{ license.obtainedDate }})
+            <span class="chip-remove" (click)="removeLicenseFromNewPerson(license.licenseClass)">&times;</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="save-btn"
+              (click)="createPerson()"
+              [disabled]="!newPerson.firstName || !newPerson.lastName || !newPerson.birthDate || !newPerson.licenses?.length">
+        Speichern
+      </button>
+
+      <div class="form-error" *ngIf="createError">{{ createError }}</div>
+    </div>
+
+    <!-- Liste der Personen -->
+    <div class="list">
+      <div *ngIf="pagedPersons.length === 0">
+        Keine Personen angelegt.
+      </div>
+
+      <div class="box"
+           *ngFor="let person of pagedPersons; let i = index"
+           (click)="onBoxClick(i)"
+           [class.active]="selectedIndex === i">
+
+        <div class="title">{{ person.firstName }} {{ person.lastName }} - {{ person.Id }}</div>
+
+        <div class="details" *ngIf="selectedIndex !== i">
+          Geburtsdatum: {{ person.birthDate }}
+        </div>
+
+        <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
+          <div>
+            <span>Vorname:</span>
+            <ng-container *ngIf="editingIndex === i; else firstNameView">
+              <input type="text" class="inline-input" maxlength="50" [(ngModel)]="person.firstName">
+            </ng-container>
+            <ng-template #firstNameView>{{ person.firstName }}</ng-template>
+          </div>
+
+          <div>
+            <span>Nachname:</span>
+            <ng-container *ngIf="editingIndex === i; else lastNameView">
+              <input type="text" class="inline-input" maxlength="50" [(ngModel)]="person.lastName">
+            </ng-container>
+            <ng-template #lastNameView>{{ person.lastName }}</ng-template>
+          </div>
+
+          <div><span>Mitarbeiter-Nr.:</span> {{ person.Id }}</div>
+
+          <div>
+            <span>Geburtsdatum:</span>
+            <ng-container *ngIf="editingIndex === i; else birthDateView">
+              <input type="date" class="inline-input" [(ngModel)]="person.birthDate">
+            </ng-container>
+            <ng-template #birthDateView>{{ person.birthDate }}</ng-template>
+          </div>
+
+          <div>
+            <span>Zugewiesenes Fahrzeug:</span>
+            <ng-container *ngIf="editingIndex === i; else vehicleView">
+              <select class="inline-input"
+                      [ngModel]="person.assignedVehicleId || ''"
+                      (ngModelChange)="onVehicleAssignmentChange(person, $event)">
+                <option value="">kein Fahrzeug</option>
+                <option *ngFor="let vehicle of vehicles"
+                        [value]="vehicle.Id"
+                        [disabled]="isVehicleTakenByOtherPerson(vehicle, person)">
+                  {{ vehicle.Id }} &mdash; {{ vehicle.brand }} {{ vehicle.modelName }}
+                </option>
+              </select>
+            </ng-container>
+            <ng-template #vehicleView>{{ person.assignedVehicleId || 'kein Fahrzeug' }}</ng-template>
+          </div>
+
+          <div class="license-section">
+            <span>Führerscheine:</span>
+
+            <div class="chips" *ngIf="person.licenses?.length">
+              <div class="chip" *ngFor="let license of person.licenses">
+                {{ license.licenseClass }} (seit {{ license.obtainedDate }})
+                <span class="chip-remove"
+                      *ngIf="editingIndex === i"
+                      (click)="removeLicenseFromPerson(person, license.licenseClass)">
+                  &times;
+                </span>
+              </div>
+            </div>
+
+            <div class="license-row" *ngIf="editingIndex === i">
+              <select [(ngModel)]="editLicenseClass">
+                <option value="" disabled>Klasse wählen</option>
+                <option *ngFor="let license of availableEditLicenseClasses(person)" [value]="license">{{ license }}</option>
+              </select>
+
+              <input type="date" [(ngModel)]="editLicenseDate">
+
+              <button type="button"
+                      class="add-btn"
+                      [disabled]="!editLicenseClass || !editLicenseDate"
+                      (click)="addLicenseToPerson(person)">
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
+        </div>
+
+        <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
+          <button class="action-btn delete-btn"
+                  [class.danger]="deleteConfirmIndex === i"
+                  (mousedown)="onActionMouseDown($event); confirmDelete(i, person)">
+            {{ deleteConfirmIndex === i ? 'Wirklich Löschen?' : 'Löschen' }}
+          </button>
+
+          <div class="actions-right">
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); collapseItem()">Abbrechen</button>
+            <button class="action-btn"
+                    [class.dirty]="editingIndex === i && isEditDirty(person)"
+                    (mousedown)="onActionMouseDown($event); toggleEdit(i)">
+              {{ editingIndex === i ? (isEditDirty(person) ? 'Speichern' : 'Fertig') : 'Bearbeiten' }}
+            </button>
+            <button class="action-btn" (mousedown)="onActionMouseDown($event); onShowTrips(person)">Fahrten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button class="page-arrow"
+              (click)="prevPage()"
+              [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button class="page-number"
+              *ngFor="let page of pageNumbers"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button class="page-arrow"
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Filterleiste (Sidebar) -->
+  <app-filter-sidebar
+    [vehicles]="vehicles"
+    [telemetryUnitIds]="telemetryUnitIds"
+    [persons]="persons"
+    [licenseClasses]="licenseClasses"
+    (filtersApplied)="onFiltersApplied($event)">
+  </app-filter-sidebar>
+
+  </div>
+</div>
