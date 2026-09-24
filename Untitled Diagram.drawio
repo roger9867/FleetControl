@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="lw2GaVi8QtIeF5WYgMME">
-    <mxGraphModel dx="2217" dy="1920" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2705" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -2616,7 +2616,7 @@
             <mxPoint x="4777.6" y="5362.36" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-306" parent="1" style="html=1;whiteSpace=wrap;" value="«external»&lt;br&gt;&lt;b&gt;MainService&lt;/b&gt;" vertex="1">
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-306" parent="1" style="html=1;whiteSpace=wrap;" value="«external»&lt;br&gt;&lt;b&gt;FleetControlApi&lt;/b&gt;" vertex="1">
           <mxGeometry height="50" width="200" x="4765" y="5914" as="geometry" />
         </mxCell>
         <mxCell id="PsWLBjGRnnlC0ZhUFgZz-326" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PersonService" vertex="1">
@@ -2654,7 +2654,7 @@
             <mxPoint x="5230" y="5417.83" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-350" parent="1" style="html=1;whiteSpace=wrap;" value="«external»&lt;br&gt;&lt;b&gt;WebUSB&lt;/b&gt;" vertex="1">
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-350" parent="1" style="html=1;whiteSpace=wrap;" value="«external»&lt;br&gt;&lt;b&gt;Web Serial API&lt;/b&gt;" vertex="1">
           <mxGeometry height="50" width="110" x="4240" y="5920" as="geometry" />
         </mxCell>
         <mxCell id="PsWLBjGRnnlC0ZhUFgZz-358" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;dashPattern=8 8;strokeColor=light-dark(#000000,#FFFFFF);strokeWidth=2;arcSize=0;fontStyle=4" value="" vertex="1">
@@ -2666,7 +2666,7 @@
         <mxCell id="PsWLBjGRnnlC0ZhUFgZz-360" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="4 Seiten u. Unterkomponenten" vertex="1">
           <mxGeometry height="30" width="110" x="4175" y="4755" as="geometry" />
         </mxCell>
-        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-361" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Gesamter Inhlalt" vertex="1">
+        <mxCell id="PsWLBjGRnnlC0ZhUFgZz-361" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Gesamter Inhalt" vertex="1">
           <mxGeometry height="30" width="110" x="4170" y="4340" as="geometry" />
         </mxCell>
         <mxCell id="PsWLBjGRnnlC0ZhUFgZz-362" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Datenmodell" vertex="1">
