@@ -34,6 +34,17 @@ enable_language(C ASM)
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
 
+# Load credentials from cmake/secrets.cmake (not in git) and generate firmware_secrets.h in the build folder
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/cmake/secrets.cmake)
+    message(FATAL_ERROR "cmake/secrets.cmake missing - copy cmake/secrets.cmake.example and fill it in")
+endif()
+include(${CMAKE_SOURCE_DIR}/cmake/secrets.cmake)
+configure_file(
+    ${CMAKE_SOURCE_DIR}/Platform/SIM7600EH/firmware_secrets.h.in
+    ${CMAKE_BINARY_DIR}/generated/firmware_secrets.h
+    @ONLY)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/generated)
+
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
@@ -53,6 +64,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     App/Telemetry/telemetry_fsm.cpp
     App/Telemetry/telemetry_point.cpp
 
+    Platform/Clock/hal_clock.cpp
+    Platform/Logging/uart_logger.cpp
     Platform/GetDeviceId/get_device_id.cpp
     Platform/GetDeviceId/device_id_as_uuid.c
     Platform/Uart.cpp
@@ -82,7 +95,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     # Add user defined libraries
 )
 
-# Pfad zur ELF-Datei
+# Path to the ELF file
 set(ELF_FILE "${CMAKE_BINARY_DIR}/TelemetryUnit.elf")
 
 # Custom target "flash"
@@ -92,3 +105,4 @@ add_custom_target(flash
     COMMENT "Flashing STM32F103 via ST-Link using OpenOCD"
     VERBATIM
 )
+

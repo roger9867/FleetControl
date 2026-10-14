@@ -2,9 +2,9 @@
 
 enum class NetworkState
 {
-    NetworkIdle,           // startet den Verbindungsaufbau
-    NetworkConnecting,     // wartet auf SIM/Signal/APN/PDP und damit auf eine IP
-    NetworkReady,          // hat eine IP, baut MQTT-Verbindung zum Broker auf
-    NetworkMqttConnected,  // MQTT verbunden, ueberwacht die Verbindung im Hintergrund
-    NetworkError           // Verbindung verloren oder Aufbau fehlgeschlagen, faellt zurueck auf Idle
+    NetworkIdle,           // starts the connection setup
+    NetworkConnecting,     // waits for SIM/signal/APN/PDP and thus for an IP
+    NetworkReady,          // has an IP, establishes the MQTT connection to the broker
+    NetworkMqttConnected,  // MQTT connected, monitors the connection in the background
+    NetworkError           // Connection lost or setup failed, falls back to Idle
 };

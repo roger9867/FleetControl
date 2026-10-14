@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace IngestionService.Assignments;
 
-// Hält Zuordnungen von Telemetrieeinheit, Fahrer, Fahrzeug
+// Holds assignments of telemetry unit, driver, vehicle
 public class AssignmentCache
 {
     private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(5);
@@ -21,8 +21,8 @@ public class AssignmentCache
         _logger = logger;
     }
 
-    // Lädt beim Start einmalig den kompletten Zuordnungsbestand von FleetControlApi
-    // Wiederholung alle 5s bei Misserfolg, bis es gelingt
+    // Loads the complete set of assignments from FleetControlApi once at startup
+    // Retries every 5s on failure until it succeeds
     public async Task LoadAsync(CancellationToken token = default)
     {
         var attempt = 0;
@@ -70,13 +70,13 @@ public class AssignmentCache
         }
     }
 
-    // Schlägt die aktuelle Zuordnung einer Geräte-ID nach, ohne einen Server-Call auszulösen
+    // Looks up the current assignment of a device ID without triggering a server call
     public bool TryGet(string telemetryUnitId, out Assignment? assignment)
     {
         return _assignments.TryGetValue(telemetryUnitId, out assignment);
     }
 
-    // Übernimmt eine per gRPC-Push von FleetControlApi gemeldete Zuordnungsänderung in den Cache
+    // Applies an assignment change reported by FleetControlApi via gRPC push to the cache
     public void Update(Assignment assignment)
     {
         _assignments[assignment.TelemetryUnitId] = assignment;

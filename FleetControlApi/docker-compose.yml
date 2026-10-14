@@ -1,20 +1,26 @@
 version: "3.9"
 
-# Benoetigt eine laufende Postgres unter localhost:5432 - die wird zentral
-# ueber Postgres/docker-compose.yml gestartet (network_mode: host, daher
-# unabhaengig davon, welcher Compose-Stack sie hochgefahren hat).
+# Requires a running Postgres at localhost:5432 - it is started centrally
+# via Postgres/docker-compose.yml (network_mode: host, so
+# independent of which compose stack started it).
 services:
   fleetcontrolservice:
     build:
       context: ./FleetControlApi
       dockerfile: Dockerfile
-      network: host
 
     container_name: fleetcontrolservice
+    restart: unless-stopped
     network_mode: host
 
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       Http__Port: 5000
       Grpc__Port: 5001
-      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=fleetcontroldb;Username=postgresuser;Password=fleetcontrol"
+      ConnectionStrings__DefaultConnection: "Host=${POSTGRES_HOST:-localhost};Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      TelemetryDataService__Url: ${DRIVEDATA_URL:-http://localhost:5002}
+      IngestionService__Url: ${INGESTION_URL:-http://localhost:5010}
+      RabbitMq__Host: ${RABBITMQ_HOST:-localhost}
+      RabbitMq__Username: ${RABBITMQ_USER}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD}
+

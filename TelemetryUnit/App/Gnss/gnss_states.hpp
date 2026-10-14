@@ -2,8 +2,8 @@
 
 enum class GnssState
 {
-    GnssIdle,       // startet die GNSS-Aktivierung
-    GnssEnabling,   // GNSS eingeschaltet, startet die NMEA-Positionsausgabe
-    GnssReady,      // fragt zyklisch den aktuellen Fix ab
-    GnssError       // länger als 60s kein Fix, GNSS wird neu initialisiert
+    GnssIdle,       // starts the GNSS activation
+    GnssEnabling,   // GNSS switched on, starts the NMEA position output
+    GnssReady,      // periodically queries the current fix
+    GnssError       // no fix for more than 60s, GNSS is re-initialized
 };

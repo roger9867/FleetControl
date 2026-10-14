@@ -50,19 +50,19 @@ export class PersonPageComponent implements OnInit
 
   appliedFilters: AppliedFilters = emptyAppliedFilters();
 
-  // Liefert die noch nicht vergebenen Führerscheinklassen für die neue Person
+  // Returns the driver's license classes not yet assigned to the new person
   get availableNewLicenseClasses(): string[] {
     const taken = new Set((this.newPerson.licenses ?? []).map(l => l.licenseClass));
     return this.licenseClasses.filter(c => !taken.has(c));
   }
 
-  // Liefert die noch nicht vergebenen Führerscheinklassen für die bearbeitete Person
+  // Returns the driver's license classes not yet assigned to the edited person
   availableEditLicenseClasses(person: Person): string[] {
     const taken = new Set((person.licenses ?? []).map(l => l.licenseClass));
     return this.licenseClasses.filter(c => !taken.has(c));
   }
 
-  // Initialisiert die Komponente mit den benötigten Services
+  // Initializes the component with the required services
   constructor(
     private personService: PersonService,
     private vehicleService: VehicleService,
@@ -70,10 +70,10 @@ export class PersonPageComponent implements OnInit
     private cdr: ChangeDetectorRef
   ) {}
 
-  // Schliesst offene Lösch-Bestätigung und Fahrzeug-Dropdown bei Klick außerhalb
+  // Closes the open delete confirmation and vehicle dropdown on a click outside
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // Lösch-Bestätigung schließen, wenn außerhalb des Lösch-Buttons geklickt wurde
+    // Close the delete confirmation if the click was outside the delete button
     if (this.deleteConfirmIndex !== null) {
       const target = event.target as HTMLElement;
       if (!target.closest || !target.closest('.delete-btn')) {
@@ -81,7 +81,7 @@ export class PersonPageComponent implements OnInit
       }
     }
 
-    // Fahrzeug-Dropdown schließen, wenn außerhalb der Auswahl geklickt wurde
+    // Close the vehicle dropdown if the click was outside the selection
     if (this.showNewVehicleDropdown) {
       const target = event.target as HTMLElement;
       if (!target.closest || !target.closest('.vehicle-select')) {
@@ -90,9 +90,9 @@ export class PersonPageComponent implements OnInit
     }
   }
 
-  // Lädt beim Start Personen, Fahrzeuge und Telemetrieeinheiten vom Server
+  // Loads persons, vehicles and telemetry units from the server at startup
   ngOnInit(): void {
-    // Personen laden
+    // Load persons
     this.personService.loadAll().subscribe({
       next: (persons) => {
         if (persons?.length) {
@@ -104,7 +104,7 @@ export class PersonPageComponent implements OnInit
       error: () => {}
     });
 
-    // Fahrzeuge laden
+    // Load vehicles
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
         if (vehicles?.length) {
@@ -116,7 +116,7 @@ export class PersonPageComponent implements OnInit
       error: () => {}
     });
 
-    // Telemetrieeinheiten laden
+    // Load telemetry units
     this.telemetryUnitService.getUnits().subscribe({
       next: (units) => {
         if (units?.length) {
@@ -128,7 +128,7 @@ export class PersonPageComponent implements OnInit
     });
   }
 
-  // Lädt die Fahrzeugliste neu, damit assignedPersonId nach Zuordnungsänderungen aktuell ist
+  // Reloads the vehicle list so that assignedPersonId is up to date after assignment changes
   private reloadVehicles(): void {
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
@@ -142,7 +142,7 @@ export class PersonPageComponent implements OnInit
     });
   }
 
-  // Verknüpft jede Person mit ihrem zugewiesenen Fahrzeug anhand der Fahrzeugdaten
+  // Links each person to their assigned vehicle based on the vehicle data
   private syncAssignedVehicles(): void {
     for (const person of this.persons) {
       const assignedVehicle = this.vehicles.find(v => v.assignedPersonId === person.Id);
@@ -150,13 +150,13 @@ export class PersonPageComponent implements OnInit
     }
   }
 
-  // Prüft, ob erweiterte Personenfilter (Vor-/Nachname, Personalnummer) gesetzt sind
+  // Checks whether advanced person filters (first/last name, employee number) are set
   private hasActivePersonAdvanced(): boolean {
     const f = this.appliedFilters.personAdvanced;
     return !!(f.firstName || f.lastName || f.employeeNr);
   }
 
-  // Prüft, ob eine Person zu den aktiven Personenfiltern passt
+  // Checks whether a person matches the active person filters
   private matchesPersonTier(p: Person): boolean {
     const f = this.appliedFilters.personAdvanced;
     const matchesChip = this.appliedFilters.personIds.length === 0 || this.appliedFilters.personIds.includes(p.Id);
@@ -167,9 +167,9 @@ export class PersonPageComponent implements OnInit
     return matchesChip && matchesFirstName && matchesLastName && matchesEmployeeNr;
   }
 
-  // Liefert die Personen, die den aktuell angewendeten Filtern (Personen-, Fahrzeug-, Telemetrieebene) entsprechen
+  // Returns the persons matching the currently applied filters (person, vehicle, telemetry level)
   get filteredPersons(): Person[] {
-    // Aktive Filterebenen ermitteln
+    // Determine active filter levels
     const personTierActive = this.appliedFilters.personIds.length > 0 || this.hasActivePersonAdvanced();
     const vehicleTierActive = this.appliedFilters.vehicleIds.length > 0;
     const telemetryTierActive = this.appliedFilters.telemetryUnitIds.length > 0;
@@ -177,7 +177,7 @@ export class PersonPageComponent implements OnInit
     return this.persons.filter(p => {
       const results: boolean[] = [];
 
-      // Treffer je aktiver Filterebene sammeln
+      // Collect matches per active filter level
       if (personTierActive) results.push(this.matchesPersonTier(p));
       if (vehicleTierActive) results.push(this.appliedFilters.vehicleIds.includes(p.assignedVehicleId ?? ''));
 
@@ -188,35 +188,35 @@ export class PersonPageComponent implements OnInit
 
       if (results.length === 0) return true;
 
-      // Ergebnisse je nach Modus (Vereinigung oder Schnittmenge) kombinieren
+      // Combine results depending on the mode (union or intersection)
       return this.appliedFilters.mode === 'union' ? results.some(Boolean) : results.every(Boolean);
     });
   }
 
-  // Berechnet die Gesamtanzahl der Seiten anhand der gefilterten Personen
+  // Calculates the total number of pages from the filtered persons
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.filteredPersons.length / this.pageSize));
   }
 
-  // Liefert die Liste der Seitenzahlen für die Paginierung
+  // Returns the list of page numbers for the pagination
   get pageNumbers(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // Liefert die Personen der aktuell angezeigten Seite
+  // Returns the persons of the currently displayed page
   get pagedPersons(): Person[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredPersons.slice(start, start + this.pageSize);
   }
 
-  // Übernimmt neu angewendete Filter und setzt die Ansicht zurück
+  // Takes over newly applied filters and resets the view
   onFiltersApplied(filters: AppliedFilters): void {
     this.appliedFilters = filters;
     this.currentPage = 1;
     this.selectedIndex = null;
   }
 
-  // Wechselt zur vorherigen Seite und setzt die Auswahl zurück
+  // Switches to the previous page and resets the selection
   prevPage(): void {
     if (this.currentPage > 1) this.currentPage--;
     this.selectedIndex = null;
@@ -224,7 +224,7 @@ export class PersonPageComponent implements OnInit
     this.deleteConfirmIndex = null;
   }
 
-  // Wechselt zur nächsten Seite und setzt die Auswahl zurück
+  // Switches to the next page and resets the selection
   nextPage(): void {
     if (this.currentPage < this.totalPages) this.currentPage++;
     this.selectedIndex = null;
@@ -232,7 +232,7 @@ export class PersonPageComponent implements OnInit
     this.deleteConfirmIndex = null;
   }
 
-  // Springt zu einer bestimmten Seite und setzt die Auswahl zurück
+  // Jumps to a specific page and resets the selection
   goToPage(page: number): void {
     this.currentPage = page;
     this.selectedIndex = null;
@@ -240,7 +240,7 @@ export class PersonPageComponent implements OnInit
     this.deleteConfirmIndex = null;
   }
 
-  // Markiert einen Eintrag als ausgewählt und beendet Bearbeitung/Löschbestätigung
+  // Marks an entry as selected and ends editing/delete confirmation
   selectItem(index: number): void {
     this.selectedIndex = index;
     this.editingIndex = null;
@@ -248,14 +248,14 @@ export class PersonPageComponent implements OnInit
     this.deleteConfirmIndex = null;
   }
 
-  // Wählt einen Eintrag per Klick aus, außer er wird gerade bearbeitet
+  // Selects an entry by click, unless it is currently being edited
   onBoxClick(index: number): void {
     if (this.editingIndex === index) return;
 
     this.selectItem(index);
   }
 
-  // Klappt den ausgewählten Eintrag wieder ein und setzt alle zugehörigen Zustände zurück
+  // Collapses the selected entry again and resets all related state
   collapseItem(): void {
     this.selectedIndex = null;
     this.editingIndex = null;
@@ -264,17 +264,17 @@ export class PersonPageComponent implements OnInit
     this.deleteConfirmIndex = null;
   }
 
-  // Verhindert das Standardverhalten beim Drücken der Maustaste auf Aktionsbuttons
+  // Prevents the default behavior when pressing the mouse button on action buttons
   onActionMouseDown(event: MouseEvent): void {
     event.preventDefault();
   }
 
-  // Meldet die Anfrage, die Fahrten einer Person anzuzeigen, an die übergeordnete Komponente
+  // Reports the request to show the trips of a person to the parent component
   onShowTrips(person: Person): void {
     this.showTrips.emit(person.Id);
   }
 
-  // Verhindert das Schließen der Auswahl beim Klick auf den Aktionsbereich und schließt ggf. die Löschbestätigung
+  // Prevents the selection from closing when clicking the action area and closes the delete confirmation if needed
   onActionsClick(event: MouseEvent): void {
     event.stopPropagation();
 
@@ -284,14 +284,14 @@ export class PersonPageComponent implements OnInit
     }
   }
 
-  // Schaltet den Bearbeitungsmodus eines Eintrags um oder speichert die Änderungen
+  // Toggles the edit mode of an entry or saves the changes
   toggleEdit(index: number): void {
     if (this.editingIndex === index) {
       this.saveEdit(index);
       return;
     }
 
-    // Bearbeitungsmodus starten und Ausgangszustand als Snapshot sichern
+    // Start edit mode and save the initial state as a snapshot
     this.editingIndex = index;
     this.editError = null;
     this.editSnapshot = { ...this.pagedPersons[index], licenses: [...(this.pagedPersons[index].licenses ?? [])] };
@@ -300,7 +300,7 @@ export class PersonPageComponent implements OnInit
     this.deleteConfirmIndex = null;
   }
 
-  // Prüft, ob die bearbeitete Person vom ursprünglichen Snapshot abweicht
+  // Checks whether the edited person differs from the original snapshot
   isEditDirty(person: Person): boolean {
     if (!this.editSnapshot) return false;
 
@@ -311,7 +311,7 @@ export class PersonPageComponent implements OnInit
       || JSON.stringify(person.licenses ?? []) !== JSON.stringify(this.editSnapshot.licenses ?? []);
   }
 
-  // Speichert die Änderungen der bearbeiteten Person über den Server
+  // Saves the changes of the edited person via the server
   private saveEdit(index: number): void {
     const person = this.pagedPersons[index];
 
@@ -332,7 +332,7 @@ export class PersonPageComponent implements OnInit
     });
   }
 
-  // Fordert beim ersten Klick eine Bestätigung an und löscht die Person beim zweiten Klick
+  // Asks for confirmation on the first click and deletes the person on the second click
   confirmDelete(index: number, person: Person): void {
     if (this.deleteConfirmIndex !== index) {
       this.deleteConfirmIndex = index;
@@ -342,7 +342,7 @@ export class PersonPageComponent implements OnInit
     this.deletePerson(person);
   }
 
-  // Löscht die Person über den Server und entfernt sie aus der lokalen Liste
+  // Deletes the person via the server and removes them from the local list
   private deletePerson(person: Person): void {
     this.editError = null;
 
@@ -362,17 +362,17 @@ export class PersonPageComponent implements OnInit
     });
   }
 
-  // Weist der Person ein neues Fahrzeug zu oder entfernt die Zuweisung
+  // Assigns a new vehicle to the person or removes the assignment
   onVehicleAssignmentChange(person: Person, value: string): void {
     person.assignedVehicleId = value || null;
   }
 
-  // Prüft, ob ein Fahrzeug bereits einer anderen Person zugewiesen ist
+  // Checks whether a vehicle is already assigned to another person
   isVehicleTakenByOtherPerson(vehicle: Vehicle, person: Person): boolean {
     return !!vehicle.assignedPersonId && vehicle.assignedPersonId !== person.Id;
   }
 
-  // Erzeugt die Anzeigebezeichnung für ein Fahrzeug anhand seiner Id
+  // Builds the display label for a vehicle from its id
   vehicleLabel(vehicleId: string | null | undefined): string {
     if (!vehicleId) return 'Kein Fahrzeug';
 
@@ -380,12 +380,12 @@ export class PersonPageComponent implements OnInit
     return vehicle ? `${vehicle.Id} — ${vehicle.brand ?? ''} ${vehicle.modelName ?? ''}`.trim() : vehicleId;
   }
 
-  // Öffnet oder schließt das Fahrzeug-Auswahl-Dropdown für die neue Person
+  // Opens or closes the vehicle selection dropdown for the new person
   toggleNewVehicleDropdown(): void {
     this.showNewVehicleDropdown = !this.showNewVehicleDropdown;
   }
 
-  // Wählt ein Fahrzeug für die neue Person aus, sofern es nicht gesperrt ist
+  // Selects a vehicle for the new person, unless it is locked
   selectNewPersonVehicle(vehicleId: string | null, disabled = false): void {
     if (disabled) return;
 
@@ -393,7 +393,7 @@ export class PersonPageComponent implements OnInit
     this.showNewVehicleDropdown = false;
   }
 
-  // Fügt der neuen Person einen Führerschein hinzu, falls Klasse und Datum gültig sind
+  // Adds a driver's license to the new person if class and date are valid
   addLicenseToNewPerson(): void {
     if (!this.newLicenseClass || !this.newLicenseDate) return;
 
@@ -405,12 +405,12 @@ export class PersonPageComponent implements OnInit
     this.newLicenseDate = '';
   }
 
-  // Entfernt einen Führerschein von der neuen Person
+  // Removes a driver's license from the new person
   removeLicenseFromNewPerson(licenseClass: string): void {
     this.newPerson.licenses = (this.newPerson.licenses ?? []).filter(l => l.licenseClass !== licenseClass);
   }
 
-  // Fügt einer bestehenden Person einen Führerschein hinzu, falls Klasse und Datum gültig sind
+  // Adds a driver's license to an existing person if class and date are valid
   addLicenseToPerson(person: Person): void {
     if (!this.editLicenseClass || !this.editLicenseDate) return;
 
@@ -422,12 +422,12 @@ export class PersonPageComponent implements OnInit
     this.editLicenseDate = '';
   }
 
-  // Entfernt einen Führerschein von einer bestehenden Person
+  // Removes a driver's license from an existing person
   removeLicenseFromPerson(person: Person, licenseClass: string): void {
     person.licenses = (person.licenses ?? []).filter(l => l.licenseClass !== licenseClass);
   }
 
-  // Öffnet oder schliesst das Formular zum Anlegen einer neuen Person
+  // Opens or closes the form for creating a new person
   toggleCreateForm(): void {
     this.showCreateForm = !this.showCreateForm;
     if (!this.showCreateForm) {
@@ -439,7 +439,7 @@ export class PersonPageComponent implements OnInit
     }
   }
 
-  // Legt eine neue Person über den Server an, sofern die Pflichtfelder ausgefüllt sind
+  // Creates a new person via the server if the required fields are filled in
   createPerson(): void {
     if (!this.newPerson.firstName || !this.newPerson.lastName || !this.newPerson.birthDate) return;
 
@@ -462,7 +462,7 @@ export class PersonPageComponent implements OnInit
     });
   }
 
-  // Erzeugt eine leere Person als Vorlage für das Neu-Anlegen-Formular
+  // Creates an empty person as a template for the create form
   private emptyPerson(): Person {
     return {
       Id: '',

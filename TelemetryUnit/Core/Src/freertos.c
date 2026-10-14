@@ -159,9 +159,9 @@ void MX_FREERTOS_Init(void) {
 
 /* USER CODE BEGIN Header_StartDefaultTask */
 /**
-  * @brief  Default-Task, Umschalten der Betriebsmodi: Befehlsausgabe / Normalbetrieb
-  * @param  argument: Nicht verwendet
-  * @retval Keiner
+  * @brief  Default task, switches the operating modes: command output / normal operation
+  * @param  argument: Not used
+  * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
@@ -185,7 +185,7 @@ for (;;)
     }
     else if ((HAL_GetTick() - last_change) >= DEBOUNCE_MS && pin != stable_pin)
     {
-        // Bestätigte, entprellte Flanke: nur beim Loslassen (LOW -> HIGH) togglen
+        // Confirmed, debounced edge: only toggle on release (LOW -> HIGH)
         if (stable_pin == PIN_STATE_LOW && pin == PIN_STATE_HIGH)
         {
             HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
@@ -202,9 +202,9 @@ for (;;)
 
 /* USER CODE BEGIN Header_start_command_handler */
 /**
-* @brief Implementiert die Befehlshandler-Task.
-* @param argument: Nicht verwendet
-* @retval Keiner
+* @brief Implements the command handler task.
+* @param argument: Not used
+* @retval None
 */
 /* USER CODE END Header_start_command_handler */
 void start_command_handler(void *argument)
@@ -224,11 +224,11 @@ void start_command_handler(void *argument)
 
 /* USER CODE BEGIN Header_start_fsm_task */
 /**
-* @brief Führt den FsmTask-Thread aus. Tickt GNSS-, Network- und
-*        TelemetryFsm in dieser Reihenfolge (GNSS/Network muessen bereit
-*        sein, bevor Telemetry publizieren kann).
-* @param argument: Nicht verwendet
-* @retval Nichts
+* @brief Runs the FsmTask thread. Ticks the GNSS, network and
+*        TelemetryFsm in this order (GNSS/Network must be ready
+*        before Telemetry can publish).
+* @param argument: Not used
+* @retval None
 */
 /* USER CODE END Header_start_fsm_task */
 void start_fsm_task(void *argument)

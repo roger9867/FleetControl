@@ -7,9 +7,9 @@ services:
     restart: always
 
     environment:
-      POSTGRES_USER: postgresuser
-      POSTGRES_PASSWORD: fleetcontrol
-      POSTGRES_DB: fleetcontroldb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
 
     ports:
       - "5432:5432"

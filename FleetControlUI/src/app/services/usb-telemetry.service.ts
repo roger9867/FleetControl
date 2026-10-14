@@ -21,26 +21,26 @@ export class UsbTelemetryService {
 
   private deviceIds = new Map<SerialPort, string>();
 
-  // Ein dauerhafter Hintergrund-Reader pro Port statt eines neuen Readers pro Anfrage
+  // One persistent background reader per port instead of a new reader per request
   private portReaders = new Map<SerialPort, PortReaderState>();
 
-  // Prueft, ob der Browser die Web-Serial-API unterstuetzt.
+  // Checks whether the browser supports the Web Serial API.
   get isSupported(): boolean {
     return 'serial' in navigator;
   }
 
-  // Registriert Connect-/Disconnect-Listener und identifiziert bereits verbundene Geräte beim Start.
+  // Registers connect/disconnect listeners and identifies already connected devices at startup.
   constructor(private zone: NgZone) {
     if (!this.isSupported) return;
 
-    // 1. Neu verbundene Geräte automatisch identifizieren
+    // 1. Automatically identify newly connected devices
     navigator.serial.addEventListener('connect', event => {
       this.zone.run(() => {
         this.identifyPort(event.target as SerialPort).catch(() => {});
       });
     });
 
-    // 2. Bei Trennung Reader- und Geraete-Zustand aufraeumen
+    // 2. On disconnect, clean up reader and device state
     navigator.serial.addEventListener('disconnect', event => {
       this.zone.run(() => {
         this.portReaders.delete(event.target as SerialPort);
@@ -49,13 +49,13 @@ export class UsbTelemetryService {
       });
     });
 
-    // 3. Bereits vom Browser autorisierte Ports direkt identifizieren
+    // 3. Directly identify ports already authorized by the browser
     navigator.serial.getPorts().then(ports => {
       ports.forEach(port => this.identifyPort(port).catch(() => {}));
     });
   }
 
-  // Oeffnet den Browser-Dialog zur Geräteauswahl und identifiziert den gewählten Port.
+  // Opens the browser dialog for device selection and identifies the selected port.
   async requestDevice(): Promise<void> {
     if (!this.isSupported) {
       throw new Error('Web Serial wird von diesem Browser nicht unterstuetzt (nur Chrome/Edge/Opera).');
@@ -65,7 +65,7 @@ export class UsbTelemetryService {
     await this.identifyPort(port);
   }
 
-  // Identifiziert alle bereits autorisierten Ports, oder öffnet den Auswahldialog, falls keiner bekannt ist.
+  // Identifies all already authorized ports, or opens the selection dialog if none is known.
   async broadcastToAll(): Promise<void> {
     if (!this.isSupported) {
       throw new Error('Web Serial wird von diesem Browser nicht unterstuetzt (nur Chrome/Edge/Opera).');
@@ -81,7 +81,7 @@ export class UsbTelemetryService {
     await Promise.all(ports.map(port => this.identifyPort(port).catch(() => {})));
   }
 
-  // Fragt die Geräte-ID eines Ports ab und aktualisiert bei Erfolg den internen Zustand.
+  // Queries the device ID of a port and updates the internal state on success.
   private async identifyPort(port: SerialPort): Promise<void> {
     const id = await this.readDeviceId(port);
     if (id) {
@@ -91,18 +91,18 @@ export class UsbTelemetryService {
     }
   }
 
-  // Sendet die aktuelle Liste eindeutiger verbundener Geräte-IDs an alle Abonnenten.
+  // Sends the current list of unique connected device IDs to all subscribers.
   private emitConnectedUnitIds(): void {
     this.connectedUnitIdsSubject.next(Array.from(new Set(this.deviceIds.values())));
   }
 
-  // Sendet den Identify-Befehl an den Port und wartet auf die zurückgesendete Geräte-UUID.
+  // Sends the identify command to the port and waits for the returned device UUID.
   private async readDeviceId(port: SerialPort): Promise<string | null> {
-    // 1. Hintergrund-Reader sicherstellen und auf Antwort warten beginnen
+    // 1. Ensure the background reader and start waiting for the response
     const state = await this.ensureReaderStarted(port);
     const responsePromise = this.waitForUuid(state, RESPONSE_TIMEOUT_MS);
 
-    // 2. Identify-Befehl an das Geraet schreiben
+    // 2. Write the identify command to the device
     const writer = port.writable!.getWriter();
     try {
       console.log('[USB %s] write get_device_id', performance.now().toFixed(0));
@@ -111,13 +111,13 @@ export class UsbTelemetryService {
       writer.releaseLock();
     }
 
-    // 3. Auf die Antwort warten und Ergebnis zurückgeben
+    // 3. Wait for the response and return the result
     const result = await responsePromise;
     console.log('[USB %s] readDeviceId resolved with', performance.now().toFixed(0), result);
     return result;
   }
 
-  // Liefert den bestehenden Reader-Zustand eines Ports oder öffnet den Port und startet einen neuen Hintergrund-Reader.
+  // Returns the existing reader state of a port, or opens the port and starts a new background reader.
   private async ensureReaderStarted(port: SerialPort): Promise<PortReaderState> {
     const existing = this.portReaders.get(port);
     if (existing) {
@@ -131,14 +131,14 @@ export class UsbTelemetryService {
     const state: PortReaderState = { lineListeners: [] };
     this.portReaders.set(port, state);
 
-    // Absichtlich nicht awaiten: läuft im Hintergrund für die gesamte
-    // Lebensdauer des Ports weiter.
+    // Intentionally not awaited: keeps running in the background for the entire
+    // lifetime of the port.
     this.pumpLines(port, state);
 
     return state;
   }
 
-  // Liest fortlaufend Bytes vom Port, setzt sie zu Zeilen zusammen und benachrichtigt passende Listener.
+  // Continuously reads bytes from the port, assembles them into lines and notifies matching listeners.
   private async pumpLines(port: SerialPort, state: PortReaderState): Promise<void> {
     const reader = port.readable!.getReader();
     let bytes: number[] = [];
@@ -151,15 +151,15 @@ export class UsbTelemetryService {
 
         for (const byte of value) {
           if (byte === 0x0A) {
-            // Zeilenende erkannt: Bytes zu Text dekodieren
+            // End of line detected: decode bytes to text
             const text = new TextDecoder().decode(new Uint8Array(bytes)).trim();
             bytes = [];
 
             if (text) {
               console.log('[USB %s] line:', performance.now().toFixed(0), JSON.stringify(text));
 
-              // Erster passender Listener verbraucht die Zeile, alle
-              // anderen bleiben für die naechste Zeile bestehen.
+              // The first matching listener consumes the line, all
+              // others remain for the next line.
               const idx = state.lineListeners.findIndex(fn => fn(text));
               if (idx !== -1) {
                 state.lineListeners.splice(idx, 1);
@@ -171,14 +171,14 @@ export class UsbTelemetryService {
         }
       }
     } catch {
-      // Port geschlossen/getrennt -> Hintergrund-Loop einfach beenden.
+      // Port closed/disconnected -> simply end the background loop.
     } finally {
       reader.releaseLock();
       this.portReaders.delete(port);
     }
   }
 
-  // Wartet auf eine Zeile, die dem UUID-Muster entspricht, oder bricht nach Ablauf des Timeouts ab.
+  // Waits for a line matching the UUID pattern, or aborts after the timeout expires.
   private waitForUuid(state: PortReaderState, timeoutMs: number): Promise<string | null> {
     return new Promise(resolve => {
       const listener = (line: string): boolean => {

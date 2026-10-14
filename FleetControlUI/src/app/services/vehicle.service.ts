@@ -42,8 +42,8 @@ export type VehiclePosition = {
 };
 
 interface VehicleResponseDto {
-  // FIN ist der Primärschluessel, die Domain-Entity wird 1:1
-  // serialisiert, es gibt kein separates "id"-Feld 
+  // The VIN is the primary key, the domain entity is serialized 1:1,
+  // there is no separate "id" field 
   vehicleIdentificationNumber: string;
   modelName: string;
   licensePlateNumber?: string | null;
@@ -62,10 +62,10 @@ export class VehicleService {
 
   private baseUrl = environment.apiUrl;
 
-  // Injiziert den HttpClient für die API-Aufrufe
+  // Injects the HttpClient for the API calls
   constructor(private http: HttpClient) {}
 
-  // Lädt alle Fahrzeuge vom Server und mappt sie auf das Domain-Modell
+  // Loads all vehicles from the server and maps them to the domain model
   loadAll(): Observable<Vehicle[]> {
     return this.http.get<VehicleResponseDto[]>(`${this.baseUrl}/Vehicle`).pipe(
       map(list => list.map(dto => this.toVehicle(dto))),
@@ -73,7 +73,7 @@ export class VehicleService {
     );
   }
 
-  // Lädt die aktuellen Positionen aller Fahrzeuge und indiziert sie als Map nach Fahrzeug-Id
+  // Loads the current positions of all vehicles and indexes them as a map by vehicle id
   loadPositions(): Observable<Map<string, VehiclePosition>> {
     return this.http.get<VehiclePositionDto[]>(`${this.baseUrl}/Vehicle/positions`).pipe(
       map(list => new Map(list.map(p => [p.vehicleId, {
@@ -89,7 +89,7 @@ export class VehicleService {
     );
   }
 
-  // Legt ein neues Fahrzeug auf dem Server an
+  // Creates a new vehicle on the server
   save(vehicle: Vehicle): Observable<Vehicle> {
     return this.http.post<VehicleResponseDto>(`${this.baseUrl}/Vehicle`, this.toRequestDto(vehicle)).pipe(
       map(dto => this.toVehicle(dto)),
@@ -97,7 +97,7 @@ export class VehicleService {
     );
   }
 
-  // Aktualisiert ein bestehendes Fahrzeug auf dem Server
+  // Updates an existing vehicle on the server
   update(vehicle: Vehicle): Observable<Vehicle> {
     return this.http.put<VehicleResponseDto>(`${this.baseUrl}/Vehicle/${encodeURIComponent(vehicle.Id)}`, this.toRequestDto(vehicle)).pipe(
       map(dto => this.toVehicle(dto)),
@@ -105,14 +105,14 @@ export class VehicleService {
     );
   }
 
-  // Löscht ein Fahrzeug anhand seiner Id
+  // Deletes a vehicle by its id
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Vehicle/${encodeURIComponent(id)}`).pipe(
       catchError(err => this.rethrow(err))
     );
   }
 
-  // Wandelt einen HTTP-Fehler in eine lesbare Fehlermeldung um und wirft ihn erneut
+  // Converts an HTTP error into a readable error message and rethrows it
   private rethrow(err: HttpErrorResponse) {
     const message = typeof err.error === 'string' && err.error
       ? err.error
@@ -121,7 +121,7 @@ export class VehicleService {
     return throwError(() => new Error(message));
   }
 
-  // Wandelt das Domain-Modell Vehicle in das Request-DTO für die API um
+  // Converts the Vehicle domain model into the request DTO for the API
   private toRequestDto(vehicle: Vehicle): VehicleRequestDto {
     return {
       modelName: vehicle.modelName ?? '',
@@ -138,7 +138,7 @@ export class VehicleService {
     };
   }
 
-  // Wandelt ein Vehicle-Response-DTO in das Domain-Modell um
+  // Converts a vehicle response DTO into the domain model
   private toVehicle(dto: VehicleResponseDto): Vehicle {
     return {
       Id: dto.vehicleIdentificationNumber,

@@ -4,33 +4,33 @@ using IngestionService.Models;
 
 namespace IngestionService.Trip;
 
-// Zustandsautomat für Fahrtzustandserkennung pro device_id: (kein Eintrag) = Idle,
-//  sonst Connected/Driving/Stopped/ConnectionLost
+// State machine for trip state detection per device_id: (no entry) = Idle,
+//  otherwise Connected/Driving/Stopped/ConnectionLost
 public class TripReactor : BackgroundService
 {
     private static readonly TimeSpan ConnectedTimeout = TimeSpan.FromSeconds(2);
 
-    // Kurze Lücke ohne neue Daten während einer laufenden Fahrt -> Verbindung
-    // verloren, ohne die Fahrt sofort zu beenden (Funkloch, etc)
+    // Short gap without new data during a running trip -> connection
+    // lost, without ending the trip immediately (dead zone, etc)
     private static readonly TimeSpan ConnectionLostTimeout = TimeSpan.FromSeconds(2);
 
-    // Bleibt die Verbindung so lange unterbrochen, wird die Fahrt zwangsweise
-    // mit dem letzten bekannten Zeitstempel beendet, statt offen zu bleiben
+    // If the connection stays interrupted this long, the trip is forcibly
+    // ended with the last known timestamp instead of staying open
     private static readonly TimeSpan GiveUpTimeout = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan TimeoutCheckInterval = TimeSpan.FromSeconds(1);
 
-    // 300 aufeinanderfolgende Stillstands-Punkte entsprechen bei einem
-    // Datenpunkt pro Sekunde den geforderten 5 Minuten Stillstand, ab denen
-    // eine Fahrt als beendet gilt
+    // 300 consecutive standstill points correspond, at one
+    // data point per second, to the required 5 minutes of standstill after which
+    // a trip counts as ended
     private const int StoppedCountThreshold = 60 * 5;
 
-    // Das GNSS-Modul liefert die Geschwindigkeit, mit einer gemessenen Ungenauigkeit
-    // von bis zu ±5 km/h, auch im Stand wurde ein Abweichung von
-    // + /- 3 km/h beobachtet. Der Schwellwert muss daher darüber liegen
+    // The GNSS module provides the speed with a measured inaccuracy
+    // of up to ±5 km/h; even when stationary a deviation of
+    // +/- 3 km/h was observed. The threshold must therefore be above that
     private const double DrivingSpeedThreshold = 5;
 
-    // Mehrere aufeinanderfolgende Punkte über dem Schwellwert verhindern, dass
-    // ein einzelner Ausreißerwert fälschlich eine Fahrt auslöst.
+    // Several consecutive points above the threshold prevent
+    // a single outlier from wrongly triggering a trip.
     private const int DrivingCandidateThreshold = 3;
 
     private readonly ConcurrentDictionary<string, DeviceTripState> _devices = new();
@@ -52,8 +52,8 @@ public class TripReactor : BackgroundService
     }
 
 
-    // Wertet einen eingehenden Datenpunkt mithilfe des Zustandsautomaten des Geräts aus,
-    // aktualisiert dessen Zustand und löst falls nötig StartTrip/EndTrip per gRPC aus.
+    // Evaluates an incoming data point using the device's state machine,
+    // updates its state and triggers StartTrip/EndTrip via gRPC if necessary.
     public Task<TripState> DispatchAsync(
         TelemetryEvent data
     ) {
@@ -136,10 +136,10 @@ public class TripReactor : BackgroundService
                     case TripState.ConnectionLost:
                         if (data.SpeedKmh == 0)
                         {
-                            // Eine kurze Verbindungslücke im Stand ist kein Beweis für
-                            // Bewegung. StoppedCount läuft weiter statt neu zu starten,
-                            // sonst wird der Schwellwert bei wiederkehrenden Lücken nie
-                            // erreicht und die Fahrt endet nie automatisch.
+                            // A short connection gap while stationary is no proof of
+                            // movement. StoppedCount keeps counting instead of restarting,
+                            // otherwise the threshold is never reached with recurring gaps
+                            // and the trip never ends automatically.
                             state.State = TripState.Stopped;
                             state.StoppedCount++;
                             resultState = TripState.Stopped;
@@ -191,8 +191,8 @@ public class TripReactor : BackgroundService
     }
 
 
-    // Läuft im Hintergrund und prüft jede Sekiunde alle Geräte auf Timeouts (Idle,
-    // Verbindungsverlust, erzwungenes Fahrtende)
+    // Runs in the background and checks all devices for timeouts every second (idle,
+    // connection loss, forced trip end)
     protected override async Task ExecuteAsync(
         CancellationToken stoppingToken
     ) {
@@ -205,8 +205,8 @@ public class TripReactor : BackgroundService
     }
 
 
-    // Ermittelt für jedes Gerät, ob seit dem letzten Datenpunkt lange genug keine Daten
-    // mehr eingetroffen sind und schaltet es auf Idle, ConnectionLost oder erzwungenes Fahrtende
+    // Determines for each device whether no data has arrived for long enough since the last
+    // data point and switches it to Idle, ConnectionLost or forced trip end
     private Task CheckForTimeoutsAsync()
     {
         var now = DateTime.UtcNow;
@@ -290,7 +290,7 @@ public class TripReactor : BackgroundService
     }
 
 
-    // Meldet die erkannte Fahrtanlage per gRPC an FleetControlApi
+    // Reports the detected trip start to FleetControlApi via gRPC
     private async Task SafeStartTripAsync(
         string deviceId,
         DateTime timestamp
@@ -314,9 +314,9 @@ public class TripReactor : BackgroundService
     }
 
 
-    // Meldet das erkannte Fahrtende per gRPC an FleetControlApi.
-    // Schlägt der Aufruf fehl, wird der Eintrag in der PendingTripEndQueue vorgemerkt 
-    // und von PendingTripEndRetryService erneut versucht
+    // Reports the detected trip end to FleetControlApi via gRPC.
+    // If the call fails, the entry is queued in the PendingTripEndQueue 
+    // and retried by PendingTripEndRetryService
     private async Task SafeEndTripAsync(
         string deviceId,
         DateTime timestamp,

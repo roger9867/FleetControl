@@ -1,6 +1,4 @@
-# Build directories
-build/
-cmake-build-debug/
+# Component-specific rules live in the .gitignore of each component folder.
 
 # Python virtual environment
 venv/
@@ -11,31 +9,8 @@ doc/
 # Modules
 Modules/
 
-# Runtime data/logs from local Docker infra (Mosquitto, InfluxDB, RabbitMQ, Postgres)
-MQTT/data/
-MQTT/log/
-MQTT/passwordfile
-**/pgdata/
-**/influxdb-data/
-
-# .NET build output
-bin/
-obj/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-.vs/
-
-# JetBrains IDEs (Rider, IntelliJ)
+# JetBrains IDEs (Rider, IntelliJ, CLion)
 .idea/
-
-# Node / Angular
-node_modules/
-dist/
-.angular/
-npm-debug.log*
-yarn-error.log
 
 # Local environment/secret files (keep committed .env.example templates)
 .env

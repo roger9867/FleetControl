@@ -17,26 +17,26 @@ export class TripChartComponent implements OnChanges {
 
   chartOptions: EChartsOption = {};
 
-  // Baut die Diagrammoptionen neu auf, sobald sich die uebergebenen Fahrten ändern
+  // Rebuilds the chart options as soon as the given trips change
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['trips']) {
       this.chartOptions = this.buildChartOptions();
     }
   }
 
-  // Erstellt die ECharts-Konfiguration mit Geschwindigkeits- und Beschleunigungsverlauf aus den Fahrtpunkten
+  // Creates the ECharts configuration with speed and acceleration curves from the trip points
   private buildChartOptions(): EChartsOption {
-    // 1. Punkte aller Fahrten zusammenfuehren
+    // 1. Merge the points of all trips
     const points = this.trips.flatMap(trip => trip.points);
 
-    // 2. Achsenbeschriftungen und Messwerte aus den Punkten ableiten
+    // 2. Derive axis labels and measured values from the points
     const labels = points.map(p =>
       new Date(p.timestamp).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     );
     const speed = points.map(p => Math.round(p.speedKmh * 10) / 10);
     const accel = points.map(p => Math.round(p.accelMs2 * 100) / 100);
 
-    // 3. ECharts-Optionsobjekt mit Achsen, Zoom und Datenreihen zusammenstellen
+    // 3. Assemble the ECharts options object with axes, zoom and data series
     return {
       backgroundColor: 'transparent',
       textStyle: { color: '#ccc' },

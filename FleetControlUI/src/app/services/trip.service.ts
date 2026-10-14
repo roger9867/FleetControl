@@ -39,16 +39,16 @@ export class TripService {
 
   private baseUrl = environment.apiUrl;
 
-  // Injiziert den HttpClient für die API-Aufrufe
+  // Injects the HttpClient for the API calls
   constructor(private http: HttpClient) {}
 
-  // Lädt eine Seite von Fahrten vom Server und mappt sie auf das Domain-Modell
+  // Loads a page of trips from the server and maps them to the domain model
   loadPage(page: number, pageSize: number): Observable<TripPage> {
-    // 1. Seite von Fahrten vom Server laden
+    // 1. Load a page of trips from the server
     return this.http.get<TripPageResponseDto>(`${this.baseUrl}/Trip`, {
       params: { page, pageSize }
     }).pipe(
-      // 2. DTOs auf das Domain-Modell mappen
+      // 2. Map the DTOs to the domain model
       map(dto => ({
         trips: dto.trips.map(t => this.toTrip(t)),
         totalCount: dto.totalCount
@@ -57,14 +57,14 @@ export class TripService {
     );
   }
 
-  // Löscht eine Fahrt anhand ihrer Id
+  // Deletes a trip by its id
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Trip/${id}`).pipe(
       catchError(err => this.rethrow(err))
     );
   }
 
-  // Wandelt einen HTTP-Fehler in eine lesbare Fehlermeldung um und wirft ihn erneut
+  // Converts an HTTP error into a readable error message and rethrows it
   private rethrow(err: HttpErrorResponse) {
     const message = typeof err.error === 'string' && err.error
       ? err.error
@@ -73,7 +73,7 @@ export class TripService {
     return throwError(() => new Error(message));
   }
 
-  // Wandelt ein Trip-Response-DTO in das Domain-Modell Trip um
+  // Converts a trip response DTO into the Trip domain model
   private toTrip(dto: TripResponseDto): Trip {
     return {
       id: dto.id,

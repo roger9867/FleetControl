@@ -6,16 +6,16 @@
 #include "FreeRTOS.h"
 
 
-// Implementierung von Sim7600eh.cpp nach folgendem gemeinsamen Muster:
-// 1. UART-Puffer flushen (uebrig gebliebene, ungelesene Bytes vom letzten Befehl verwerfen)
-// 2. AT-Befehl über UART senden
-// 3. Antwort mit Timeout senden
+// Implementation of Sim7600eh.cpp following this common pattern:
+// 1. Flush the UART buffer (discard leftover, unread bytes from the last command)
+// 2. Send the AT command via UART
+// 3. Read the response with a timeout
 
 
 
-// Einzelschritte einzeln loggen, damit auf dem Debug-UART sichtbar ist, an
-// welcher Stelle (SIM/Signal/Netzanmeldung/APN/PDP) es tatsaechlich hängt,
-// statt nur "kein Netz" am Ende zu sehen.
+// Log the individual steps separately, so that the debug UART shows at
+// which point (SIM/signal/network registration/APN/PDP) it actually hangs,
+// instead of only seeing "no network" at the end.
 static void log_network_step(Uart& huart_debug, const char* name, bool ok)
 {
     char msg[48];
@@ -287,22 +287,22 @@ void Sim7600::get_gnss(uint8_t* buffer, uint16_t buffer_length)
 {
     uint8_t cmd[] = "AT+CGNSSINFO\r\n";
 
-    // Buffer löschen
+    // Clear buffer
     memset(buffer, 0, buffer_length);
 
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
-    // Command senden
+    // Send command
     huart_sim.write(cmd, sizeof(cmd) - 1);
 
-    // Antwort lesen
+    // Read response
     huart_sim.read(buffer, buffer_length - 1, 5000);
 
-    // Sicherheit
+    // Safety
     buffer[buffer_length - 1] = '\0';
 
-    // Debug Ausgabe
+    // Debug output
     huart_debug.write(
         buffer,
         strlen((char*)buffer)
@@ -323,7 +323,7 @@ bool Sim7600::has_fix()
 
     get_gnss(buffer, sizeof(buffer));
 
-    // Präfix finden
+    // Find prefix
     char* p = strstr((char*)buffer, "+CGNSSINFO:");
 
     if (p == nullptr)
@@ -338,7 +338,7 @@ bool Sim7600::has_fix()
         return false;
     }
 
-    // Erstes Feld lesen
+    // Read first field
     int fix_mode = 0;
 
     if (sscanf(p, "+CGNSSINFO: %d", &fix_mode) != 1)
@@ -354,7 +354,7 @@ bool Sim7600::has_fix()
         return false;
     }
 
-    // Fix prüfen
+    // Check fix
     if (fix_mode == 1 || fix_mode == 2)
     {
         uint8_t msg[] =
@@ -512,7 +512,7 @@ bool Sim7600::mqtt_disconnect()
     const char msg[] = "[MQTT] Disconnect\r\n";
     huart_debug.write((uint8_t*)msg, strlen(msg));
 
-    // 1. Broker trennen
+    // 1. Disconnect from broker
     uint8_t cmd_disc[] = "AT+CMQTTDISC=0,60\r\n";
     huart_sim.write(cmd_disc, sizeof(cmd_disc) - 1);
     huart_sim.read(response, sizeof(response) - 1, 3000);
@@ -520,7 +520,7 @@ bool Sim7600::mqtt_disconnect()
 
     memset(response, 0, sizeof(response));
 
-    // 2. Client freigeben
+    // 2. Release client
     uint8_t cmd_rel[] = "AT+CMQTTREL=0\r\n";
     huart_sim.write(cmd_rel, sizeof(cmd_rel) - 1);
     huart_sim.read(response, sizeof(response) - 1, 3000);
@@ -528,7 +528,7 @@ bool Sim7600::mqtt_disconnect()
 
     memset(response, 0, sizeof(response));
 
-    // 3. MQTT-Service stoppen
+    // 3. Stop MQTT service
     uint8_t cmd_stop[] = "AT+CMQTTSTOP\r\n";
     huart_sim.write(cmd_stop, sizeof(cmd_stop) - 1);
     huart_sim.read(response, sizeof(response) - 1, 3000);
@@ -546,7 +546,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     uint8_t c;
     while (huart_sim.read(&c, 1, 10) == HAL_OK) {}
 
-    // 1. Topic-Laenge ankündigen
+    // 1. Announce topic length
     snprintf((char*)cmd,
              sizeof(cmd),
              "AT+CMQTTTOPIC=0,%u\r\n",
@@ -557,7 +557,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-    // 2. Topic-Text senden
+    // 2. Send topic text
     huart_sim.write((uint8_t*)TOPIC_NAME, strlen(TOPIC_NAME));
 
     memset(response,0,sizeof(response));
@@ -565,7 +565,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-    // 3. Payload-Laenge ankuendigen
+    // 3. Announce payload length
     snprintf((char*)cmd,
              sizeof(cmd),
              "AT+CMQTTPAYLOAD=0,%u\r\n",
@@ -578,7 +578,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-    // 4. Payload-Text senden
+    // 4. Send payload text
     huart_sim.write((uint8_t*)payload, strlen(payload));
 
     memset(response,0,sizeof(response));
@@ -586,7 +586,7 @@ bool Sim7600::mqtt_publish(const char* payload)
     if (huart_sim.read(response,sizeof(response)-1,1000) != HAL_OK)
         return false;
 
-    // 5. Publish auslösen
+    // 5. Trigger publish
     uint8_t pub[]="AT+CMQTTPUB=0,1,60\r\n";
 
     huart_sim.write(pub,sizeof(pub)-1);
@@ -620,11 +620,17 @@ bool Sim7600::is_mqtt_connected()
 
     huart_debug.write(response, strlen((char*)response));
 
-    //  Status prüfen
+    //  Check status
     if (strstr((char*)response, "CONNECTED"))
     {
         return true;
     }
 
     return false;
+}
+
+
+bool Sim7600::publish(const char* payload)
+{
+    return mqtt_publish(payload);
 }

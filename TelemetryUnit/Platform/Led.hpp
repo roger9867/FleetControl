@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * Ungenutzt, siehe Led.cpp.
+ * Unused, see Led.cpp.
 
 class Led
 {

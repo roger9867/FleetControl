@@ -2,7 +2,7 @@ using Grpc.Core;
 
 namespace IngestionService.Assignments;
 
-// Kapselt den gRPC Service für die Sendung von Zuordnungsupdates von FleetControlApi
+// Wraps the gRPC service for receiving assignment updates from FleetControlApi
 public class AssignmentUpdateGrpcService : AssignmentUpdateService.AssignmentUpdateServiceBase
 {
     private readonly AssignmentCache _cache;

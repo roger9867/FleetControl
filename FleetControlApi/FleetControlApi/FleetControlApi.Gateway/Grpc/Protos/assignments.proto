@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "FleetControlApi.Gateway.Grpc";
+
+package assignments;
+
+service AssignmentService {
+  // Returns the current assignments of all registered telemetry units.
+  rpc GetCurrentAssignments (GetCurrentAssignmentsRequest) returns (GetCurrentAssignmentsResponse);
+}
+
+// Assignment of a telemetry unit to vehicle, license plate and driver
+message Assignment {
+  string telemetry_unit_id = 1;
+  optional string vehicle_id = 2;
+  optional string license_plate = 3;
+  optional string driver_id = 4;
+}
+
+message GetCurrentAssignmentsRequest {}
+
+message GetCurrentAssignmentsResponse {
+  repeated Assignment assignments = 1;
+}

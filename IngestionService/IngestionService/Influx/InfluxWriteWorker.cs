@@ -4,9 +4,9 @@ using IngestionService.RabbitMq;
 
 namespace IngestionService.Influx;
 
-// Liest aus der InfluxWriter-Queue und schreibt in einem eigenen Hintergrund-
-// Loop nach InfluxDB, damit InfluxDB-Latenz nie den MQTT-Verarbeitungspfad
-// blockiert.
+// Reads from the InfluxWriter queue and writes to InfluxDB in its own background
+// loop, so that InfluxDB latency never blocks the MQTT processing
+// path.
 public class InfluxWriteWorker : BackgroundService
 {
     private readonly InfluxWriter _writer;
@@ -18,7 +18,7 @@ public class InfluxWriteWorker : BackgroundService
     private readonly ILogger<InfluxWriteWorker> _logger;
 
 
-    // Baut den InfluxDB-Client aus der Konfiguration auf 
+    // Creates the InfluxDB client from the configuration 
     public InfluxWriteWorker(
         InfluxWriter writer,
         RabbitMqPublisher rabbitMqPublisher,
@@ -41,8 +41,8 @@ public class InfluxWriteWorker : BackgroundService
     }
 
 
-    // Liest fortlaufend Datenpunkte aus der Warteschlange, schreibt sie nach InfluxDB
-    // und veröffentlicht sie bei Erfolg über RabbitMQ für Live-Kartenupdates
+    // Continuously reads data points from the queue, writes them to InfluxDB
+    // and, on success, publishes them via RabbitMQ for live map updates
     protected override async Task ExecuteAsync(
         CancellationToken stoppingToken
     ) {

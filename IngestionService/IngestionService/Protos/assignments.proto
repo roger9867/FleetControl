@@ -4,8 +4,8 @@ option csharp_namespace = "IngestionService.Assignments";
 
 package assignments;
 
-// Von IngestionService genutzt, um den kompletten
-// Zuordnungsbestand einmalig beim Start in AssignmentCache zu laden.
+// Used by IngestionService to load the complete
+// set of assignments into AssignmentCache once at startup.
 service AssignmentService {
   rpc GetCurrentAssignments (GetCurrentAssignmentsRequest) returns (GetCurrentAssignmentsResponse);
 }

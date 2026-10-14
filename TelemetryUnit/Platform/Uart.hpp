@@ -8,28 +8,28 @@
 extern osMutexId_t huart_sim_mutexHandle;
 extern osMutexId_t huart_debug_mutexHandle;
 
-// Kapselt UART-Nutzung und schützt die Leitungen mit RTOS-Mutexen
+// Wraps UART usage and protects the lines with RTOS mutexes
 class Uart
 {
     public:
-        /** @param _huart HAL-Handle */
+        /** @param _huart HAL handle */
         Uart(UART_HandleTypeDef* _huart, osMutexId_t& huart_sim_mutexHandle);
 
-        // Lesefunktion für AT-Kommando-Antworten des SIM7600-Moduls
+        // Read function for AT command responses of the SIM7600 module
         HAL_StatusTypeDef read(
             uint8_t* buffer,
             uint16_t max_len,
             uint32_t timeout_ms
         );
 
-        // Lesefunktion für rohe Bytes für Befehlsempfang (ID-Ausgabe) und PC-Debugging
+        // Read function for raw bytes for command reception (ID output) and PC debugging
         HAL_StatusTypeDef readRaw(
             uint8_t* buffer,
             uint16_t max_len,
             uint32_t timeout_ms
         );
 
-        // len Bytes Senden
+        // Send len bytes
         HAL_StatusTypeDef write(
             uint8_t* data,
             uint16_t len,
@@ -41,7 +41,7 @@ class Uart
         UART_HandleTypeDef* huart;
         osMutexId_t& mutex;
 
-        // Mutex-Funktionen
+        // Mutex functions
         void acquire();
         void release();
 };

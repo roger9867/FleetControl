@@ -10,14 +10,14 @@ extern osMutexId_t huart_debug_mutexHandle;
 extern "C" {
 #endif
 
-// Prüft eingehende UART-Befehle und fuehrt sie aus.
-// Liest Bytes vom Debug-UART, baut daraus einen Befehlsstring auf
-// und führt passende Befehle aus, sobald ein Zeilenende empfangen wurde.
+// Checks incoming UART commands and executes them.
+// Reads bytes from the debug UART, builds a command string from them
+// and executes matching commands as soon as an end of line is received.
 //
-// Unterstuetzter Befehl:
-// - get_device_id, liefert die Device-ID als UUID formatiert
+// Supported command:
+// - get_device_id, returns the device ID formatted as a UUID
 //
-// Diese Funktion muss wiederholt aufgerufen werden.
+// This function must be called repeatedly.
 void check_for_device_id_request_command(void);
 
 #ifdef __cplusplus

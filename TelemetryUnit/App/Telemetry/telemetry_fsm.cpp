@@ -1,16 +1,18 @@
 #include "telemetry_fsm.hpp"
-#include "../Network/interface.h"
-#include "../Gnss/interface.h"
-#include <cstring>
-#include <cstdio>
 
-namespace
-{
-    constexpr uint32_t PUBLISH_INTERVAL_MS = 1000;
-}
 
-TelemetryFsm::TelemetryFsm(Sim7600& _telemetry_module)
-    : telemetry_module(_telemetry_module)
+TelemetryFsm::TelemetryFsm(IMqttPublisher& _mqtt,
+                           INetworkStatus& _network,
+                           IGnssSource& _gnss,
+                           TelemetryPoint& _telemetry_point,
+                           IClock& _clock,
+                           ILogger& _logger)
+    : mqtt(_mqtt),
+      network(_network),
+      gnss(_gnss),
+      telemetry_point(_telemetry_point),
+      clock(_clock),
+      logger(_logger)
 {
 }
 
@@ -21,41 +23,37 @@ TelemetryState TelemetryFsm::get_state()
 
 bool TelemetryFsm::is_network_ready()
 {
-    return network_fsm_get_state() == NetworkState::NetworkMqttConnected;
+    return network.is_mqtt_connected();
 }
 
 bool TelemetryFsm::is_gnss_ready()
 {
-    return gnss_fsm_get_state() == GnssState::GnssReady;
+    return gnss.is_ready();
 }
 
 bool TelemetryFsm::publish_timestamp()
 {
-    if (!gnss_fsm_has_valid_fix())
+    if (!gnss.has_valid_fix())
     {
-        const char msg[] = "[TELEMETRY FSM] NO GNSS FIX -> skip publish\r\n";
-        telemetry_module.huart_debug.write((uint8_t*)msg, strlen(msg));
+        logger.log("[TELEMETRY FSM] NO GNSS FIX -> skip publish");
         return false;
     }
 
-    // GNSS-Daten kommen aus GnssFSM statt eine zweite,
-    //  redundante AT+CGNSSINFO-Abfrage pro Publish zu senden.
-    telemetry_point.parse_gnss(gnss_fsm_get_last_response());
+    // GNSS data comes from GnssFSM instead of sending a second,
+    //  redundant AT+CGNSSINFO query per publish.
+    telemetry_point.parse_gnss(gnss.last_response());
 
     const char* json = telemetry_point.to_json();
-    telemetry_module.huart_debug.write((uint8_t*)"[TELEMETRY FSM] PUBLISH ", 24);
-    telemetry_module.huart_debug.write((uint8_t*)json, strlen(json));
-    telemetry_module.huart_debug.write((uint8_t*)"\r\n", 2);
+    logger.logf("[TELEMETRY FSM] PUBLISH %s", json);
 
-    bool ok = telemetry_module.mqtt_publish(json);
+    bool ok = mqtt.publish(json);
 
     if (!ok)
     {
-        const char msg[] = "[TELEMETRY FSM] MQTT PUBLISH FAILED\r\n";
-        telemetry_module.huart_debug.write((uint8_t*)msg, strlen(msg));
+        logger.log("[TELEMETRY FSM] MQTT PUBLISH FAILED");
     }
 
-    network_fsm_report_publish_result(ok);
+    network.report_publish_result(ok);
 
     return ok;
 }
@@ -64,43 +62,38 @@ void TelemetryFsm::step()
 {
     switch (current_state)
     {
-        // warten, bis Netzwerk und GNSS gleichzeitig bereit sind
+        // wait until network and GNSS are ready at the same time
         case TelemetryState::Idle:
         {
             if (is_network_ready() && is_gnss_ready())
             {
-                const char msg[] = "[TELEMETRY FSM] Idle -> Publishing\r\n";
-                telemetry_module.huart_debug.write((uint8_t*)msg, strlen(msg));
+                logger.log("[TELEMETRY FSM] Idle -> Publishing");
 
                 last_publish = 0;
                 current_state = TelemetryState::Publishing;
             }
             else
             {
-                char msg[80];
-                int len = snprintf(msg, sizeof(msg),
-                    "[TELEMETRY FSM] waiting (network_ready=%d gnss_ready=%d)\r\n",
+                logger.logf("[TELEMETRY FSM] waiting (network_ready=%d gnss_ready=%d)",
                     (int)is_network_ready(), (int)is_gnss_ready());
-                telemetry_module.huart_debug.write((uint8_t*)msg, len);
             }
             break;
         }
 
-        // im festen Intervall Telemetriepunkte senden, solange alles bereit bleibt
+        // send telemetry points at a fixed interval as long as everything stays ready
         case TelemetryState::Publishing:
         {
             if (!is_network_ready() || !is_gnss_ready())
             {
-                const char msg[] = "[TELEMETRY FSM] Publishing -> Idle (lost readiness)\r\n";
-                telemetry_module.huart_debug.write((uint8_t*)msg, strlen(msg));
+                logger.log("[TELEMETRY FSM] Publishing -> Idle (lost readiness)");
 
                 current_state = TelemetryState::Idle;
                 break;
             }
 
-            if (HAL_GetTick() - last_publish >= PUBLISH_INTERVAL_MS)
+            if (clock.get_clock_ticks() - last_publish >= PUBLISH_INTERVAL_MS)
             {
-                last_publish = HAL_GetTick();
+                last_publish = clock.get_clock_ticks();
 
                 if (!publish_timestamp())
                     current_state = TelemetryState::Error;
@@ -108,11 +101,10 @@ void TelemetryFsm::step()
             break;
         }
 
-        // Fehlerzustand ist nur ein Durchgangspunkt, springt sofort zurück zu Idle
+        // The error state is only a transit state, jumps straight back to Idle
         case TelemetryState::Error:
         {
-            const char msg[] = "[TELEMETRY FSM] Error -> Idle\r\n";
-            telemetry_module.huart_debug.write((uint8_t*)msg, strlen(msg));
+            logger.log("[TELEMETRY FSM] Error -> Idle");
 
             current_state = TelemetryState::Idle;
             break;

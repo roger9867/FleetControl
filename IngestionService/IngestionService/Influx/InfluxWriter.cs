@@ -5,12 +5,12 @@ using IngestionService.Trip;
 
 namespace IngestionService.Influx;
 
-// Ein verarbeiteter Datenpunkt inkl. erkanntem Fahrtzustand und aktueller Zuordnung
+// A processed data point including the detected trip state and current assignment
 public record InfluxPoint(string Topic, TelemetryEvent Data, TripState State, Assignment Assignment);
 
-// Nimmt Punkte entgegen, ohne zu blockieren
-// Eigentliches Schreiben nach InfluxDB passiert in InfluxWriteWorker 
-// entkoppelt vom MQTT-Verarbeitungspfad
+// Accepts points without blocking
+// The actual writing to InfluxDB happens in InfluxWriteWorker 
+// decoupled from the MQTT processing path
 public class InfluxWriter
 {
     private readonly Channel<InfluxPoint> _channel =
@@ -19,7 +19,7 @@ public class InfluxWriter
     public ChannelReader<InfluxPoint> Reader => _channel.Reader;
 
 
-    // Legt einen Datenpunkt in der Warteschlange ab
+    // Puts a data point into the queue
     public Task WriteAsync(
         string topic,
         TelemetryEvent data,

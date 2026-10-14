@@ -2,25 +2,25 @@ using System.Collections.Concurrent;
 
 namespace IngestionService.Trip;
 
-// Hält Fahrtenden, deren EndTrip-Call fehlgeschlagen ist, bis sie erfolgreich
-// nachgeliefert wurden
+// Holds trip ends whose EndTrip call failed until they have been
+// delivered successfully
 public class PendingTripEndQueue
 {
     private readonly ConcurrentDictionary<string, PendingTripEnd> _pending = new();
 
-    // Merkt ein fehlgeschlagenes Fahrtende vor
+    // Queues a failed trip end
     public void Enqueue(PendingTripEnd entry)
     {
         _pending[entry.DeviceId] = entry;
     }
 
-    // Entfernt ein Fahrtende aus der Warteliste, nachdem es erfolgreich nachgereicht wurde
+    // Removes a trip end from the queue after it has been delivered successfully
     public void Consume(string deviceId)
     {
         _pending.TryRemove(deviceId, out _);
     }
 
-    // Liefert alle offenen Fahrtenden für einen Retry-Durchlauf
+    // Returns all pending trip ends for a retry run
     public IReadOnlyCollection<PendingTripEnd> Snapshot()
     {
         return _pending.Values.ToList();

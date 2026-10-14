@@ -3,12 +3,12 @@
 
     <h1 class="header">Fahrzeuge</h1>
 
-    <!-- Karte -->
+    <!-- Map -->
     <div class="card">
       <app-vehicle-map [points]="mapPoints"></app-vehicle-map>
     </div>
 
-    <!-- Toolbar (Neu anlegen, Zentrieren) -->
+    <!-- Toolbar (create new, center) -->
     <div class="toolbar">
       <button class="create-btn" (click)="toggleCreateForm()">
         {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
@@ -19,7 +19,7 @@
       </button>
     </div>
 
-    <!-- Erstellen-Formular -->
+    <!-- Create form -->
     <div class="create-form" *ngIf="showCreateForm">
       <div class="form-grid">
         <label>
@@ -89,7 +89,7 @@
       <div class="form-error" *ngIf="createError">{{ createError }}</div>
     </div>
 
-    <!-- Liste der Fahrzeuge -->
+    <!-- List of vehicles -->
     <div class="list">
       <div *ngIf="pagedVehicles.length === 0">
         Keine Fahrzeuge gefunden.
@@ -240,7 +240,7 @@
 
   </div>
 
-  <!-- Filterleiste (Sidebar) -->
+  <!-- Filter bar (sidebar) -->
   <app-filter-sidebar
     [vehicles]="vehicles"
     [telemetryUnitIds]="telemetryUnitIds"

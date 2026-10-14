@@ -1,79 +1,89 @@
 #pragma once
 
-#include "../Uart.hpp"
 #include "cmsis_os.h"
+
+#include "../../App/Interfaces/i_mqtt_publisher.hpp"
+#include "../../App/Interfaces/i_gnss_modem.hpp"
+#include "../../App/Interfaces/i_network_modem.hpp"
+#include "../Uart.hpp"
+#include "firmware_secrets.h"
+
 
 extern osMutexId_t huart_sim_mutexHandle;
 extern osMutexId_t huart_debug_mutexHandle;
 
-// Treiber fuer das SIM7600EH-Modul:
-// Beeinhaltet die direkte Kommunikation mit
-// dem Waveshare SIM7600E-H LTE/GNSS-Modul
-class Sim7600
+
+// Driver for the SIM7600EH module:
+// Contains the direct communication with
+// the Waveshare SIM7600E-H LTE/GNSS module
+class Sim7600 : public IMqttPublisher, public IGnssModem, public INetworkModem
 {
     public:
         Sim7600() {}
 
-        // Prüft, ob eine SIM-Karte eingelegt und entsperrt ist (AT+CPIN?)
+        // Checks whether a SIM card is inserted and unlocked (AT+CPIN?)
         bool check_sim();
 
-        // Prueft die Netzanmeldung beim Mobilfunkanbieter (AT+CREG?)
+        // Checks network registration with the mobile operator (AT+CREG?)
         bool check_network();
 
-        //Prüft die Signalqualitaet (AT+CSQ)
+        //Checks the signal quality (AT+CSQ)
         bool check_signal();
 
-        // Prüft das Attachment am Paketdatendienst (AT+CGATT?)
+        // Checks the attachment to the packet data service (AT+CGATT?)
         bool check_attach();
 
-        // Setzt den APN fuer die PDP-Kontext-Aktivierung
+        // Sets the APN for the PDP context activation
         bool set_apn();
 
-        // Aktiviert den PDP-Kontext, also die eigentliche Datenverbindung
+        // Activates the PDP context, i.e. the actual data connection
         bool activate_pdp();
 
-        // Fragt die aktuell zugewiesene IP-Adresse ab (AT+CGPADDR)
+        // Queries the currently assigned IP address (AT+CGPADDR)
         bool get_ip(char* out_ip, uint16_t max_len);
 
-        // Führt alle Schritte fuer den Netzwerkaufbau nacheinander aus
-        void establish_network_connection();
+        // Executes all steps for the network setup one after another
+        void establish_network_connection() override;
 
-        // Liefert true, sobald eine IP-Adresse zugewiesen wurde
-        bool is_network_ready();
+        // Returns true as soon as an IP address has been assigned
+        bool is_network_ready() override;
 
 
-        // Schaltet GNSS ein
-        bool activate_gnss();
+        // Switches GNSS on
+        bool activate_gnss() override;
 
-        // Startet die NMEA-Positionsausgabe
-        bool gnss_nmea_start();
+        // Starts the NMEA position output
+        bool gnss_nmea_start() override;
         void get_gnss(uint8_t* buffer, uint16_t buffer_length);
         bool has_fix();
 
-        // Fragt die aktuelle GNSS-Position ab (AT+CGNSSINFO) und liefert
-        // true, falls ein gueltiger Fix vorliegt
-        bool get_gnss_fix(uint8_t* buffer, uint16_t buffer_length);
+        // Queries the current GNSS position (AT+CGNSSINFO) and returns
+        // true if a valid fix is available
+        bool get_gnss_fix(uint8_t* buffer, uint16_t buffer_length) override;
 
 
-        // Startet den MQTT-Client des Moduls (AT+CMQTTSTART)
-        bool mqtt_start();
+        // Starts the module's MQTT client (AT+CMQTTSTART)
+        bool mqtt_start() override;
 
-        // Legt eine MQTT-Client-Instanz an (AT+CMQTTACCQ)
-        bool mqtt_create_client();
+        // Creates an MQTT client instance (AT+CMQTTACCQ)
+        bool mqtt_create_client() override;
 
-        // Baut die Verbindung zum konfigurierten Broker auf
-        bool mqtt_connect();
+        // Establishes the connection to the configured broker
+        bool mqtt_connect() override;
 
-        // Trennt die Verbindung zum Broker sauber
-        bool mqtt_disconnect();
+        // Cleanly disconnects from the broker
+        bool mqtt_disconnect() override;
 
-        // Veöffentlicht payload als JSON-Datenpunkt auf der konfigurierten Topic
+        // Publishes payload as a JSON data point on the configured topic
         bool mqtt_publish(const char* payload);
 
         bool is_mqtt_connected();
 
-        // Stoppt den MQTT-Client des Moduls
+        // Stops the module's MQTT client
         bool mqtt_stop();
+
+        // IMqttPublisher: forwards to mqtt_publish()
+        bool publish(const char* payload) override;
 
 
         Uart huart_sim = Uart(&huart3, huart_sim_mutexHandle);
@@ -81,14 +91,13 @@ class Sim7600
 
     private:
         // MQTT Credentials
-        const char* APN_TOKEN = "internet";
-        const char* TOPIC_NAME = "drivedata";
-        const char* IP_BROKER = "74.248.232.214";
-        const char* MQTT_USER = "mqttuser";
-        const char* MQTT_PASSWORD = "hihohihe1967";
-        uint32_t PORT_BROKER = 1883;
+        const char* IP_BROKER = FW_BROKER_HOST;
+        uint32_t PORT_BROKER = FW_BROKER_PORT;
+        const char* MQTT_USER = FW_MQTT_USER;
+        const char* MQTT_PASSWORD = FW_MQTT_PASSWORD;
+        const char* TOPIC_NAME = FW_MQTT_TOPIC;
+        const char* APN_TOKEN = FW_APN;
 
-        // Hilfsfunktion
+        // Helper function
         void memset(uint8_t *buf, uint8_t value, uint32_t len);
-        //bool wait_for_char(char token, uint32_t timeout);
 };

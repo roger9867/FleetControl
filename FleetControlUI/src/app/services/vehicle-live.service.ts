@@ -43,18 +43,18 @@ export class VehicleLiveService {
   tripEnded$ = this.tripEndedSubject.asObservable();
   tripStarted$ = this.tripStartedSubject.asObservable();
 
-  // Baut die SignalR-Verbindung auf und registriert die Live-Event-Handler
+  // Establishes the SignalR connection and registers the live event handlers
   constructor() {
-    // 1. Hub-URL aus der API-Basis-URL ableiten
+    // 1. Derive the hub URL from the API base URL
     const hubUrl = `${environment.apiUrl.replace(/\/api\/?$/, '')}/hubs/vehicles`;
 
-    // 2. SignalR-Verbindung mit automatischem Reconnect aufbauen
+    // 2. Establish the SignalR connection with automatic reconnect
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(hubUrl)
       .withAutomaticReconnect()
       .build();
 
-    // 3. Eingehende Fahrzeug- und Trip-Events an die entsprechenden Subjects weiterleiten
+    // 3. Forward incoming vehicle and trip events to the corresponding subjects
     this.connection.on('VehicleUpdate', (update: VehiclePositionUpdate) => {
       this.vehicleUpdateSubject.next(update);
     });
@@ -67,7 +67,7 @@ export class VehicleLiveService {
       this.tripStartedSubject.next(update);
     });
 
-    // 4. Verbindung starten
+    // 4. Start the connection
     this.connection.start().catch(() => {});
   }
 }

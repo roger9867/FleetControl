@@ -6,19 +6,26 @@ GnssState GnssFSM::get_state()
 }
 
 
-GnssFSM::GnssFSM(Sim7600& _gnss_module)
-    : gnss_module(_gnss_module)
+GnssFSM::GnssFSM(IGnssModem& _modem, IClock& _clock, ILogger& _logger)
+    : modem(_modem),
+      clock(_clock),
+      logger(_logger)
 {
 }
 
-const char* GnssFSM::get_last_response()
+const char* GnssFSM::last_response() const
 {
-    return last_response;
+    return last_response_buf;
 }
 
-bool GnssFSM::has_valid_fix()
+bool GnssFSM::has_valid_fix() const
 {
     return last_fix_valid;
+}
+
+bool GnssFSM::is_ready() const
+{
+    return current_state == GnssState::GnssReady; 
 }
 
 
@@ -26,92 +33,60 @@ void GnssFSM::step()
 {
     switch(current_state)
     {
-        // GNSS-Subsystem einschalten
+        // Switch on the GNSS subsystem
         case GnssState::GnssIdle:
         {
-            const char msg[] = "[GNSS FSM] IDLE -> ENABLE GNSS\r\n";
-            gnss_module.huart_debug.write(
-                (uint8_t*)msg,
-                sizeof(msg) - 1
-            );
+            logger.log("[GNSS FSM] IDLE -> ENABLE GNSS");
 
-            gnss_module.activate_gnss();
+            modem.activate_gnss();
             current_state = GnssState::GnssEnabling;
             break;
         }
 
-        // NMEA-Positionsausgabe starten
+        // Start NMEA position output
         case GnssState::GnssEnabling:
         {
-            const char msg[] = "[GNSS FSM] START NMEA\r\n";
-            gnss_module.huart_debug.write(
-                (uint8_t*)msg,
-                sizeof(msg) - 1
-            );
+            logger.log("[GNSS FSM] START NMEA");
 
-            gnss_module.gnss_nmea_start();
+            modem.gnss_nmea_start();
             current_state = GnssState::GnssReady;
             break;
         }
 
-        // zyklisch pruefen, ob ein GNSS-Fix vorliegt
+        // periodically check whether a GNSS fix is available
         case GnssState::GnssReady:
         {
-            const char msg[] =
-                "[GNSS FSM] CHECK FIX\r\n";
+            logger.log("[GNSS FSM] CHECK FIX");
 
-            gnss_module.huart_debug.write(
-                (uint8_t*)msg,
-                sizeof(msg) - 1
-            );
-
-            // Prüfen ob GNSS Fix vorhanden (und Rohantwort für TelemetryFsm cachen)
-            bool fix = gnss_module.get_gnss_fix((uint8_t*)last_response, sizeof(last_response));
+            // Check whether a GNSS fix is available (and cache the raw response for TelemetryFsm)
+            bool fix = modem.get_gnss_fix((uint8_t*)last_response_buf, sizeof(last_response_buf));
             last_fix_valid = fix;
-
-            // Timeout
-            static uint32_t no_fix_start = 0;
 
             if (fix)
             {
-                // Timer zurücksetzen
+                // Reset timer
+                waiting_for_fix = false;
                 no_fix_start = 0;
 
-                const char ok[] =
-                    "[GNSS FSM] FIX OK\r\n";
-
-                gnss_module.huart_debug.write(
-                    (uint8_t*)ok,
-                    sizeof(ok) - 1
-                );
+                logger.log("[GNSS FSM] FIX OK");
             }
             else
             {
-                const char wait[] =
-                    "[GNSS FSM] WAITING FOR FIX\r\n";
+                logger.log("[GNSS FSM] WAITING FOR FIX");
 
-                gnss_module.huart_debug.write(
-                    (uint8_t*)wait,
-                    sizeof(wait) - 1
-                );
-
-                // erste Zeit merken
-                if (no_fix_start == 0)
+                // remember the first time
+                if (!waiting_for_fix)
                 {
-                    no_fix_start = HAL_GetTick();
+                    waiting_for_fix = true;
+                    no_fix_start = clock.get_clock_ticks();
                 }
 
-                // länger als 60 Sekunden kein Fix
-                if ((HAL_GetTick() - no_fix_start) >= 60000)
+                // no fix for more than 60 seconds
+                if ((clock.get_clock_ticks() - no_fix_start) >= 60000)
                 {
-                    const char err[] =
-                        "[GNSS FSM] NO FIX 60s -> ERROR\r\n";
+                    logger.log("[GNSS FSM] NO FIX 60s -> ERROR");
 
-                    gnss_module.huart_debug.write(
-                        (uint8_t*)err,
-                        sizeof(err) - 1
-                    );
-
+                    waiting_for_fix = false;
                     no_fix_start = 0;
                     last_fix_valid = false;
 
@@ -122,20 +97,14 @@ void GnssFSM::step()
             break;
         }
 
-        // GNSS nach Timeout neu initialisieren
+        // Re-initialize GNSS after timeout
         case GnssState::GnssError:
         {
-            const char msg[] =
-                "[GNSS FSM] RECOVERY\r\n";
+            logger.log("[GNSS FSM] RECOVERY");
 
-            gnss_module.huart_debug.write(
-                (uint8_t*)msg,
-                sizeof(msg) - 1
-            );
-
-            // GNSS erneut starten
-            gnss_module.activate_gnss();
-            gnss_module.gnss_nmea_start();
+            // Restart GNSS
+            modem.activate_gnss();
+            modem.gnss_nmea_start();
 
             current_state = GnssState::GnssReady;
 

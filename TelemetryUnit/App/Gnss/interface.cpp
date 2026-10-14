@@ -1,9 +1,15 @@
 #include "interface.h"
 #include "gnss_fsm.hpp"
 #include "../../Platform/SIM7600EH/sim7600eh.hpp"
+#include "../../Platform/Clock/hal_clock.hpp"
+#include "../../Platform/Logging/uart_logger.hpp"
 
+// Platform implementations of the interfaces used by the GNSS FSM
 static Sim7600 sim;
-static GnssFSM gnss_fsm(sim);
+static HalClock clock;
+static UartLogger logger(sim.huart_debug);
+
+static GnssFSM gnss_fsm(sim, clock, logger);
 
 
 extern "C" void gnss_fsm_step()
@@ -11,17 +17,7 @@ extern "C" void gnss_fsm_step()
     gnss_fsm.step();
 }
 
-GnssState gnss_fsm_get_state()
+IGnssSource& gnss_fsm_source()
 {
-    return gnss_fsm.get_state();
-}
-
-const char* gnss_fsm_get_last_response()
-{
-    return gnss_fsm.get_last_response();
-}
-
-bool gnss_fsm_has_valid_fix()
-{
-    return gnss_fsm.has_valid_fix();
+    return gnss_fsm;
 }

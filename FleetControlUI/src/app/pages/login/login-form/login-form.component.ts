@@ -16,15 +16,15 @@ export class LoginFormComponent {
 
   showPassword: boolean = false;
 
-  // Injiziert den Router fuer die Navigation nach dem Login
+  // Injects the router for navigation after login
   constructor(private router: Router) {}
 
-  // Schaltet die Sichtbarkeit des Passwort-Felds um
+  // Toggles the visibility of the password field
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
 
-  // Verarbeitet das Login-Formular und navigiert zur Hauptseite
+  // Processes the login form and navigates to the main page
   onSubmit() {
     console.log('Login:', this.email, this.password);
     this.router.navigate(['/main']);

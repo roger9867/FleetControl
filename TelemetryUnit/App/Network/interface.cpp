@@ -1,21 +1,22 @@
 #include "interface.h"
 #include "network_fsm.hpp"
 #include "../../Platform/SIM7600EH/sim7600eh.hpp"
+#include "../../Platform/Clock/hal_clock.hpp"
+#include "../../Platform/Logging/uart_logger.hpp"
 
+// Platform implementations of the interfaces used by the network FSM
 static Sim7600 sim;
-static NetworkFSM network_fsm(sim);
+static HalClock clock;
+static UartLogger logger(sim.huart_debug);
+
+static NetworkFSM network_fsm(sim, clock, logger);
 
 extern "C" void network_fsm_step()
 {
     network_fsm.step();
 }
 
-extern "C" void network_fsm_report_publish_result(bool ok)
+INetworkStatus& network_fsm_status()
 {
-    network_fsm.report_publish_result(ok);
-}
-
-NetworkState network_fsm_get_state()
-{
-    return network_fsm.get_state();
+    return network_fsm;
 }

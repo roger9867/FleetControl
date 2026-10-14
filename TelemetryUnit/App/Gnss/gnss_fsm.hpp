@@ -1,31 +1,45 @@
 #pragma once
 
-#include "../../Platform/SIM7600EH/sim7600eh.hpp"
+#include <cstdint>
+
 #include "./gnss_states.hpp"
+#include "../Interfaces/i_clock.hpp"
+#include "../Interfaces/i_gnss_modem.hpp"
+#include "../Interfaces/i_gnss_source.hpp"
+#include "../Interfaces/i_logger.hpp"
 
 
 
-// Aktiviert GNSS und fragt zyklisch den Fix ab
-// Cached die Rohantwort, damit TelemetryFsm sie ohne weitere AT-Abfrage weiterverarbeiten kann.
-class GnssFSM
+// Enables GNSS and periodically queries the fix
+// Caches the raw response so that TelemetryFsm can process it without another AT query.
+class GnssFSM : public IGnssSource
 {
     public:
         GnssState get_state();
 
-        // Führt Schritt der FSM aus, muss zyklisch aufgerufen werden
+        // Executes one step of the FSM, must be called periodically
         void step();
 
-        // Letzte AT+CGNSSINFO-Rohantwort, von TelemetryFsm zum Parsen genutzt
-        const char* get_last_response();
-        bool has_valid_fix();
+        // IGnssSource
+        bool is_ready() const override;
+        bool has_valid_fix() const override;
+        // Last raw AT+CGNSSINFO response, used by TelemetryFsm for parsing
+        const char* last_response() const override;
 
-        explicit GnssFSM(Sim7600& _gnss_module);
+        GnssFSM(IGnssModem& _modem, IClock& _clock, ILogger& _logger);
 
     private:
         GnssState current_state = GnssState::GnssIdle;
 
-        Sim7600& gnss_module;
+        // Dependencies, injected via the constructor
+        IGnssModem& modem;
+        IClock& clock;
+        ILogger& logger;
 
-        char last_response[160] = {0};
+        char last_response_buf[160] = {0};
         bool last_fix_valid = false;
+
+        // Start of the current phase without a fix, for the 60 s timeout
+        bool waiting_for_fix = false;
+        uint32_t no_fix_start = 0;
 };

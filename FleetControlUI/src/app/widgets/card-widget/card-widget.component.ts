@@ -22,15 +22,15 @@ export class CardWidgetComponent implements AfterViewInit, AfterViewChecked, OnC
 
   private readonly routeColors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6'];
 
-  // Erstellt die Leaflet-Karte samt Kachel-Layer und rendert die ersten Fahrtrouten.
+  // Creates the Leaflet map including the tile layer and renders the first trip routes.
   ngAfterViewInit(): void {
-    // 1. Karte initialisieren und Startansicht setzen
+    // 1. Initialize the map and set the initial view
     this.map = L.map('map', {
       attributionControl: false
     }).setView([48.8375, 10.0936], 14);
 
 
-// 2. Kartenkacheln laden
+// 2. Load map tiles
 L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; OpenStreetMap contributors',
     maxZoom: 20,
@@ -39,7 +39,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     zoomOffset: -1
 }).addTo(this.map);
 
-    // 3. Routen-Layer einhaengen und erste Fahrten zeichnen
+    // 3. Attach the route layer and draw the first trips
     this.routeLayer.addTo(this.map);
     this.mapInitialized = true;
 
@@ -47,14 +47,14 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     this.renderTrips();
   }
 
-  // Passt die Kartengrösse nach jeder Änderungspruefung an das aktuelle Layout an
+  // Adjusts the map size to the current layout after each change detection
   ngAfterViewChecked(): void {
     if (this.mapInitialized) {
       this.map.invalidateSize();
     }
   }
 
-  // Rendert die Routen neu, sobald sich die übergebenen Fahrten tatsächlich geändert haben
+  // Re-renders the routes as soon as the given trips have actually changed
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['trips'] || !this.mapInitialized) return;
 
@@ -65,12 +65,12 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     this.renderTrips();
   }
 
-  // Erzeugt eine vergleichbare Signatur aller Fahrten, um unnötiges Neurendern zu vermeiden
+  // Creates a comparable signature of all trips to avoid unnecessary re-rendering
   private tripsSignature(): string {
     return this.trips.map(t => `${t.id}:${t.points.length}:${t.end ? '1' : '0'}`).join('|');
   }
 
-  // Zeichnet für jede Fahrt die Route mit Punkten, Start-/Zielmarkierung und zentriert anschliessend die Karte
+  // Draws the route with points and start/end markers for each trip and then centers the map
   private renderTrips(): void {
     this.routeLayer.clearLayers();
 
@@ -85,7 +85,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
       const coordinates: L.LatLngExpression[] = trip.points.map(p => [p.lat, p.lng]);
       const isOngoing = !trip.end;
 
-      // Route als Linie zeichnen
+      // Draw the route as a line
       L.polyline(coordinates, {
         color,
         weight: 4,
@@ -93,7 +93,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
         opacity: 0.65,
       }).addTo(this.routeLayer);
 
-      // Punktmarker je Fahrtpunkt zeichnen (aktuelle Position bei laufender Fahrt pulsierend hervorheben)
+      // Draw a point marker for each trip point (highlight the current position of a running trip with a pulse)
       trip.points.forEach((point, index) => {
         const isLastPoint = index === trip.points.length - 1;
 
@@ -125,7 +125,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
         marker.bindTooltip(this.pointTooltip(trip, point), { permanent: false, direction: 'top' });
       });
 
-      // Start- und (falls beendet) Zielmarkierung zeichnen
+      // Draw start and (if finished) end markers
       if (coordinates.length) {
         const startMarker = L.circleMarker(coordinates[0], {
           radius: 12,
@@ -162,7 +162,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     this.recenter();
   }
 
-  // Zentriert und zoomt die Karte so, dass alle Fahrtpunkte sichtbar sind
+  // Centers and zooms the map so that all trip points are visible
   recenter(): void {
     const allPoints: L.LatLngExpression[] = this.trips.flatMap(trip =>
       trip.points.map(p => [p.lat, p.lng] as L.LatLngExpression)
@@ -173,7 +173,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     }
   }
 
-  // Baut den HTML-Text des Tooltips für einen Fahrtpunkt aus Fahrzeug-, Fahrer- und Messwerten
+  // Builds the tooltip HTML for a trip point from vehicle, driver and measured values
   private pointTooltip(trip: Trip, point: TripPoint, label?: string): string {
     const time = new Date(point.timestamp).toLocaleString('de-DE');
     const zeitLine = label ? `Zeit: ${time} — ${label}` : `Zeit: ${time}`;
@@ -187,7 +187,7 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
       + `Koordinaten: ${point.lat.toFixed(6)}, ${point.lng.toFixed(6)}`;
   }
 
-  // Ermittelt das Kennzeichen des Fahrzeugs zu einer Fahrzeug-ID.
+  // Determines the license plate of the vehicle for a vehicle ID.
   private licensePlate(vehicleId?: string | null): string {
     if (!vehicleId) return '–';
     const vehicle = this.vehicles.find(v => v.Id === vehicleId);

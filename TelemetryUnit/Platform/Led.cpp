@@ -2,7 +2,7 @@
 #include "main.h"
 
 /*
- * Ungenutzt: steht nicht in CMakeLists.txt, wird nirgends instanziiert
+ * Unused: not listed in CMakeLists.txt, never instantiated
 
 void Led::Led(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {

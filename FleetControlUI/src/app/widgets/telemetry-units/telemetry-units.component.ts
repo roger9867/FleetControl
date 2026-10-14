@@ -45,7 +45,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
 
   openVehicleDropdownIndex: number | null = null;
 
-  // Injiziert die benötigten Services für Telemetrie-, Fahrzeug- und Personendaten
+  // Injects the services required for telemetry, vehicle and person data
   constructor(
     private service: TelemetryUnitService,
     private vehicleService: VehicleService,
@@ -56,7 +56,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
 
   }
 
-  // Schliesst offene Dropdowns (Löschen-Bestätigung, Fahrzeugauswahl) bei Klick ausserhalb
+  // Closes open dropdowns (delete confirmation, vehicle selection) on a click outside
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (this.deleteConfirmIndex !== null) {
@@ -74,19 +74,19 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     }
   }
 
-  // Initialisiert die Komponente: lädt Einheiten, abonniert USB-Broadcasts und lädt Stammdaten
+  // Initializes the component: loads units, subscribes to USB broadcasts and loads master data
   ngOnInit(): void {
-    // 1. Registrierte Telemetrie-Einheiten laden
+    // 1. Load registered telemetry units
     this.loadAllUnits();
 
-    // 2. Verbundene USB-Einheiten laufend abonnieren
+    // 2. Continuously subscribe to connected USB units
     this.broadcastSub = this.usbTelemetryService.connectedUnitIds$
       .subscribe(uuids => {
         this.usb_connected_units = uuids.map(id => ({ id }));
         this.cdr.detectChanges();
       });
 
-    // 3. Fahrzeuge für die Zuordnung laden
+    // 3. Load vehicles for the assignment
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
         if (vehicles?.length) {
@@ -97,7 +97,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
       error: () => {}
     });
 
-    // 4. Personen für die Zuordnung laden
+    // 4. Load persons for the assignment
     this.personService.loadAll().subscribe({
       next: (persons) => {
         if (persons?.length) {
@@ -109,15 +109,15 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     });
   }
 
-  // Registriert die ausgewählte Telemetrie-Einheit über den Service
+  // Registers the selected telemetry unit via the service
   createUnit(): void {
-    // 1. Auswahl prüfen und DTO aufbauen
+    // 1. Check the selection and build the DTO
     if (!this.selectedUnitId || this.isUnitAlreadyRegistered(this.selectedUnitId)) return;
     const dto = {
       id: this.selectedUnitId
     };
 
-    // 2. Neue Einheit anlegen und Liste danach neu laden
+    // 2. Create the new unit and reload the list afterwards
     this.service.createUnit(dto)
       .subscribe({
         next: () => {
@@ -131,7 +131,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
       });
   }
 
-  // Lädt alle registrierten Telemetrie-Einheiten vom Server
+  // Loads all registered telemetry units from the server
   loadAllUnits(): void {
     this.service.getUnits()
       .subscribe({
@@ -146,7 +146,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
       });
   }
 
-  // Sendet einen Broadcast an alle verbundenen USB-Telemetrie-Geräte
+  // Sends a broadcast to all connected USB telemetry devices
   async sendBroadcast(): Promise<void> {
     try {
       await this.usbTelemetryService.broadcastToAll();
@@ -156,27 +156,27 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     }
   }
 
-  // Beendet das Broadcast-Abonnement beim Zerstören der Komponente
+  // Ends the broadcast subscription when the component is destroyed
   ngOnDestroy(): void {
     this.broadcastSub?.unsubscribe();
   }
 
-  // Liefert die IDs aller registrierten Telemetrie-Einheiten
+  // Returns the IDs of all registered telemetry units
   get telemetryUnitIds(): string[] {
     return this.registered_units.map(u => u.id);
   }
 
-  // Prüft, ob eine per USB gefundene Geräte-ID bereits als Telemetrie-Einheit registriert ist.
-  // Vergleich erfolgt case-insensitiv, da die Firmware die UUID in Großbuchstaben liefert,
-  // das Backend (.NET Guid) sie aber kleingeschrieben zurückgibt.
+  // Checks whether a device ID found via USB is already registered as a telemetry unit.
+  // The comparison is case-insensitive because the firmware returns the UUID in upper case,
+  // while the backend (.NET Guid) returns it in lower case.
   isUnitAlreadyRegistered(id: string): boolean {
     const normalized = id.toLowerCase();
     return this.telemetryUnitIds.some(existingId => existingId.toLowerCase() === normalized);
   }
 
-  // Wendet die aktiven Filterkriterien (Einheit, Fahrzeug, Person) auf die Einheitenliste an
+  // Applies the active filter criteria (unit, vehicle, person) to the unit list
   get filteredUnits(): TelemetryUnit[] {
-    // 1. Aktive Filterebenen bestimmen
+    // 1. Determine active filter levels
     const unitTierActive = this.appliedFilters.telemetryUnitIds.length > 0;
     const vehicleTierActive = this.appliedFilters.vehicleIds.length > 0;
     const personTierActive = this.appliedFilters.personIds.length > 0;
@@ -184,7 +184,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     return this.registered_units.filter(u => {
       const results: boolean[] = [];
 
-      // 2. Treffer je aktiver Filterebene sammeln
+      // 2. Collect matches per active filter level
       if (unitTierActive) results.push(this.appliedFilters.telemetryUnitIds.includes(u.id));
       if (vehicleTierActive) results.push(this.appliedFilters.vehicleIds.includes(u.vehicleId ?? ''));
 
@@ -195,56 +195,56 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
 
       if (results.length === 0) return true;
 
-      // 3. Ergebnisse je nach Modus (Schnittmenge/Vereinigung) kombinieren
+      // 3. Combine results depending on the mode (intersection/union)
       return this.appliedFilters.mode === 'union' ? results.some(Boolean) : results.every(Boolean);
     });
   }
 
-  // Berechnet die Gesamtzahl der Seiten anhand der gefilterten Einheiten
+  // Calculates the total number of pages from the filtered units
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.filteredUnits.length / this.pageSize));
   }
 
-  // Liefert die Liste der Seitenzahlen für die Pagination
+  // Returns the list of page numbers for the pagination
   get pageNumbers(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // Liefert die Einheiten der aktuell angezeigten Seite
+  // Returns the units of the currently displayed page
   get pagedUnits(): TelemetryUnit[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredUnits.slice(start, start + this.pageSize);
   }
 
-  // Wechselt zur vorherigen Seite und schliesst offene Auswahl/Bearbeitung
+  // Switches to the previous page and closes open selection/editing
   prevPage(): void {
     if (this.currentPage > 1) this.currentPage--;
     this.selectedIndex = null;
     this.editingIndex = null;
   }
 
-  // Wechselt zur nächsten Seite und schliesst offene Auswahl/Bearbeitung
+  // Switches to the next page and closes open selection/editing
   nextPage(): void {
     if (this.currentPage < this.totalPages) this.currentPage++;
     this.selectedIndex = null;
     this.editingIndex = null;
   }
 
-  // Springt zu einer bestimmten Seite und schliesst offene Auswahl/Bearbeitung
+  // Jumps to a specific page and closes open selection/editing
   goToPage(page: number): void {
     this.currentPage = page;
     this.selectedIndex = null;
     this.editingIndex = null;
   }
 
-  // Übernimmt neu angewendete Filter und setzt Seite sowie Auswahl zurück
+  // Takes over newly applied filters and resets page and selection
   onFiltersApplied(filters: AppliedFilters): void {
     this.appliedFilters = filters;
     this.currentPage = 1;
     this.selectedIndex = null;
   }
 
-  // Wählt einen Listeneintrag aus und schliesst andere offene Zustände
+  // Selects a list entry and closes other open states
   selectItem(index: number): void {
     this.selectedIndex = index;
     this.editingIndex = null;
@@ -252,7 +252,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     this.deleteConfirmIndex = null;
   }
 
-  // Klappt den ausgewählten Eintrag ein und setzt alle zugehörigen Zustände zurück
+  // Collapses the selected entry and resets all related state
   collapseItem(): void {
     this.selectedIndex = null;
     this.editingIndex = null;
@@ -262,17 +262,17 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     this.openVehicleDropdownIndex = null;
   }
 
-  // Verhindert, dass ein Mousedown auf den Aktionen den Fokus verliert
+  // Prevents a mousedown on the actions from losing focus
   onActionMouseDown(event: MouseEvent): void {
     event.preventDefault();
   }
 
-  // Löst die Anzeige der Fahrten für die gewählte Einheit aus
+  // Triggers showing the trips for the selected unit
   onShowTrips(item: TelemetryUnit): void {
     this.showTrips.emit(item.id);
   }
 
-  // Verhindert das Schliessen der Löschen-Bestätigung bei Klick innerhalb der Aktionen
+  // Prevents the delete confirmation from closing when clicking inside the actions
   onActionsClick(event: MouseEvent): void {
     event.stopPropagation();
 
@@ -282,7 +282,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     }
   }
 
-  // Wechselt zwischen Anzeige- und Bearbeitungsmodus eines Eintrags bzw. speichert bei erneutem Klick
+  // Switches between view and edit mode of an entry, or saves when clicked again
   toggleEdit(index: number): void {
     if (this.editingIndex === index) {
       this.saveEdit(index);
@@ -295,25 +295,25 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     this.deleteConfirmIndex = null;
   }
 
-  // Prüft, ob sich die Fahrzeugzuordnung gegenüber dem gespeicherten Zustand geändert hat
+  // Checks whether the vehicle assignment has changed compared to the saved state
   isEditDirty(unit: TelemetryUnit): boolean {
     if (!this.editSnapshot) return false;
 
     return (unit.vehicleId ?? '') !== (this.editSnapshot.vehicleId ?? '');
   }
 
-  // Prüft, ob ein Fahrzeug bereits einer anderen Telemetrie-Einheit zugeordnet ist
+  // Checks whether a vehicle is already assigned to another telemetry unit
   isVehicleTakenByOtherUnit(vehicle: Vehicle, unit: TelemetryUnit): boolean {
     return this.registered_units.some(u => u.id !== unit.id && u.vehicleId === vehicle.Id);
   }
 
-  // Öffnet oder schliesst das Fahrzeugauswahl-Dropdown für einen Eintrag
+  // Opens or closes the vehicle selection dropdown for an entry
   toggleVehicleDropdown(index: number, event: MouseEvent): void {
     event.stopPropagation();
     this.openVehicleDropdownIndex = this.openVehicleDropdownIndex === index ? null : index;
   }
 
-  // Weist der Telemetrie-Einheit das gewählte Fahrzeug zu, sofern nicht deaktiviert
+  // Assigns the selected vehicle to the telemetry unit, unless disabled
   selectVehicleForUnit(unit: TelemetryUnit, vehicleId: string, disabled = false): void {
     if (disabled) return;
 
@@ -321,13 +321,13 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     this.openVehicleDropdownIndex = null;
   }
 
-  // Speichert die Änderungen des bearbeiteten Eintrags über den Service
+  // Saves the changes of the edited entry via the service
   private saveEdit(index: number): void {
-    // 1. Zu speichernde Einheit ermitteln
+    // 1. Determine the unit to save
     const unit = this.pagedUnits[index];
     this.editError = null;
 
-    // 2. Änderungen speichern und Bearbeitungsmodus beenden
+    // 2. Save changes and end edit mode
     this.service.update(unit).subscribe({
       next: (updated) => {
         Object.assign(unit, updated);
@@ -342,7 +342,7 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     });
   }
 
-  // Fordert beim ersten Klick eine Bestätigung an und löscht erst beim zweiten Klick
+  // Asks for confirmation on the first click and deletes only on the second click
   confirmDelete(index: number, unit: TelemetryUnit): void {
     if (this.deleteConfirmIndex !== index) {
       this.deleteConfirmIndex = index;
@@ -352,11 +352,11 @@ export class TelemetryUnitPageComponent implements OnInit, OnDestroy
     this.deleteUnit(unit);
   }
 
-  // Löscht die Telemetrie-Einheit über den Service und aktualisiert die lokale Liste
+  // Deletes the telemetry unit via the service and updates the local list
   private deleteUnit(unit: TelemetryUnit): void {
     this.editError = null;
 
-    // Löschen anstossen und bei Erfolg die Liste sowie offene Zustände bereinigen
+    // Trigger the deletion and, on success, clean up the list and open states
     this.service.delete(unit.id).subscribe({
       next: () => {
         this.registered_units = this.registered_units.filter(u => u !== unit);

@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+#include "../Interfaces/i_clock.hpp"
+#include "../Interfaces/i_device_id.hpp"
+
 
 struct TelemetryData
 {
@@ -21,28 +24,33 @@ struct TelemetryData
 class TelemetryPoint
 {
     public:
-        // Parst eine AT+CGNSSINFO-Antwort und aktualisiert die gespeicherten Telemetriedaten
+        TelemetryPoint(IClock& _clock, IDeviceId& _device_id);
+
+        // Parses an AT+CGNSSINFO response and updates the stored telemetry data
         TelemetryData parse_gnss(const char* sim_response);
 
-        // Baut den aktuellen Telemetriepunkt als JSON-String fuer den MQTT-Publish
+        // Builds the current telemetry point as a JSON string for the MQTT publish
         const char* to_json();
 
     private:
+        // Dependencies, injected via the constructor
+        IClock& clock;
+        IDeviceId& device_id;
+
         TelemetryData gnss_data;
-        char device_id[37] = {0};
 
         float prev_speed_kmh = 0.0f;
         uint32_t prev_tick_ms = 0;
 
-        // Wandelt eine NMEA-Koordinate (ddmm.mmmmmm) in Dezimalgrad um
+        // Converts an NMEA coordinate (ddmm.mmmmmm) into decimal degrees
         float nmea_to_decimal(const char* nmea);
 
-        // Baut aus dem NMEA-Datum/Zeit-Feldern einen ISO-8601-Zeitstempel
+        // Builds an ISO 8601 timestamp from the NMEA date/time fields
         void format_timestamp(char* out, unsigned out_len);
 
-        // Berechnet die Beschleunigung aus der Geschwindigkeitsänderung seit dem letzten Fix
+        // Calculates the acceleration from the change in speed since the last fix
         float calculate_accel_in_ms2(float new_speed_kmh);
 
-        // Prüft, ob ein NMEA-Feld wie eine gültige Koordinate aussieht
+        // Checks whether an NMEA field looks like a valid coordinate
         uint8_t is_valid_nmea_coordinate(const char* token, int min_digits_before_decimal);
 };

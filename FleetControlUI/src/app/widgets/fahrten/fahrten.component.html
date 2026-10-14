@@ -4,7 +4,7 @@
 
     <h1 class="header">Dokumentierte Fahrten</h1>
 
-    <!-- Karte / Fahrt-Chart -->
+    <!-- Map / trip chart -->
     <div class="card">
       <app-card-widget *ngIf="viewMode === 'routen'" [trips]="mapTrips" [vehicles]="vehicles"></app-card-widget>
 
@@ -14,7 +14,7 @@
         Wähle eine Fahrt aus der Liste aus, um die Details zu sehen.
       </div>
 
-      <!-- Karten-Aktionen -->
+      <!-- Map actions -->
       <div class="card-actions">
         <button type="button"
                 class="recenter-btn"
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <!-- Liste der Fahrten -->
+    <!-- List of trips -->
     <div class="list">
       <div *ngIf="filteredTrips.length === 0" class="empty-hint">
         Keine Fahrten für die gewählten Filter gefunden.
@@ -97,7 +97,7 @@
 
   </div>
 
-  <!-- Filterleiste -->
+  <!-- Filter sidebar -->
   <div class="sidebar">
     <div class="filter-title">Filter</div>
 
@@ -111,7 +111,7 @@
       <input type="datetime-local" [(ngModel)]="filterStop">
     </label>
 
-    <!-- Fahrzeug-Filter -->
+    <!-- Vehicle filter -->
     <div class="autocomplete" #vehicleAutocomplete>
       <div class="label-row">
         <span>Fahrzeug</span>
@@ -185,7 +185,7 @@
       </div>
     </div>
 
-    <!-- Telemetrie-Einheit-Filter -->
+    <!-- Telemetry unit filter -->
     <div class="autocomplete" #telemetryAutocomplete>
       <span>Telemetrie-Einheit</span>
 
@@ -226,7 +226,7 @@
       </div>
     </div>
 
-    <!-- Person-Filter -->
+    <!-- Person filter -->
     <div class="autocomplete" #personAutocomplete>
       <div class="label-row">
         <span>Person</span>

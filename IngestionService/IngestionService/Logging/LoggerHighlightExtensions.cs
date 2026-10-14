@@ -1,13 +1,13 @@
 namespace IngestionService.Logging;
 
 
-// Einzelne Aufrufe farbig hervorheben
+// Highlight individual calls in color
 public static class LoggerHighlightExtensions
 {
     private const string Red = "[31m";
     private const string Reset = "[0m";
 
-    // Loggt mit Highlighting
+    // Logs with highlighting
     public static void LogHighlighted(
         this ILogger logger,
         string message,

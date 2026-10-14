@@ -1,19 +1,19 @@
 version: '3.9'
 
-# Benoetigt eine laufende InfluxDB unter localhost:8086
+# Requires a running InfluxDB at localhost:8086
 services:
   ingestionservice:
     build:
       context: ./IngestionService
       dockerfile: Dockerfile
-      network: host
 
     container_name: ingestionservice
-    # Host-Netzwerk, damit der Dienst InfluxDB und FleetControlApi (gRPC)
-    # unter localhost auf der VM erreichen kann, ohne eigenes Docker-Netzwerk
+    restart: unless-stopped
+    # Host network, so that the service can reach InfluxDB and FleetControlApi (gRPC)
+    # at localhost on the VM without its own Docker network
     network_mode: host
 
-    # Aus .env übernommene Konfiguration für MQTT-Broker, InfluxDB und TripService
+    # Configuration for MQTT broker, InfluxDB and TripService taken from .env
     environment:
       Mqtt__Host: ${MQTT_HOST}
       Mqtt__Port: ${MQTT_PORT}
@@ -21,8 +21,15 @@ services:
       Mqtt__Password: ${MQTT_PASSWORD}
       Mqtt__UseTls: ${MQTT_USE_TLS}
       Mqtt__Topic: ${MQTT_TOPIC}
-      InfluxDB__Url: http://localhost:8086
+
+      InfluxDB__Url: ${INFLUXDB_URL:-http://localhost:8086}
       InfluxDB__Token: ${INFLUXDB_TOKEN}
       InfluxDB__Org: ${INFLUXDB_ORG}
       InfluxDB__Bucket: ${INFLUXDB_BUCKET}
-      TripService__Address: ${TRIP_SERVICE_ADDRESS}
+
+      TripService__Url: ${TRIP_SERVICE_URL:-http://localhost:5001}
+      AssignmentService__Url: ${ASSIGNMENT_SERVICE_URL:-http://localhost:5001}
+
+      RabbitMq__Host: ${RABBITMQ_HOST:-localhost}
+      RabbitMq__Username: ${RABBITMQ_USER}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD}

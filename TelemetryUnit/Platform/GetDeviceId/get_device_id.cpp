@@ -23,12 +23,12 @@ extern "C" void check_for_device_id_request_command(void)
 
     while (true)
     {
-        // Ein Byte vom Debug-UART lesen
+        // Read one byte from the debug UART
         if (huart_debug_wrapper.readRaw(&byte_read, 1, HAL_MAX_DELAY) == HAL_OK)
         {
             if (byte_read == '\n' || byte_read == '\r')
             {
-                // Zeilenende: leere Zeile ignorieren
+                // End of line: ignore empty lines
                 if (bytes_read_count == 0)
                 {
                     continue;
@@ -36,7 +36,7 @@ extern "C" void check_for_device_id_request_command(void)
 
                 cmd_buffer[bytes_read_count] = '\0';
 
-                // Befehl auswerten und Antwort senden
+                // Evaluate the command and send the response
                 if (is_get_id_command(cmd_buffer, bytes_read_count))
                 {
                     stm32_get_uid_as_uuid(uuid_device);
@@ -49,19 +49,19 @@ extern "C" void check_for_device_id_request_command(void)
                     huart_debug_wrapper.write((uint8_t*)"Unknown command\r\n", 18);
                 }
 
-                // Puffer fuer den nächsten Befehl zuruecksetzen
+                // Reset the buffer for the next command
                 bytes_read_count = 0;
             }
             else
             {
-                // Byte an den Befehlspuffer anhaengen
+                // Append the byte to the command buffer
                 if (bytes_read_count < sizeof(cmd_buffer) - 1)
                 {
                     cmd_buffer[bytes_read_count++] = byte_read;
                 }
                 else
                 {
-                    // Puffer voll ohne Zeilenende: Befehl verwerfen
+                    // Buffer full without end of line: discard the command
                     bytes_read_count = 0;
                 }
             }

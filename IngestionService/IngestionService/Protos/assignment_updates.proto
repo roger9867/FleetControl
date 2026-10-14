@@ -4,8 +4,8 @@ option csharp_namespace = "IngestionService.Assignments";
 
 package assignment_updates;
 
-// Abfrage-Service, mit dem FleetControlApi die Zuordnungen / Systemzustand pusht
-// (IngestionService ist Server)
+// Service through which FleetControlApi pushes the assignments / system state
+// (IngestionService is the server)
 service AssignmentUpdateService {
   rpc PushAssignmentUpdate (AssignmentUpdate) returns (PushAssignmentUpdateResponse);
 }

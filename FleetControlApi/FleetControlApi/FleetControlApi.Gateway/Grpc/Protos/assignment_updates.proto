@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "FleetControlApi.Gateway.Grpc";
+
+package assignment_updates;
+
+service AssignmentUpdateService {
+  // Pushes a changed telemetry unit assignment to IngestionService as soon as it changes
+  rpc PushAssignmentUpdate (AssignmentUpdate) returns (PushAssignmentUpdateResponse);
+}
+
+// Current assignment of a telemetry unit to vehicle, license plate and driver
+message AssignmentUpdate {
+  string telemetry_unit_id = 1;
+  optional string vehicle_id = 2;
+  optional string license_plate = 3;
+  optional string driver_id = 4;
+}
+
+message PushAssignmentUpdateResponse {}

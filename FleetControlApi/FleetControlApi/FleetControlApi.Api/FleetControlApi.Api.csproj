@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.80.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FleetControlApi.Persistence\FleetControlApi.Persistence.csproj" />
+    <ProjectReference Include="..\FleetControlApi.Service\FleetControlApi.Service.csproj" />
+    <ProjectReference Include="..\FleetControlApi.Gateway\FleetControlApi.Gateway.csproj" />
+  </ItemGroup>
+
+</Project>

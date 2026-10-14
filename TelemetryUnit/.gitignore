@@ -1,0 +1,6 @@
+# Firmware credentials (keep the committed cmake/secrets.cmake.example template)
+cmake/secrets.cmake
+
+# CMake build directories
+build/
+cmake-build-debug/

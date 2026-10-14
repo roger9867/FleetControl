@@ -32,10 +32,10 @@ export class PersonService {
 
   private baseUrl = environment.apiUrl;
 
-  // Injiziert den HttpClient für die API-Aufrufe
+  // Injects the HttpClient for the API calls
   constructor(private http: HttpClient) {}
 
-  // Lädt alle Personen vom Server und mappt sie auf das Domain-Modell
+  // Loads all persons from the server and maps them to the domain model
   loadAll(): Observable<Person[]> {
     return this.http.get<PersonResponseDto[]>(`${this.baseUrl}/Person`).pipe(
       map(list => list.map(dto => this.toPerson(dto))),
@@ -43,17 +43,17 @@ export class PersonService {
     );
   }
 
-  // Legt eine neue Person auf dem Server an
+  // Creates a new person on the server
   save(person: Person): Observable<Person> {
-    // 1. Domain-Modell in das Request-DTO umwandeln und speichern
+    // 1. Convert the domain model into the request DTO and save it
     return this.http.post<PersonResponseDto>(`${this.baseUrl}/Person`, this.toRequestDto(person)).pipe(
-      // 2. Antwort-DTO zurück in das Domain-Modell mappen
+      // 2. Map the response DTO back into the domain model
       map(dto => this.toPerson(dto, person.assignedVehicleId)),
       catchError(err => this.rethrow(err))
     );
   }
 
-  // Aktualisiert eine bestehende Person auf dem Server
+  // Updates an existing person on the server
   update(person: Person): Observable<Person> {
     return this.http.put<PersonResponseDto>(`${this.baseUrl}/Person/${person.Id}`, this.toRequestDto(person)).pipe(
       map(dto => this.toPerson(dto, person.assignedVehicleId)),
@@ -61,14 +61,14 @@ export class PersonService {
     );
   }
 
-  // Löscht eine Person anhand ihrer Id
+  // Deletes a person by its id
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Person/${id}`).pipe(
       catchError(err => this.rethrow(err))
     );
   }
 
-  // Wandelt einen HTTP-Fehler in eine lesbare Fehlermeldung um und wirft ihn erneut
+  // Converts an HTTP error into a readable error message and rethrows it
   private rethrow(err: HttpErrorResponse) {
     const message = typeof err.error === 'string' && err.error
       ? err.error
@@ -77,7 +77,7 @@ export class PersonService {
     return throwError(() => new Error(message));
   }
 
-  // Wandelt das Domain-Modell Person in das Request-DTO für die API um
+  // Converts the Person domain model into the request DTO for the API
   private toRequestDto(person: Person): PersonRequestDto {
     return {
       firstName: person.firstName ?? '',
@@ -91,9 +91,9 @@ export class PersonService {
     };
   }
 
-  // Wandelt ein Person-Response-DTO in das Domain-Modell um, inklusive Führerschein-Mapping
+  // Converts a person response DTO into the domain model, including driver's license mapping
   private toPerson(dto: PersonResponseDto, assignedVehicleId?: string | null): Person {
-    // Fuehrerscheinklassen anhand des Index in LICENSE_TYPES auf Klartext mappen
+    // Map driver's license classes to plain text using their index in LICENSE_TYPES
     const licenses: DrivingLicense[] = (dto.licenses ?? []).map(l => ({
       licenseClass: LICENSE_TYPES[l.licenseType] ?? '',
       obtainedDate: l.obtainedDate

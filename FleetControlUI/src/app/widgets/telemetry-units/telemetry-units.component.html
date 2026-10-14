@@ -3,7 +3,7 @@
   <!-- Header -->
   <h1 class="header">Datenerfassungseinheiten</h1>
 
-  <!-- Toolbar: Neues Gerät anlegen / USB-Gerät registrieren -->
+  <!-- Toolbar: create new device / register USB device -->
   <div class="toolbar">
 
   <button class="create-btn"
@@ -47,7 +47,7 @@
 <div class="container">
   <div class="main">
 
-    <!-- Tabelle mit Ergebnissen: Liste der Datenerfassungseinheiten -->
+    <!-- Results table: list of data acquisition units -->
     <div class="list">
 
   <div *ngIf="filteredUnits.length === 0">
@@ -70,7 +70,7 @@
     </div>
   </div>
 
-  <!-- Bearbeiten-Formular: Fahrzeugzuordnung der Einheit -->
+  <!-- Edit form: vehicle assignment of the unit -->
   <div class="details-full" *ngIf="selectedIndex === i" (click)="$event.stopPropagation()">
     <div>
       <span>Fahrzeug-Identnr.:</span>
@@ -99,7 +99,7 @@
     <div class="form-error" *ngIf="editError && selectedIndex === i">{{ editError }}</div>
   </div>
 
-  <!-- Aktionen: Löschen, Bearbeiten, Fahrten anzeigen -->
+  <!-- Actions: delete, edit, show trips -->
   <div class="actions" *ngIf="selectedIndex === i" (click)="onActionsClick($event)" (mousedown)="$event.stopPropagation()">
     <button class="action-btn delete-btn"
             [class.danger]="deleteConfirmIndex === i"
@@ -147,7 +147,7 @@
 
   </div>
 
-  <!-- Filterleiste -->
+  <!-- Filter sidebar -->
   <app-filter-sidebar
     [vehicles]="vehicles"
     [telemetryUnitIds]="telemetryUnitIds"

@@ -5,9 +5,9 @@ using IngestionService.Influx;
 using IngestionService.Models;
 using IngestionService.Trip;
 
-// Verarbeitet einen einzelnen eingehenden MQTT-Datenpunkt: parsen, gegen
-// Zuordnungs-Cache und Plausibilitätsfilter prüfen, an den Fahrtzustandsautomaten
-// weiterreichen und anschließend zur Persistierung übergeben
+// Processes a single incoming MQTT data point: parse, check against the
+// assignment cache and plausibility filter, pass it on to the trip state machine
+// and then hand it over for persistence
 public class MessageHandler
 {
     private readonly InfluxWriter _writer;
@@ -32,9 +32,9 @@ public class MessageHandler
     }
 
 
-    // Verarbeitungskette für einen eingehenden Datenpunkt: JSON parsen, fehlende
-    // DeviceId oder unbekannte Geräte verwerfen, Plausibilität prüfen und den
-    // Punkt danach an Zustandsautomat und Persistenz weiterreichen
+    // Processing chain for an incoming data point: parse JSON, discard missing
+    // DeviceId or unknown devices, check plausibility and then
+    // pass the point on to the state machine and persistence
     public async Task HandleAsync(
         string topic,
         string payload
@@ -78,7 +78,7 @@ public class MessageHandler
             }
 
 
-            // Nur für im System bekannte Geräte werden Daten gespeichert
+            // Data is only stored for devices known to the system
             if (!_assignmentCache.TryGet(data.DeviceId, out var assignment))
             {
                 _logger.LogWarning(
@@ -89,8 +89,8 @@ public class MessageHandler
             }
 
 
-            // Verwirft Punkte mit Positionsfehlern der Telemetrieeinheit,
-            //  bevor sie den Zustandsautomaten oder die Datenbank erreichen
+            // Discards points with position errors from the telemetry unit
+            //  before they reach the state machine or the database
             if (!_gpsPlausibilityFilter.IsPlausible(data.DeviceId, data.Latitude, data.Longitude, data.Timestamp))
             {
                 return;

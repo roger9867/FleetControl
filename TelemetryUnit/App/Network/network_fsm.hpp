@@ -1,27 +1,35 @@
 #pragma once
 
-#include "../../Platform/SIM7600EH/sim7600eh.hpp"
-#include "./network_states.hpp"
+#include <cstdint>
 
-// Baut die Mobilfunk- und MQTT-Verbindung auf und überwacht sie
-class NetworkFSM
+#include "./network_states.hpp"
+#include "../Interfaces/i_clock.hpp"
+#include "../Interfaces/i_logger.hpp"
+#include "../Interfaces/i_network_modem.hpp"
+#include "../Interfaces/i_network_status.hpp"
+
+// Establishes and monitors the cellular and MQTT connection
+class NetworkFSM : public INetworkStatus
 {
     public:
         NetworkState get_state();
 
-        // Einen Schritt der FSM, muss zyklisch aufgerufen werden
+        // One step of the FSM, must be called periodically
         void step();
 
-        // Von TelemetryFsm nach jedem Publish-Versuch aufgerufen, um wiederholte
-        // Fehlschlaege als Zeichen einer toten Verbindung zu erkennen
-        void report_publish_result(bool ok);
+        // INetworkStatus
+        bool is_mqtt_connected() const override;
+        void report_publish_result(bool ok) override;
 
-        explicit NetworkFSM(Sim7600& _network_module);
+        NetworkFSM(INetworkModem& _modem, IClock& _clock, ILogger& _logger);
 
     private:
         NetworkState current_state = NetworkState::NetworkIdle;
 
-        Sim7600& network_module;
+        // Dependencies, injected via the constructor
+        INetworkModem& modem;
+        IClock& clock;
+        ILogger& logger;
 
         uint32_t last_health_check = 0;
         uint8_t consecutive_publish_failures = 0;

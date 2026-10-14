@@ -18,7 +18,7 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
-// Registrierung als Singleton
+// Registration as singleton
 builder.Services.AddSingleton<MessageHandler>();
 builder.Services.AddSingleton<InfluxWriter>();
 builder.Services.AddHostedService<InfluxWriteWorker>();
@@ -34,16 +34,16 @@ builder.Services.AddSingleton<TripReactor>();
 builder.Services.AddHostedService(
     sp => sp.GetRequiredService<TripReactor>());
 
-// Hintergrunddienste
+// Background services
 builder.Services.AddHostedService<PendingTripEndRetryService>();
 builder.Services.AddHostedService<Worker>();
 
-// gRPC-Serverfunktion aktivieren
+// Enable gRPC server functionality
 builder.Services.AddGrpc();
 
 var app = builder.Build();
 
-// Server-Endpunkt, über den FleetControlApi Zuordnungsänderungen zur Laufzeit pusht
+// Server endpoint through which FleetControlApi pushes assignment changes at runtime
 app.MapGrpcService<AssignmentUpdateGrpcService>();
 
 app.Run();

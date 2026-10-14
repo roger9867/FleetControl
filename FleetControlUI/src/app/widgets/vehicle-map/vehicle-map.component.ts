@@ -29,14 +29,14 @@ export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnC
   private markerLayer = L.layerGroup();
   private lastPointsSignature = '';
 
-  // Erstellt die Leaflet-Karte samt Kachel-Layer und rendert die ersten Fahrzeugpunkte.
+  // Creates the Leaflet map including the tile layer and renders the first vehicle points.
   ngAfterViewInit(): void {
-    // 1. Karte initialisieren und Startansicht setzen
+    // 1. Initialize the map and set the initial view
     this.map = L.map('vehicle-map', {
       attributionControl: false
     }).setView([48.8375, 10.0936], 13);
 
-    // 2. Kartenkacheln laden
+    // 2. Load map tiles
     L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; OpenStreetMap contributors',
       maxZoom: 20,
@@ -45,7 +45,7 @@ export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnC
       zoomOffset: -1
     }).addTo(this.map);
 
-    // 3. Marker-Layer einhängen und erste Punkte zeichnen
+    // 3. Attach the marker layer and draw the first points
     this.markerLayer.addTo(this.map);
     this.mapInitialized = true;
 
@@ -53,14 +53,14 @@ export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnC
     this.renderPoints();
   }
 
-  // Passt die Kartengroesse nach jeder Aenderungsprüfung an das aktuelle Layout an.
+  // Adjusts the map size to the current layout after each change detection.
   ngAfterViewChecked(): void {
     if (this.mapInitialized) {
       this.map.invalidateSize();
     }
   }
 
-  // Rendert die Marker neu, sobald sich die uebergebenen Fahrzeugpunkte tatsächlich geändert haben
+  // Re-renders the markers as soon as the given vehicle points have actually changed
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['points'] || !this.mapInitialized) return;
 
@@ -71,14 +71,14 @@ export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnC
     this.renderPoints();
   }
 
-  // Erzeugt eine vergleichbare Signatur aller Punkte, um unnötiges Neurendern zu vermeiden
+  // Creates a comparable signature of all points to avoid unnecessary re-rendering
   private pointsSignature(): string {
     return this.points
       .map(p => `${p.id}:${p.isMoving ? '1' : '0'}:${p.lat}:${p.lng}:${p.driverLabel ?? ''}:${p.telemetryUnitId ?? ''}:${p.timestamp ?? ''}`)
       .join('|');
   }
 
-  // Zeichnet für jeden Fahrzeugpunkt einen Marker mit Tooltip und zentriert anschliessend die Karte
+  // Draws a marker with tooltip for each vehicle point and then centers the map
   private renderPoints(): void {
     this.markerLayer.clearLayers();
 
@@ -102,7 +102,7 @@ export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnC
     this.recenter();
   }
 
-  // Baut den HTML-Text des Tooltips fuer einen Fahrzeugpunkt aus den vorhandenen Feldern
+  // Builds the tooltip HTML for a vehicle point from the available fields
   private tooltipContent(point: VehicleMapPoint): string {
     const lines = [`Fahrzeug: ${point.label}`];
 
@@ -123,7 +123,7 @@ export class VehicleMapComponent implements AfterViewInit, AfterViewChecked, OnC
     return lines.join('<br>');
   }
 
-  // Zentriert und zoomt die Karte so, dass alle Fahrzeugpunkte sichtbar sind
+  // Centers and zooms the map so that all vehicle points are visible
   recenter(): void {
     const coordinates: L.LatLngExpression[] = this.points.map(p => [p.lat, p.lng]);
 

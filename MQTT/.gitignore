@@ -1,0 +1,5 @@
+# Runtime data and logs of the local Mosquitto container
+data/
+log/
+# Legacy password file (now generated inside the container from .env)
+passwordfile

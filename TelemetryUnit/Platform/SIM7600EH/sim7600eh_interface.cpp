@@ -3,14 +3,14 @@
 #include "usart.h"
 
 /*
- * Komplette Datei ungenutzt: keiner dieser extern "C"-Wrapper wird von
- * Core/ oder App/ aufgerufen. Die tatsaechlich verwendete Sim7600-Instanz
- * lebt in App/Network/interface.cpp; diese hier war eine zweite, nie
- * genutzte Kopie.
+ * Entire file unused: none of these extern "C" wrappers is called from
+ * Core/ or App/. The Sim7600 instance actually used
+ * lives in App/Network/interface.cpp; this one was a second, never
+ * used copy.
 
 static Sim7600 sim;
 
-extern "C" bool check_connection() // ungenutzt, Sim7600::check_connection() haengt an AtBuffer
+extern "C" bool check_connection() // unused, Sim7600::check_connection() depends on AtBuffer
 {
     return sim.check_connection();
 }

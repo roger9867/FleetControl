@@ -1,12 +1,17 @@
 #include "telemetry_point.hpp"
-#include "../../Platform/SIM7600EH/sim7600eh.hpp"
-#include "../../Platform/GetDeviceId/device_id_as_uuid.h"
 #include <string.h>
 #include <stdlib.h>
 #include <cstdio>
 
 
-// NMEA-Format ddmm.mmmmmm: erste 2 (Lat) bzw. 3 (Lon) Ziffern sind Grad, Rest Minuten
+TelemetryPoint::TelemetryPoint(IClock& _clock, IDeviceId& _device_id)
+    : clock(_clock),
+      device_id(_device_id)
+{
+}
+
+
+// NMEA format ddmm.mmmmmm: the first 2 (lat) or 3 (lon) digits are degrees, the rest minutes
 float TelemetryPoint::nmea_to_decimal(const char* nmea)
 {
     float val = atof(nmea);
@@ -47,19 +52,19 @@ TelemetryData TelemetryPoint::parse_gnss(const char* response)
     if (!response)
         return out;
 
-    // "+CGNSSINFO:" suchen
+    // search for "+CGNSSINFO:"
     const char* p = strstr(response, "+CGNSSINFO:");
     if (!p)
         return out;
 
-    // hinter ':' springen
+    // jump past ':'
     p = strchr(p, ':');
     if (!p)
         return out;
 
     p++;
 
-    // lokale Kopie für strtok
+    // local copy for strtok
     char buf[256];
     strncpy(buf, p, sizeof(buf));
     buf[sizeof(buf) - 1] = '\0';
@@ -118,19 +123,19 @@ TelemetryData TelemetryPoint::parse_gnss(const char* response)
         field++;
     }
 
-    // Süd/West negativ
+    // South/West negative
     if (lat_dir == 'S')
         out.latitude *= -1.0f;
 
     if (lon_dir == 'W')
         out.longitude *= -1.0f;
 
-    // einfache Validierung
+    // simple validation
     if (fields_valid && (out.latitude != 0.0f || out.longitude != 0.0f))
         out.valid = true;
 
-    // Beschleunigung nur zwischen zwei gültigen Fixes berechnen, sonst
-    // würde ein Loch (kein Fix) fälschlich als starke Verzögerung gewertet.
+    // Only calculate acceleration between two valid fixes, otherwise
+    // a gap (no fix) would wrongly count as strong deceleration.
     if (out.valid)
         out.accel_in_ms2 = calculate_accel_in_ms2(out.speed_in_kmh);
 
@@ -156,10 +161,10 @@ void TelemetryPoint::format_timestamp(char* out, unsigned out_len)
     );
 }
 
-// Beschleunigung als Geschwindigkeitsänderung seit dem letzten Fix geteilt durch die vergangene Zeit
+// Acceleration as the change in speed since the last fix divided by the elapsed time
 float TelemetryPoint::calculate_accel_in_ms2(float new_speed_kmh)
 {
-    uint32_t now = HAL_GetTick();
+    uint32_t now = clock.get_clock_ticks();
     float accel = 0.0f;
 
     if (prev_tick_ms != 0)
@@ -181,12 +186,9 @@ float TelemetryPoint::calculate_accel_in_ms2(float new_speed_kmh)
 
 const char* TelemetryPoint::to_json()
 {
-    // nicht auf stack -> bss / data, persistent
+    // not on the stack -> bss / data, persistent
     static char json[192];
     char timestamp[32];
-
-    if (device_id[0] == '\0')
-        stm32_get_uid_as_uuid(device_id);
 
     format_timestamp(timestamp, sizeof(timestamp));
 
@@ -201,7 +203,7 @@ const char* TelemetryPoint::to_json()
         "\"speed_in_kmh\":%.2f,"
         "\"accel_in_ms2\":%.3f"
         "}",
-        device_id,
+        device_id.uuid(),
         timestamp,
         gnss_data.latitude,
         gnss_data.longitude,

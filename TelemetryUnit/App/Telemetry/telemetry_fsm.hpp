@@ -1,38 +1,58 @@
 #pragma once
 
-#include "../../Platform/SIM7600EH/sim7600eh.hpp"
+#include "../Interfaces/i_clock.hpp"
+#include "../Interfaces/i_gnss_source.hpp"
+#include "../Interfaces/i_logger.hpp"
+#include "../Interfaces/i_mqtt_publisher.hpp"
+#include "../Interfaces/i_network_status.hpp"
 #include "telemetry_point.hpp"
+
+
+// Interval between two telemetry publishes
+#define PUBLISH_INTERVAL_MS 1000U
+
 
 enum class TelemetryState
 {
-    Idle,       // wartet auf Netzwerk- und GNSS-Bereitschaft
-    Publishing, // sendet in festem Intervall Telemetriepunkte per MQTT
-    Error       // letzter Publish ist fehlgeschlagen, fällt zurück auf Idle
+    Idle,       // waits for network and GNSS readiness
+    Publishing, // sends telemetry points via MQTT at a fixed interval
+    Error       // last publish failed, falls back to Idle
 };
 
 
-// Steuert das periodische Senden von Telemetriedaten (Position, Geschwindigkeit,
-// Beschleunigung), sobald Netzwerk- und GNSS-FSM bereit sind
+// Controls the periodic sending of telemetry data (position, speed,
+// acceleration) as soon as the network and GNSS FSMs are ready
 class TelemetryFsm
 {
     public:
-        explicit TelemetryFsm(Sim7600& _telemetry_module);
+        TelemetryFsm(IMqttPublisher& _mqtt,
+             INetworkStatus& _network,
+             IGnssSource& _gnss,
+             TelemetryPoint& _telemetry_point,
+             IClock& _clock,
+             ILogger& _logger
+        );
 
-        // Führt einen Schritt der FSM aus, muss zyklisch aufgerufen werden
+        // Executes one step of the FSM, must be called periodically
         void step();
         TelemetryState get_state();
 
     private:
         TelemetryState current_state = TelemetryState::Idle;
 
-        Sim7600& telemetry_module;
-        TelemetryPoint telemetry_point;
+        // Dependencies, injected via the constructor
+        IMqttPublisher& mqtt;
+        INetworkStatus& network;
+        IGnssSource& gnss;
+        TelemetryPoint& telemetry_point;
+        IClock& clock;
+        ILogger& logger;
 
         uint32_t last_publish = 0;
 
         bool is_network_ready();
         bool is_gnss_ready();
 
-        // Baut den aktuellen Telemetriepunkt und sendet ihn per MQTT
+        // Builds the current telemetry point and sends it via MQTT
         bool publish_timestamp();
 };

@@ -1,7 +1,9 @@
+#pragma once
+
 #include "main.h"
 
 #ifdef __cplusplus
-#include "network_states.hpp"
+#include "../Interfaces/i_network_status.hpp"
 #endif
 
 #ifdef __cplusplus
@@ -9,10 +11,10 @@ extern "C" {
 #endif
 
 void network_fsm_step();
-void network_fsm_report_publish_result(bool ok);
 
 #ifdef __cplusplus
 }
 
-NetworkState network_fsm_get_state();
+// Network FSM as seen by other FSMs (connection status and publish feedback)
+INetworkStatus& network_fsm_status();
 #endif

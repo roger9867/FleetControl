@@ -10,22 +10,22 @@ package telemetry;
 service TelemetryQuery {
 
 
-  // Liest die InfluxDB-Datenpunkte, die IngestionService fuer eine
-  // telemetrieeinheit gespeichert hat, eingegrenzt auf den Zeitraum (Start/EndTimestamp
-  // einer Fahrt).
+  // Reads the InfluxDB data points that IngestionService stored for a
+  // telemetry unit, limited to the time range (Start/EndTimestamp
+  // of a trip).
   rpc GetTelemetryPoints (GetTelemetryPointsRequest) returns (GetTelemetryPointsResponse);
 
-  // Ein Punkt pro  Geräte-ID - die jeweils letzte gemeldete
-  // Position. Geräte ohne gemeldete Daten fehlen einfach in der
-  // Antwort, statt einen Fehler auszulösen.
+  // One point per device ID - the most recently reported
+  // position. Devices without reported data are simply missing from the
+  // response instead of causing an error.
   rpc GetLatestPoints (GetLatestPointsRequest) returns (GetLatestPointsResponse);
 
-  // Wie GetLatestPoints, aber ueber vehicleId statt deviceId -
-  // fragt direkt nach der Fahrzeug-Zuordnung, mit der der Datenpunkt
-  // geschrieben wurde, statt ueber die aktuelle T-Einheit-Zuordnung zu gehen.
+  // Like GetLatestPoints, but by vehicleId instead of deviceId -
+  // queries directly by the vehicle assignment the data point was
+  // written with, instead of going through the current telemetry unit assignment.
   rpc GetLatestPointsByVehicle (GetLatestPointsByVehicleRequest) returns (GetLatestPointsByVehicleResponse);
 
-  // Loescht alle Punkte eines Geraets
+  // Deletes all points of a device
   rpc DeleteTelemetryPoints (DeleteTelemetryPointsRequest) returns (DeleteTelemetryPointsResponse);
 }
 

@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="FleetControlApi.Api.Tests/FleetControlApi.Api.Tests.csproj" />
+  <Project Path="FleetControlApi.Api/FleetControlApi.Api.csproj" />
+  <Project Path="FleetControlApi.Persistence.Tests/FleetControlApi.Persistence.Tests.csproj" />
+  <Project Path="FleetControlApi.Persistence/FleetControlApi.Persistence.csproj" />
+  <Project Path="FleetControlApi.Domain/FleetControlApi.Domain.csproj" />
+  <Project Path="FleetControlApi.Gateway/FleetControlApi.Gateway.csproj" />
+  <Project Path="FleetControlApi.Service/FleetControlApi.Service.csproj" />
+</Solution>

@@ -1,15 +1,15 @@
 #include "mpu6050.h"
 
-#define MPU6050_ADDR 0x68 << 1  // um 1 shiften: I2c-Adresse 7 bit linksbündig +r/w-Bit
+#define MPU6050_ADDR 0x68 << 1  // shift by 1: I2C address 7 bit left-aligned + r/w bit
 
 #define WHO_AM_I 0x75 // device identification 
 #define PWR_MGMT_1 0x6B // Power management, CLK source (0 = internal oscillator)
 #define MPU6050_SMRT_DIV 0x19
 #define MPU6050_CONFIG 0x1A // DLPF config
 #define MPU6050_GYRO_CONFIG 0x1B // Full range
-#define MPU6050_ACCEL_CONFIG 0x1C // Accel. full scale range = Messbereich
+#define MPU6050_ACCEL_CONFIG 0x1C // Accel. full scale range = measuring range
 #define MPU6050_FIFO_EN 0x23 // FIFO enable / disable
-#define MPU6050_USER_CONTROL 0x6A // enable FIFO buffers b6=1, b2=FIFO reset=1 wenn FIFO_En=0 -> clears to 0 after
+#define MPU6050_USER_CONTROL 0x6A // enable FIFO buffers b6=1, b2=FIFO reset=1 if FIFO_En=0 -> clears to 0 after
 
 #define MPU6050_GYRO_OUT_H 0x43
 #define MPU6050_ACCEL_OUT_H 0x3B

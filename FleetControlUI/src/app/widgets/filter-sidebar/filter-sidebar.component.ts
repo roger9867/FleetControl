@@ -36,7 +36,7 @@ export interface AppliedFilters {
   mode: FilterMode;
 }
 
-// Erzeugt ein leeres erweitertes Filterobjekt für Fahrzeuge
+// Creates an empty advanced filter object for vehicles
 export function emptyVehicleAdvancedFilter(): VehicleAdvancedFilter {
   return {
     brand: '',
@@ -53,7 +53,7 @@ export function emptyVehicleAdvancedFilter(): VehicleAdvancedFilter {
   };
 }
 
-// Erzeugt ein leeres erweitertes Filterobjekt für Personen
+// Creates an empty advanced filter object for persons
 export function emptyPersonAdvancedFilter(): PersonAdvancedFilter {
   return {
     firstName: '',
@@ -62,7 +62,7 @@ export function emptyPersonAdvancedFilter(): PersonAdvancedFilter {
   };
 }
 
-// Erzeugt ein leeres Gesamt-Filterobjekt mit Standardwerten
+// Creates an empty overall filter object with default values
 export function emptyAppliedFilters(): AppliedFilters {
   return {
     vehicleIds: [],
@@ -122,7 +122,7 @@ export class FilterComponent
   @ViewChild('telemetryAutocomplete') telemetryAutocompleteRef?: ElementRef<HTMLElement>;
   @ViewChild('personAutocomplete') personAutocompleteRef?: ElementRef<HTMLElement>;
 
-  // Schliesst offene Autocomplete-Dropdowns bei Klick ausserhalb ihres Bereichs
+  // Closes open autocomplete dropdowns when clicking outside their area
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
@@ -140,13 +140,13 @@ export class FilterComponent
     }
   }
 
-  // Liefert die Fahrzeuge, die Suchbegriff und erweiterte Filterkriterien erfüllen
+  // Returns the vehicles that match the search term and advanced filter criteria
   get filteredVehicleOptions(): Vehicle[] {
     const term = this.vehicleSearch.toLowerCase();
     const f = this.advancedVehicleFilter;
 
     return this.vehicles.filter(v => {
-      // Einzelne Filterkriterien prüfen
+      // Check individual filter criteria
       const matchesSearch = !term || (v.licensePlate ?? '').toLowerCase().includes(term) || v.Id.toLowerCase().includes(term);
       const matchesBrand = !f.brand || (v.brand ?? '').toLowerCase().includes(f.brand.toLowerCase());
       const matchesModel = !f.modelName || (v.modelName ?? '').toLowerCase().includes(f.modelName.toLowerCase());
@@ -160,66 +160,66 @@ export class FilterComponent
       const matchesRegFrom = !f.firstRegistrationFrom || (v.firstRegistration ?? '') >= f.firstRegistrationFrom;
       const matchesRegTo = !f.firstRegistrationTo || (v.firstRegistration ?? '') <= f.firstRegistrationTo;
 
-      // Alle Kriterien müssen gleichzeitig erfüllt sein
+      // All criteria must be met at the same time
       return matchesSearch && matchesBrand && matchesModel && matchesColor
         && matchesYearFrom && matchesYearTo && matchesIdentNr && matchesLicense
         && matchesPowerFrom && matchesPowerTo && matchesRegFrom && matchesRegTo;
     });
   }
 
-  // Liefert die Telemetrie-Einheiten-IDs, die zum Suchbegriff passen
+  // Returns the telemetry unit IDs that match the search term
   get filteredTelemetryOptions(): string[] {
     const term = this.telemetrySearch.toLowerCase();
     return this.telemetryUnitIds.filter(u => u.toLowerCase().includes(term));
   }
 
-  // Liefert die Personen, die Suchbegriff und erweiterte Filterkriterien erfüllen
+  // Returns the persons that match the search term and advanced filter criteria
   get filteredPersonOptions(): Person[] {
     const term = this.personSearch.toLowerCase();
     const f = this.advancedPersonFilter;
 
     return this.persons.filter(p => {
-      // Einzelne Filterkriterien prüfen
+      // Check individual filter criteria
       const fullName = `${p.firstName ?? ''} ${p.lastName ?? ''}`.toLowerCase();
       const matchesSearch = !term || fullName.includes(term) || p.Id.toLowerCase().includes(term);
       const matchesFirstName = !f.firstName || (p.firstName ?? '').toLowerCase().includes(f.firstName.toLowerCase());
       const matchesLastName = !f.lastName || (p.lastName ?? '').toLowerCase().includes(f.lastName.toLowerCase());
       const matchesEmployeeNr = !f.employeeNr || p.Id.toLowerCase().includes(f.employeeNr.toLowerCase());
 
-      // Alle Kriterien müssen gleichzeitig erfüllt sein
+      // All criteria must be met at the same time
       return matchesSearch && matchesFirstName && matchesLastName && matchesEmployeeNr;
     });
   }
 
-  // Setzt den Verknüpfungsmodus (Schnittmenge/Vereinigung) für Filter
+  // Sets the combination mode (intersection/union) for filters
   setFilterMode(mode: FilterMode): void {
     this.filterMode = mode;
   }
 
-  // Blendet den erweiterten Fahrzeugfilter ein oder aus
+  // Shows or hides the advanced vehicle filter
   toggleAdvancedVehicleFilter(): void {
     this.showAdvancedVehicleFilter = !this.showAdvancedVehicleFilter;
   }
 
-  // Blendet den erweiterten Personenfilter ein oder aus
+  // Shows or hides the advanced person filter
   toggleAdvancedPersonFilter(): void {
     this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
   }
 
-  // Reagiert auf Änderungen im Fahrzeug-Suchfeld und öffnet die Vorschlagsliste
+  // Reacts to changes in the vehicle search field and opens the suggestion list
   onVehicleSearchChange(): void {
     this.showVehicleOptions = true;
     if (!this.vehicleSearch) this.filterVehicleId = '';
   }
 
-  // Übernimmt ein ausgewähltes Fahrzeug aus der Autocomplete-Liste
+  // Takes over a selected vehicle from the autocomplete list
   selectVehicle(vehicle: Vehicle): void {
     this.filterVehicleId = vehicle.Id;
     this.vehicleSearch = vehicle.licensePlate ?? vehicle.Id;
     this.showVehicleOptions = false;
   }
 
-  // Fügt das ausgewählte Fahrzeug der Filterliste hinzu, sofern gültig und nicht doppelt
+  // Adds the selected vehicle to the filter list if valid and not a duplicate
   addVehicleFilter(): void {
     if (this.filterVehicleId
       && !this.filterVehicleIds.includes(this.filterVehicleId)
@@ -227,30 +227,30 @@ export class FilterComponent
       this.filterVehicleIds.push(this.filterVehicleId);
     }
 
-    // Eingabefelder für die nächste Auswahl zurücksetzen
+    // Reset input fields for the next selection
     this.filterVehicleId = '';
     this.vehicleSearch = '';
   }
 
-  // Entfernt ein Fahrzeug aus der Filterliste
+  // Removes a vehicle from the filter list
   removeVehicleFilter(vehicleId: string): void {
     this.filterVehicleIds = this.filterVehicleIds.filter(id => id !== vehicleId);
   }
 
-  // Reagiert auf Änderungen im Telemetrie-Suchfeld und öffnet die Vorschlagsliste
+  // Reacts to changes in the telemetry search field and opens the suggestion list
   onTelemetrySearchChange(): void {
     this.showTelemetryOptions = true;
     if (!this.telemetrySearch) this.filterTelemetryUnitId = '';
   }
 
-  // Übernimmt eine ausgewählte Telemetrie-Einheit aus der Autocomplete-Liste
+  // Takes over a selected telemetry unit from the autocomplete list
   selectTelemetryUnit(unitId: string): void {
     this.filterTelemetryUnitId = unitId;
     this.telemetrySearch = unitId;
     this.showTelemetryOptions = false;
   }
 
-  // Fügt die ausgewählte Telemetrie-Einheit der Filterliste hinzu, sofern gültig und nicht doppelt
+  // Adds the selected telemetry unit to the filter list if valid and not a duplicate
   addTelemetryUnitFilter(): void {
     if (this.filterTelemetryUnitId
       && !this.filterTelemetryUnitIds.includes(this.filterTelemetryUnitId)
@@ -258,30 +258,30 @@ export class FilterComponent
       this.filterTelemetryUnitIds.push(this.filterTelemetryUnitId);
     }
 
-    // Eingabefelder für die nächste Auswahl zurücksetzen
+    // Reset input fields for the next selection
     this.filterTelemetryUnitId = '';
     this.telemetrySearch = '';
   }
 
-  // Entfernt eine Telemetrie-Einheit aus der Filterliste
+  // Removes a telemetry unit from the filter list
   removeTelemetryUnitFilter(unitId: string): void {
     this.filterTelemetryUnitIds = this.filterTelemetryUnitIds.filter(id => id !== unitId);
   }
 
-  // Reagiert auf Änderungen im Personen-Suchfeld und öffnet die Vorschlagsliste
+  // Reacts to changes in the person search field and opens the suggestion list
   onPersonSearchChange(): void {
     this.showPersonOptions = true;
     if (!this.personSearch) this.filterPersonId = '';
   }
 
-  // Übernimmt eine ausgewählte Person aus der Autocomplete-Liste
+  // Takes over a selected person from the autocomplete list
   selectPerson(person: Person): void {
     this.filterPersonId = person.Id;
     this.personSearch = person.Id;
     this.showPersonOptions = false;
   }
 
-  // Fügt die ausgewählte Person der Filterliste hinzu, sofern gültig und nicht doppelt
+  // Adds the selected person to the filter list if valid and not a duplicate
   addPersonFilter(): void {
     if (this.filterPersonId
       && !this.filterPersonIds.includes(this.filterPersonId)
@@ -289,19 +289,19 @@ export class FilterComponent
       this.filterPersonIds.push(this.filterPersonId);
     }
 
-    // Eingabefelder für die nächste Auswahl zurücksetzen
+    // Reset input fields for the next selection
     this.filterPersonId = '';
     this.personSearch = '';
   }
 
-  // Entfernt eine Person aus der Filterliste
+  // Removes a person from the filter list
   removePersonFilter(personId: string): void {
     this.filterPersonIds = this.filterPersonIds.filter(id => id !== personId);
   }
 
   hasActiveFilters = false;
 
-  // Prüft, ob irgendein Filterkriterium der übergebenen Filter aktiv gesetzt ist
+  // Checks whether any filter criterion of the given filters is actively set
   private computeHasActiveFilters(f: AppliedFilters): boolean {
     const va = f.vehicleAdvanced;
     const pa = f.personAdvanced;
@@ -315,9 +315,9 @@ export class FilterComponent
       || !!(pa.firstName || pa.lastName || pa.employeeNr);
   }
 
-  // Baut das aktuelle Filterobjekt zusammen und meldet es an die übergeordnete Komponente
+  // Assembles the current filter object and reports it to the parent component
   applyFilters(): void {
-    // 1. Filterobjekt aus aktuellem Auswahlzustand zusammenstellen
+    // 1. Assemble the filter object from the current selection state
     const filters: AppliedFilters = {
       vehicleIds: [...this.filterVehicleIds],
       telemetryUnitIds: [...this.filterTelemetryUnitIds],
@@ -327,14 +327,14 @@ export class FilterComponent
       mode: this.filterMode
     };
 
-    // 2. Aktiv-Status ermitteln und Filter-Event auslösen
+    // 2. Determine the active state and emit the filter event
     this.hasActiveFilters = this.computeHasActiveFilters(filters);
     this.filtersApplied.emit(filters);
   }
 
-  // Setzt alle Filterauswahlen und -eingaben auf den Ausgangszustand zurück
+  // Resets all filter selections and inputs to their initial state
   resetFilters(): void {
-    // 1. Alle Auswahl- und Sucheingaben leeren
+    // 1. Clear all selection and search inputs
     this.filterVehicleId = '';
     this.filterVehicleIds = [];
     this.filterTelemetryUnitId = '';
@@ -351,7 +351,7 @@ export class FilterComponent
     this.filterMode = 'intersect';
     this.hasActiveFilters = false;
 
-    // 2. Leere Filter an die übergeordnete Komponente melden
+    // 2. Report empty filters to the parent component
     this.filtersApplied.emit(emptyAppliedFilters());
   }
 }

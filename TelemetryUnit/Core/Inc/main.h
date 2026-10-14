@@ -75,9 +75,8 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 #define PIN_STATE_HIGH 1
 #define PIN_STATE_LOW 0
-#define bool uint8_t
-#define true 1
-#define false 0
+// bool/true/false for C code; do not #define bool, that would break the C++ keyword
+#include <stdbool.h>
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -8,10 +8,10 @@ using System.Text;
 
 
 
-// Baut die MQTT-Verbindung zum konfigurierten Broker auf, abonniert die
-// Topic und reicht eingehende Nachrichten an den MessageHandler
-// weiter.
-//  baut die Verbindung bei Verbindungsverlust automatisch neu auf
+// Establishes the MQTT connection to the configured broker, subscribes to the
+// topic and passes incoming messages on to the
+// MessageHandler.
+//  re-establishes the connection automatically when it is lost
 public class MqttClientService
 {
     private static readonly TimeSpan ReconnectDelay = TimeSpan.FromSeconds(5);
@@ -24,8 +24,8 @@ public class MqttClientService
     private MqttClientOptions? _options;
     private CancellationToken _stoppingToken;
 
-    // Verhindert, dass mehrere gleichzeitig eintreffende Disconnect-Events
-    // jeweils eigene, parallel laufende Reconnect-Versuche starten.
+    // Prevents several simultaneously arriving disconnect events from
+    // each starting their own parallel reconnect attempts.
     private readonly SemaphoreSlim _reconnectLock = new(1, 1);
 
 
@@ -40,8 +40,8 @@ public class MqttClientService
     }
 
 
-    // Registriert die Callbacks für eingehende Nachrichten und Verbindungsabbrüche,
-    // baut danach die Erstverbindung auf und abonniert die konfigurierte Topic
+    // Registers the callbacks for incoming messages and disconnects,
+    // then establishes the initial connection and subscribes to the configured topic
     public async Task StartAsync(
         CancellationToken token
     ) {
@@ -52,7 +52,7 @@ public class MqttClientService
         _client = factory.CreateMqttClient();
 
 
-        // Topic und Payload zur Verarbeitung weiterleiten
+        // Forward topic and payload for processing
         _client.ApplicationMessageReceivedAsync += async e =>
         {
             var topic = e.ApplicationMessage.Topic;
@@ -153,7 +153,7 @@ public class MqttClientService
     }
 
 
-    // Versucht in einer Endlosschleife, die Verbindung zum Broker aufzubauen
+    // Tries to connect to the broker in an endless loop
     private async Task ConnectWithRetryAsync(
         MqttClientOptions options,
         CancellationToken token
@@ -202,7 +202,7 @@ public class MqttClientService
     }
 
 
-    // Wrapper, der eine eingehende MQTT-Nachricht an MessageHandler weiterreicht
+    // Wrapper that passes an incoming MQTT message on to the MessageHandler
     private async Task HandleMessage(
         string topic,
         string payload

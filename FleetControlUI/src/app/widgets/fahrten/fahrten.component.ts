@@ -108,7 +108,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
   private tripEndedSubscription?: Subscription;
   private tripStartedSubscription?: Subscription;
 
-  // Konstruktor: injiziert die benötigten Services
+  // Constructor: injects the required services
   constructor(
     private tripService: TripService,
     private vehicleService: VehicleService,
@@ -118,7 +118,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
-  // Schließt offene Dropdowns/Bestätigungen, wenn außerhalb geklickt wird
+  // Closes open dropdowns/confirmations when clicking outside
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
@@ -143,15 +143,15 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Lifecycle-Hook: lädt Anfangsdaten, übernimmt Preset-Filter und abonniert Live-Updates
+  // Lifecycle hook: loads initial data, applies preset filters and subscribes to live updates
   ngOnInit(): void {
-    // 1. Fahrten und Stammdaten laden
+    // 1. Load trips and master data
     this.loadTripPage();
     this.loadVehicles();
     this.loadTelemetryUnits();
     this.loadPersons();
 
-    // 2. über Inputs vorgegebene Filter übernehmen und danach zurücksetzen
+    // 2. Apply filters passed via inputs and reset them afterwards
     if (this.presetVehicleId) {
       this.filterVehicleIds = [this.presetVehicleId];
       this.appliedFilterVehicleIds = [this.presetVehicleId];
@@ -170,7 +170,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
       this.presetTelemetryUnitIdChange.emit(undefined);
     }
 
-    // 3. Live-Updates für Fahrzeugposition, Fahrtende und Fahrtstart abonnieren
+    // 3. Subscribe to live updates for vehicle position, trip end and trip start
     this.liveSubscription = this.vehicleLiveService.vehicleUpdate$.subscribe(update => {
       this.onVehicleUpdate(update);
     });
@@ -190,7 +190,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.tripStartedSubscription?.unsubscribe();
   }
 
-  // Fügt eine neu gestartete Fahrt oben in die Liste ein (nur auf der ersten Seite)
+  // Inserts a newly started trip at the top of the list (only on the first page)
   private onTripStarted(update: TripStartedUpdate): void {
     if (this.currentTripPage !== 1 || this.trips.some(t => t.id === update.tripId)) return;
 
@@ -208,7 +208,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  // Trägt den Endzeitpunkt einer beendeten Fahrt in die passende lokale Fahrt ein
+  // Sets the end time of an ended trip on the matching local trip
   private onTripEnded(update: TripEndedUpdate): void {
     const trip = this.trips.find(t => t.id === update.tripId);
     if (!trip || trip.end) return;
@@ -217,11 +217,11 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  // Ordnet ein eintreffendes Positions-Update der passenden laufenden Fahrt zu und hängt den Punkt an
+  // Assigns an incoming position update to the matching running trip and appends the point
   private onVehicleUpdate(update: VehiclePositionUpdate): void {
     const pointTime = new Date(update.timestamp).getTime();
 
-    // 1. betroffene Fahrt anhand Fahrzeug und Zeitraum finden
+    // 1. Find the affected trip by vehicle and time range
     const affectedTrip = this.trips.find(trip => {
       if (trip.vehicleId !== update.vehicleId) return false;
 
@@ -238,7 +238,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
 
     if (!affectedTrip) return;
 
-    // 2. neuen Telemetriepunkt an die Fahrt anhängen
+    // 2. Append the new telemetry point to the trip
     affectedTrip.points.push({
       lat: update.lat,
       lng: update.lng,
@@ -250,7 +250,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  // Lädt alle Fahrzeuge für die Filter- und Anzeigelisten
+  // Loads all vehicles for the filter and display lists
   private loadVehicles(): void {
     this.vehicleService.loadAll().subscribe({
       next: (vehicles) => {
@@ -261,7 +261,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Lädt alle Telemetrie-Einheiten für die Filterliste
+  // Loads all telemetry units for the filter list
   private loadTelemetryUnits(): void {
     this.telemetryUnitService.getUnits().subscribe({
       next: (units) => {
@@ -272,7 +272,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Lädt alle Personen (Fahrer) für die Filterliste
+  // Loads all persons (drivers) for the filter list
   private loadPersons(): void {
     this.personService.loadAll().subscribe({
       next: (persons) => {
@@ -283,7 +283,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Lädt die aktuelle Seite der Fahrtenliste vom Server
+  // Loads the current page of the trip list from the server
   private loadTripPage(): void {
     this.tripService.loadPage(this.currentTripPage, this.tripPageSize).subscribe({
       next: (result) => {
@@ -296,7 +296,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Wendet die aktuell angewendeten Filter (Fahrzeug, Einheit, Person, Zeitraum) auf die Fahrten an
+  // Applies the currently applied filters (vehicle, unit, person, time range) to the trips
   get filteredTrips(): Trip[] {
     return this.trips.filter(trip => {
       if (this.appliedFilterVehicleIds.length && !this.appliedFilterVehicleIds.includes(trip.vehicleId ?? '')) return false;
@@ -308,7 +308,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Liefert die für die Kartendarstellung relevanten Fahrten mit reduzierter Punktdichte
+  // Returns the trips relevant for the map display with reduced point density
   get mapTrips(): Trip[] {
     const source = this.selectedTrip ? [this.selectedTrip] : this.pagedTrips;
 
@@ -318,27 +318,27 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     }));
   }
 
-  // Berechnet die Gesamtanzahl der Seiten anhand von Fahrtenanzahl und Seitengröße
+  // Calculates the total number of pages from the number of trips and the page size
   get totalTripPages(): number {
     return Math.max(1, Math.ceil(this.totalTripCount / this.tripPageSize));
   }
 
-  // Liefert die Liste der Seitenzahlen für die Pagination
+  // Returns the list of page numbers for the pagination
   get tripPageNumbers(): number[] {
     return Array.from({ length: this.totalTripPages }, (_, i) => i + 1);
   }
 
-  // Liefert die gefilterten Fahrten der aktuellen Seite
+  // Returns the filtered trips of the current page
   get pagedTrips(): Trip[] {
     return this.filteredTrips;
   }
 
-  // Liefert die aktuell ausgewählte Fahrt, falls vorhanden
+  // Returns the currently selected trip, if any
   get selectedTrip(): Trip | null {
     return this.selectedIndex !== null ? this.pagedTrips[this.selectedIndex] ?? null : null;
   }
 
-  // Liefert die Diagrammdaten der ausgewählten Fahrt mit reduzierter Punktdichte
+  // Returns the chart data of the selected trip with reduced point density
   get selectedTripChartData(): Trip[] {
     if (!this.selectedTrip) return [];
 
@@ -348,13 +348,13 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     }];
   }
 
-  // Filtert die Fahrzeugliste anhand von Suchbegriff und erweiterten Filterkriterien
+  // Filters the vehicle list by search term and advanced filter criteria
   get filteredVehicleOptions(): Vehicle[] {
     const term = this.vehicleSearch.toLowerCase();
     const f = this.appliedAdvancedVehicleFilter;
 
     return this.vehicles.filter(v => {
-      // Einzelne Kriterien prüfen
+      // Check individual criteria
       const matchesSearch = !term || (v.licensePlate ?? '').toLowerCase().includes(term);
       const matchesBrand = !f.brand || (v.brand ?? '').toLowerCase().includes(f.brand.toLowerCase());
       const matchesModel = !f.modelName || (v.modelName ?? '').toLowerCase().includes(f.modelName.toLowerCase());
@@ -374,13 +374,13 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Filtert die Telemetrie-Einheiten-IDs anhand des Suchbegriffs
+  // Filters the telemetry unit IDs by search term
   get filteredTelemetryOptions(): string[] {
     const term = this.telemetrySearch.toLowerCase();
     return this.telemetryUnits.map(u => u.id).filter(id => id.toLowerCase().includes(term));
   }
 
-  // Filtert die Personenliste anhand von Suchbegriff und erweiterten Filterkriterien
+  // Filters the person list by search term and advanced filter criteria
   get filteredPersonOptions(): Person[] {
     const term = this.personSearch.toLowerCase();
     const f = this.appliedAdvancedPersonFilter;
@@ -397,18 +397,18 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Öffnet die Fahrzeug-Vorschlagsliste und setzt die Auswahl zurück, wenn das Suchfeld geleert wird
+  // Opens the vehicle suggestion list and resets the selection when the search field is cleared
   onVehicleSearchChange(): void {
     this.showVehicleOptions = true;
     if (!this.vehicleSearch) this.filterVehicleId = '';
   }
 
-  // Blendet den erweiterten Fahrzeugfilter ein oder aus
+  // Shows or hides the advanced vehicle filter
   toggleAdvancedVehicleFilter(): void {
     this.showAdvancedVehicleFilter = !this.showAdvancedVehicleFilter;
   }
 
-  // Übernimmt die aktuell gewählten Filterwerte als angewendete Filter
+  // Applies the currently selected filter values as the applied filters
   applyFilters(): void {
     this.appliedFilterVehicleIds = [...this.filterVehicleIds];
     this.appliedFilterTelemetryUnitIds = [...this.filterTelemetryUnitIds];
@@ -421,14 +421,14 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.selectedIndex = null;
   }
 
-  // Übernimmt ein aus der Vorschlagsliste gewähltes Fahrzeug in das Suchfeld
+  // Puts a vehicle selected from the suggestion list into the search field
   selectVehicle(vehicle: Vehicle): void {
     this.filterVehicleId = vehicle.Id;
     this.vehicleSearch = vehicle.licensePlate ?? '';
     this.showVehicleOptions = false;
   }
 
-  // Fügt das aktuell gewählte Fahrzeug der Filterliste hinzu (bis zum Maximum)
+  // Adds the currently selected vehicle to the filter list (up to the maximum)
   addVehicleFilter(): void {
     if (this.filterVehicleId
       && !this.filterVehicleIds.includes(this.filterVehicleId)
@@ -440,25 +440,25 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.vehicleSearch = '';
   }
 
-  // Entfernt ein Fahrzeug aus der Filterliste
+  // Removes a vehicle from the filter list
   removeVehicleFilter(vehicleId: string): void {
     this.filterVehicleIds = this.filterVehicleIds.filter(id => id !== vehicleId);
   }
 
-  // Öffnet die Telemetrie-Einheiten-Vorschlagsliste und setzt die Auswahl zurück, wenn das Suchfeld geleert wird
+  // Opens the telemetry unit suggestion list and resets the selection when the search field is cleared
   onTelemetrySearchChange(): void {
     this.showTelemetryOptions = true;
     if (!this.telemetrySearch) this.filterTelemetryUnitId = '';
   }
 
-  // Übernimmt eine aus der Vorschlagsliste gewählte Telemetrie-Einheit in das Suchfeld
+  // Puts a telemetry unit selected from the suggestion list into the search field
   selectTelemetryUnit(unitId: string): void {
     this.filterTelemetryUnitId = unitId;
     this.telemetrySearch = unitId;
     this.showTelemetryOptions = false;
   }
 
-  // Fügt die aktuell gewählte Telemetrie-Einheit der Filterliste hinzu (bis zum Maximum)
+  // Adds the currently selected telemetry unit to the filter list (up to the maximum)
   addTelemetryUnitFilter(): void {
     if (this.filterTelemetryUnitId
       && !this.filterTelemetryUnitIds.includes(this.filterTelemetryUnitId)
@@ -470,30 +470,30 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.telemetrySearch = '';
   }
 
-  // Entfernt eine Telemetrie-Einheit aus der Filterliste
+  // Removes a telemetry unit from the filter list
   removeTelemetryUnitFilter(unitId: string): void {
     this.filterTelemetryUnitIds = this.filterTelemetryUnitIds.filter(id => id !== unitId);
   }
 
-  // Öffnet die Personen-Vorschlagsliste und setzt die Auswahl zurück, wenn das Suchfeld geleert wird
+  // Opens the person suggestion list and resets the selection when the search field is cleared
   onPersonSearchChange(): void {
     this.showPersonOptions = true;
     if (!this.personSearch) this.filterPersonId = '';
   }
 
-  // Blendet den erweiterten Personenfilter ein oder aus
+  // Shows or hides the advanced person filter
   toggleAdvancedPersonFilter(): void {
     this.showAdvancedPersonFilter = !this.showAdvancedPersonFilter;
   }
 
-  // Übernimmt eine aus der Vorschlagsliste gewählte Person in das Suchfeld
+  // Puts a person selected from the suggestion list into the search field
   selectPerson(person: Person): void {
     this.filterPersonId = person.Id;
     this.personSearch = person.Id;
     this.showPersonOptions = false;
   }
 
-  // Fügt die aktuell gewählte Person der Filterliste hinzu (bis zum Maximum)
+  // Adds the currently selected person to the filter list (up to the maximum)
   addPersonFilter(): void {
     if (this.filterPersonId
       && !this.filterPersonIds.includes(this.filterPersonId)
@@ -505,17 +505,17 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.personSearch = '';
   }
 
-  // Entfernt eine Person aus der Filterliste
+  // Removes a person from the filter list
   removePersonFilter(personId: string): void {
     this.filterPersonIds = this.filterPersonIds.filter(id => id !== personId);
   }
 
-  // Wählt eine Fahrt in der Liste aus bzw. hebt die Auswahl bei erneutem Klick auf
+  // Selects a trip in the list, or deselects it when clicked again
   selectItem(index: number): void {
     this.selectedIndex = this.selectedIndex === index ? null : index;
   }
 
-  // Verhindert das Schließen der Löschbestätigung, wenn in den Aktionsbereich geklickt wird
+  // Prevents the delete confirmation from closing when clicking in the action area
   onActionsClick(event: MouseEvent): void {
     event.stopPropagation();
 
@@ -525,12 +525,12 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Unterbindet den Standard-Fokuswechsel beim Klick auf einen Aktions-Button
+  // Suppresses the default focus change when clicking an action button
   onActionMouseDown(event: MouseEvent): void {
     event.preventDefault();
   }
 
-  // Fordert bei erstem Klick eine Bestätigung an und löscht die Fahrt erst beim zweiten Klick
+  // Asks for confirmation on the first click and deletes the trip only on the second click
   confirmDelete(index: number, trip: Trip): void {
     if (!trip.end) return;
 
@@ -542,7 +542,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.deleteTrip(trip);
   }
 
-  // Löscht die Fahrt über den Service und aktualisiert die lokale Liste bzw. zeigt einen Fehler an
+  // Deletes the trip via the service and updates the local list or shows an error
   private deleteTrip(trip: Trip): void {
     this.deleteError = null;
 
@@ -562,21 +562,21 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Erzeugt die Anzeigebezeichnung eines Fahrzeugs (ID plus Kennzeichen)
+  // Builds the display label of a vehicle (ID plus license plate)
   vehicleLabel(vehicleId?: string | null): string {
     if (!vehicleId) return '';
     const vehicle = this.vehicles.find(v => v.Id === vehicleId);
     return vehicle ? `${vehicleId} - ${vehicle.licensePlate}` : vehicleId;
   }
 
-  // Erzeugt die Anzeigebezeichnung eines Fahrers (ID plus Name)
+  // Builds the display label of a driver (ID plus name)
   driverLabel(driverId?: string | null): string {
     if (!driverId) return '';
     const person = this.persons.find(p => p.Id === driverId);
     return person ? `${driverId} - ${person.firstName} ${person.lastName}` : driverId;
   }
 
-  // Wechselt zur vorherigen Seite der Fahrtenliste, falls möglich
+  // Switches to the previous page of the trip list, if possible
   prevTripPage(): void {
     if (this.currentTripPage > 1) {
       this.currentTripPage--;
@@ -584,7 +584,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Wechselt zur nächsten Seite der Fahrtenliste, falls möglich
+  // Switches to the next page of the trip list, if possible
   nextTripPage(): void {
     if (this.currentTripPage < this.totalTripPages) {
       this.currentTripPage++;
@@ -592,23 +592,23 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Springt direkt zu einer bestimmten Seite der Fahrtenliste
+  // Jumps directly to a specific page of the trip list
   goToTripPage(page: number): void {
     this.currentTripPage = page;
     this.loadTripPage();
   }
 
-  // Wechselt zwischen Routen- und Detailansicht
+  // Switches between route and detail view
   setViewMode(mode: 'routen' | 'details'): void {
     this.viewMode = mode;
   }
 
-  // Zentriert die Karte über das Card-Widget neu
+  // Re-centers the map via the card widget
   recenterMap(): void {
     this.cardWidget?.recenter();
   }
 
-  // Setzt alle Filter (einfach und erweitert) auf ihren Ausgangszustand zurück
+  // Resets all filters (simple and advanced) to their initial state
   resetFilters(): void {
     this.filterVehicleId = '';
     this.filterVehicleIds = [];
@@ -636,7 +636,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     this.appliedAdvancedPersonFilter = this.emptyAdvancedPersonFilter();
   }
 
-  // Erzeugt ein leeres Objekt für den erweiterten Personenfilter
+  // Creates an empty object for the advanced person filter
   private emptyAdvancedPersonFilter() {
     return {
       firstName: '',
@@ -646,7 +646,7 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  // Erzeugt ein leeres Objekt für den erweiterten Fahrzeugfilter
+  // Creates an empty object for the advanced vehicle filter
   private emptyAdvancedVehicleFilter() {
     return {
       brand: '',
@@ -663,11 +663,11 @@ export class TripsPageComponent implements OnInit, OnDestroy {
     };
   }
 
-  // Dünnt die Punkte einer Fahrt aus, sodass nur alle intervalSeconds ein Punkt übernommen wird
+  // Thins out the points of a trip so that only one point per intervalSeconds is kept
   private sampleByInterval(points: TripPoint[], intervalSeconds: number): TripPoint[] {
     if (!points.length) return points;
 
-    // Ersten Punkt immer übernehmen und Zeitfenster fortlaufend prüfen
+    // Always keep the first point and check the time window continuously
     const sampled: TripPoint[] = [points[0]];
     let lastTime = new Date(points[0].timestamp).getTime();
 

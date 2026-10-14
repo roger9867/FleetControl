@@ -2,7 +2,7 @@ using TelemetryDataService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Services hinzufügen.
+// Add services.
 builder.Services.AddGrpc();
 
 

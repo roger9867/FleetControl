@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option csharp_namespace = "FleetControlApi.Gateway.Grpc";
+
+import "google/protobuf/timestamp.proto";
+
+package trip;
+
+service TripService {
+  // Starts a new trip for a telemetry unit
+  rpc StartTrip (StartTripRequest) returns (StartTripResponse);
+
+  // Ends a running trip of a telemetry unit
+  rpc EndTrip (EndTripRequest) returns (EndTripResponse);
+}
+
+// Request to start a trip with start time
+message StartTripRequest {
+  string telemetry_unit_id = 1;
+  google.protobuf.Timestamp start_timestamp = 2;
+}
+
+// Response with the id of the started trip.
+message StartTripResponse {
+  string trip_id = 1;
+}
+
+// Request to end a trip with end time.
+message EndTripRequest {
+  string telemetry_unit_id = 1;
+  google.protobuf.Timestamp end_timestamp = 2;
+  google.protobuf.Timestamp start_timestamp = 3;
+}
+
+// Response with the id of the ended trip
+message EndTripResponse {
+  string trip_id = 1;
+}

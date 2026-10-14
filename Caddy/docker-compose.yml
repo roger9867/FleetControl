@@ -1,15 +1,20 @@
 version: "3.9"
 
-# Reverse Proxy: holt/erneuert automatisch ein echtes Let's-Encrypt-Zertifikat
-# fuer die Domain aus dem Caddyfile und terminiert TLS. Leitet intern per
-# Klartext-HTTP an Frontend (4200) und Backend (5000) weiter - beide muessen
-# bereits laufen (network_mode: host, "localhost" ist daher die VM selbst).
+# Reverse proxy: automatically obtains/renews a real Let's Encrypt certificate
+# for the domain from the Caddyfile and terminates TLS. Forwards internally via
+# plain HTTP to the frontend (4200) and backend (5000) - both must
+# already be running (network_mode: host, so "localhost" is the VM itself).
 services:
   caddy:
     image: caddy:2
     container_name: caddy
     restart: unless-stopped
     network_mode: host
+
+    environment:
+      DOMAIN: ${DOMAIN:-fleetcontrol.polandcentral.cloudapp.azure.com}
+      API_UPSTREAM: ${API_UPSTREAM:-localhost:5000}
+      UI_UPSTREAM: ${UI_UPSTREAM:-localhost:4200}
 
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile

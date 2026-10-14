@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <!-- Nur zum Messen der natuerlichen Breite, nie sichtbar -->
+  <!-- Only used to measure the natural width, never visible -->
   <nav class="tabs tabs-measure" #tabsMeasureEl>
     <button *ngFor="let tab of tabs">{{ tab }}</button>
   </nav>
@@ -51,7 +51,7 @@
 </header>
 
 <div class="layout">
-  <!-- Seitenleiste: verbundene Datenerfassungseinheiten -->
+  <!-- Sidebar: connected data acquisition units -->
   <div class="stripe" [class.closed]="sidebarClosed" >
 
     <nav class="tabs-vertical">
@@ -72,7 +72,7 @@
     </div>
   </div>
 
-  <!-- Hauptinhalt: aktiver Tab-Bereich -->
+  <!-- Main content: active tab area -->
   <div class="main">
     <div class="content" #contentEl>
     <div class="content-inner" #contentInner [style.transform]="'scale(' + contentScale + ')'">

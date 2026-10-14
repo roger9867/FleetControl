@@ -1,7 +1,7 @@
 <div class="page">
   <h1 class="header">Personen</h1>
 
-  <!-- Toolbar (Neu anlegen) -->
+  <!-- Toolbar (create new) -->
   <div class="toolbar">
     <button class="create-btn" (click)="toggleCreateForm()">
       {{ showCreateForm ? 'Abbrechen' : 'Neu anlegen' }}
@@ -11,7 +11,7 @@
   <div class="container">
   <div class="main">
 
-    <!-- Erstellen-Formular -->
+    <!-- Create form -->
     <div class="create-form" *ngIf="showCreateForm">
       <div class="form-grid">
         <label>
@@ -87,7 +87,7 @@
       <div class="form-error" *ngIf="createError">{{ createError }}</div>
     </div>
 
-    <!-- Liste der Personen -->
+    <!-- List of persons -->
     <div class="list">
       <div *ngIf="pagedPersons.length === 0">
         Keine Personen angelegt.
@@ -226,7 +226,7 @@
 
   </div>
 
-  <!-- Filterleiste (Sidebar) -->
+  <!-- Filter bar (sidebar) -->
   <app-filter-sidebar
     [vehicles]="vehicles"
     [telemetryUnitIds]="telemetryUnitIds"

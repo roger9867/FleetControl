@@ -73,7 +73,7 @@ void i32toStringDec(char* inbuf, int32_t _int) {
 
 void f32toStringDec(char* buf, float val) {
     int32_t int_part = (int32_t)val;                     // integer part
-    int32_t frac_part = (int32_t)((val - int_part) * 1000); // 3 figures after komma
+    int32_t frac_part = (int32_t)((val - int_part) * 1000); // 3 figures after the decimal point
 
     if (frac_part < 0) frac_part = -frac_part;
 
@@ -101,10 +101,10 @@ void f32toStringDec(char* buf, float val) {
     while (i > 0)
         buf[j++] = tmp[--i];
 
-    // Dezimal point
+    // Decimal point
     buf[j++] = '.';
 
-    // figures after komma
+    // figures after the decimal point
     buf[j++] = '0' + (frac_part / 100);
     buf[j++] = '0' + ((frac_part / 10) % 10);
     buf[j++] = '0' + (frac_part % 10);

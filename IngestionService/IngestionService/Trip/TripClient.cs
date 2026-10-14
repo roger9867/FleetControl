@@ -3,8 +3,8 @@ using Grpc.Net.Client;
 
 namespace IngestionService.Trip;
 
-// Kapselt den generierten gRPC-Client für den TripService von FleetControlApi,
-// über den Fahrtbeginn und -ende gemeldet werden
+// Wraps the generated gRPC client for FleetControlApi's TripService,
+// through which trip starts and ends are reported
 public class TripClient
 {
     private readonly TripService.TripServiceClient _client;
@@ -19,12 +19,12 @@ public class TripClient
 
         var channel =
             GrpcChannel.ForAddress(
-                configuration["TripService:Address"]!);
+                configuration["TripService:Url"]!);
 
         _client = new TripService.TripServiceClient(channel);
     }
 
-    // Meldet den vom Zustandsautomaten erkannten Fahrtbeginn (Geräte-ID, Startzeitpunkt) an FleetControlApi
+    // Reports the trip start detected by the state machine (device ID, start time) to FleetControlApi
     public async Task StartTripAsync(
         string deviceId,
         DateTime timestamp
@@ -37,7 +37,7 @@ public class TripClient
             });
     }
 
-    // Meldet das erkannte Fahrtende an FleetControlApi.
+    // Reports the detected trip end to FleetControlApi.
     public async Task EndTripAsync(
         string deviceId,
         DateTime timestamp,
@@ -57,7 +57,7 @@ public class TripClient
         await _client.EndTripAsync(request);
     }
 
-    // Wandelt einen Zeitstempel in das von Protocol Buffers erwartete Timestamp-Format um
+    // Converts a timestamp into the Timestamp format expected by Protocol Buffers
     private static Timestamp ToProtoTimestamp(
         DateTime timestamp
     ) {

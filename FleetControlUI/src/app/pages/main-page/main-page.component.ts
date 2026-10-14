@@ -52,24 +52,24 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
   pendingTripPersonId?: string;
   pendingTripTelemetryUnitId?: string;
 
-  // Wechselt den aktiven Reiter
+  // Switches the active tab
   selectTab(tab: string) {
     this.activeTab = tab;
   }
 
-  // Wechselt zum Fahrten-Reiter und filtert dort nach dem gewählten Fahrzeug
+  // Switches to the trips tab and filters it by the selected vehicle
   onShowTripsForVehicle(identNr: string) {
     this.pendingTripVehicleId = identNr;
     this.activeTab = 'Fahrten';
   }
 
-  // Wechselt zum Fahrten-Reiter und filtert dort nach der gewählten Person.
+  // Switches to the trips tab and filters it by the selected person.
   onShowTripsForPerson(personId: string) {
     this.pendingTripPersonId = personId;
     this.activeTab = 'Fahrten';
   }
 
-  // Wechselt zum Fahrten-Reiter und filtert dort nach der gewählten Telemetrieeinheit.
+  // Switches to the trips tab and filters it by the selected telemetry unit.
   onShowTripsForTelemetryUnit(unitId: string) {
     this.pendingTripTelemetryUnitId = unitId;
     this.activeTab = 'Fahrten';
@@ -77,21 +77,21 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sidebarClosed = true;
 
-  // Klappt die Seitenleiste auf bzw. zu
+  // Expands or collapses the sidebar
   toggleSidebar() {
     this.sidebarClosed = !this.sidebarClosed;
   }
 
   isDarkMode = localStorage.getItem('theme') !== 'light';
 
-  // Wechselt zwischen hellem und dunklem Design und speichert die Wahl dauerhaft.
+  // Switches between light and dark theme and saves the choice permanently.
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.applyTheme();
   }
 
-  // Setzt die passende Theme-Klasse am Wurzelelement des Dokuments
+  // Sets the matching theme class on the document's root element
   private applyTheme() {
     document.documentElement.classList.toggle('theme-light', !this.isDarkMode);
   }
@@ -99,7 +99,7 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
   uuids: string[] = [];
   private usbSub?: Subscription;
 
-  // Initialisiert den Service und wendet das gespeicherte Theme direkt an
+  // Initializes the service and applies the saved theme immediately
   constructor(
     private usbTelemetryService: UsbTelemetryService,
     private cdr: ChangeDetectorRef
@@ -107,7 +107,7 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.applyTheme();
   }
 
-  // Abonniert die verbundenen USB-Geräte-IDs für die Anzeige
+  // Subscribes to the connected USB device IDs for display
   ngOnInit() {
     this.usbSub = this.usbTelemetryService.connectedUnitIds$
       .subscribe(uuids => {
@@ -116,15 +116,15 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  // Richtet ResizeObserver fuer die Inhalts-Skalierung und das Reiter-Kollabieren ein.
+  // Sets up ResizeObserver for content scaling and tab collapsing.
   ngAfterViewInit() {
-    // 1. Gössenaenderungen des Inhaltsbereichs überwachen
+    // 1. Watch size changes of the content area
     this.contentResizeObserver = new ResizeObserver(() => this.updateContentScale());
     this.contentResizeObserver.observe(this.contentEl.nativeElement);
     this.contentResizeObserver.observe(this.contentInnerEl.nativeElement);
     this.updateContentScale();
 
-    // 2. Grössenaenderungen des Headers für das Reiter-Layout überwachen
+    // 2. Watch size changes of the header for the tab layout
     this.tabsResizeObserver = new ResizeObserver(() => this.updateTabsCollapse());
     this.tabsResizeObserver.observe(this.headerEl.nativeElement);
     this.tabsResizeObserver.observe(this.appMenuEl.nativeElement);
@@ -133,21 +133,21 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.updateTabsCollapse();
   }
 
-  // Beendet Abonnement und Observer beim Zerstören der Komponente
+  // Ends subscription and observer when the component is destroyed
   ngOnDestroy() {
     this.usbSub?.unsubscribe();
     this.contentResizeObserver?.disconnect();
     this.tabsResizeObserver?.disconnect();
   }
 
-  // Schliesst Reiter-Dropdown bei einem Klick ausserhalb
+  // Closes the tab dropdown on a click outside
   @HostListener('document:click')
   onDocumentClickCloseTabsDropdown() {
     this.tabsDropdownOpen = false;
   }
 
-  // Kollabiert die Reiter in ein Dropdown, sobald sie nicht mehr nebeneinander
-  // in den Header passen
+  // Collapses the tabs into a dropdown as soon as they no longer fit side by side
+  // fit into the header
   private updateTabsCollapse() {
     const header = this.headerEl?.nativeElement;
     const appMenu = this.appMenuEl?.nativeElement;
@@ -169,8 +169,8 @@ export class MainPageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Passt den Inhalt per transform: scale() an den verfuegbaren Platz an,
-  // statt Widgets/Tabellen zusammenzuquetschen
+  // Scales the content to the available space via transform: scale(),
+  // instead of squeezing widgets/tables
   private updateContentScale() {
     const container = this.contentEl?.nativeElement;
     const inner = this.contentInnerEl?.nativeElement;

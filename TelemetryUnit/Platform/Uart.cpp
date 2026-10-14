@@ -15,7 +15,7 @@ HAL_StatusTypeDef Uart::read(
     uint16_t idx = 0;
     uint8_t c;
 
-    // Aktuelle Zeit in Ticks des SysTick-Timer-Registers holen
+    // Get the current time in ticks of the SysTick timer register
     uint32_t startTime = HAL_GetTick();
 
     acquire();
@@ -27,18 +27,18 @@ HAL_StatusTypeDef Uart::read(
             buffer[idx++] = c;
             buffer[idx] = '\0';
 
-            // Timeout zurücksetzen, solange Daten kommen
+            // Reset the timeout as long as data keeps arriving
             startTime = HAL_GetTick();
 
-            // Prompt zum Senden von Topic/Payload
+            // Prompt for sending topic/payload
             if (strchr((char*)buffer, '>') != nullptr)
                 break;
 
-            // Normale AT-Antwort beendet
+            // Normal AT response finished
             if (strstr((char*)buffer, "\r\nOK\r\n") != nullptr)
                 break;
 
-            // Fehler beendet ebenfalls
+            // Error also finishes it
             if (strstr((char*)buffer, "\r\nERROR\r\n") != nullptr)
                 break;
         }
@@ -59,7 +59,7 @@ HAL_StatusTypeDef Uart::readRaw(
     uint16_t idx = 0;
     uint8_t c;
 
-    // Aktuelle Zeit in Ticks des SysTick-Timer-Registers holen
+    // Get the current time in ticks of the SysTick timer register
     uint32_t startTime = HAL_GetTick();
 
     acquire();

@@ -8,12 +8,12 @@ import { catchError } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class TelemetryUnitService {
 
-  // Basis-String aus Env holen
+  // Get base string from env
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  // Legt eine neue Telemetrie-Einheit auf dem Server an
+  // Creates a new telemetry unit on the server
   createUnit(dto: TelemetryUnit): Observable<{ id: string }> {
     return this.http.post<{ id: string }>(
       `${this.baseUrl}/TelemetryUnit`,
@@ -21,27 +21,27 @@ export class TelemetryUnitService {
     );
   }
 
-  // Lädt alle vorhandenen Telemetrie-Einheiten vom Server
+  // Loads all existing telemetry units from the server
   getUnits(): Observable<TelemetryUnit[]> {
     return this.http.get<TelemetryUnit[]>(
       `${this.baseUrl}/TelemetryUnit/TelemetryUnits`);
   }
 
-  // Aktualisiert eine bestehende Telemetrie-Einheit
+  // Updates an existing telemetry unit
   update(unit: TelemetryUnit): Observable<TelemetryUnit> {
     return this.http.put<TelemetryUnit>(`${this.baseUrl}/TelemetryUnit/${unit.id}`, unit).pipe(
       catchError(err => this.rethrow(err))
     );
   }
 
-  // Löscht eine Telemetrie-Einheit anhand ihrer Id
+  // Deletes a telemetry unit by its id
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/TelemetryUnit/${id}`).pipe(
       catchError(err => this.rethrow(err))
     );
   }
 
-  // Wandelt einen HTTP-Fehler in eine lesbare Fehlermeldung um und wirft ihn erneut
+  // Converts an HTTP error into a readable error message and rethrows it
   private rethrow(err: HttpErrorResponse) {
     const message = typeof err.error === 'string' && err.error
       ? err.error

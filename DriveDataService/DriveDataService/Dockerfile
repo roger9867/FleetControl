@@ -1,23 +1,23 @@
 # syntax=docker/dockerfile:1
 
-# Build-Stage
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Projektkonfiguration kopieren
+# Copy project configuration
 COPY TelemetryDataService.csproj .
 RUN --mount=type=cache,target=/root/.nuget/packages \
     dotnet restore TelemetryDataService.csproj
 
-# Quellcode kopieren
+# Copy source code
 COPY . .
 RUN --mount=type=cache,target=/root/.nuget/packages \
     dotnet publish TelemetryDataService.csproj -c Release -o /app --no-restore
 
-# Runtime-Stage
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 
-# Einstiegspunkt des Containers
+# Container entry point
 ENTRYPOINT ["dotnet", "TelemetryDataService.dll"]

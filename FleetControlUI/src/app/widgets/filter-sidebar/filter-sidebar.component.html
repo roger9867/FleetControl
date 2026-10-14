@@ -1,5 +1,5 @@
 <div class="sidebar">
-  <!-- Titelzeile mit Filter-Modus-Umschalter -->
+  <!-- Title row with filter mode toggle -->
   <div class="filter-title-row">
     <div class="filter-title">Filter</div>
 
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <!-- Fahrzeugfilter (Suche, Chips, erweiterte Filterung) -->
+  <!-- Vehicle filter (search, chips, advanced filtering) -->
   <div class="autocomplete" #vehicleAutocomplete>
     <div class="label-row">
       <span>Fahrzeug</span>
@@ -95,7 +95,7 @@
     </div>
   </div>
 
-  <!-- Telemetrie-Einheiten-Filter (Suche und Chips) -->
+  <!-- Telemetry unit filter (search and chips) -->
   <div class="autocomplete" #telemetryAutocomplete>
     <span>Telemetrie-Einheit</span>
 
@@ -136,7 +136,7 @@
     </div>
   </div>
 
-  <!-- Personenfilter (Suche, Chips, erweiterte Filterung) -->
+  <!-- Person filter (search, chips, advanced filtering) -->
   <div class="autocomplete" #personAutocomplete>
     <div class="label-row">
       <span>Person</span>
@@ -188,7 +188,7 @@
     </div>
   </div>
 
-  <!-- Aktionen: Filter anwenden / zurücksetzen -->
+  <!-- Actions: apply / reset filters -->
   <div class="filter-actions">
     <button class="apply-btn" (click)="applyFilters()">Anwenden</button>
     <button class="reset-btn" [class.active]="hasActiveFilters" (click)="resetFilters()">Zurücksetzen</button>

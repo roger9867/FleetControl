@@ -2,24 +2,24 @@ using System.Collections.Concurrent;
 
 namespace IngestionService.Plausibility;
 
-// Notlösung für ein Hardware-Problem der Telemetrieeinheit: Durch Timingfehler
-// beim Einlesen der GNSS-Antwort werden gelegentlich führende Bytes der
-// Koordinaten überschrieben bzw. auf 0 gesetzt, wodurch sporadisch weit
-// entfernte Fantasie-Positionen ankommen. Da die eigentliche Fehlerursache in
-// der Telemetrieeinheit zeitlich nicht behoben werden konnte, wird  anhand
-// der aus zwei Punkten und der verstrichenen Zeit (Haversine-Formel)
-// errechneten impliziten Geschwindigkeit geprüft, ob ein Punkt überhaupt
-// realistisch erreichbar war.
+// Workaround for a hardware problem of the telemetry unit: due to timing errors
+// when reading the GNSS response, leading bytes of the coordinates are occasionally
+// overwritten or set to 0, which sporadically produces far-away
+// phantom positions. Since the actual root cause in
+// the telemetry unit could not be fixed in time, the implied speed
+// calculated from two points and the elapsed time (haversine formula)
+// is used to check whether a point was
+// realistically reachable at all.
 public class GpsPlausibilityFilter
 {
-    // Deutlich über realistischer Straßengeschwindigkeit, damit echte,
-    // schnelle Fahrten nicht fälschlich verworfen werden.
+    // Well above realistic road speed, so that real,
+    // fast trips are not wrongly discarded.
     private const double MaxPlausibleSpeedKmh = 300;
 
-    // Verhindert, dass ein einmal fehlerhafter Referenzpunkt dauerhaft alle
-    // folgenden (korrekten) Punkte blockiert: Nach drei Ablehnungen in Folge
-    // für dasselbe Gerät wird der nächste Punkt unabhängig vom Ergebnis als
-    // neue Referenz akzeptiert
+    // Prevents a reference point that was wrong once from permanently blocking all
+    // following (correct) points: after three rejections in a row
+    // for the same device, the next point is accepted as the new reference
+    // regardless of the result
     private const int MaxConsecutiveRejections = 3;
     private static readonly TimeSpan MaxGapForCheck = TimeSpan.FromMinutes(5);
 
@@ -36,9 +36,9 @@ public class GpsPlausibilityFilter
         _logger = logger;
     }
 
-    // Prüft, ob eine neue Position anhand der seit dem letzten akzeptierten Punkt
-    // verstrichenen Zeit überhaupt erreichbar gewesen wäre, und aktualisiert bei
-    // Erfolg (oder erzwungener Übernahme) die Referenzposition des Geräts.
+    // Checks whether a new position could have been reached at all given the time
+    // elapsed since the last accepted point, and on success (or forced acceptance)
+    // updates the device's reference position.
     public bool IsPlausible(string deviceId, double lat, double lon, DateTime timestamp)
     {
         if (!_lastGoodPosition.TryGetValue(deviceId, out var last))
@@ -49,9 +49,9 @@ public class GpsPlausibilityFilter
 
         var elapsed = timestamp - last.Timestamp;
 
-        // Nach einer längeren Pause ist eine
-        // beliebig weit entfernte Position plausibel, da echte Zeit zum
-        // Zurücklegen der Strecke verstrichen sein kann
+        // After a longer pause, an arbitrarily
+        // distant position is plausible, since real time may have passed
+        // to cover the distance
         if (elapsed <= TimeSpan.Zero || elapsed > MaxGapForCheck)
         {
             Accept(deviceId, lat, lon, timestamp);
@@ -95,16 +95,16 @@ public class GpsPlausibilityFilter
         return true;
     }
 
-    // Übernimmt eine Position als neue Referenz für künftige Plausibilitätsprüfungen
-    // und setzt den Ablehnungszähler des Geräts zurück
+    // Takes over a position as the new reference for future plausibility checks
+    // and resets the device's rejection counter
     private void Accept(string deviceId, double lat, double lon, DateTime timestamp)
     {
         _lastGoodPosition[deviceId] = (lat, lon, timestamp);
         _consecutiveRejections.TryRemove(deviceId, out _);
     }
 
-    // Berechnet die Distanz zwischen zwei Koordinaten in Kilometern über die
-    // Haversine-Formel
+    // Calculates the distance between two coordinates in kilometers using the
+    // haversine formula
     private static double HaversineDistanceKm(double lat1, double lon1, double lat2, double lon2)
     {
         const double earthRadiusKm = 6371;
@@ -121,6 +121,6 @@ public class GpsPlausibilityFilter
         return earthRadiusKm * c;
     }
 
-    // Hilfsfunktion für Haversine-Formel die mit Bogenmaß statt Grad rechnet
+    // Helper function for the haversine formula that works in radians instead of degrees
     private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
 }

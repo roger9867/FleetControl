@@ -4,17 +4,17 @@ using InfluxDB.Client;
 
 namespace TelemetryDataService.Services;
 
-// Liest gespeicherte Datenpunkte:
-// Measurement "sensor", getaggt mit deviceId, Felder lat/lon/speedKmh/accelMs2.
-// Es gibt keine tripId in InfluxDB, daher werden die Punkte einer Fahrt
-// ausschliesslich ueber deviceId, Anfangs- u. Endzeitpunkt bestimmt
+// Reads stored data points:
+// Measurement "sensor", tagged with deviceId, fields lat/lon/speedKmh/accelMs2.
+// There is no tripId in InfluxDB, so the points of a trip are determined
+// solely by deviceId, start and end time
 public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
 {
     private readonly InfluxDBClient _client;
     private readonly string _bucket;
     private readonly string _org;
 
-    // Zustandsausgabe
+    // Status output
     private readonly ILogger<TelemetryQueryService> _logger;
 
     public TelemetryQueryService(IConfiguration config, ILogger<TelemetryQueryService> logger)
@@ -29,7 +29,7 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
     }
 
 
-    // Ausgabe von Telemetriedatenpunkten
+    // Output of telemetry data points
     public override async Task<GetTelemetryPointsResponse> GetTelemetryPoints(
         GetTelemetryPointsRequest request,
         ServerCallContext context
@@ -39,7 +39,7 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         var start = request.Start.ToDateTime();
         var end = request.End.ToDateTime();
 
-        // deviceId wird case-insensitiv verglichen
+        // deviceId is compared case-insensitively
         var flux =
             "import \"strings\" " +
             $"from(bucket: \"{_bucket}\") " +
@@ -88,7 +88,7 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
-    // Den letzten Punkt aller Geraete ausgeben
+    // Output the latest point of all devices
     public override async Task<GetLatestPointsResponse> GetLatestPoints(
         GetLatestPointsRequest request,
         ServerCallContext context
@@ -104,12 +104,12 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
             ", ",
             request.DeviceIds.Select(id => $"\"{id.ToLowerInvariant()}\""));
 
-        // last() aggregiert pro Input-Tabelle, nicht pro Telemetrieeinheit - vorheriges
-        // Gruppieren nach (deviceId, _field) garantiert genau eine "last"-Zeile
-        // pro Feld und Geraet, unabhaengig davon, welche anderen Tags
-        // (vehicleId, driverId, etc) beim Schreiben gesetzt waren. Erneutes
-        // Gruppieren nach deviceId allein erlaubt es, diese
-        // Felder wieder zu einer Zeile zusammenzufuehren.
+        // last() aggregates per input table, not per telemetry unit - grouping
+        // by (deviceId, _field) first guarantees exactly one "last" row
+        // per field and device, regardless of which other tags
+        // (vehicleId, driverId, etc) were set when writing. Grouping again
+        // by deviceId alone allows these
+        // fields to be merged back into one row.
         var flux =
             "import \"strings\" " +
             $"from(bucket: \"{_bucket}\") " +
@@ -163,7 +163,7 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
-    // Wie GetLatestPoints, aber ueber vehicleId statt deviceId
+    // Like GetLatestPoints, but by vehicleId instead of deviceId
     public override async Task<GetLatestPointsByVehicleResponse> GetLatestPointsByVehicle(
         GetLatestPointsByVehicleRequest request,
         ServerCallContext context)
@@ -189,11 +189,11 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
             "|> last() " +
             "|> group(columns: [\"vehicleId\", \"deviceId\", \"driverId\"]) " +
             "|> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\") " +
-            // Ein Fahrzeug kann in den letzten 90 Tagen mehrere unterschiedliche
-            // (deviceId, driverId)-Kombinationen gehabt haben - das erzeugt bis
-            // hierher eine Zeile pro Kombination. Nochmal nach vehicleId
-            // gruppieren und nur die insgesamt juengste Zeile behalten, sonst
-            // gibt es pro Fahrzeug mehrere Treffer.
+            // A vehicle may have had several different (deviceId, driverId)
+            // combinations within the last 90 days - up to this point that produces
+            // one row per combination. Group by vehicleId again
+            // and keep only the most recent row overall, otherwise
+            // there are several hits per vehicle.
             "|> group(columns: [\"vehicleId\"]) " +
             "|> sort(columns: [\"_time\"], desc: true) " +
             "|> limit(n: 1)";
@@ -241,7 +241,7 @@ public class TelemetryQueryService : TelemetryQuery.TelemetryQueryBase
         return response;
     }
 
-    // Alle Punkte innerhalb einer Zeitspanne für ein Gerät löschen
+    // Delete all points within a time span for a device
     public override async Task<DeleteTelemetryPointsResponse> DeleteTelemetryPoints(
         DeleteTelemetryPointsRequest request,
         ServerCallContext context
